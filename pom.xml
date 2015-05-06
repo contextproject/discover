@@ -1,15 +1,15 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>your.group.id</groupId>
-    <artifactId>your.artifact.id</artifactId>
+    <groupId>groupid</groupId>
+    <artifactId>explore</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <name>myFirstApp</name>
+    <name>Explore</name>
 
     <packaging>play2</packaging>
 
     <properties>
-        <play.version>2.2.1</play.version>
+        <play.version>2.2.6</play.version>
     </properties>
 
         <repositories>
@@ -56,6 +56,16 @@
         <testSourceDirectory>test</testSourceDirectory>
 
         <plugins>
+
+            <plugin>
+                <groupId>org.nanoko.playframework</groupId>
+                <artifactId>play2-maven-plugin</artifactId>
+                <version>1.2.5</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <play2Home>/Users/daan/dev/play-2.2.6</play2Home>
+                </configuration>
+            </plugin>
 
             <plugin>
                 <groupId>org.nanoko.playframework</groupId>
