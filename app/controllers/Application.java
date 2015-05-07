@@ -1,6 +1,7 @@
 package controllers;
 
 
+//import models.snippet.RandomSnippet;
 import play.mvc.Controller;
 import play.mvc.Result;
 import views.html.index;
@@ -8,7 +9,9 @@ import views.html.index;
 public class Application extends Controller {
 
     public static Result index() {
-        snippet.RandomSnippet snpt = new snippet.RandomSnippet();
-        return ok(index.render(snpt.getStart()));
+        //RandomSnippet snpt = new RandomSnippet();
+        //return ok(index.render(snpt.getStart()));
+        double something = 0.0;
+        return ok(index.render(something));
     }
 }
