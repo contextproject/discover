@@ -15,7 +15,7 @@ public class CommentIntensitySeeker {
      * @param duration The duration of that given song
      * @return a start time
      */
-    protected int getStartTime(Set<Comment> coms, int duration) {
+    protected static int getStartTime(Set<Comment> coms, int duration) {
         if (coms.isEmpty()) {
             return 0;
         }
@@ -40,13 +40,15 @@ public class CommentIntensitySeeker {
         return start;
     }
 
+
+
     /**
      * Seeks the Snippet to be used of a given song with a unknown duration.
      *
      * @param coms The set of comments to use
      * @return A TimedSnippet object
      */
-    public TimedSnippet seek(Set<Comment> coms) {
+    public static TimedSnippet seek(Set<Comment> coms) {
         return new TimedSnippet(getStartTime(coms, TimedSnippet.getDefaultDuration()));
     }
 

@@ -1,3 +1,47 @@
-@(randStart: Double)
+@(url: String, randStart: Double)
 
-@main(randStart)
+@main(randStart) {
+    <div class="container">
+        <div class="widgetContainer">
+            <iframe id="sc-widget" src="https://w.soundcloud.com/player/?url=http://@url" width="100%" height="465" scrolling="no" frameborder="no"></iframe>
+        </div>
+        <div class="actionsContainer">
+            <input class="urlInput" placeholder="Enter SoundCloud URL of the track." type="text">
+            <button class="reload" action="">Reload</button>
+            <input class="idInput" placeholder="Enter the ID of a track." type="text">
+            <button class="getTrack" action="">Get Track</button>
+
+            <dl class="actionButtons">
+                <dd><button class="seekTo">Seek <input type="text" value="50000" size="10" maxlength="10" /></button></dd>
+                <dd><button class="preview" value=@randStart>Preview</button></dd>
+                <dd><button class="prev">Prev</button></dd>
+                <dd><button class="next">Next</button></dd>
+                <dd><button class="randSong">Random Song</button></dd>
+                <dd><button class="clear">Clear Events</button></dd>
+            </dl>
+        </div>
+    </div>
+    <script type="text/javascript" src="@routes.Assets.at("javascripts/index.js")"></script>
+    <script>
+
+	var widgetIframe = document.getElementById('sc-widget');
+	var widget = SC.Widget(widgetIframe);
+	
+	//Template for adding event listeners.
+	function addEvent(element, eventName, callback) {
+    if (element.addEventListener) {
+      element.addEventListener(eventName, callback, false);
+    } else {
+      element.attachEvent(eventName, callback, false);
+    }
+  }
+	
+	//Adding the functionality of reloading the wiidget with a given url.
+	var getButton = document.querySelector('.getTrack');
+	var idInput = document.querySelector('.idInput');
+	addEvent(getButton, 'click', function() {
+		window.location.href = window.location.protocol + idInput.value;
+	});
+
+	</script>
+}
