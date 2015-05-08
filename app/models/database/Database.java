@@ -1,20 +1,18 @@
 package models.database;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Stream;
 
 /**
  * Class to connect to the database.
@@ -36,51 +34,59 @@ public class Database {
         makeConnection();
     }
 
+    public ResultSet getComments(int trackid) {
+        ResultSet result = null;
+        try {
+            String query = "SELECT user_id, timestamp, text FROM comments_without_features WHERE track_id = " + trackid;
+            result = statement.executeQuery(query);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
     /**
      * Read all the comments in this folder.
      *
      * @param folder The folder the comments are located in
      */
     public void readFolder(final File folder) {
+        System.out.println("Importing folder...");
         for (final File file : folder.listFiles()) {
-            if (file.isDirectory()) {
-                readFile(file.toPath());
-            } else {
-                System.out.println(file.getName());
+            Matcher matcher = Pattern.compile("\\Q.DS_Store\\E").matcher(file.toString());
+            // ignore .DS_Store file
+            if(!matcher.find()) {
+                readFile(file);
             }
         }
+        System.out.println("Done importing!");
     }
 
     /**
      * Read a comment file and insert it into the database.
      *
-     * @param path The path to the comment
+     * @param file The comment file
      */
-    public void readFile(final Path path) {
+    public void readFile(final File file) {
         try {
-            BufferedReader br = new BufferedReader(new FileReader("file.txt"));
-            try {
-                StringBuilder stringBuilder = new StringBuilder();
-                String line = processLine(br.readLine());
-
+            List<String> lines = Files.readAllLines(Paths.get(file.toString()), Charset.defaultCharset());
+            StringBuilder stringBuilder = new StringBuilder();
+            for (String line : lines) {
                 // regular expression that matches to a comment with trackid, userid, etc.
                 Pattern pattern = Pattern.compile("(\\d*) (\\d*) (\\d{4}.\\d{2}.\\d{2}) (\\d{2}.\\d{2}.\\d{2}) (.{5}) (-?\\d*|\\w*) (.*)");
-                Matcher matcher = pattern.matcher(line);
+                Matcher matcher = pattern.matcher(processLine(line));
 
                 if (matcher.find()) {
                     executeQuery(stringBuilder.toString());
                     stringBuilder.setLength(0);
-                    stringBuilder.insert(0, buildQuery(matcher, extractTrackID(path)));
+                    stringBuilder.insert(0, buildQuery(matcher, extractTrackID(file)));
                 } else {
                     // part of a comment is on a new line, add this part to the previous comment
                     stringBuilder.setLength(stringBuilder.length() - 3);
                     stringBuilder.append(" ").append(line).append("\');");
                 }
-
-            } catch (IOException e) {
-                e.printStackTrace();
             }
-        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -120,12 +126,12 @@ public class Database {
     /**
      * Extracts the track id from the file name.
      *
-     * @param path The path object to the file
+     * @param file The file object of the comment file
      * @return The track id
      */
-    public String extractTrackID(final Path path) {
+    public String extractTrackID(final File file) {
         Pattern pattern = Pattern.compile("\\d+");
-        Matcher matcher = pattern.matcher(path.toString());
+        Matcher matcher = pattern.matcher(file.toString());
         if (matcher.find()) {
             return matcher.group(0);
         } else {
