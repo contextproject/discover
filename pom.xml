@@ -3,7 +3,7 @@
 
     <groupId>multimediaservices5</groupId>
     <artifactId>discover</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
     <name>Discover</name>
 
     <packaging>play2</packaging>
