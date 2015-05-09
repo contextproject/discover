@@ -9,6 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -24,11 +25,21 @@ public class DatabaseConnectorTest {
     }
 
     @Test
+    public void connectionTest() {
+        assertNotNull(databaseConnector.getConnection());
+    }
+
+    @Test
+    public void statementTest() {
+        assertNotNull(databaseConnector.getStatement());
+    }
+
+    @Test
     public void executeUpdateTest() throws SQLException {
         databaseConnector.executeUpdate("CREATE TABLE test (columna TEXT, columnb INT)");
 
         DatabaseMetaData dbm = databaseConnector.getConnection().getMetaData();
-        ResultSet tables = dbm.getTables(null, null, "employee", null);
+        ResultSet tables = dbm.getTables(null, null, "test", null);
         assertTrue(tables.next());
 
         databaseConnector.executeUpdate("DROP TABLE test");

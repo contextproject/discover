@@ -26,6 +26,7 @@ public class DatabaseConnector {
      */
     public DatabaseConnector() {
         loadDrivers();
+        makeConnection();
     }
 
     /**

@@ -33,8 +33,6 @@ public class CommentProcessor {
      * @param path path to the comment folder
      */
     public void processComments(final String path) {
-        databaseConnector.makeConnection();
-
         createTable(new File(path));
 
         databaseConnector.closeConnection();

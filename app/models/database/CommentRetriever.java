@@ -20,10 +20,7 @@ public class CommentRetriever {
     /**
      * Constructor.
      */
-    public CommentRetriever() {
-        databaseConnector.makeConnection();
-
-    }
+    public CommentRetriever() { }
 
     /**
      * Gets the comments of the song corresponding to the given track id.
