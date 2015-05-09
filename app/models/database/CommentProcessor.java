@@ -5,59 +5,39 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.sql.Connection;
 import java.sql.DatabaseMetaData;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Class to connect to the database.
+ * Class to process the .comment files.
  */
-public class Database {
+public class CommentProcessor {
 
     /**
-     * Connection object to the database.
+     * Database connector.
      */
-    private Connection connection;
-
-    /**
-     * Statement object of the connection.
-     */
-    private Statement statement;
+    private DatabaseConnector databaseConnector = new DatabaseConnector();
 
     /**
      * Constructor.
+     */
+    public CommentProcessor() { }
+
+    /**
+     * Processes the comments in the provided folder.
      *
      * @param path path to the comment folder
      */
-    public Database(final String path) {
-        loadDrivers();
-        makeConnection();
+    public void processComments(final String path) {
+        databaseConnector.makeConnection();
 
         createTable(new File(path));
-    }
 
-
-    /**
-     * Gets the comments of a certain track.
-     *
-     * @param trackid The track id of the song
-     * @return Resultset with the comments
-     */
-    public ResultSet getComments(final int trackid) {
-        ResultSet result = null;
-        try {
-            String query = "SELECT user_id, timestamp, text FROM comments_without_features WHERE track_id = " + trackid;
-            result = statement.executeQuery(query);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return result;
+        databaseConnector.closeConnection();
     }
 
     /**
@@ -67,11 +47,11 @@ public class Database {
      */
     private void createTable(final File folder) {
         try {
-            DatabaseMetaData dbm = connection.getMetaData();
+            DatabaseMetaData dbm = databaseConnector.getConnection().getMetaData();
             ResultSet tables = dbm.getTables(null, null, "comments_without_features", null);
             if (!tables.next()) {
                 System.out.println("Table does not exist, will create one.");
-                statement.execute("CREATE TABLE IF NOT EXISTS comments_without_features( "
+                databaseConnector.getStatement().execute("CREATE TABLE IF NOT EXISTS comments_without_features( "
                         + " track_id INT NOT NULL,"
                         + " comment_id INT NOT NULL,"
                         + " user_id INT NOT NULL,"
@@ -93,7 +73,6 @@ public class Database {
      * @param folder The folder the comments are located in
      */
     private void readFolder(final File folder) {
-        System.out.println("Importing comments...");
         for (final File file : folder.listFiles()) {
             // ignore .DS_Store file
             Matcher matcher = Pattern.compile("\\Q.DS_Store\\E").matcher(file.toString());
@@ -101,7 +80,6 @@ public class Database {
                 readFile(file);
             }
         }
-        System.out.println("Done importing!");
     }
 
     /**
@@ -120,7 +98,8 @@ public class Database {
                 Matcher matcher = pattern.matcher(line);
 
                 if (matcher.find()) {
-                    executeQuery(stringBuilder.toString());
+                    databaseConnector.executeUpdate(stringBuilder.toString());
+                    //executeQuery(stringBuilder.toString());
                     stringBuilder.setLength(0);
                     stringBuilder.insert(0, buildQuery(matcher, extractTrackID(file)));
                 } else {
@@ -152,22 +131,6 @@ public class Database {
     }
 
     /**
-     * Executes the given query string.
-     *
-     * @param query The query string
-     */
-    private void executeQuery(final String query) {
-        if (!query.equals("")) {
-            try {
-                statement.executeUpdate(query);
-            } catch (SQLException e) {
-                //e.printStackTrace();
-                System.out.println(query);
-            }
-        }
-    }
-
-    /**
      * Extracts the track id from the file name.
      *
      * @param file The file object of the comment file
@@ -181,7 +144,6 @@ public class Database {
         } else {
             return "-1";
         }
-
     }
 
     /**
@@ -198,67 +160,8 @@ public class Database {
                 + matcher.group(2) + ", "
                 + "\'" + matcher.group(3).replaceAll("/", "-")
                 + " " + matcher.group(4) + "\', "
-                + processTimestamp(matcher.group(6)) + ", "
+                + (matcher.group(6).equals("None") ? -1 : matcher.group(6)) + ", "
                 + "\'" + matcher.group(7) + "\');"
         );
-    }
-
-    /**
-     * Processes the timestamp of a comment for the MySQL database.
-     *
-     * @param timestamp The raw timestamp
-     * @return The processed timestamp
-     */
-    private String processTimestamp(final String timestamp) {
-        if (timestamp.equals("None")) {
-            return "-1";
-        } else {
-            return timestamp;
-        }
-    }
-
-    /**
-     * Loading the drivers to connect to a MySQL database.
-     */
-    private void loadDrivers() {
-        try {
-            System.out.println("Loading driver...");
-            Class.forName("com.mysql.jdbc.Driver");
-            System.out.println("Driver loaded!");
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException("Cannot find the driver in the classpath!", e);
-        }
-    }
-
-    /**
-     * Make a connection with the database.
-     */
-    private void makeConnection() {
-        try {
-            System.out.println("Connecting database...");
-
-            String url = "jdbc:mysql://localhost:3306/contextbase";
-            String username = "context";
-            String password = "password";
-
-            connection = DriverManager.getConnection(url, username, password);
-            System.out.println("Database connected!");
-            statement = connection.createStatement();
-        } catch (SQLException e) {
-            throw new RuntimeException("Cannot connect the database!", e);
-        }
-    }
-
-    /**
-     * Close the connection with the database.
-     */
-    private void closeConnection() {
-        System.out.println("Closing the connection.");
-        if (connection != null) {
-            try {
-                connection.close();
-            } catch (SQLException ignore) {
-            }
-        }
     }
 }
