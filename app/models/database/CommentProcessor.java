@@ -23,16 +23,11 @@ public class CommentProcessor {
     private DatabaseConnector databaseConnector = new DatabaseConnector();
 
     /**
-     * Constructor.
-     */
-    public CommentProcessor() { }
-
-    /**
-     * Processes the comments in the provided folder.
+     * Constructor, processes the comments in the provided folder.
      *
      * @param path path to the comment folder
      */
-    public void processComments(final String path) {
+    public CommentProcessor(final String path) {
         createTable(new File(path));
 
         databaseConnector.closeConnection();
@@ -113,7 +108,7 @@ public class CommentProcessor {
 
 
     /**
-     * Process a line so it can be processed easier.
+     * Process a line so it can be read easier.
      *
      * @param line Original line
      * @return Processed line
@@ -139,9 +134,8 @@ public class CommentProcessor {
         Matcher matcher = pattern.matcher(file.toString());
         if (matcher.find()) {
             return matcher.group(0);
-        } else {
-            return "-1";
         }
+        return "-1";
     }
 
     /**
