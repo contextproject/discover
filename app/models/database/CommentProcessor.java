@@ -24,11 +24,9 @@ public class CommentProcessor {
 
     /**
      * Constructor, processes the comments in the provided folder.
-     *
-     * @param path path to the comment folder
      */
-    public CommentProcessor(final String path) {
-        createTable(new File(path));
+    public CommentProcessor() {
+        createTable(new File("/Users/daan/Downloads/metadata/without_features/metadata/comments"));
 
         databaseConnector.closeConnection();
     }

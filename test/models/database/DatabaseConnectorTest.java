@@ -25,12 +25,12 @@ public class DatabaseConnectorTest {
     }
 
     @Test
-    public void connectionTest() {
+    public void connectionTest() throws Exception {
         assertNotNull(databaseConnector.getConnection());
     }
 
     @Test
-    public void statementTest() {
+    public void statementTest() throws Exception {
         assertNotNull(databaseConnector.getStatement());
     }
 
@@ -59,7 +59,7 @@ public class DatabaseConnectorTest {
 
 
     @After
-    public void tearDown() {
+    public void tearDown() throws SQLException {
         databaseConnector.closeConnection();
     }
 }

@@ -16,7 +16,7 @@ public class Application extends Controller {
     private static RandomSnippet snpt;
 
     public static Result index() {
-        new CommentProcessor("/Users/daan/Downloads/metadata/without_features/metadata/comments");
+        new CommentProcessor();
         String url = "w.soundcloud.com/tracks/202852531";
         snpt = new RandomSnippet();
         return ok(index.render(url, snpt.getStart()));

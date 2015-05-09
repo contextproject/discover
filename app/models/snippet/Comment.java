@@ -25,6 +25,8 @@ public class Comment {
         return (int) (Math.floor(timestamp / period) * period);
     }
 
+    public int getTimestamp() { return timestamp; }
+
     public int getUser() {
         return userid;
     }
