@@ -16,10 +16,10 @@ public class Application extends Controller {
 
     private static RandomSnippet snpt;
 
-    private static Database database = new Database();
+    //TODO: close database after session
+    private static Database database = new Database("/Users/daan/Downloads/metadata/without_features/metadata/comments");
 
     public static Result index() {
-
         String url = "w.soundcloud.com/tracks/202852531";
         snpt = new RandomSnippet();
         return ok(index.render(url, snpt.getStart()));

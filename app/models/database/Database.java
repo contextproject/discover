@@ -6,6 +6,7 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -29,12 +30,26 @@ public class Database {
      */
     private Statement statement;
 
-    public Database() {
+    /**
+     * Constructor.
+     *
+     * @param path path to the comment folder
+     */
+    public Database(final String path) {
         loadDrivers();
         makeConnection();
+
+        createTable(new File(path));
     }
 
-    public ResultSet getComments(int trackid) {
+
+    /**
+     * Gets the comments of a certain track.
+     *
+     * @param trackid The track id of the song
+     * @return Resultset with the comments
+     */
+    public ResultSet getComments(final int trackid) {
         ResultSet result = null;
         try {
             String query = "SELECT user_id, timestamp, text FROM comments_without_features WHERE track_id = " + trackid;
@@ -46,16 +61,43 @@ public class Database {
     }
 
     /**
+     * Creates new MySQL table for the comments without features only if it did not exists.
+     *
+     * @param folder The folder where the comments are located
+     */
+    private void createTable(final File folder) {
+        try {
+            DatabaseMetaData dbm = connection.getMetaData();
+            ResultSet tables = dbm.getTables(null, null, "comments_without_features", null);
+            if (!tables.next()) {
+                System.out.println("Table does not exist, will create one.");
+                statement.execute("CREATE TABLE IF NOT EXISTS comments_without_features( "
+                        + " track_id INT NOT NULL,"
+                        + " comment_id INT NOT NULL,"
+                        + " user_id INT NOT NULL,"
+                        + " created_at DATETIME,"
+                        + " timestamp INT,"
+                        + " text LONGTEXT NOT NULL"
+                        + ");");
+                readFolder(folder);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    /**
      * Read all the comments in this folder.
      *
      * @param folder The folder the comments are located in
      */
-    public void readFolder(final File folder) {
-        System.out.println("Importing folder...");
+    private void readFolder(final File folder) {
+        System.out.println("Importing comments...");
         for (final File file : folder.listFiles()) {
-            Matcher matcher = Pattern.compile("\\Q.DS_Store\\E").matcher(file.toString());
             // ignore .DS_Store file
-            if(!matcher.find()) {
+            Matcher matcher = Pattern.compile("\\Q.DS_Store\\E").matcher(file.toString());
+            if (!matcher.find()) {
                 readFile(file);
             }
         }
@@ -67,14 +109,15 @@ public class Database {
      *
      * @param file The comment file
      */
-    public void readFile(final File file) {
+    private void readFile(final File file) {
+        StringBuilder stringBuilder = new StringBuilder();
         try {
             List<String> lines = Files.readAllLines(Paths.get(file.toString()), Charset.defaultCharset());
-            StringBuilder stringBuilder = new StringBuilder();
             for (String line : lines) {
                 // regular expression that matches to a comment with trackid, userid, etc.
+                line = processLine(line);
                 Pattern pattern = Pattern.compile("(\\d*) (\\d*) (\\d{4}.\\d{2}.\\d{2}) (\\d{2}.\\d{2}.\\d{2}) (.{5}) (-?\\d*|\\w*) (.*)");
-                Matcher matcher = pattern.matcher(processLine(line));
+                Matcher matcher = pattern.matcher(line);
 
                 if (matcher.find()) {
                     executeQuery(stringBuilder.toString());
@@ -98,7 +141,7 @@ public class Database {
      * @param line Original line
      * @return Processed line
      */
-    public String processLine(final String line) {
+    private String processLine(final String line) {
         String result = line;
         // remove tabs from the string and replace them with a space
         result = result.replaceAll("\\t", " ");
@@ -113,12 +156,13 @@ public class Database {
      *
      * @param query The query string
      */
-    public void executeQuery(final String query) {
+    private void executeQuery(final String query) {
         if (!query.equals("")) {
             try {
                 statement.executeUpdate(query);
             } catch (SQLException e) {
-                e.printStackTrace();
+                //e.printStackTrace();
+                System.out.println(query);
             }
         }
     }
@@ -129,7 +173,7 @@ public class Database {
      * @param file The file object of the comment file
      * @return The track id
      */
-    public String extractTrackID(final File file) {
+    private String extractTrackID(final File file) {
         Pattern pattern = Pattern.compile("\\d+");
         Matcher matcher = pattern.matcher(file.toString());
         if (matcher.find()) {
@@ -147,7 +191,7 @@ public class Database {
      * @param trackid Track id of the comment
      * @return String that can be executed as MySQL command
      */
-    public String buildQuery(final Matcher matcher, final String trackid) {
+    private String buildQuery(final Matcher matcher, final String trackid) {
         return ("INSERT INTO comments_without_features VALUES ("
                 + trackid + ", "
                 + matcher.group(1) + ", "
@@ -165,7 +209,7 @@ public class Database {
      * @param timestamp The raw timestamp
      * @return The processed timestamp
      */
-    public String processTimestamp(final String timestamp) {
+    private String processTimestamp(final String timestamp) {
         if (timestamp.equals("None")) {
             return "-1";
         } else {
@@ -176,7 +220,7 @@ public class Database {
     /**
      * Loading the drivers to connect to a MySQL database.
      */
-    public void loadDrivers() {
+    private void loadDrivers() {
         try {
             System.out.println("Loading driver...");
             Class.forName("com.mysql.jdbc.Driver");
@@ -189,7 +233,7 @@ public class Database {
     /**
      * Make a connection with the database.
      */
-    public void makeConnection() {
+    private void makeConnection() {
         try {
             System.out.println("Connecting database...");
 
@@ -208,7 +252,7 @@ public class Database {
     /**
      * Close the connection with the database.
      */
-    public void closeConnection() {
+    private void closeConnection() {
         System.out.println("Closing the connection.");
         if (connection != null) {
             try {
