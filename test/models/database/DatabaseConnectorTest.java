@@ -1,5 +1,6 @@
 package models.database;
 
+import controllers.Application;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -10,6 +11,7 @@ import java.sql.SQLException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -20,8 +22,10 @@ public class DatabaseConnectorTest {
     private DatabaseConnector databaseConnector;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         databaseConnector = new DatabaseConnector();
+        databaseConnector.loadDrivers();
+        databaseConnector.makeConnection();
     }
 
     @Test
