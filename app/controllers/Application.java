@@ -2,6 +2,7 @@ package controllers;
 
 import models.database.CommentRetriever;
 import models.database.DatabaseConnector;
+import models.database.FeatureProcessor;
 import models.snippet.Comment;
 import models.snippet.CommentIntensitySeeker;
 import models.snippet.RandomSnippet;
@@ -18,6 +19,10 @@ public class Application extends Controller {
     private static RandomSnippet snpt;
 
     public static Result index() {
+        FeatureProcessor featureProcessor = new FeatureProcessor();
+        featureProcessor.parser();
+
+
         String url = "w.soundcloud.com/tracks/202852531";
         snpt = new RandomSnippet();
         return ok(index.render(url, snpt.getStart()));
