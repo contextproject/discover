@@ -24,10 +24,7 @@ public class DatabaseConnector {
     /**
      * Constructor.
      */
-    public DatabaseConnector() {
-        loadDrivers();
-        makeConnection();
-    }
+    public DatabaseConnector() { }
 
     /**
      * Executes the given query.
@@ -51,7 +48,7 @@ public class DatabaseConnector {
     public final ResultSet executeQuery(final String query) {
         ResultSet result = null;
         try {
-            result =  statement.executeQuery(query);
+            result = statement.executeQuery(query);
         } catch (SQLException e) {
             e.printStackTrace();
         }
