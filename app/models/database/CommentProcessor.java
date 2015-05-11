@@ -1,5 +1,7 @@
 package models.database;
 
+import controllers.Application;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -20,15 +22,14 @@ public class CommentProcessor {
     /**
      * Database connector.
      */
-    private DatabaseConnector databaseConnector = new DatabaseConnector();
+    private DatabaseConnector databaseConnector;
 
     /**
      * Constructor, processes the comments in the provided folder.
      */
     public CommentProcessor() {
+        databaseConnector = Application.getDatabaseConnector();
         createTable(new File("/Users/daan/Downloads/metadata/without_features/metadata/comments"));
-
-        databaseConnector.closeConnection();
     }
 
     /**

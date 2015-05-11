@@ -19,10 +19,12 @@ public class Global extends GlobalSettings {
         databaseConnector.loadDrivers();
         databaseConnector.makeConnection();
 
+        controllers.Application.setDatabaseConnector(databaseConnector);
+
         ScriptRunner runner = new ScriptRunner(databaseConnector.getConnection(), false, true);
         runner.setDelimiter(";", true);
         try {
-            runner.runScript(new BufferedReader(new FileReader("/resources/contextbase.sql")));
+            runner.runScript(new BufferedReader(new FileReader("resources/contextbase.sql")));
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -1,5 +1,6 @@
 package models.database;
 
+import controllers.Application;
 import models.snippet.Comment;
 
 import java.sql.ResultSet;
@@ -15,12 +16,14 @@ public class CommentRetriever {
     /**
      * Database connector.
      */
-    private DatabaseConnector databaseConnector = new DatabaseConnector();
+    private DatabaseConnector databaseConnector;
 
     /**
      * Constructor.
      */
-    public CommentRetriever() { }
+    public CommentRetriever() {
+        databaseConnector = Application.getDatabaseConnector();
+    }
 
     /**
      * Gets the comments of the song corresponding to the given track id.
