@@ -29,6 +29,9 @@ public class CommentProcessor {
      */
     public CommentProcessor() {
         databaseConnector = Application.getDatabaseConnector();
+
+        databaseConnector.executeUpdate("DROP TABLE IF EXISTS comments_without_features");
+
         createTable(new File("/Users/daan/Downloads/metadata/without_features/metadata/comments"));
     }
 
@@ -42,8 +45,7 @@ public class CommentProcessor {
             DatabaseMetaData dbm = databaseConnector.getConnection().getMetaData();
             ResultSet tables = dbm.getTables(null, null, "comments_without_features", null);
             if (!tables.next()) {
-                System.out.println("Table does not exist, will create one.");
-                databaseConnector.getStatement().execute("CREATE TABLE IF NOT EXISTS comments_without_features( "
+                databaseConnector.executeUpdate("CREATE TABLE IF NOT EXISTS comments_without_features( "
                         + " track_id INT NOT NULL,"
                         + " comment_id INT NOT NULL,"
                         + " user_id INT NOT NULL,"
@@ -91,7 +93,6 @@ public class CommentProcessor {
 
                 if (matcher.find()) {
                     databaseConnector.executeUpdate(stringBuilder.toString());
-                    //executeQuery(stringBuilder.toString());
                     stringBuilder.setLength(0);
                     stringBuilder.insert(0, buildQuery(matcher, extractTrackID(file)));
                 } else {
@@ -100,6 +101,7 @@ public class CommentProcessor {
                     stringBuilder.append(" ").append(line).append("\');");
                 }
             }
+            databaseConnector.executeUpdate(stringBuilder.toString());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -116,8 +118,11 @@ public class CommentProcessor {
         String result = line;
         // remove tabs from the string and replace them with a space
         result = result.replaceAll("\\t", " ");
-        // process line so MySQL can handle the comment, escape ', " or \
-        result = result.replaceAll("(?<!\\\\)(\\\\)(?![\\\\|\"|'])|(?<!\\\\)([\"|'])", "\\\\$0");
+        // escape odd number of backslashes
+        result = result.replaceAll("(?<!\\\\)(?:\\\\\\\\)*\\\\(?![\\\\|'|\"])", "\\\\$0");
+        // process line so MySQL can handle the comment, escape ' or "
+        result = result.replaceAll("(?<!\\\\)([\"|'])", "\\\\$0");
+
 
         return result;
     }
@@ -151,8 +156,16 @@ public class CommentProcessor {
                 + matcher.group(2) + ", "
                 + "\'" + matcher.group(3).replaceAll("/", "-")
                 + " " + matcher.group(4) + "\', "
-                + (matcher.group(6).equals("None") ? -1 : matcher.group(6)) + ", "
+                + timestamp(matcher) + ", "
                 + "\'" + matcher.group(7) + "\');"
         );
+    }
+
+    private String timestamp(final Matcher matcher) {
+        if(matcher.group(6).equals("None")) {
+            return "-1";
+        } else {
+            return matcher.group(6);
+        }
     }
 }

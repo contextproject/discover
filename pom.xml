@@ -68,9 +68,6 @@
                 <artifactId>play2-maven-plugin</artifactId>
                 <version>1.2.5</version>
                 <extensions>true</extensions>
-                <configuration>
-                    <play2Home>/Users/daan/dev/play-2.2.6</play2Home>
-                </configuration>
             </plugin>
 
             <plugin>

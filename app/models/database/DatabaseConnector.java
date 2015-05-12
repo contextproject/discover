@@ -33,7 +33,9 @@ public class DatabaseConnector {
      */
     public final void executeUpdate(final String query) {
         try {
-            statement.executeUpdate(query);
+            if (!query.equals("")) {
+                statement.executeUpdate(query);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -78,7 +80,7 @@ public class DatabaseConnector {
             connection = DriverManager.getConnection(url, username, password);
             statement = connection.createStatement();
         } catch (SQLException e) {
-            throw new RuntimeException("Cannot connect the database!", e);
+            throw new RuntimeException("Cannot connect to the database!", e);
         }
     }
 
