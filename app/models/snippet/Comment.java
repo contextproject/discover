@@ -31,6 +31,10 @@ public class Comment {
     public int getUser() {
       return userid;
     }
+    
+    public int getTimestamp() {
+        return timestamp;
+    }
 
     /**
      * Changes the period in which the timestamp should be computed.

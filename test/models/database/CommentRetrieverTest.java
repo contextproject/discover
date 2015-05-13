@@ -32,7 +32,7 @@ public class CommentRetrieverTest {
         while (it.hasNext()) {
             Comment comment = it.next();
             assertEquals(1, comment.getUser());
-            assertEquals(0, comment.getTime());
+            assertEquals(1, comment.getTimestamp());
         }
 
         databaseConnector.executeQuery("DELETE FROM comments_without_features WHERE track_id = 1 AND comment_id = 1 AND user_id = 1 AND created_at = '2015-01-01 12:00:00' AND timestamp = 1 AND text = 'test'");
