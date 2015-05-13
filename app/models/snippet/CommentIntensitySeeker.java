@@ -44,7 +44,6 @@ public class CommentIntensitySeeker {
 
   /**
    * Seeks the Snippet to be used of a given song with a unknown duration.
-   *
    * @param coms
    *          The set of comments to use
    * @return A TimedSnippet object
@@ -55,7 +54,6 @@ public class CommentIntensitySeeker {
 
   /**
    * Seeks the snippet to be used of a given song with the duration known.
-   *
    * @param coms
    *          The set of comments to use
    * @param duration

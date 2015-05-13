@@ -2,7 +2,6 @@ package models.snippet;
 
 /**
  * Snipped that has a duration and ends when the given time is finished.
- *
  * @author stefanboodt
  * @version 29-04-2015
  * @since 29-04-2015
@@ -26,7 +25,6 @@ public class TimedSnippet {
 
   /**
    * Creates a timed snippet that starts at the given time.
-   *
    * @param starttime
    *          The starttime of the snippet in ms.
    */
@@ -36,7 +34,6 @@ public class TimedSnippet {
 
   /**
    * Creates a timed snippet that starts at the given time.
-   *
    * @param starttime
    *          The starttime of the snippet in ms. A negative starttime results in starttime is 0.
    * @param duration
@@ -57,7 +54,6 @@ public class TimedSnippet {
 
   /**
    * Gets the starttime of the snippet.
-   *
    * @return The starttime of the snippet in ms.
    */
   public int getStartTime() {
@@ -66,7 +62,6 @@ public class TimedSnippet {
 
   /**
    * Gets the duration of this snippet in ms.
-   *
    * @return The snippet duration in ms.
    */
   public int getDuration() {
@@ -75,7 +70,6 @@ public class TimedSnippet {
 
   /**
    * Returns the end time of the snippet.
-   *
    * @return The endtime of the snippet in ms.
    */
   public int getEndTime() {
@@ -84,7 +78,6 @@ public class TimedSnippet {
 
   /**
    * Returns the default duration.
-   *
    * @return The default duration of the
    */
   public static int getDefaultDuration() {
@@ -93,7 +86,6 @@ public class TimedSnippet {
 
   /**
    * Sets the default duration of the snippet. If duration is less than 0 this method does nothing.
-   *
    * @param duration
    *          The new default duration.
    */
@@ -105,7 +97,6 @@ public class TimedSnippet {
 
   /**
    * Creates a new TimedSnippet with the given starttime and duration.
-   *
    * @param starttime
    *          The starttime in ms.
    * @param durationInSeconds
@@ -130,7 +121,6 @@ public class TimedSnippet {
 
   /**
    * Copies the snippet.
-   *
    * @return A snippet with another address but with the same values. Equivalent to calling the
    *         constructor with the same values.
    */
