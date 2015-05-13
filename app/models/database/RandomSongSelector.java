@@ -35,9 +35,10 @@ public class RandomSongSelector {
 	 */
 	public int getRandomSong() {
 		final String trackid = "track_id";
-		final String subquery = "(SELECT DISTINCT track_id FROM comments_without_features)";
-		final String query = "SELECT " + trackid + " FROM " + subquery
-				+ " ORDER BY RAND() LIMIT 1";
+		final String query = "SELECT DISTINCT " + trackid
+				+ " FROM without_features_comments "
+				+ " ORDER BY RAND() " 
+				+ " LIMIT 1";
 		ResultSet result = null;
 		try {
 			return result.getInt(trackid);
