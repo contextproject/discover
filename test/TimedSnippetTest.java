@@ -1,6 +1,7 @@
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
-import static org.junit.Assert.*;
 import models.snippet.TimedSnippet;
 
 import org.junit.After;
@@ -91,7 +92,7 @@ public class TimedSnippetTest {
   }
 
   /**
-   * Tests if the {@link TimedSnippet#getDefaultDuration()} method
+   * Tests if the {@link TimedSnippet#getDefaultDuration()} method.
    */
   @Test
   public void testGetDefaultDuration() {
@@ -101,7 +102,7 @@ public class TimedSnippetTest {
 
   /**
    * Tests if the {@link TimedSnippet#getDefaultDuration()} and
-   * {@link TimedSnippet#setDefaultDuration(int)} method
+   * {@link TimedSnippet#setDefaultDuration(int)} method.
    */
   @Test
   public void testGetAndSetDefaultDuration() {
@@ -114,7 +115,7 @@ public class TimedSnippetTest {
 
   /**
    * Tests if the {@link TimedSnippet#getDefaultDuration()} and
-   * {@link TimedSnippet#setDefaultDuration(int)} method
+   * {@link TimedSnippet#setDefaultDuration(int)} method.
    */
   @Test
   public void testGetAndSetDefaultDurationNegativeNumber() {
@@ -137,7 +138,7 @@ public class TimedSnippetTest {
   }
 
   /**
-   * Tests the {@link TimedSnippet#getStartTime()}
+   * Tests the {@link TimedSnippet#getStartTime()}.
    */
   @Test
   public void testGetStarttime() {
@@ -157,7 +158,7 @@ public class TimedSnippetTest {
   }
 
   /**
-   * Tests the {@link TimedSnippet#getStartTime()}
+   * Tests the {@link TimedSnippet#getStartTime()}.
    */
   @Test
   public void testGetStarttimeNegative() {
@@ -168,7 +169,7 @@ public class TimedSnippetTest {
   }
 
   /**
-   * Tests the {@link TimedSnippet#getDuration()}
+   * Tests the {@link TimedSnippet#getDuration()}.
    */
   @Test
   public void testGetDurationZero() {
@@ -180,7 +181,7 @@ public class TimedSnippetTest {
   }
 
   /**
-   * Tests the {@link TimedSnippet#getDuration()}
+   * Tests the {@link TimedSnippet#getDuration()}.
    */
   @Test
   public void testGetDurationNegative() {

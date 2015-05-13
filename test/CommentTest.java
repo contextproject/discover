@@ -1,8 +1,7 @@
-
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+
 import models.snippet.Comment;
 
 import org.junit.After;
@@ -109,11 +108,11 @@ public class CommentTest {
    */
   @Test
   public void testEquals4() {
-    try{
-    Object x1 = new Object();
-    assertFalse(c1.equals(x1));
-    }catch(Exception e){
-        
+    try {
+      Object x1 = new Object();
+      assertFalse(c1.equals(x1));
+    } catch (Exception e) {
+      e.printStackTrace();
     }
   }
 
