@@ -1,6 +1,7 @@
 package models.snippet;
 
 
+
 public class Comment {
     private static int period = 5000;
     private int userid;
@@ -9,39 +10,57 @@ public class Comment {
     /**
      * Creates a new comment object. Contains simple get methods to get the userid or timestamp and a
      * set method to change the period which will change the timestamp
-     *
-     * @param userId id of the user
-     * @param time   time of the given comment, will be saved as thousand
+     * 
+     * @param userId
+     *          id of the user
+     * @param time
+     *          time of the given comment, will be saved as thousand
      */
     public Comment(int userId, int time) {
 
-        userid = userId;
-        timestamp = time;
+      userid = userId;
+      timestamp = time;
 
     }
 
     public int getTime() {
 
-        return (int) (Math.floor(timestamp / period) * period);
+      return (int) (Math.floor(timestamp / period) * period);
     }
 
-    public int getTimestamp() { return timestamp; }
-
     public int getUser() {
-        return userid;
+      return userid;
+    }
+    
+    public int getTimestamp() {
+        return timestamp;
     }
 
     /**
      * Changes the period in which the timestamp should be computed.
-     *
-     * @param per new period time
+     * 
+     * @param period
+     *          new period time
      */
     public static void setPeriod(int per) {
-        period = per;
+      period = per;
     }
 
     public static int getPeriod() {
-        return period;
+      return period;
     }
-}
+
+    public boolean equals(Object other) {
+      return this.equals((Comment) other);
+
+    }
+
+    public boolean equals(Comment com) {
+      return this.getUser() == com.getUser() && this.getTime() == com.getTime();
+    }
+
+    public int hashCode() {
+      return userid + timestamp;
+    }
+  }
 
