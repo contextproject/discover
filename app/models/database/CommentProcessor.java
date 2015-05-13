@@ -7,15 +7,13 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.sql.DatabaseMetaData;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Class to process the .comment files.
+ * Class to process the .comment files. Cleans up old table and builds a
+ * new one based on the .comment files in the provided path.
  */
 public class CommentProcessor {
 
@@ -25,41 +23,19 @@ public class CommentProcessor {
     private DatabaseConnector databaseConnector;
 
     /**
-     * Constructor, processes the comments in the provided folder.
+     * Table name.
      */
-    public CommentProcessor() {
-        databaseConnector = Application.getDatabaseConnector();
-
-        databaseConnector.executeUpdate("DROP TABLE IF EXISTS comments_without_features");
-
-        createTable(new File("/Users/daan/Downloads/metadata/without_features/metadata/comments"));
-    }
+    private String table;
 
     /**
-     * Creates new MySQL table for the comments without features only if it did not exists.
-     *
-     * @param folder The folder where the comments are located
+     * Constructor, processes the comments in the provided folder.
      */
-    private void createTable(final File folder) {
-        try {
-            DatabaseMetaData dbm = databaseConnector.getConnection().getMetaData();
-            ResultSet tables = dbm.getTables(null, null, "comments_without_features", null);
-            if (!tables.next()) {
-                databaseConnector.executeUpdate("CREATE TABLE IF NOT EXISTS comments_without_features( "
-                        + " track_id INT NOT NULL,"
-                        + " comment_id INT NOT NULL,"
-                        + " user_id INT NOT NULL,"
-                        + " created_at DATETIME,"
-                        + " timestamp INT,"
-                        + " text LONGTEXT NOT NULL"
-                        + ");");
-                readFolder(folder);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
+    public CommentProcessor(final String path, final String table) {
+        databaseConnector = Application.getDatabaseConnector();
+        this.table = table;
 
+        readFolder(new File(path));
+    }
 
     /**
      * Read all the comments in this folder.
@@ -107,7 +83,6 @@ public class CommentProcessor {
         }
     }
 
-
     /**
      * Process a line so it can be read easier.
      *
@@ -150,7 +125,7 @@ public class CommentProcessor {
      * @return String that can be executed as MySQL command
      */
     private String buildQuery(final Matcher matcher, final String trackid) {
-        return ("INSERT INTO comments_without_features VALUES ("
+        return ("INSERT INTO " + table + " VALUES ("
                 + trackid + ", "
                 + matcher.group(1) + ", "
                 + matcher.group(2) + ", "
@@ -162,7 +137,7 @@ public class CommentProcessor {
     }
 
     private String timestamp(final Matcher matcher) {
-        if(matcher.group(6).equals("None")) {
+        if (matcher.group(6).equals("None")) {
             return "-1";
         } else {
             return matcher.group(6);

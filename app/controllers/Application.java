@@ -3,7 +3,6 @@ package controllers;
 import models.database.CommentProcessor;
 import models.database.CommentRetriever;
 import models.database.DatabaseConnector;
-import models.database.FeatureProcessor;
 import models.snippet.Comment;
 import models.snippet.CommentIntensitySeeker;
 import models.snippet.RandomSnippet;
