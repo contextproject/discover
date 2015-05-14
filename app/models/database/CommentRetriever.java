@@ -33,7 +33,7 @@ public class CommentRetriever {
      * @throws SQLException In case of a SQL exception
      */
     public final Set<Comment> getComments(final int trackid) {
-        ResultSet comments = databaseConnector.executeQuery("SELECT user_id, timestamp, text FROM comments_without_features WHERE track_id = " + trackid);
+        ResultSet comments = databaseConnector.executeQuery("SELECT user_id, timestamp, text FROM comments WHERE track_id = " + trackid);
         HashSet<Comment> result = new HashSet<>();
 
         try {
