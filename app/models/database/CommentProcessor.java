@@ -29,6 +29,9 @@ public class CommentProcessor {
 
     /**
      * Constructor, processes the comments in the provided folder.
+     *
+     * @param path The path to the folder with the .comment files
+     * @param table The name of the table in the database
      */
     public CommentProcessor(final String path, final String table) {
         databaseConnector = Application.getDatabaseConnector();
@@ -136,6 +139,12 @@ public class CommentProcessor {
         );
     }
 
+    /**
+     * Processes the timestamp in a .comment file.
+     *
+     * @param matcher The matcher object of the current line
+     * @return The timestamp
+     */
     private String timestamp(final Matcher matcher) {
         if (matcher.group(6).equals("None")) {
             return "-1";
