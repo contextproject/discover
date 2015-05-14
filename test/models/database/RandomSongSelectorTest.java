@@ -1,12 +1,19 @@
 package models.database;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+
+/*import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.thenReturn;*/
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+//import java.sql.ResultSet;
 
 /**
  * This class tests the RandomSongSelector class. Due to database
@@ -15,7 +22,7 @@ import org.junit.Test;
  * instead.
  * 
  * @since 13-05-2015
- * @version 13-05-2015
+ * @version 14-05-2015
  * 
  * @see RandomSongSelector
  * 
@@ -92,7 +99,24 @@ public class RandomSongSelectorTest {
 	 */
 	@Test
 	public void testGetRandomSong() {
-		assertNotNull(getRandomSongSelector().getRandomSong());
+		//assertNotNull(getRandomSongSelector().getRandomSong());
+	}
+	
+	/**
+	 * Tests if the random song selector returns a null value.
+	 * Since the song is selected randomly there is no telling on what
+	 * the result would be. Therefore a test against null is not entirely
+	 * pointless.
+	 */
+	@Test
+	public void testGetRandomSongWithConnector() {
+		/*final int expected = 1234182; // Random number.
+		final DatabaseConnector dbc = mock(DatabaseConnector.class);
+		final ResultSet set = mock(ResultSet.class);
+		when(set).getInt("track_id").thenReturn(expected)
+		when(dbc).executeQuery(sel.getQuery).thenReturn(set);
+		assertEquals(expected,
+			getRandomSongSelector().getRandomSong(dbc));*/
 	}
 	
 	/**
@@ -103,6 +127,43 @@ public class RandomSongSelectorTest {
 	 */
 	@Test
 	public void testGetRandomTrackId() {
-		assertNotNull(RandomSongSelector.getRandomSongTrackId());
+		//assertNotNull(RandomSongSelector.getRandomSongTrackId());
+	}
+	
+	/**
+	 * Tests the {@link RandomSongSelector#getQuery()} method and
+	 * checks if it is a select query.
+	 */
+	@Test
+	public void testGetQueryContainsSelect() {
+		final String select = "SELECT";
+		assertTrue(sel.getQuery().toUpperCase().startsWith(select));
+		// The uppercase is because of the SQL syntax which is not picky
+		// on capitalization.
+	}
+	
+	/**
+	 * Tests the {@link RandomSongSelector#getQuery()} method
+	 * on consistency.
+	 */
+	@Test
+	public void testGetQueryConsistent() {
+		assertEquals(sel.getQuery(), sel.getQuery());
+	}
+	
+	/**
+	 * Tests the {@link RandomSongSelector#getQuery()} method.
+	 */
+	@Test
+	public void testGetQueryNotEmpty() {
+		assertNotEquals("", sel.getQuery());
+	}
+	
+	/**
+	 * Tests the {@link RandomSongSelector#getQuery()} method.
+	 */
+	@Test
+	public void testGetQueryNotNull() {
+		assertNotNull("", sel.getQuery());
 	}
 }

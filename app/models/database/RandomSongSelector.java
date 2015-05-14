@@ -8,11 +8,11 @@ import java.sql.SQLException;
  * this class uses the singleton pattern.
  * 
  * @since 13-05-2015
- * @version 13-05-2015
+ * @version 14-05-2015
  * 
  * @see DatabaseConnector
  * 
- * @author stefanboodt
+ * @author stefan boodt
  *
  */
 public class RandomSongSelector {
@@ -21,6 +21,19 @@ public class RandomSongSelector {
 	 * The Singleton selector that is used by this class.
 	 */
 	private static RandomSongSelector selector;
+	
+	/**
+	 * The name of the track_id field in the database.
+	 */
+	private final String trackid = "track_id";
+	
+	/**
+	 * The query to be executed.
+	 */
+	private final String query = "SELECT DISTINCT " + trackid
+			+ " FROM without_features_comments "
+			+ " ORDER BY RAND() " 
+			+ " LIMIT 1";
 
 	/**
 	 * Private constructor that construct new random song selectors.
@@ -34,12 +47,16 @@ public class RandomSongSelector {
 	 * @return The track_id of a random song.
 	 */
 	public int getRandomSong() {
-		final String trackid = "track_id";
-		final String query = "SELECT DISTINCT " + trackid
-				+ " FROM without_features_comments "
-				+ " ORDER BY RAND() " 
-				+ " LIMIT 1";
-		ResultSet result = null;
+		return getRandomSong(new DatabaseConnector());
+	}
+
+	/**
+	 * Method that returns the track_id of a random song in the database.
+	 * @param dbc The databaseconnector.
+	 * @return The track_id of a random song.
+	 */
+	public int getRandomSong(final DatabaseConnector dbc) {
+		final ResultSet result = dbc.executeQuery(getQuery());
 		try {
 			return result.getInt(trackid);
 		} catch (SQLException e) {
@@ -73,4 +90,12 @@ public class RandomSongSelector {
 		return getRandomSongSelector().getRandomSong();
 	}
 
+	/**
+	 * Returns the query that is being executed to get the unique
+	 * random song.
+	 * @return The query to execute.
+	 */
+	protected String getQuery() {
+		return query;
+	}
 }
