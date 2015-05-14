@@ -1,7 +1,7 @@
 package controllers;
 
-import models.database.CommentProcessor;
 import models.database.CommentRetriever;
+import models.database.DatabaseConnector;
 import models.snippet.Comment;
 import models.snippet.CommentIntensitySeeker;
 import models.snippet.RandomSnippet;
@@ -13,10 +13,11 @@ import java.util.Set;
 
 public class Application extends Controller {
 
+    private static DatabaseConnector databaseConnector;
+
     private static RandomSnippet snpt;
 
     public static Result index() {
-        new CommentProcessor();
         String url = "w.soundcloud.com/tracks/202852531";
         snpt = new RandomSnippet();
         return ok(index.render(url, snpt.getStart()));
@@ -31,5 +32,13 @@ public class Application extends Controller {
         System.out.println("starttime = " + starttime);
 
         return ok(index.render(url2, (double) starttime));
+    }
+
+    public static void setDatabaseConnector(DatabaseConnector dbc) {
+        databaseConnector = dbc;
+    }
+
+    public static DatabaseConnector getDatabaseConnector() {
+        return databaseConnector;
     }
 }

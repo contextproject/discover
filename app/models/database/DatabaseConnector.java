@@ -1,5 +1,7 @@
 package models.database;
 
+import play.Logger;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -24,10 +26,7 @@ public class DatabaseConnector {
     /**
      * Constructor.
      */
-    public DatabaseConnector() {
-        loadDrivers();
-        makeConnection();
-    }
+    public DatabaseConnector() { }
 
     /**
      * Executes the given query.
@@ -36,7 +35,9 @@ public class DatabaseConnector {
      */
     public final void executeUpdate(final String query) {
         try {
-            statement.executeUpdate(query);
+            if (!query.equals("")) {
+                statement.executeUpdate(query);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -51,7 +52,7 @@ public class DatabaseConnector {
     public final ResultSet executeQuery(final String query) {
         ResultSet result = null;
         try {
-            result =  statement.executeQuery(query);
+            result = statement.executeQuery(query);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -71,17 +72,18 @@ public class DatabaseConnector {
 
     /**
      * Make a connection with the database.
+     *
+     * @param url The url of the MySQL database
+     * @param username The username to connect with
+     * @param password The password of the username
      */
-    public final void makeConnection() {
+    public final void makeConnection(final String url, final String username, final String password) {
         try {
-            String url = "jdbc:mysql://localhost:3306/contextbase";
-            String username = "context";
-            String password = "password";
-
             connection = DriverManager.getConnection(url, username, password);
             statement = connection.createStatement();
+            Logger.info("Database connected established");
         } catch (SQLException e) {
-            throw new RuntimeException("Cannot connect the database!", e);
+            throw new RuntimeException("Cannot connect to the database!", e);
         }
     }
 
