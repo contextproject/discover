@@ -6,17 +6,17 @@ package models.snippet;
  * the timestamp.
  */
 public class Comment {
-  
+
   /**
    * A standard number for computing the rounded time of a timestamp.
    */
   private static int period = 5000;
-  
+
   /**
    * The userid of a comment.
    */
   private int userid;
-  
+
   /**
    * The actual timestamp.
    */
@@ -24,6 +24,7 @@ public class Comment {
 
   /**
    * Creates a new comment object.
+   * 
    * @param userId
    *          id of the user
    * @param time
@@ -32,11 +33,11 @@ public class Comment {
   public Comment(int userId, int time) {
     userid = userId;
     timestamp = time;
-
   }
 
   /**
    * Gives the rounded time of a comment.
+   * 
    * @return the rounded time
    */
   public int getTime() {
@@ -45,6 +46,7 @@ public class Comment {
 
   /**
    * Give the user id of a comment.
+   * 
    * @return user id
    */
   public int getUser() {
@@ -89,6 +91,7 @@ public class Comment {
 
   /**
    * Second equals method to actually test the similarity between two comments.
+   * 
    * @param com
    *          the comment to compare with
    * @return true or false
