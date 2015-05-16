@@ -95,6 +95,7 @@ public class DatabaseConnector {
             try {
                 connection.close();
             } catch (SQLException ignore) {
+                ignore.printStackTrace();
             }
         }
     }

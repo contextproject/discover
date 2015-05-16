@@ -227,7 +227,6 @@ under the License.
     <profiles>
         <profile>
             <id>eclipse</id> <!-- for M2Eclipse only -->
-
             <build>
                 <plugins>
                     <plugin>
