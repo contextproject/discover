@@ -1,5 +1,10 @@
-Discover, the product of the Context Project of Multimedia Services group 5.
+# Discover
+The product of the Context Project of Multimedia Services group 5.
 
+### Status
+[![Build Status](https://travis-ci.org/contextproject/discover.svg?branch=master)](https://travis-ci.org/contextproject/discover)
+
+### Installation details
 For usage of the play framework in combination with maven look here:
 http://nanoko-project.github.io/maven-play2-plugin/maven/release/quickstart.html
 
