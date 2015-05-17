@@ -5,7 +5,6 @@ import controllers.Application;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -47,6 +46,7 @@ public class CommentProcessor {
      * Read all the comments in this folder.
      *
      * @param folder The folder the comments are located in
+     * @throws IOException IOException
      */
     private void readFolder(final File folder) throws IOException {
         File[] files = folder.listFiles();
@@ -65,6 +65,7 @@ public class CommentProcessor {
      * Read a comment file and insert it into the database.
      *
      * @param file The file object to the comment file
+     * @throws IOException IOException
      */
     private void readFile(final File file) throws IOException {
         StringBuilder stringBuilder = new StringBuilder();
