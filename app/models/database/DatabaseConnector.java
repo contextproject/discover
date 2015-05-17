@@ -110,6 +110,15 @@ public class DatabaseConnector {
     }
 
     /**
+     * Setter of the statement object.
+     *
+     * @param statement The statement object to set the statement of the database connection
+     */
+    public final void setStatement(final Statement statement) {
+        this.statement = statement;
+    }
+
+    /**
      * Getter of the connection object.
      *
      * @return The connection object to the database
