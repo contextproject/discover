@@ -4,12 +4,14 @@ import models.snippet.TimedSnippet;
 import org.junit.Before;
 import org.junit.Test;
 
-
 import java.util.HashSet;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
-
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class CommentIntensitySeekerTest {
 
@@ -46,7 +48,7 @@ public class CommentIntensitySeekerTest {
     @Test
     public void testSeekZero() {
         Set<Comment> set = new HashSet<Comment>();
-        TimedSnippet ts = cis.seek(set);
+        TimedSnippet ts = CommentIntensitySeeker.seek(set);
         assertEquals(0, ts.getStartTime());
         assertEquals(30000, ts.getDuration());
     }
@@ -61,44 +63,38 @@ public class CommentIntensitySeekerTest {
         set.add(c4);
         set.add(c5);
         set.add(c6);
-        TimedSnippet ts = cis.seek(set);
+        TimedSnippet ts = CommentIntensitySeeker.seek(set);
         assertEquals(15000, ts.getStartTime());
         assertEquals(30000, ts.getDuration());
     }
 
-    //test fails
+    /**
+     * Test the seek function with a set of comments with the timestamp centered at a other point.
+     */
+    @Test
+    public void testSeek2() {
+        Set<Comment> set = new HashSet<Comment>();
+        set.add(c3);
+        set.add(c7);
+        set.add(c8);
+        set.add(c9);
+        TimedSnippet ts = CommentIntensitySeeker.seek(set);
+        assertEquals(40000, ts.getStartTime());
+        assertEquals(30000, ts.getDuration());
+    }
 
-//    /**
-//     * Test the seek function with a set of comments with the timestamp centered at a other point.
-//     */
-//    @Test
-//    public void testSeek2() {
-//        Set<Comment> set = new HashSet<Comment>();
-//        set.add(c3);
-//
-//        set.add(c7);
-//        set.add(c8);
-//        set.add(c9);
-//        TimedSnippet ts = cis.seek(set);
-//        assertEquals(40000, ts.getStartTime());
-//        assertEquals(30000, ts.getDuration());
-//    }
-
-    //test fails
-
-//    /**
-//     * Test the seek function with only 2 comments.
-//     */
-//    @Test
-//    public void testSeek3() {
-//        Set<Comment> set = new HashSet<Comment>();
-//        set.add(c1);
-//
-//        set.add(c9);
-//        TimedSnippet ts = cis.seek(set);
-//        assertEquals(5000, ts.getStartTime());
-//        assertEquals(30000, ts.getDuration());
-//    }
+    /**
+     * Test the seek function with only 2 comments.
+     */
+    @Test
+    public void testSeek3() {
+        Set<Comment> set = new HashSet<Comment>();
+        set.add(c1);
+        set.add(c9);
+        TimedSnippet ts = CommentIntensitySeeker.seek(set);
+        assertEquals(5000, ts.getStartTime());
+        assertEquals(30000, ts.getDuration());
+    }
 
     /**
      * Test the seek function with a duration.
@@ -115,20 +111,19 @@ public class CommentIntensitySeekerTest {
         assertEquals(45000, ts.getDuration());
     }
 
-//  /**
-//   * Testing if the functions of the Comment class are used.
-//   */
-//  @Test
-//  public void testDependency() {
-//    Set<Comment> set = new HashSet<Comment>();
-//
-//    Comment com = mock(Comment.class);
-//    set.add(com);
-//    TimedSnippet ts = cis.seek(set);
-//    assertEquals(0, ts.getStartTime());
-//    assertEquals(30000, ts.getDuration());
-//    verify(com, times(7)).getTime();
-//    verify(com).hashCode();
-//  }
-
+    /**
+     * Testing if the functions of the Comment class are used.
+     */
+    @Test
+    public void testDependency() {
+        Set<Comment> set = new HashSet<Comment>();
+        Comment com = mock(Comment.class);
+        when(com.getTime()).thenReturn(0);
+        set.add(com);
+        TimedSnippet ts = CommentIntensitySeeker.seek(set);
+        assertEquals(0, ts.getStartTime());
+        assertEquals(30000, ts.getDuration());
+        verify(com, times(7)).getTime();
+        verify(com).hashCode();
+    }
 }

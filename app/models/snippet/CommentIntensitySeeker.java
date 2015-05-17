@@ -4,7 +4,8 @@ import java.util.Set;
 import java.util.TreeSet;
 
 /**
- * This class returns the start time for a snippet, based on the comment intensity of that song.
+ * This class returns the start time for a snippet,
+ * based on the comment intensity of that song.
  */
 public class CommentIntensitySeeker {
 
@@ -15,7 +16,7 @@ public class CommentIntensitySeeker {
      * @param duration The duration of that given song
      * @return a start time
      */
-    protected static int getStartTime(Set<Comment> coms, int duration) {
+    protected static int getStartTime(final Set<Comment> coms, final int duration) {
         if (coms.isEmpty()) {
             return 0;
         }
@@ -40,15 +41,13 @@ public class CommentIntensitySeeker {
         return start;
     }
 
-
-
     /**
      * Seeks the Snippet to be used of a given song with a unknown duration.
      *
      * @param coms The set of comments to use
      * @return A TimedSnippet object
      */
-    public static TimedSnippet seek(Set<Comment> coms) {
+    public static TimedSnippet seek(final Set<Comment> coms) {
         return new TimedSnippet(getStartTime(coms, TimedSnippet.getDefaultDuration()));
     }
 
@@ -59,8 +58,7 @@ public class CommentIntensitySeeker {
      * @param duration The duration of the song
      * @return A TimedSnippet object
      */
-    public TimedSnippet seekDuration(Set<Comment> coms, int duration) {
+    public TimedSnippet seekDuration(final Set<Comment> coms, final int duration) {
         return new TimedSnippet(getStartTime(coms, duration), duration);
     }
-
 }
