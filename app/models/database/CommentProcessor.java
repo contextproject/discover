@@ -6,15 +6,14 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Stream;
 
 /**
  * Class to process the .comment files. Cleans up old table and builds a
  * new one based on the .comment files in the provided path.
  */
-@SuppressWarnings("unused")
 public class CommentProcessor {
 
     /**
@@ -37,7 +36,11 @@ public class CommentProcessor {
     public CommentProcessor(final String path, final String table) {
         databaseConnector = Application.getDatabaseConnector();
         this.table = table;
-        readFolder(new File(path));
+        try {
+            readFolder(new File(path));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -45,50 +48,47 @@ public class CommentProcessor {
      *
      * @param folder The folder the comments are located in
      */
-    private void readFolder(final File folder) {
-        try {
-            Files.walk(folder.toPath()).forEach(filePath -> {
-                Matcher matcher = Pattern.compile("\\Q.DS_Store\\E").matcher(filePath.toString());
-                if (!matcher.find() && Files.isRegularFile(filePath)) {
-                    readFile(filePath);
+    private void readFolder(final File folder) throws IOException {
+        File[] files = folder.listFiles();
+        assert files != null;
+        for (File file : files) {
+            if (file.isFile()) {
+                Matcher matcher = Pattern.compile("\\Q.DS_Store\\E").matcher(file.toString());
+                if (!matcher.find()) {
+                    readFile(file);
                 }
-            });
-        } catch (IOException e) {
-            e.printStackTrace();
+            }
         }
     }
 
     /**
      * Read a comment file and insert it into the database.
      *
-     * @param path The path to the comment file
+     * @param file The file object to the comment file
      */
-    private void readFile(final Path path) {
+    private void readFile(final File file) throws IOException {
         StringBuilder stringBuilder = new StringBuilder();
-        try {
-            Stream<String> lines = Files.lines(path);
-            lines.forEach(line -> {
-                // regular expression that matches to a comment with trackid, userid, etc.
-                line = processLine(line);
-                Pattern pattern = Pattern.compile("(\\d*) (\\d*) (\\d{4}.\\d{2}.\\d{2}) (\\d{2}.\\d{2}.\\d{2}) (.{5}) (-?\\d*|\\w*) (.*)");
-                Matcher matcher = pattern.matcher(line);
+        List<String> lines = Files.readAllLines(file.toPath());
+        for (String line : lines) {
+            // regular expression that matches to a comment with trackid, userid, etc.
+            line = processLine(line);
+            Pattern pattern = Pattern.compile("(\\d*) (\\d*) (\\d{4}.\\d{2}.\\d{2}) (\\d{2}.\\d{2}.\\d{2}) (.{5}) (-?\\d*|\\w*) (.*)");
+            Matcher matcher = pattern.matcher(line);
 
-                if (matcher.find()) {
-                    databaseConnector.executeUpdate(stringBuilder.toString());
-                    stringBuilder.setLength(0);
-                    stringBuilder.insert(0, buildQuery(matcher, extractTrackID(path)));
-                } else {
-                    //part of a comment is on a new line, add this part to the previous comment
-                    stringBuilder.setLength(stringBuilder.length() - 3);
-                    stringBuilder.append(" ").append(line).append("\');");
-                }
+            if (matcher.find()) {
                 databaseConnector.executeUpdate(stringBuilder.toString());
-            });
-            lines.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+                stringBuilder.setLength(0);
+                stringBuilder.insert(0, buildQuery(matcher, extractTrackID(file)));
+            } else {
+                //part of a comment is on a new line, add this part to the previous comment
+                stringBuilder.setLength(stringBuilder.length() - 3);
+                stringBuilder.append(" ").append(line).append("\');");
+            }
+            databaseConnector.executeUpdate(stringBuilder.toString());
         }
+
     }
+
 
     /**
      * Process a line so it can be read easier.
@@ -111,12 +111,12 @@ public class CommentProcessor {
     /**
      * Extracts the track id from the file name.
      *
-     * @param path The path object of the comment file
+     * @param file The file object of the comment file
      * @return The track id
      */
-    private String extractTrackID(final Path path) {
+    private String extractTrackID(final File file) {
         Pattern pattern = Pattern.compile("\\d+");
-        Matcher matcher = pattern.matcher(path.toString());
+        Matcher matcher = pattern.matcher(file.toString());
         if (matcher.find()) {
             return matcher.group(0);
         }
