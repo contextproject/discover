@@ -4,6 +4,7 @@ import controllers.Application;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -69,7 +70,7 @@ public class CommentProcessor {
      */
     private void readFile(final File file) throws IOException {
         StringBuilder stringBuilder = new StringBuilder();
-        List<String> lines = Files.readAllLines(file.toPath());
+        List<String> lines = Files.readAllLines(file.toPath(), Charset.defaultCharset());
         for (String line : lines) {
             // regular expression that matches to a comment with trackid, userid, etc.
             line = processLine(line);
