@@ -6,7 +6,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -30,27 +29,35 @@ public class CommentProcessor {
     /**
      * Constructor, processes the comments in the provided folder.
      *
-     * @param path The path to the folder with the .comment files
+     * @param path  The path to the folder with the .comment files
      * @param table The name of the table in the database
      */
+
     public CommentProcessor(final String path, final String table) {
         databaseConnector = Application.getDatabaseConnector();
         this.table = table;
-
-        readFolder(new File(path));
+        try {
+            readFolder(new File(path));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
      * Read all the comments in this folder.
      *
      * @param folder The folder the comments are located in
+     * @throws IOException IOException
      */
-    private void readFolder(final File folder) {
-        for (final File file : folder.listFiles()) {
-            // ignore .DS_Store file
-            Matcher matcher = Pattern.compile("\\Q.DS_Store\\E").matcher(file.toString());
-            if (!matcher.find()) {
-                readFile(file);
+    private void readFolder(final File folder) throws IOException {
+        File[] files = folder.listFiles();
+        assert files != null;
+        for (File file : files) {
+            if (file.isFile()) {
+                Matcher matcher = Pattern.compile("\\Q.DS_Store\\E").matcher(file.toString());
+                if (!matcher.find()) {
+                    readFile(file);
+                }
             }
         }
     }
@@ -58,33 +65,32 @@ public class CommentProcessor {
     /**
      * Read a comment file and insert it into the database.
      *
-     * @param file The comment file
+     * @param file The file object to the comment file
+     * @throws IOException IOException
      */
-    private void readFile(final File file) {
+    private void readFile(final File file) throws IOException {
         StringBuilder stringBuilder = new StringBuilder();
-        try {
-            List<String> lines = Files.readAllLines(Paths.get(file.toString()), Charset.defaultCharset());
-            for (String line : lines) {
-                // regular expression that matches to a comment with trackid, userid, etc.
-                line = processLine(line);
-                Pattern pattern = Pattern.compile("(\\d*) (\\d*) (\\d{4}.\\d{2}.\\d{2}) (\\d{2}.\\d{2}.\\d{2}) (.{5}) (-?\\d*|\\w*) (.*)");
-                Matcher matcher = pattern.matcher(line);
+        List<String> lines = Files.readAllLines(file.toPath(), Charset.defaultCharset());
+        for (String line : lines) {
+            // regular expression that matches to a comment with trackid, userid, etc.
+            line = processLine(line);
+            Pattern pattern = Pattern.compile("(\\d*) (\\d*) (\\d{4}.\\d{2}.\\d{2}) (\\d{2}.\\d{2}.\\d{2}) (.{5}) (-?\\d*|\\w*) (.*)");
+            Matcher matcher = pattern.matcher(line);
 
-                if (matcher.find()) {
-                    databaseConnector.executeUpdate(stringBuilder.toString());
-                    stringBuilder.setLength(0);
-                    stringBuilder.insert(0, buildQuery(matcher, extractTrackID(file)));
-                } else {
-                    // part of a comment is on a new line, add this part to the previous comment
-                    stringBuilder.setLength(stringBuilder.length() - 3);
-                    stringBuilder.append(" ").append(line).append("\');");
-                }
+            if (matcher.find()) {
+                databaseConnector.executeUpdate(stringBuilder.toString());
+                stringBuilder.setLength(0);
+                stringBuilder.insert(0, buildQuery(matcher, extractTrackID(file)));
+            } else {
+                //part of a comment is on a new line, add this part to the previous comment
+                stringBuilder.setLength(stringBuilder.length() - 3);
+                stringBuilder.append(" ").append(line).append("\');");
             }
             databaseConnector.executeUpdate(stringBuilder.toString());
-        } catch (IOException e) {
-            e.printStackTrace();
         }
+
     }
+
 
     /**
      * Process a line so it can be read easier.
@@ -100,7 +106,6 @@ public class CommentProcessor {
         result = result.replaceAll("(?<!\\\\)(?:\\\\\\\\)*\\\\(?![\\\\|'|\"])", "\\\\$0");
         // process line so MySQL can handle the comment, escape ' or "
         result = result.replaceAll("(?<!\\\\)([\"|'])", "\\\\$0");
-
 
         return result;
     }
@@ -128,15 +133,14 @@ public class CommentProcessor {
      * @return String that can be executed as MySQL command
      */
     private String buildQuery(final Matcher matcher, final String trackid) {
-        return ("INSERT INTO " + table + " VALUES ("
+        return "INSERT INTO " + table + " VALUES ("
                 + trackid + ", "
                 + matcher.group(1) + ", "
                 + matcher.group(2) + ", "
                 + "\'" + matcher.group(3).replaceAll("/", "-")
                 + " " + matcher.group(4) + "\', "
                 + timestamp(matcher) + ", "
-                + "\'" + matcher.group(7) + "\');"
-        );
+                + "\'" + matcher.group(7) + "\');";
     }
 
     /**
