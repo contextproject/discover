@@ -30,11 +30,10 @@ public class CommentRetriever {
      *
      * @param trackid the track id of the song
      * @return A set of comments of the song
-     * @throws SQLException In case of a SQL exception
      */
     public final Set<Comment> getComments(final int trackid) {
         ResultSet comments = databaseConnector.executeQuery("SELECT user_id, timestamp, text FROM comments WHERE track_id = " + trackid);
-        HashSet<Comment> result = new HashSet<>();
+        HashSet<Comment> result = new HashSet<Comment>();
 
         try {
             while (comments.next()) {
