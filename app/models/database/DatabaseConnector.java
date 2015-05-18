@@ -95,6 +95,7 @@ public class DatabaseConnector {
             try {
                 connection.close();
             } catch (SQLException ignore) {
+                ignore.printStackTrace();
             }
         }
     }
@@ -106,6 +107,15 @@ public class DatabaseConnector {
      */
     public final Statement getStatement() {
         return statement;
+    }
+
+    /**
+     * Setter of the statement object.
+     *
+     * @param statement The statement object to set the statement of the database connection
+     */
+    public final void setStatement(final Statement statement) {
+        this.statement = statement;
     }
 
     /**

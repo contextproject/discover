@@ -1,13 +1,10 @@
-name := "explore"
+name := "discover"
 
 version := "0.13.8"
 
 libraryDependencies ++= Seq(
   javaJdbc,
-  javaEbean,
-  cache,
-  jdbc,
-  "mysql" % "mysql-connector-java" % "5.1.35"
+  cache
 )
 
 play.Project.playJavaSettings
