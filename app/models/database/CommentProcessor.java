@@ -1,62 +1,44 @@
 package models.database;
 
+import controllers.Application;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.sql.DatabaseMetaData;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Class to process the .comment files.
+ * Class to process the .comment files. Cleans up old table and builds a
+ * new one based on the .comment files in the provided path.
  */
 public class CommentProcessor {
 
     /**
      * Database connector.
      */
-    private DatabaseConnector databaseConnector = new DatabaseConnector();
+    private DatabaseConnector databaseConnector;
+
+    /**
+     * Table name.
+     */
+    private String table;
 
     /**
      * Constructor, processes the comments in the provided folder.
-     */
-    public CommentProcessor() {
-        createTable(new File("/Users/daan/Downloads/metadata/without_features/metadata/comments"));
-
-        databaseConnector.closeConnection();
-    }
-
-    /**
-     * Creates new MySQL table for the comments without features only if it did not exists.
      *
-     * @param folder The folder where the comments are located
+     * @param path The path to the folder with the .comment files
+     * @param table The name of the table in the database
      */
-    private void createTable(final File folder) {
-        try {
-            DatabaseMetaData dbm = databaseConnector.getConnection().getMetaData();
-            ResultSet tables = dbm.getTables(null, null, "comments_without_features", null);
-            if (!tables.next()) {
-                System.out.println("Table does not exist, will create one.");
-                databaseConnector.getStatement().execute("CREATE TABLE IF NOT EXISTS comments_without_features( "
-                        + " track_id INT NOT NULL,"
-                        + " comment_id INT NOT NULL,"
-                        + " user_id INT NOT NULL,"
-                        + " created_at DATETIME,"
-                        + " timestamp INT,"
-                        + " text LONGTEXT NOT NULL"
-                        + ");");
-                readFolder(folder);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
+    public CommentProcessor(final String path, final String table) {
+        databaseConnector = Application.getDatabaseConnector();
+        this.table = table;
 
+        readFolder(new File(path));
+    }
 
     /**
      * Read all the comments in this folder.
@@ -90,7 +72,6 @@ public class CommentProcessor {
 
                 if (matcher.find()) {
                     databaseConnector.executeUpdate(stringBuilder.toString());
-                    //executeQuery(stringBuilder.toString());
                     stringBuilder.setLength(0);
                     stringBuilder.insert(0, buildQuery(matcher, extractTrackID(file)));
                 } else {
@@ -99,11 +80,11 @@ public class CommentProcessor {
                     stringBuilder.append(" ").append(line).append("\');");
                 }
             }
+            databaseConnector.executeUpdate(stringBuilder.toString());
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
 
     /**
      * Process a line so it can be read easier.
@@ -115,8 +96,11 @@ public class CommentProcessor {
         String result = line;
         // remove tabs from the string and replace them with a space
         result = result.replaceAll("\\t", " ");
-        // process line so MySQL can handle the comment, escape ', " or \
-        result = result.replaceAll("(?<!\\\\)(\\\\)(?![\\\\|\"|'])|(?<!\\\\)([\"|'])", "\\\\$0");
+        // escape odd number of backslashes
+        result = result.replaceAll("(?<!\\\\)(?:\\\\\\\\)*\\\\(?![\\\\|'|\"])", "\\\\$0");
+        // process line so MySQL can handle the comment, escape ' or "
+        result = result.replaceAll("(?<!\\\\)([\"|'])", "\\\\$0");
+
 
         return result;
     }
@@ -144,14 +128,28 @@ public class CommentProcessor {
      * @return String that can be executed as MySQL command
      */
     private String buildQuery(final Matcher matcher, final String trackid) {
-        return ("INSERT INTO comments_without_features VALUES ("
+        return ("INSERT INTO " + table + " VALUES ("
                 + trackid + ", "
                 + matcher.group(1) + ", "
                 + matcher.group(2) + ", "
                 + "\'" + matcher.group(3).replaceAll("/", "-")
                 + " " + matcher.group(4) + "\', "
-                + (matcher.group(6).equals("None") ? -1 : matcher.group(6)) + ", "
+                + timestamp(matcher) + ", "
                 + "\'" + matcher.group(7) + "\');"
         );
+    }
+
+    /**
+     * Processes the timestamp in a .comment file.
+     *
+     * @param matcher The matcher object of the current line
+     * @return The timestamp
+     */
+    private String timestamp(final Matcher matcher) {
+        if (matcher.group(6).equals("None")) {
+            return "-1";
+        } else {
+            return matcher.group(6);
+        }
     }
 }

@@ -1,5 +1,6 @@
 package models.database;
 
+import controllers.Application;
 import models.snippet.Comment;
 
 import java.sql.ResultSet;
@@ -15,12 +16,14 @@ public class CommentRetriever {
     /**
      * Database connector.
      */
-    private DatabaseConnector databaseConnector = new DatabaseConnector();
+    private DatabaseConnector databaseConnector;
 
     /**
      * Constructor.
      */
-    public CommentRetriever() { }
+    public CommentRetriever() {
+        databaseConnector = Application.getDatabaseConnector();
+    }
 
     /**
      * Gets the comments of the song corresponding to the given track id.
@@ -30,7 +33,7 @@ public class CommentRetriever {
      * @throws SQLException In case of a SQL exception
      */
     public final Set<Comment> getComments(final int trackid) {
-        ResultSet comments = databaseConnector.executeQuery("SELECT user_id, timestamp, text FROM comments_without_features WHERE track_id = " + trackid);
+        ResultSet comments = databaseConnector.executeQuery("SELECT user_id, timestamp, text FROM comments WHERE track_id = " + trackid);
         HashSet<Comment> result = new HashSet<>();
 
         try {
