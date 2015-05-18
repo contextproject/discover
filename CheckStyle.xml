@@ -20,7 +20,7 @@ The CheckStyle configuration for the discover project
     </module>
     <module name="JavadocType"/>
     <module name="JavadocVariable">
-      <property name="severity" value="error"/>
+      <property name="severity" value="warning"/>
     </module>
     <module name="JavadocStyle"/>
     <module name="ConstantName"/>
@@ -62,10 +62,7 @@ The CheckStyle configuration for the discover project
       <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
     </module>
     <module name="EmptyStatement"/>
-    <module name="EqualsHashCode">
-      <property name="severity" value="ignore"/>
-      <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
-    </module>
+    <module name="EqualsHashCode"/>
     <module name="HiddenField">
       <property name="severity" value="ignore"/>
       <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
@@ -87,9 +84,7 @@ The CheckStyle configuration for the discover project
     <module name="InterfaceIsType"/>
     <module name="VisibilityModifier"/>
     <module name="ArrayTypeStyle"/>
-    <module name="FinalParameters">
-      <property name="severity" value="warning"/>
-    </module>
+    <module name="FinalParameters"/>
     <module name="TodoComment"/>
     <module name="UpperEll"/>
     <module name="HiddenField">
@@ -117,6 +112,8 @@ The CheckStyle configuration for the discover project
       <property name="severity" value="error"/>
     </module>
     <module name="Indentation"/>
+    <module name="EmptyLineSeparator"/>
+    <module name="NPathComplexity"/>
   </module>
   <module name="JavadocPackage"/>
   <module name="NewlineAtEndOfFile"/>
@@ -124,12 +121,12 @@ The CheckStyle configuration for the discover project
   <module name="FileLength"/>
   <module name="FileTabCharacter">
     <property name="severity" value="ignore"/>
-    <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
   </module>
   <module name="RegexpSingleline">
     <property name="severity" value="ignore"/>
     <property name="format" value="\s+$"/>
     <property name="message" value="Line has trailing spaces."/>
+    <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
   </module>
   <module name="SuppressionCommentFilter"/>
   <module name="SuppressWarningsFilter"/>
