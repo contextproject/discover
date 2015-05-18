@@ -18,30 +18,48 @@
                 <dd><button class="next">Next</button></dd>
                 <dd><button class="randSong">Random Song</button></dd>
                 <dd><button class="clear">Clear Events</button></dd>
+                <dd><input type="image" src="@routes.Assets.at("images/connect.png")" class="connect"></dd>
             </dl>
         </div>
     </div>
+    <script type="text/javascript" src="http://connect.soundcloud.com/sdk.js"></script>
     <script type="text/javascript" src="@routes.Assets.at("javascripts/index.js")"></script>
     <script>
+    // initialize client with app credentials
+        SC.initialize({
+          client_id: '70a5f42778b461b7fbae504a5e436c06',
+          redirect_uri: 'http://localhost:9000/assets/html/callback.html'
+        });
+        
 
-	var widgetIframe = document.getElementById('sc-widget');
-	var widget = SC.Widget(widgetIframe);
-	
-	//Template for adding event listeners.
-	function addEvent(element, eventName, callback) {
+    var widgetIframe = document.getElementById('sc-widget');
+    var widget = SC.Widget(widgetIframe);
+    
+    //Template for adding event listeners.
+    function addEvent(element, eventName, callback) {
     if (element.addEventListener) {
       element.addEventListener(eventName, callback, false);
     } else {
       element.attachEvent(eventName, callback, false);
     }
   }
-	
-	//Adding the functionality of reloading the wiidget with a given url.
-	var getButton = document.querySelector('.getTrack');
-	var idInput = document.querySelector('.idInput');
-	addEvent(getButton, 'click', function() {
-		window.location.href = window.location.protocol + idInput.value;
-	});
+    
+    //Adding the functionality of reloading the wiidget with a given url.
+    var getButton = document.querySelector('.getTrack');
+    var idInput = document.querySelector('.idInput');
+    addEvent(getButton, 'click', function() {
+        window.location.href = window.location.protocol + idInput.value;
+    });
 
-	</script>
+    // Adding functionality to the 'connect' button.
+    var connectButton = document.querySelector('.connect');
+    addEvent(connectButton, 'click', function() {
+        SC.connect(function() {
+          SC.get('/me', function(me) { 
+            alert('Hello, ' + me.username); 
+          });
+            });
+        });
+
+    </script>
 }
