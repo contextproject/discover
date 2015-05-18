@@ -103,15 +103,15 @@ public class ContentFilterTest {
   @Test
   public void testWithCIS() {
     HashMap<Comment,String> map = new HashMap<Comment,String>();
-    Comment c1 = new Comment(1,5000); map.put(c1, "shit part");
-    Comment c2 = new Comment(2,6000); map.put(c2, "worthless!!");
-    Comment c3 = new Comment(3,7000); map.put(c3, "@user1: you are shit");
-    Comment c4 = new Comment(4,20000); map.put(c4, "love it");
+    Comment c1 = new Comment(1,45000); map.put(c1, "shit part");
+    Comment c2 = new Comment(2,80000); map.put(c2, "worthless!!");
+    Comment c3 = new Comment(3,45000); map.put(c3, "@user1: you are shit");
+    Comment c4 = new Comment(4,21000); map.put(c4, "love it");
     
-    Comment c5 = new Comment(5,23000); map.put(c5, "best part");
-    Comment c6 = new Comment(6,20000); map.put(c6, "really good");
-    Comment c7 = new Comment(7,30000); map.put(c7, "oke");
-    Comment c8 = new Comment(8,22000); map.put(c8, "=D");
+    Comment c5 = new Comment(5,50000); map.put(c5, "best part");
+    Comment c6 = new Comment(6,53000); map.put(c6, "really good");
+    Comment c7 = new Comment(7,50000); map.put(c7, "oke");
+    Comment c8 = new Comment(8,62000); map.put(c8, "=D");
     HashSet<Comment> goodcom = new HashSet<Comment>(); 
     Set<Comment> allcom =  map.keySet();
     
@@ -125,8 +125,8 @@ public class ContentFilterTest {
     TimedSnippet tsgood = CommentIntensitySeeker.seek(goodcom);
     TimedSnippet tsall = CommentIntensitySeeker.seek(allcom);
 
-    assertEquals(20000,tsgood.getStartTime());
-    assertEquals(5000,tsall.getStartTime());
+    assertEquals(50000,tsgood.getStartTime());
+    assertEquals(45000,tsall.getStartTime());
     
   }
   
