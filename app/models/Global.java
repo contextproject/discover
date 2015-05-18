@@ -22,7 +22,7 @@ public class Global extends GlobalSettings {
      * @param app The play application
      */
     public void onStart(final Application app) {
-        String url = "jdbc:mysql://localhost:3306/contextbase";
+        String url = "jdbc:mysql://188.166.78.36/contextbase";
         String username = "context";
         String password = "password";
 
