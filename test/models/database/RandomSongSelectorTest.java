@@ -4,9 +4,13 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-/*import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.doReturn;*/
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -15,10 +19,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import controllers.Application;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 
 /**
  * This class tests the RandomSongSelector class. Due to database
@@ -134,25 +134,6 @@ public class RandomSongSelectorTest {
 	}
 	
 	/**
-	 * Tests if the random song selector returns a the expected
-	 * value. Since the connection is mocked the result is verifiable.
-	 * @throws SQLException If the request on the mocked object fails.
-	 */
-	/* @Test
-	public void testGetRandomSongWithMockedConnector()
-			throws SQLException {
-		final int expected = 1234182; // Random number.
-		final DatabaseConnector dbc = mock(DatabaseConnector.class);
-		final ResultSet set = mock(ResultSet.class);
-		dbc.setStatement(mock(Statement.class));
-		when(set.getInt("track_id")).thenReturn(expected);
-		doReturn(set).when(dbc.executeQuery(sel.getQuery()));
-		assertEquals(expected,
-			getRandomSongSelector().getRandomSong(dbc));
-	}/* Removed because the mocking is not working.
-	DatabaseConnector is to final.*/
-	
-	/**
 	 * Tests if the random song selector returns a null value.
 	 * Since the song is selected randomly there is no telling on what
 	 * the result would be. Therefore a test against null is not entirely
@@ -209,5 +190,24 @@ public class RandomSongSelectorTest {
 	@Test
 	public void testGetQueryNotNull() {
 		assertNotNull("", sel.getQuery());
+	}
+	
+	/**
+	 * Checks the {@link RandomSongSelector#getRandomSong()} method in
+	 * case of an empty result.
+	 */
+	@Test (expected = RuntimeException.class)
+	public void testGetEmptyResult() throws SQLException {
+		final DatabaseConnector dbc = new DatabaseConnector();
+		final Statement old = dbc.getStatement();
+		final Statement statement = mock(Statement.class);
+		final ResultSet set = mock(ResultSet.class);
+		doReturn(false).when(set).next();
+		doReturn(set).when(statement).executeQuery(sel.getQuery());
+		dbc.setStatement(statement);
+		sel.getRandomSong(dbc);
+		
+		// Reset the statement.
+		dbc.setStatement(old);
 	}
 }

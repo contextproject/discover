@@ -10,7 +10,7 @@ import controllers.Application;
  * this class uses the singleton pattern.
  * 
  * @since 13-05-2015
- * @version 14-05-2015
+ * @version 19-05-2015
  * 
  * @see DatabaseConnector
  * 
@@ -60,14 +60,16 @@ public class RandomSongSelector {
 	public int getRandomSong(final DatabaseConnector dbc) {
 		final ResultSet result = dbc.executeQuery(getQuery());
 		try {
-			result.next();
-			System.out.println(result.getString(trackid));
+			if (!result.next()) {
+				throw new RuntimeException("Error the query " + query
+						+ " returned an empty result set.");
+			}
 			return result.getInt(trackid);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new RuntimeException("Error when doing query "
-			+ query + " on the database, returned result was "
-					+ result, e);
+			+ query + " on the database. The returned result did not"
+			+ " have a column by the name of " + trackid + " of type int", e);
 		}
 	}
 
