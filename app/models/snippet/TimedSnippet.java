@@ -125,10 +125,10 @@ public class TimedSnippet {
     /**
      * Copies the snippet.
      *
-     * @return A snippet with another address but with the same values. Equivalent to calling the constructor with the same values.
+     * @return A snippet with another address but with the same values. Equivalent to calling the
+     * constructor with the same values.
      */
     public TimedSnippet copy() {
         return new TimedSnippet(this.starttime, this.duration);
     }
 }
-
