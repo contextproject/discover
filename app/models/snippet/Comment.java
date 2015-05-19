@@ -79,24 +79,18 @@ public class Comment {
     }
 
     /**
-     * First equals method to minimize if-statements.
+     * Equals method for comments.
      */
     @Override
     public boolean equals(final Object other) {
-        return other.equals((Comment) this);
+        if(other instanceof Comment){
+          Comment com = (Comment) other;
+          return this.getUser() == com.getUser()
+              && this.getTime() == com.getTime();
+        }
+        return false;
     }
 
-    /**
-     * Second equals method to actually test
-     * the similarity between two comments.
-     *
-     * @param com the comment to compare with
-     * @return true or false
-     */
-    public boolean equals(final Comment com) {
-        return this.getUser() == com.getUser()
-                && this.getTime() == com.getTime();
-    }
 
     /**
      * Simple hash method based on user id and time stamp.
