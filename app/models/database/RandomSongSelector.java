@@ -3,6 +3,8 @@ package models.database;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import controllers.Application;
+
 /**
  * This class selects a random song from the database. The current version of
  * this class uses the singleton pattern.
@@ -31,8 +33,8 @@ public class RandomSongSelector {
 	 * The query to be executed.
 	 */
 	private final String query = "SELECT DISTINCT " + trackid
-			+ " FROM without_features_comments "
-			+ " ORDER BY RAND() " 
+			+ " FROM without_features_comments"
+			+ " ORDER BY RAND()" 
 			+ " LIMIT 1";
 
 	/**
@@ -47,22 +49,25 @@ public class RandomSongSelector {
 	 * @return The track_id of a random song.
 	 */
 	public int getRandomSong() {
-		return getRandomSong(new DatabaseConnector());
+		return getRandomSong(Application.getDatabaseConnector());
 	}
 
 	/**
 	 * Method that returns the track_id of a random song in the database.
-	 * @param dbc The databaseconnector.
+	 * @param dbc The database connector to use.
 	 * @return The track_id of a random song.
 	 */
 	public int getRandomSong(final DatabaseConnector dbc) {
 		final ResultSet result = dbc.executeQuery(getQuery());
 		try {
+			result.next();
+			System.out.println(result.getString(trackid));
 			return result.getInt(trackid);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new RuntimeException("Error when doing query "
-			+ query + " on the database", e);
+			+ query + " on the database, returned result was "
+					+ result, e);
 		}
 	}
 

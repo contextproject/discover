@@ -4,16 +4,21 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-
 /*import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.thenReturn;*/
+import static org.mockito.Mockito.doReturn;*/
 
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
-//import java.sql.ResultSet;
+import controllers.Application;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 /**
  * This class tests the RandomSongSelector class. Due to database
@@ -22,11 +27,11 @@ import org.junit.Test;
  * instead.
  * 
  * @since 13-05-2015
- * @version 14-05-2015
+ * @version 19-05-2015
  * 
  * @see RandomSongSelector
  * 
- * @author stefanboodt
+ * @author stefan boodt
  *
  */
 public class RandomSongSelectorTest {
@@ -35,6 +40,32 @@ public class RandomSongSelectorTest {
 	 * Selector under test.
 	 */
 	private RandomSongSelector sel;
+	
+	/**
+     * DatabaseConnector object to the database
+     */
+    private static DatabaseConnector databaseConnector;
+	
+    /**
+     * Does some static set up for the class. Such as database connections.
+     * @throws Exception If the set up fails.
+     */
+	@BeforeClass
+	public static void setUpBeforeClass() throws Exception {
+		databaseConnector = new DatabaseConnector();
+        databaseConnector.loadDrivers();
+        databaseConnector.makeConnection("jdbc:mysql://188.166.78.36/contextbase", "context", "password");
+        Application.setDatabaseConnector(databaseConnector);
+	}
+	
+	/**
+     * Does some static clean up for the class. Such as database connections.
+     * @throws Exception If the clean up fails.
+     */
+	@AfterClass
+	public static void tearDownAfterClass() throws Exception {
+		databaseConnector.closeConnection();
+	}
 
 	/**
 	 * Does some set up.
@@ -99,8 +130,27 @@ public class RandomSongSelectorTest {
 	 */
 	@Test
 	public void testGetRandomSong() {
-		//assertNotNull(getRandomSongSelector().getRandomSong());
+		assertNotNull(getRandomSongSelector().getRandomSong());
 	}
+	
+	/**
+	 * Tests if the random song selector returns a the expected
+	 * value. Since the connection is mocked the result is verifiable.
+	 * @throws SQLException If the request on the mocked object fails.
+	 */
+	/* @Test
+	public void testGetRandomSongWithMockedConnector()
+			throws SQLException {
+		final int expected = 1234182; // Random number.
+		final DatabaseConnector dbc = mock(DatabaseConnector.class);
+		final ResultSet set = mock(ResultSet.class);
+		dbc.setStatement(mock(Statement.class));
+		when(set.getInt("track_id")).thenReturn(expected);
+		doReturn(set).when(dbc.executeQuery(sel.getQuery()));
+		assertEquals(expected,
+			getRandomSongSelector().getRandomSong(dbc));
+	}/* Removed because the mocking is not working.
+	DatabaseConnector is to final.*/
 	
 	/**
 	 * Tests if the random song selector returns a null value.
@@ -110,13 +160,7 @@ public class RandomSongSelectorTest {
 	 */
 	@Test
 	public void testGetRandomSongWithConnector() {
-		/*final int expected = 1234182; // Random number.
-		final DatabaseConnector dbc = mock(DatabaseConnector.class);
-		final ResultSet set = mock(ResultSet.class);
-		when(set).getInt("track_id").thenReturn(expected)
-		when(dbc).executeQuery(sel.getQuery).thenReturn(set);
-		assertEquals(expected,
-			getRandomSongSelector().getRandomSong(dbc));*/
+		assertNotNull(getRandomSongSelector().getRandomSong(databaseConnector));
 	}
 	
 	/**
@@ -127,7 +171,7 @@ public class RandomSongSelectorTest {
 	 */
 	@Test
 	public void testGetRandomTrackId() {
-		//assertNotNull(RandomSongSelector.getRandomSongTrackId());
+		assertNotNull(RandomSongSelector.getRandomSongTrackId());
 	}
 	
 	/**
