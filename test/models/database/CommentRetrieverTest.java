@@ -1,5 +1,6 @@
 package models.database;
 
+
 import controllers.Application;
 import models.snippet.Comment;
 import org.junit.Before;
@@ -11,7 +12,7 @@ import java.util.Set;
 import static org.junit.Assert.assertEquals;
 
 /**
- * Test class for the CommentRetriever class
+ * Test class for the CommentRetriever class.
  */
 public class CommentRetrieverTest {
 
