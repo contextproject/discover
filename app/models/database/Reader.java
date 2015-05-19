@@ -4,6 +4,7 @@ import controllers.Application;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -56,7 +57,7 @@ public class Reader {
      * @throws IOException IOException
      */
     protected void readFile(final File file) throws IOException {
-        List<String> lines = Files.readAllLines(file.toPath());
+        List<String> lines = Files.readAllLines(file.toPath(), Charset.defaultCharset());
         for (String line : lines) {
             readLine(line, file);
         }
@@ -88,6 +89,7 @@ public class Reader {
 
     /**
      * Getter of the DatabaseConnector object.
+     *
      * @return The DatabaseConnector object
      */
     protected DatabaseConnector getDatabaseConnector() {
