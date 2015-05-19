@@ -37,9 +37,9 @@ public class TimedSnippet {
      * Creates a timed snippet that starts at the given time.
      *
      * @param starttime The starttime of the snippet in ms.
-     *         A negative starttime results in starttime is 0.
-     * @param duration  The duration of the snippet in ms. 
-     *         If the duration is 0 or less the default is used.
+     *                  A negative starttime results in starttime is 0.
+     * @param duration  The duration of the snippet in ms.
+     *                  If the duration is 0 or less the default is used.
      */
     public TimedSnippet(final int starttime, final int duration) {
         if (starttime < 0) {
