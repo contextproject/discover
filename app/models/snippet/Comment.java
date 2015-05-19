@@ -83,10 +83,10 @@ public class Comment {
      */
     @Override
     public boolean equals(final Object other) {
-        if(other instanceof Comment){
-          Comment com = (Comment) other;
-          return this.getUser() == com.getUser()
-              && this.getTime() == com.getTime();
+        if (other instanceof Comment) {
+            Comment com = (Comment) other;
+            return this.getUser() == com.getUser()
+                    && this.getTime() == com.getTime();
         }
         return false;
     }
