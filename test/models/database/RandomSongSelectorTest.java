@@ -8,9 +8,7 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import controllers.Application;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -18,7 +16,9 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import controllers.Application;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 /**
  * This class tests the RandomSongSelector class. Due to database
@@ -42,7 +42,7 @@ public class RandomSongSelectorTest {
 	private RandomSongSelector sel;
 	
 	/**
-     * DatabaseConnector object to the database
+     * DatabaseConnector object to the database.
      */
     private static DatabaseConnector databaseConnector;
 	
@@ -54,7 +54,8 @@ public class RandomSongSelectorTest {
 	public static void setUpBeforeClass() throws Exception {
 		databaseConnector = new DatabaseConnector();
         databaseConnector.loadDrivers();
-        databaseConnector.makeConnection("jdbc:mysql://188.166.78.36/contextbase", "context", "password");
+        final String url = "jdbc:mysql://188.166.78.36/contextbase";
+        databaseConnector.makeConnection(url, "context", "password");
         Application.setDatabaseConnector(databaseConnector);
 	}
 	
@@ -88,7 +89,7 @@ public class RandomSongSelectorTest {
 	 * Sets the selector under test to the given value.
 	 * @param tested The selector under test.
 	 */
-	public void setRandomSongSelector(RandomSongSelector tested) {
+	public void setRandomSongSelector(final RandomSongSelector tested) {
 		sel = tested;
 	}
 	
@@ -107,8 +108,7 @@ public class RandomSongSelectorTest {
 	 */
 	@Test
 	public void testGetSelector() {
-		assertEquals(getRandomSongSelector(),
-				RandomSongSelector.getRandomSongSelector());
+		assertEquals(getRandomSongSelector(), RandomSongSelector.getRandomSongSelector());
 	}
 	
 	/**
@@ -118,8 +118,7 @@ public class RandomSongSelectorTest {
 	 */
 	@Test
 	public void testGetSelectorAddressCheck() {
-		assertTrue(getRandomSongSelector() ==
-				RandomSongSelector.getRandomSongSelector());
+		assertTrue(getRandomSongSelector() == RandomSongSelector.getRandomSongSelector());
 	}
 	
 	/**
@@ -195,6 +194,7 @@ public class RandomSongSelectorTest {
 	/**
 	 * Checks the {@link RandomSongSelector#getRandomSong()} method in
 	 * case of an empty result.
+	 * @throws SQLException If the mocked statement has an SQL failure.
 	 */
 	@Test (expected = RuntimeException.class)
 	public void testGetEmptyResult() throws SQLException {

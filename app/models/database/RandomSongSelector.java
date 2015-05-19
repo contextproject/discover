@@ -1,9 +1,9 @@
 package models.database;
 
+import controllers.Application;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
-import controllers.Application;
 
 /**
  * This class selects a random song from the database. The current version of
@@ -17,7 +17,7 @@ import controllers.Application;
  * @author stefan boodt
  *
  */
-public class RandomSongSelector {
+public final class RandomSongSelector {
 
 	/**
 	 * The Singleton selector that is used by this class.
@@ -27,21 +27,22 @@ public class RandomSongSelector {
 	/**
 	 * The name of the track_id field in the database.
 	 */
-	private final String trackid = "track_id";
+	private final String trackid;
 	
 	/**
 	 * The query to be executed.
 	 */
-	private final String query = "SELECT DISTINCT " + trackid
-			+ " FROM without_features_comments"
-			+ " ORDER BY RAND()" 
-			+ " LIMIT 1";
+	private final String query;
 
 	/**
 	 * Private constructor that construct new random song selectors.
 	 */
 	private RandomSongSelector() {
-
+		trackid = "track_id";
+		query = "SELECT DISTINCT " + trackid
+				+ " FROM without_features_comments"
+				+ " ORDER BY RAND()" 
+				+ " LIMIT 1";
 	}
 
 	/**
