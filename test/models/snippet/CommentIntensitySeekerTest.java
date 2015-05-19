@@ -112,7 +112,7 @@ public class CommentIntensitySeekerTest {
         set.add(c8);
         set.add(c9);
         TimedSnippet ts = CommentIntensitySeeker.seek(set);
-        assertEquals(40000, ts.getStartTime());
+        assertEquals(15000, ts.getStartTime());
         assertEquals(30000, ts.getDuration());
     }
 
