@@ -2,13 +2,14 @@
 
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <title>"Welcome to the Soundcloud Discovery Page!"</title>
-        <link rel="stylesheet" type="text/css" href="@routes.Assets.at("stylesheets/index.css")">
-        <script type="text/javascript" src="@routes.Assets.at("javascripts/api.js")"></script>
-    </head>
-    <body>
-    @content
-    </body>
+	<head>
+		<meta charset="UTF-8">
+		<title>"Welcome to the Soundcloud Discovery Page!"</title>
+		<link rel="stylesheet" type="text/css" href="@routes.Assets.at("stylesheets/index.css")">
+		<script type="text/javascript" src="@routes.Assets.at("javascripts/api.js")"></script>
+		<script type="text/javascript" src="http://connect.soundcloud.com/sdk.js"></script>
+		<script type="text/javascript" src="@routes.Assets.at("javascripts/connect.js")"></script>
+	</head>
+	<body>@content
+	</body>
 </html>

@@ -18,30 +18,29 @@
                 <dd><button class="next">Next</button></dd>
                 <dd><button class="randSong">Random Song</button></dd>
                 <dd><button class="clear">Clear Events</button></dd>
+                <dd><input type="image" src="@routes.Assets.at("images/connect.png")" class="connect" onclick="connect()"></dd>
             </dl>
         </div>
     </div>
-    <script type="text/javascript" src="@routes.Assets.at("javascripts/index.js")"></script>
+   	<script type="text/javascript" src="@routes.Assets.at("javascripts/index.js")"></script>
     <script>
-
-	var widgetIframe = document.getElementById('sc-widget');
-	var widget = SC.Widget(widgetIframe);
-	
-	//Template for adding event listeners.
-	function addEvent(element, eventName, callback) {
+    var widgetIframe = document.getElementById('sc-widget');
+    
+    //Template for adding event listeners.
+    function addEvent(element, eventName, callback) {
     if (element.addEventListener) {
       element.addEventListener(eventName, callback, false);
     } else {
       element.attachEvent(eventName, callback, false);
     }
   }
-	
-	//Adding the functionality of reloading the wiidget with a given url.
-	var getButton = document.querySelector('.getTrack');
-	var idInput = document.querySelector('.idInput');
-	addEvent(getButton, 'click', function() {
-		window.location.href = window.location.protocol + idInput.value;
-	});
-
-	</script>
+    
+    //Adding the functionality of reloading the wiidget with a given url.
+    var getButton = document.querySelector('.getTrack');
+    var idInput = document.querySelector('.idInput');
+    addEvent(getButton, 'click', function() {
+        window.location.href = window.location.protocol + idInput.value;
+    });
+    
+    </script>
 }
