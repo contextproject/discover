@@ -119,7 +119,7 @@ public class TimedSnippet {
      */
     @Override
     public int hashCode() {
-        return (3 * getStartTime()) + (2 * getDuration());
+        return 3 * getStartTime() + 2 * getDuration();
     }
 
     /**

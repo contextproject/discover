@@ -6,14 +6,14 @@ import play.GlobalSettings;
 import play.Logger;
 
 /**
- * The global class of the play application
+ * The global class of the play application.
  */
 public class Global extends GlobalSettings {
 
     /**
-     * DatabaseConnector object to the database
+     * DatabaseConnector object to the database.
      */
-    public DatabaseConnector databaseConnector = new DatabaseConnector();
+    private DatabaseConnector databaseConnector = new DatabaseConnector();
 
     /**
      * The method that gets called on the start of the play application.
@@ -21,7 +21,7 @@ public class Global extends GlobalSettings {
      *
      * @param app The play application
      */
-    public void onStart(Application app) {
+    public void onStart(final Application app) {
         String url = "jdbc:mysql://188.166.78.36/contextbase";
         String username = "context";
         String password = "password";
@@ -38,7 +38,7 @@ public class Global extends GlobalSettings {
      *
      * @param app The play application
      */
-    public void onStop(Application app) {
+    public void onStop(final Application app) {
         Logger.info("Application shutdown...");
 
         databaseConnector.closeConnection();
