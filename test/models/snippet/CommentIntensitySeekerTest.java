@@ -107,12 +107,15 @@ public class CommentIntensitySeekerTest {
     @Test
     public void testSeek2() {
         Set<Comment> set = new HashSet<Comment>();
-        set.add(c3);
+        assertEquals(30000,TimedSnippet.getDefaultDuration());
+        assertEquals(5000,Comment.getPeriod());
         set.add(c7);
         set.add(c8);
         set.add(c9);
         TimedSnippet ts = CommentIntensitySeeker.seek(set);
-        assertEquals(15000, ts.getStartTime());
+        assertEquals(30000,TimedSnippet.getDefaultDuration());
+        assertEquals(5000,Comment.getPeriod());
+        assertEquals(40000, ts.getStartTime());
         assertEquals(30000, ts.getDuration());
     }
 
