@@ -34,7 +34,7 @@ public class CommentRetriever {
      */
     public final Set<Comment> getComments(final int trackid) {
         ResultSet comments = databaseConnector.executeQuery("SELECT user_id, timestamp, text FROM comments WHERE track_id = " + trackid);
-        HashSet<Comment> result = new HashSet<>();
+        HashSet<Comment> result = new HashSet<Comment>();
 
         try {
             while (comments.next()) {
