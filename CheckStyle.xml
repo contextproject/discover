@@ -95,9 +95,6 @@ The CheckStyle configuration for the discover project
       <property name="severity" value="error"/>
     </module>
     <module name="PackageAnnotation"/>
-    <module name="AnnotationLocation"/>
-    <module name="NonEmptyAtclauseDescription"/>
-    <module name="JavadocParagraph"/>
     <module name="ImportOrder">
       <property name="separated" value="true"/>
       <property name="sortStaticImportsAlphabetically" value="true"/>
@@ -114,6 +111,9 @@ The CheckStyle configuration for the discover project
     <module name="Indentation"/>
     <module name="EmptyLineSeparator"/>
     <module name="NPathComplexity"/>
+    <module name="AnnotationLocation"/>
+    <module name="NonEmptyAtclauseDescription"/>
+    <module name="JavadocParagraph"/>
   </module>
   <module name="JavadocPackage"/>
   <module name="NewlineAtEndOfFile"/>
@@ -121,6 +121,7 @@ The CheckStyle configuration for the discover project
   <module name="FileLength"/>
   <module name="FileTabCharacter">
     <property name="severity" value="ignore"/>
+    <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
   </module>
   <module name="RegexpSingleline">
     <property name="severity" value="ignore"/>
