@@ -22,24 +22,26 @@ public class TimedSnippet {
     /**
      * The default duration in ms.
      */
-    private static int DEFAULT_DURATION = 30000;
+    private static int defaultDURATION = 30000;
 
     /**
      * Creates a timed snippet that starts at the given time.
      *
      * @param starttime The starttime of the snippet in ms.
      */
-    public TimedSnippet(int starttime) {
-        this(starttime, DEFAULT_DURATION);
+    public TimedSnippet(final int starttime) {
+        this(starttime, defaultDURATION);
     }
 
     /**
      * Creates a timed snippet that starts at the given time.
      *
-     * @param starttime The starttime of the snippet in ms. A negative starttime results in starttime is 0.
-     * @param duration  The duration of the snippet in ms. If the duration is 0 or less the default is used.
+     * @param starttime The starttime of the snippet in ms.
+     *                  A negative starttime results in starttime is 0.
+     * @param duration  The duration of the snippet in ms.
+     *                  If the duration is 0 or less the default is used.
      */
-    public TimedSnippet(int starttime, int duration) {
+    public TimedSnippet(final int starttime, final int duration) {
         if (starttime < 0) {
             this.starttime = 0;
         } else {
@@ -48,7 +50,7 @@ public class TimedSnippet {
         if (duration > 0) {
             this.duration = duration;
         } else {
-            this.duration = DEFAULT_DURATION;
+            this.duration = defaultDURATION;
         }
     }
 
@@ -85,17 +87,18 @@ public class TimedSnippet {
      * @return The default duration of the
      */
     public static int getDefaultDuration() {
-        return DEFAULT_DURATION;
+        return defaultDURATION;
     }
 
     /**
-     * Sets the default duration of the snippet. If duration is less than 0 this method does nothing.
+     * Sets the default duration of the snippet.
+     * If duration is less than 0 this method does nothing.
      *
      * @param duration The new default duration.
      */
-    public static void setDefaultDuration(int duration) {
+    public static void setDefaultDuration(final int duration) {
         if (duration > 0) {
-            DEFAULT_DURATION = duration;
+            defaultDURATION = duration;
         }
     }
 
@@ -106,7 +109,7 @@ public class TimedSnippet {
      * @param durationInSeconds The duration of the snippet in seconds.
      * @return The newly created snippet.
      */
-    public static TimedSnippet createSnippet(int starttime, int durationInSeconds) {
+    public static TimedSnippet createSnippet(final int starttime, final int durationInSeconds) {
         return new TimedSnippet(starttime, durationInSeconds * 1000);
     }
 
