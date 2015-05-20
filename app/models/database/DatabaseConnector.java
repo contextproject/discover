@@ -33,13 +33,16 @@ public class DatabaseConnector {
      *
      * @param query The query to be executed
      */
-    public final void executeUpdate(final String query) {
+    public final boolean executeUpdate(final String query) {
         try {
             if (!query.equals("")) {
                 statement.executeUpdate(query);
+                return true;
+            } else {
+                return false;
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            return false;
         }
     }
 
@@ -53,9 +56,7 @@ public class DatabaseConnector {
         ResultSet result = null;
         try {
             result = statement.executeQuery(query);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        } catch (SQLException e) { }
         return result;
     }
 

@@ -14,6 +14,7 @@ import java.util.regex.Pattern;
  * Class to process the .comment files. Cleans up old table and builds a
  * new one based on the .comment files in the provided path.
  */
+@SuppressWarnings("unused")
 public class CommentProcessor {
 
     /**
@@ -74,7 +75,8 @@ public class CommentProcessor {
         for (String line : lines) {
             // regular expression that matches to a comment with trackid, userid, etc.
             line = processLine(line);
-            Pattern pattern = Pattern.compile("(\\d*) (\\d*) (\\d{4}.\\d{2}.\\d{2}) (\\d{2}.\\d{2}.\\d{2}) (.{5}) (-?\\d*|\\w*) (.*)");
+            Pattern pattern = Pattern.compile("(\\d*) (\\d*) (\\d{4}.\\d{2}.\\d{2}) "
+                    + "(\\d{2}.\\d{2}.\\d{2}) (.{5}) (-?\\d*|\\w*) (.*)");
             Matcher matcher = pattern.matcher(line);
 
             if (matcher.find()) {
