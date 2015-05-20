@@ -5,9 +5,9 @@
     This configuration file was written by the eclipse-cs plugin configuration editor
 -->
 <!--
-    Checkstyle-Configuration: Discover
+    Checkstyle-Configuration: Discover Maven
     Description: 
-The CheckStyle configuration for the discover project
+The CheckStyle file explicitly for maven usage. It is roughly the same as the other CheckStyle configuration but contains less checks, because the removed checks are added in CheckStyle 6.0 (or later). Mavens latest CheckStyle plugin is still at CheckStyle 5.8. See http://checkstyle.sourceforge.net/releasenotes.html for more information.  Please ignore any and all errors regarding java 8 syntax when using this file for maven as java 8 support was added to CheckStyle 5.9.
 -->
 <module name="Checker">
   <property name="severity" value="warning"/>
@@ -99,7 +99,6 @@ The CheckStyle configuration for the discover project
     <module name="PackageAnnotation"/>
     <module name="ImportOrder">
       <property name="separated" value="true"/>
-      <property name="sortStaticImportsAlphabetically" value="true"/>
     </module>
     <module name="GenericWhitespace"/>
     <module name="CovariantEquals"/>
@@ -113,13 +112,6 @@ The CheckStyle configuration for the discover project
     <module name="Indentation"/>
     <module name="EmptyLineSeparator"/>
     <module name="NPathComplexity"/>
-    <module name="AnnotationLocation"/>
-    <module name="NonEmptyAtclauseDescription"/>
-    <module name="JavadocParagraph"/>
-  </module>
-  <module name="JavadocPackage">
-    <property name="severity" value="ignore"/>
-    <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
   </module>
   <module name="NewlineAtEndOfFile"/>
   <module name="Translation"/>
