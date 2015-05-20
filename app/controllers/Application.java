@@ -2,6 +2,7 @@ package controllers;
 
 import models.database.CommentRetriever;
 import models.database.DatabaseConnector;
+import models.database.RandomSongSelector;
 import models.snippet.Comment;
 import models.snippet.CommentIntensitySeeker;
 import models.snippet.RandomSnippet;
@@ -32,6 +33,19 @@ public class Application extends Controller {
         System.out.println("starttime = " + starttime);
 
         return ok(index.render(url2, (double) starttime));
+    }
+    
+    public static Result getRandomSong() {
+        RandomSongSelector selector = RandomSongSelector.getRandomSongSelector();
+        int track_id = selector.getRandomSong();
+        String url = "w.soundcloud.com/tracks/" + track_id;
+        
+        CommentRetriever commentRetriever = new CommentRetriever();
+        Set<Comment> comments = commentRetriever.getComments(track_id);
+        int starttime = CommentIntensitySeeker.seek(comments).getStartTime();
+        System.out.println("starttime = " + starttime);
+        
+        return ok(index.render(url, (double) starttime));
     }
 
     public static void setDatabaseConnector(DatabaseConnector dbc) {

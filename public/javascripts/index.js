@@ -2,7 +2,6 @@
 	var widgetIframe = document.getElementById('sc-widget');
 	var previewButton = document.querySelector('.preview');
 	var widget = SC.Widget(widgetIframe);
-	var url2 = 'http://api.soundcloud.com/users/1539950/favorites';
 
 	// Template for adding event listeners.
 	function addEvent(element, eventName, callback) {
