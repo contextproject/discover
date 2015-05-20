@@ -8,8 +8,6 @@
         <div class="actionsContainer">
             <input class="urlInput" placeholder="Enter SoundCloud URL of the track." type="text">
             <button class="reload" action="">Reload</button>
-            <input class="idInput" placeholder="Enter the ID of a track." type="text">
-            <button class="getTrack" action="">Get Track</button>
 
             <dl class="actionButtons">
                 <dd><button class="seekTo">Seek <input type="text" value="50000" size="10" maxlength="10" /></button></dd>
@@ -25,25 +23,77 @@
    	<script type="text/javascript" src="@routes.Assets.at("javascripts/index.js")"></script>
 	<script type="text/javascript" src="@routes.Assets.at("javascripts/connect.js")"></script>
     <script>
+    
     var widgetIframe = document.getElementById('sc-widget');
+	var widget = SC.Widget(widgetIframe);
+	var previewButton = document.querySelector('.preview');
+	var reloadButton = document.querySelector('.reload');
+	var widgetUrlInput = document.querySelector('.urlInput');
+	var curURL = "@url";
+	var snipWin = 10000.0000;
+	var songStart = parseFloat(previewButton.value) - (snipWin/2);
+	var songEnd = songStart + window;
+
+	
     
     //Template for adding event listeners.
     function addEvent(element, eventName, callback) {
-    if (element.addEventListener) {
-      element.addEventListener(eventName, callback, false);
-    } else {
-      element.attachEvent(eventName, callback, false);
-    }
-  }
+	    if (element.addEventListener) {
+	      element.addEventListener(eventName, callback, false);
+	    } else {
+	      element.attachEvent(eventName, callback, false);
+	    }
+  	}
+	
+
+	//var idInput = document.querySelector('.idInput');
+	addEvent(reloadButton, 'click', function() {
+		widget.load(widgetUrlInput.value, {
+			auto_play : false
+		});
+		
+		widget.bind(SC.Widget.Events.READY, function() {
+			widget.unbind(SC.Widget.Events.READY);
+			var pos;
+			widget.getCurrentSoundIndex(function(index) {
+				pos = index;
+			});
+			widget.getSounds(function(sounds) {
+				window.location.href = "http://localhost:9000/tracks/" + sounds[pos].id;
+			});	
+		});
+		
+	});
+		
+		
+	// Adding functionality to the Preview button. Seeks to a certain point in
+	// the music and stops after a couple of seconds.
+	addEvent(previewButton, 'click', function(e) {
+		widget.bind(SC.Widget.Events.READY, function() {
+			if (widget.isPaused(function(paused) {
+				if (paused) {
+					widget.play();
+				}
+			}))
+				widget.bind(SC.Widget.Events.PLAY, function() {
+					widget.seekTo(songStart);
+					widget.unbind(SC.Widget.Events.PLAY);
+					widget.unbind(SC.Widget.Events.READY);
+				});
+		});
+
+		widget.bind(SC.Widget.Events.PLAY_PROGRESS, function() {
+			widget.getPosition(function(position) {
+				if (position > songEnd) {
+					widget.pause();
+					widget.unbind(SC.Widget.Events.PLAY_PROGRESS);
+				}
+			});
+		});
+	});
     
-    //Adding the functionality of reloading the wiidget with a given url.
-    var getButton = document.querySelector('.getTrack');
-    var idInput = document.querySelector('.idInput');
-    addEvent(getButton, 'click', function() {
-        window.location.href = window.location.protocol + idInput.value;
-    });
-    
-    var connectButton = document.querySelector('.connect');
+	//Adding the functionality to the connect button login and logout.
+	var connectButton = document.querySelector('.connect');
     addEvent(connectButton, 'click', function() {
     	if (SC.accessToken() == null) {
     		SC.connect(function() {
@@ -60,6 +110,6 @@
     		document.querySelector(".connect").src = "@routes.Assets.at("images/connect.png")";
     	}
     });
-
+    
     </script>
 }
