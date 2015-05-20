@@ -76,7 +76,7 @@ public class AlgorithmSelector {
 				result.add(c);
 			}
 		}
-
+		
 		if (result.size() > 5) {
 			return result;
 		} else {

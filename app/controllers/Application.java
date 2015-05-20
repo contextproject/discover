@@ -2,6 +2,7 @@ package controllers;
 
 import models.database.CommentRetriever;
 import models.database.DatabaseConnector;
+import models.snippet.AlgorithmSelector;
 import models.snippet.Comment;
 import models.snippet.CommentIntensitySeeker;
 import models.snippet.RandomSnippet;
@@ -26,9 +27,10 @@ public class Application extends Controller {
     public static Result getStartTime(String url) {
         String url2 = "w.soundcloud.com/tracks/" + url;
 
-        CommentRetriever commentRetriever = new CommentRetriever();
-        Set<Comment> comments = commentRetriever.getComments(Integer.parseInt(url));
-        int starttime = CommentIntensitySeeker.seek(comments).getStartTime();
+        
+        AlgorithmSelector as = new AlgorithmSelector(Integer.parseInt(url));
+     
+        int starttime = as.getStartTime();
         System.out.println("starttime = " + starttime);
 
         return ok(index.render(url2, (double) starttime));
@@ -38,6 +40,7 @@ public class Application extends Controller {
         databaseConnector = dbc;
     }
 
+    
     public static DatabaseConnector getDatabaseConnector() {
         return databaseConnector;
     }
