@@ -1,4 +1,6 @@
+package models.snippet;
 import models.snippet.Comment;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -7,10 +9,23 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+/**
+ * Tests for the Comment class.
+ *
+ */
 public class CommentTest {
 
+    /**
+     * Comment 1.
+     */
     private Comment c1;
+    /**
+     * Comment 2.
+     */
     private Comment c2;
+    /**
+     * Comment 3.
+     */
     private Comment c3;
 
     /**
@@ -104,7 +119,7 @@ public class CommentTest {
         try {
             Object x1 = new Object();
             assertFalse(c1.equals(x1));
-        } catch (Exception e) {
+        } catch (StackOverflowError e) {
             e.printStackTrace();
         }
     }

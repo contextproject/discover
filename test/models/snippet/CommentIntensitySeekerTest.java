@@ -1,11 +1,13 @@
+package models.snippet;
+import java.util.HashSet;
+import java.util.Set;
+
 import models.snippet.Comment;
 import models.snippet.CommentIntensitySeeker;
 import models.snippet.TimedSnippet;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.HashSet;
-import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
@@ -13,16 +15,47 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+/**
+ * Test for the CommentIntensitySeeker.
+ */
 public class CommentIntensitySeekerTest {
 
+    /**
+     * CommentIntesitySeeker variable.
+     */
     private CommentIntensitySeeker cis;
+    
+    /**
+     * Comment Object.
+     */
     private Comment c1;
+    /**
+     * Comment Object.
+     */
     private Comment c3;
+    /**
+     * Comment Object.
+     */
     private Comment c4;
+    /**
+     * Comment Object.
+     */
     private Comment c5;
+    /**
+     * Comment Object.
+     */
     private Comment c6;
+    /**
+     * Comment Object.
+     */
     private Comment c7;
+    /**
+     * Comment Object.
+     */
     private Comment c8;
+    /**
+     * Comment Object.
+     */
     private Comment c9;
 
     /**
@@ -74,11 +107,14 @@ public class CommentIntensitySeekerTest {
     @Test
     public void testSeek2() {
         Set<Comment> set = new HashSet<Comment>();
-        set.add(c3);
+        assertEquals(30000,TimedSnippet.getDefaultDuration());
+        assertEquals(5000,Comment.getPeriod());
         set.add(c7);
         set.add(c8);
         set.add(c9);
         TimedSnippet ts = CommentIntensitySeeker.seek(set);
+        assertEquals(30000,TimedSnippet.getDefaultDuration());
+        assertEquals(5000,Comment.getPeriod());
         assertEquals(40000, ts.getStartTime());
         assertEquals(30000, ts.getDuration());
     }
