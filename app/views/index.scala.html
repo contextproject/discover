@@ -8,7 +8,9 @@
         <div class="actionsContainer">
             <input class="urlInput" placeholder="Enter SoundCloud URL of the track." type="text">
             <button class="reload" action="">Reload</button>
-
+			<form>
+			  <input type="range" class="volume">
+			</form>
             <dl class="actionButtons">
                 <dd><button class="seekTo">Seek <input type="text" value="50000" size="10" maxlength="10" /></button></dd>
                 <dd><button class="preview" value=@randStart>Preview</button></dd>
@@ -34,8 +36,6 @@
 	var songStart = parseFloat(previewButton.value) - (snipWin/2);
 	var songEnd = songStart + snipWin;
 
-	
-    
     //Template for adding event listeners.
     function addEvent(element, eventName, callback) {
 	    if (element.addEventListener) {
@@ -45,8 +45,8 @@
 	    }
   	}
 	
-
-	//var idInput = document.querySelector('.idInput');
+	//Reloads the widget with the given song, get the id and then re-renders 
+	//the page and computes the preview.
 	addEvent(reloadButton, 'click', function() {
 		widget.load(widgetUrlInput.value, {
 			auto_play : false
@@ -64,8 +64,7 @@
 		});
 		
 	});
-		
-		
+			
 	// Adding functionality to the Preview button. Seeks to a certain point in
 	// the music and stops after a couple of seconds.
 	addEvent(previewButton, 'click', function(e) {
@@ -97,8 +96,7 @@
     addEvent(connectButton, 'click', function() {
     	if (SC.accessToken() == null) {
     		SC.connect(function() {
-    			SC.get(
-    				'/me',
+    			SC.get('/me',
     				function(me) {
     					SC.Widget(widgetIframe).load("api.soundcloud.com/users/" + me.id + "/favorites", {});
     					document.querySelector(".connect").src = "@routes.Assets.at("images/disconnect.png")";

@@ -12,6 +12,13 @@
 			element.attachEvent(eventName, callback, false);
 		}
 	}
+	
+	//Adding the functionality for a volume slider.
+	var volSlider = $(".volume"); 
+	volSlider.on("input change", function() { 
+		widget.setVolume(parseInt(volSlider.val()));
+	});
+	
 	// Adding functionality to the seek button with the given input.
 	var seekToButton = document.querySelector('.seekTo');
 	var seekInput = seekToButton.querySelector('input');
