@@ -1,5 +1,4 @@
 package models.snippet;
-import models.snippet.Comment;
 
 import org.junit.After;
 import org.junit.Before;

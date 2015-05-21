@@ -1,15 +1,11 @@
 package controllers;
 
-import models.database.CommentRetriever;
 import models.database.DatabaseConnector;
 import models.database.RandomSongSelector;
-import models.snippet.Comment;
-import models.snippet.CommentIntensitySeeker;
+import models.snippet.AlgorithmSelector;
 import play.mvc.Controller;
 import play.mvc.Result;
 import views.html.index;
-
-import java.util.Set;
 
 /**
  * This class is used to control the model and the view parts of the MVC. It
@@ -21,8 +17,9 @@ public class Application extends Controller {
 	private static DatabaseConnector databaseConnector;
 
 	/**
-	 * The index method is called when the application is started and
-	 * no other messages have been passed.
+	 * The index method is called when the application is started and no other
+	 * messages have been passed.
+	 * 
 	 * @return an http ok response with the rendered page.
 	 */
 	public static Result index() {
@@ -33,7 +30,9 @@ public class Application extends Controller {
 
 	/**
 	 * Renders a page with the given track id to load the widget.
-	 * @param trackId , the id of the track we are searching for.
+	 * 
+	 * @param trackId
+	 *            , the id of the track we are searching for.
 	 * @return an http ok response with the new rendered page.
 	 */
 	public static Result getSong(final String trackId) {
@@ -43,20 +42,22 @@ public class Application extends Controller {
 	}
 
 	/**
-	 * Retrieves a start-time calculated by the CommentIntensitySeeker
-	 * for the given track id.
-	 * @param trackId , the id of the track.
+	 * Retrieves a start-time calculated by the CommentIntensitySeeker for the
+	 * given track id.
+	 * 
+	 * @param trackId
+	 *            , the id of the track.
 	 * @return the start-time of the snippet.
 	 */
 	public static double getStartTime(final int trackId) {
-		CommentRetriever commentRetriever = new CommentRetriever();
-		Set<Comment> coms = commentRetriever.getComments(trackId);
-		int start = CommentIntensitySeeker.seek(coms).getStartTime();
+		AlgorithmSelector as = new AlgorithmSelector(trackId);
+		int start = as.getStartTime();
 		return start;
 	}
 
 	/**
 	 * Selects a random track from the database.
+	 * 
 	 * @return an http ok response with a random track id.
 	 */
 	public static Result getRandomSong() {
@@ -70,7 +71,9 @@ public class Application extends Controller {
 
 	/**
 	 * Setter for the DatabaseConnector object.
-	 * @param dbc , the new DatabaseConnector object.
+	 * 
+	 * @param dbc
+	 *            , the new DatabaseConnector object.
 	 */
 	public static void setDatabaseConnector(final DatabaseConnector dbc) {
 		databaseConnector = dbc;
@@ -78,6 +81,7 @@ public class Application extends Controller {
 
 	/**
 	 * Getter for the DatabaseConnecter Object of the controller.
+	 * 
 	 * @return the DatabaseConnecter Object.
 	 */
 	public static DatabaseConnector getDatabaseConnector() {
