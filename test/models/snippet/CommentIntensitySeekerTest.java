@@ -1,10 +1,8 @@
 package models.snippet;
+
 import java.util.HashSet;
 import java.util.Set;
 
-import models.snippet.Comment;
-import models.snippet.CommentIntensitySeeker;
-import models.snippet.TimedSnippet;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -107,14 +105,14 @@ public class CommentIntensitySeekerTest {
     @Test
     public void testSeek2() {
         Set<Comment> set = new HashSet<Comment>();
-        assertEquals(30000,TimedSnippet.getDefaultDuration());
-        assertEquals(5000,Comment.getPeriod());
+        assertEquals(30000, TimedSnippet.getDefaultDuration());
+        assertEquals(5000, Comment.getPeriod());
         set.add(c7);
         set.add(c8);
         set.add(c9);
         TimedSnippet ts = CommentIntensitySeeker.seek(set);
-        assertEquals(30000,TimedSnippet.getDefaultDuration());
-        assertEquals(5000,Comment.getPeriod());
+        assertEquals(30000, TimedSnippet.getDefaultDuration());
+        assertEquals(5000, Comment.getPeriod());
         assertEquals(40000, ts.getStartTime());
         assertEquals(30000, ts.getDuration());
     }
