@@ -26,7 +26,8 @@ public class DatabaseConnector {
     /**
      * Constructor.
      */
-    public DatabaseConnector() { }
+    public DatabaseConnector() {
+    }
 
     /**
      * Executes the given query.
@@ -35,12 +36,8 @@ public class DatabaseConnector {
      */
     public final boolean executeUpdate(final String query) {
         try {
-            if (!query.equals("")) {
-                statement.executeUpdate(query);
-                return true;
-            } else {
-                return false;
-            }
+            statement.executeUpdate(query);
+            return true;
         } catch (SQLException e) {
             return false;
         }
@@ -77,7 +74,7 @@ public class DatabaseConnector {
     /**
      * Make a connection with the database.
      *
-     * @param url The url of the MySQL database
+     * @param url      The url of the MySQL database
      * @param username The username to connect with
      * @param password The password of the username
      */
