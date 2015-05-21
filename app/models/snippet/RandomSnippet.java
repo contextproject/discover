@@ -21,11 +21,11 @@ public class RandomSnippet {
     }
 
     /**
-     * Set the size of the window
+     * Set the size of the window.
      *
      * @param duration , size of the new window in milliseconds.
      */
-    public void setWindow(double duration) {
+    public void setWindow(final double duration) {
         window = duration;
     }
 
