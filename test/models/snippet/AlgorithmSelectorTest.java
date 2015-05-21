@@ -1,17 +1,39 @@
 package models.snippet;
 
+import controllers.Application;
+import models.database.DatabaseConnector;
+
+import org.junit.Before;
 import org.junit.Test;
+
+
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
-
-
 
 /**
  * Tests for the AlgortihmSelector.
  *
  */
 public class AlgorithmSelectorTest {
+
+	/**
+	 * Needed for the setup.
+	 */
+	private DatabaseConnector databaseConnector;
+	
+	/**
+	 * Setup up the connection to the database.
+	 */
+	@Before
+	public void setUp() {
+		databaseConnector = new DatabaseConnector();
+		databaseConnector.loadDrivers();
+		databaseConnector
+				  .makeConnection("jdbc:mysql://188.166.78.36/contextbase",
+						"context", "password");
+		Application.setDatabaseConnector(databaseConnector);
+	}
 
 	/**
 	 * Testing if a song with high amount of comments doesn't return zero.
