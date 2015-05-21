@@ -50,7 +50,7 @@ public class AlgorithmSelector {
 
 			HashMap<Comment, String> map = (HashMap<Comment, String>) retriever
 					  .getCommentsWithString(trackid);
-			HashSet<Comment> set = (HashSet<Comment>) processContent(map);
+			Set<Comment> set = processContent(map);
 			TimedSnippet ts = CommentIntensitySeeker.seek(set);
 
 			return ts.getStartTime();
