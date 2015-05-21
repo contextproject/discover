@@ -40,7 +40,7 @@ public class TrackProcessor extends Reader {
             prepareStatement(matcher);
         } else {
             // print the line for debugging purposes
-            System.out.println("The following line failed to get processed! " + line);
+            System.err.println("The following line failed to get processed! " + line);
         }
     }
 

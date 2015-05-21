@@ -56,7 +56,10 @@ public class DatabaseConnector {
         ResultSet result = null;
         try {
             result = statement.executeQuery(query);
-        } catch (SQLException e) { }
+        } catch (SQLException e) {
+            System.err.println("Something went wrong with the following query! " + query);
+            return result;
+        }
         return result;
     }
 
