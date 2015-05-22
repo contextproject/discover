@@ -29,7 +29,7 @@ public class CommentRetrieverTest {
 
         commentRetriever = new CommentRetriever();
     }
-
+    
     @Test
     public void getCommentsTest() throws Exception {
         databaseConnector.executeUpdate("INSERT INTO with_features_comments VALUES (1, 1, 1, '2015-01-01 12:00:00', 1, 'test')");

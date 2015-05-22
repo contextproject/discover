@@ -32,12 +32,14 @@ public class CommentRetriever {
      * @return A set of comments of the song
      */
     public final Set<Comment> getComments(final int trackid) {
-        ResultSet comments = databaseConnector.executeQuery("SELECT user_id, timestamp, text FROM comments WHERE track_id = " + trackid);
+        ResultSet comments = databaseConnector.executeQuery(
+                "SELECT user_id, timestamp, text FROM comments WHERE track_id = " + trackid);
         HashSet<Comment> result = new HashSet<Comment>();
 
         try {
             while (comments.next()) {
-                Comment current = new Comment(comments.getInt("user_id"), comments.getInt("timestamp"));
+                Comment current = new Comment(
+                        comments.getInt("user_id"), comments.getInt("timestamp"));
                 result.add(current);
             }
         } catch (SQLException e) {

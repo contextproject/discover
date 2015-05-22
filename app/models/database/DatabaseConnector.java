@@ -26,20 +26,20 @@ public class DatabaseConnector {
     /**
      * Constructor.
      */
-    public DatabaseConnector() { }
+    public DatabaseConnector() {
+    }
 
     /**
      * Executes the given query.
      *
      * @param query The query to be executed
      */
-    public final void executeUpdate(final String query) {
+    public final boolean executeUpdate(final String query) {
         try {
-            if (!query.equals("")) {
-                statement.executeUpdate(query);
-            }
+            statement.executeUpdate(query);
+            return true;
         } catch (SQLException e) {
-            e.printStackTrace();
+            return false;
         }
     }
 
@@ -54,7 +54,8 @@ public class DatabaseConnector {
         try {
             result = statement.executeQuery(query);
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.err.println("Something went wrong with the following query! " + query);
+            return result;
         }
         return result;
     }
@@ -73,7 +74,7 @@ public class DatabaseConnector {
     /**
      * Make a connection with the database.
      *
-     * @param url The url of the MySQL database
+     * @param url      The url of the MySQL database
      * @param username The username to connect with
      * @param password The password of the username
      */
