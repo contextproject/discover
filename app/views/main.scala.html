@@ -1,4 +1,4 @@
-@(snipStart: Double)(content: Html)
+@(start: Double)(player: Html)
 
 <!DOCTYPE html>
 <html>
@@ -7,24 +7,27 @@
 
         <meta charset="UTF-8">
 
-        <link rel="stylesheet" type="text/css" href="@routes.Assets.at("stylesheets/index.css")">
         <script type="text/javascript" src="@routes.Assets.at("javascripts/api.js")"></script>
-        <script type="text/javascript" src="@routes.Assets.at("javascripts/index.js")"></script>
         <script type="text/javascript" src="@routes.Assets.at("javascripts/connect.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.at("javascripts/scroll.js")"></script>
 
         <script type="text/javascript" src="http://connect.soundcloud.com/sdk.js"></script>
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 
-
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-            <!--[if lte IE 8]><script src="assets/css/ie/html5shiv.js"></script><![endif]-->
         <link rel="stylesheet" href="@routes.Assets.at("stylesheets/photon.css")" />
-            <!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie/v8.css" /><![endif]-->
-            <!--[if lte IE 9]><link rel="stylesheet" href="assets/css/ie/v9.css" /><![endif]-->
-            <!--[if lte IE 8]><script src="assets/css/ie/respond.min.js"></script><![endif]-->
+        <link rel="stylesheet" href="@routes.Assets.at("stylesheets/index.css")" />
+
+        <script>
+            $.getScript("/assets/javascripts/controls.js");
+        </script>
+
+        <script>
+            var start = @start;
+        </script>
     </head>
 
-    <body>
+    <body onload="loadScroll()" onunload="saveScroll()">
             <!-- Header -->
         <section id="header">
             <div class="inner">
@@ -38,23 +41,40 @@
         </section>
 
             <!-- One -->
-        <section id="one" class="main style1" style="height: 750px">
+        <section id="one" class="main style1">
             <div class="container">
-            @content
+                <div class="row 150%">
+                    <div class="8u 12u$(medium)">
+                        <input type="text" id="url" placeholder="Enter Soundcloud URL of the track.">
+                    </div>
+                    <div class="4u$ 12u$(medium)">
+                        <button class="control" type="submit" id="reload">Reload</button>
+                    </div>
+                </div>
             </div>
         </section>
 
-            <!-- Four -->
-        <section id="four" class="main style2 special">
+        <section id="two" class="main style1">
             <div class="container">
-                <header class="major">
-                    <h2>Ipsum feugiat consequat?</h2>
-                </header>
-                <p>Sed lacus nascetur ac ante amet sapien.</p>
-                <ul class="actions uniform">
-                    <li><a href="#" class="button special">Sign Up</a></li>
-                    <li><a href="#" class="button">Learn More</a></li>
-                </ul>
+                <div class="row 150%">
+                    <div class="8u 12u$(medium)">
+                        <div class="player">
+                        @player
+                        </div>
+                    </div>
+                    <div class="4u$ 12u$(medium) important(medium)">
+                        <div class="controls">
+                            <input type="range" class="control" id="volume">
+
+                            <button class="control" id="preview">Preview</button> <br>
+                            <button class="control" id="prev">Previous</button> <br>
+                            <button class="control" id="next">Next</button> <br>
+                            <button class="control" id="rand">Random Song</button> <br>
+                            <button class="control" id="clear">Clear Events</button> <br>
+                            <button class="control" id="connect">Connect</button> <br>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -68,7 +88,6 @@
                 <li><a href="#" class="icon alt fa-envelope"><span class="label">Email</span></a></li>
             </ul>
             <ul class="copyright">
-                @*<li>&copy; Untitled</li>*@
                 <li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
             </ul>
         </section>

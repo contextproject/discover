@@ -9,6 +9,8 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import views.html.index;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -27,8 +29,7 @@ public class Application extends Controller {
 	 */
 	public static Result index() {
 		String url = "w.soundcloud.com/tracks/67016624";
-		Double starttime = getStartTime(67016624);
-		return ok(index.render(url, starttime));
+		return ok(index.render(url, getStartTime(67016624)));
 	}
 
 	/**
@@ -38,7 +39,9 @@ public class Application extends Controller {
 	 */
 	public static Result getSong(final String trackId) {
 		String url = "w.soundcloud.com/tracks/" + trackId;
+        double[] results = new double[3];
 		double starttime = getStartTime(Integer.parseInt(trackId));
+        results[0] = starttime;
 		return ok(index.render(url, starttime));
 	}
 
@@ -65,6 +68,8 @@ public class Application extends Controller {
 		int trackId = selector.getRandomSong();
 		String url = "w.soundcloud.com/tracks/" + trackId;
 		double starttime = getStartTime(trackId);
+        double[] results = new double[3];
+        results[0] = starttime;
 		return ok(index.render(url, starttime));
 	}
 

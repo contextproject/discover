@@ -536,7 +536,7 @@
 		}
 
 		.row.\31 50\25 > * {
-			padding: 0 0 0 3em;
+			padding: 0em 0 1em 3em;
 		}
 
 		.row.\31 50\25 {
@@ -751,7 +751,7 @@
 		}
 
 		.row.\31 50\25 > * {
-			padding: 0 0 0 2.25em;
+			padding: 2.25em 0 0 2.25em;
 		}
 
 		.row.\31 50\25 {
@@ -966,7 +966,7 @@
 		}
 
 		.row.\31 50\25 > * {
-			padding: 0 0 0 2.25em;
+			padding: 2.25em 0 0 2.25em;
 		}
 
 		.row.\31 50\25 {
@@ -1181,7 +1181,7 @@
 		}
 
 		.row.\31 50\25 > * {
-			padding: 0 0 0 2.25em;
+			padding: 2.25em 0 0 2.25em;
 		}
 
 		.row.\31 50\25 {
@@ -2010,7 +2010,7 @@
 /* Form */
 
 	form {
-		margin: 0 0 2em 0;
+		margin: 0 0 0 0;
 	}
 
 	label {
@@ -2701,8 +2701,8 @@
 /* Main */
 
 	.main {
-		padding: 6em 0 4em 0;
-	}
+        padding: 1em 0em 0 4em;
+    }
 
 		.main.style1 {
 			background: #fff;
@@ -2712,7 +2712,7 @@
 			background-color: #333;
 			color: rgba(255, 255, 255, 0.75);
 			background-attachment: fixed,							fixed;
-			background-image: url("images/overlay1.png"), url("../../images/SELECT track_id FROM comments ORDER BY RAND() LIMIT 1;.jpg");
+			background-image: url("images/overlay1.png"), url("../../images/header.jpg");
 			background-size: auto,							cover;
 		}
 
@@ -3114,7 +3114,7 @@
 		/* Header */
 
 			#header {
-				padding: 3em 0 3em 0;
+				padding: 3em 0 3em 1em;
 			}
 
 	}
@@ -3148,7 +3148,7 @@
 		/* Main */
 
 			.main {
-				padding: 4em 0 2em 0;
+				padding: 2em 0 2em 0;
 			}
 
 				.main.style2 {
@@ -3158,7 +3158,7 @@
 		/* Header */
 
 			#header {
-				padding: 2em 0 2em 0;
+				padding: 2em 0 2em 1em;
 				background-attachment: scroll;
 			}
 
@@ -3194,7 +3194,7 @@
 		/* Main */
 
 			.main {
-				padding: 5em 3em 3em 3em;
+				padding: 3em 3em 3em 3em;
 			}
 
 		/* Header */
