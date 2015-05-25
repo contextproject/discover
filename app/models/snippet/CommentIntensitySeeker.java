@@ -7,7 +7,7 @@ import java.util.TreeSet;
  * This class returns the start time for a snippet,
  * based on the comment intensity of that song.
  */
-public class CommentIntensitySeeker {
+public class CommentIntensitySeeker implements Seeker {
 
     /**
      * Generates a start time for a snippet.
@@ -47,7 +47,8 @@ public class CommentIntensitySeeker {
      * @param coms The set of comments to use
      * @return A TimedSnippet object
      */
-    public static TimedSnippet seek(final Set<Comment> coms) {
+    @Override
+    public TimedSnippet seek(final Set<Comment> coms) {
         return new TimedSnippet(getStartTime(coms, TimedSnippet.getDefaultDuration()));
     }
 

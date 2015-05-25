@@ -71,6 +71,16 @@ public class ContentFilterTest {
 		assertTrue(cf.contentFilter(s1));
 		assertFalse(cf.findEmoticons(s1));
 	}
+	
+	/**
+	 * Test for simple content with a negative message .
+	 */
+	@Test
+	public void testContentFilter5() {
+		String s1 = "I don't like this ";
+		assertFalse(cf.contentFilter(s1));
+		assertFalse(cf.findEmoticons(s1));
+	}
 
 	/**
 	 * Test for simple content with a wrong spelled positive word and a
@@ -92,10 +102,12 @@ public class ContentFilterTest {
 		String s2 = ":)";
 		String s3 = ":-)";
 		String s4 = "=D";
+		String s5 = ":D";
 		assertTrue(cf.contentFilter(s1));
 		assertTrue(cf.contentFilter(s2));
 		assertTrue(cf.contentFilter(s3));
 		assertTrue(cf.contentFilter(s4));
+		assertTrue(cf.contentFilter(s5));
 	}
 
 	/**
@@ -131,9 +143,11 @@ public class ContentFilterTest {
 				goodcom.add(c);
 			}
 		}
-
-		TimedSnippet tsgood = CommentIntensitySeeker.seek(goodcom);
-		TimedSnippet tsall = CommentIntensitySeeker.seek(allcom);
+		
+		CommentIntensitySeeker cis = new CommentIntensitySeeker();
+		
+		TimedSnippet tsgood = cis.seek(goodcom);
+		TimedSnippet tsall = cis.seek(allcom);
 
 		assertEquals(50000, tsgood.getStartTime());
 		assertEquals(45000, tsall.getStartTime());
