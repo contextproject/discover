@@ -32,7 +32,7 @@ function reloadWidget() {
 }
 
 // change the volume of the widget
-$("#volume").on("input change", function() {
+$("#volume").on("input change", function () {
     widget.setVolume(parseInt($('#volume').val()));
 });
 
@@ -41,7 +41,7 @@ var snipWin = 10000.00;
 var songStart = parseFloat(start) - (snipWin / 2);
 var songEnd = songStart + snipWin;
 
-$("#preview").click(function() {
+$("#preview").click(function () {
     widget.bind(SC.Widget.Events.READY, function () {
         if (widget.isPaused(function (paused) {
                 if (paused) {
@@ -70,35 +70,40 @@ $("#rand").click(function () {
     window.location.href = "http://localhost:9000/random";
 });
 
-// select the previous song if present
-$("#prev").click(function() {
+// select the next song if present
+$("#next").click(function () {
     widget.next();
 });
 
-// select the next song if present
-$("#next").click(function() {
+// select the previous song if present
+$("#prev").click(function () {
     widget.prev();
 });
 
 // clear every event on the widget, used for debugging purposes.
-$("#clear").click(function() {
+$("#clear").click(function () {
     widget.unbind(SC.Widget.Events.PLAY);
     widget.unbind(SC.Widget.Events.READY);
 });
 
 // connect with Soundcloud
-$("#connect").click(function() {
+// initialize client with app credentials
+SC.initialize({
+    client_id: '70a5f42778b461b7fbae504a5e436c06',
+    redirect_uri: 'http://localhost:9000/assets/html/callback.html'
+});
+
+$("#connect").click(function () {
+    // initiate auth popup
     if (SC.accessToken() == null) {
-        SC.connect(function() {
-            SC.get('/me', function(me) {
-                alert("hoi");
+        SC.connect(function () {
+            SC.get('/me', function (me) {
                 widget.load("api.soundcloud.com/users/" + me.id + "/favorites", {});
-                $("connect").val("Disconnect");
+                $("#connect").html("Disconnect");
             });
         });
     } else {
-        alert("hee");
         SC.accessToken(null);
-        $("connect").val("Connect");
+        $("#connect").html("Connect");
     }
 });

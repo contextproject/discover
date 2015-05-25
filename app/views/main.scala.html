@@ -8,7 +8,6 @@
         <meta charset="UTF-8">
 
         <script type="text/javascript" src="@routes.Assets.at("javascripts/api.js")"></script>
-        <script type="text/javascript" src="@routes.Assets.at("javascripts/connect.js")"></script>
         <script type="text/javascript" src="@routes.Assets.at("javascripts/scroll.js")"></script>
 
         <script type="text/javascript" src="http://connect.soundcloud.com/sdk.js"></script>
@@ -16,7 +15,7 @@
 
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="stylesheet" href="@routes.Assets.at("stylesheets/photon.css")" />
-        <link rel="stylesheet" href="@routes.Assets.at("stylesheets/index.css")" />
+        <link rel="stylesheet" href="@routes.Assets.at("stylesheets/main.css")" />
 
         <script>
             $.getScript("/assets/javascripts/controls.js");
@@ -59,7 +58,7 @@
                 <div class="row 150%">
                     <div class="8u 12u$(medium)">
                         <div class="player">
-                        @player
+                            @player
                         </div>
                     </div>
                     <div class="4u$ 12u$(medium) important(medium)">
@@ -67,8 +66,8 @@
                             <input type="range" class="control" id="volume">
 
                             <button class="control" id="preview">Preview</button> <br>
-                            <button class="control" id="prev">Previous</button> <br>
                             <button class="control" id="next">Next</button> <br>
+                            <button class="control" id="prev">Previous</button> <br>
                             <button class="control" id="rand">Random Song</button> <br>
                             <button class="control" id="clear">Clear Events</button> <br>
                             <button class="control" id="connect">Connect</button> <br>
