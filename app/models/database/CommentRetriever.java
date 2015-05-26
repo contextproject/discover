@@ -67,34 +67,8 @@ public class CommentRetriever {
 		try {
 			while (comments.next()) {
 				Comment current = new Comment(comments.getInt("user_id"),
-						   comments.getInt("timestamp"));
+						   comments.getInt("timestamp"), comments.getString("text"));
 				result.add(current);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return result;
-	}
-
-	/**
-	 * Gets the comment of a song and also gets the content of a comment.
-	 * 
-	 * @param trackid
-	 *            the track id of the song
-	 * @return A map of comments with their content
-	 */
-	public final Map<Comment, String> getCommentsWithString(final int trackid) {
-		ResultSet comments = databaseConnector
-				  .executeQuery("SELECT user_id, timestamp,"
-						+ " text FROM comments WHERE track_id = " + trackid);
-		HashMap<Comment, String> result = new HashMap<Comment, String>();
-
-		try {
-			while (comments.next()) {
-				Comment current = new Comment(comments.getInt("user_id"),
-						  comments.getInt("timestamp"));
-				String content = comments.getString("text");
-				result.put(current, content);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

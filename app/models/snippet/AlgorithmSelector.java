@@ -4,6 +4,7 @@ import models.database.CommentRetriever;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -39,6 +40,36 @@ public class AlgorithmSelector {
             enoughComments = true;
         }
     }
+
+    public double masterMethod() {
+        int timeCI = contentFiltering();
+        int timeFE = featureEssentia();
+
+        return (100 * timeCI + 0 * timeFE) / 100.0;
+    }
+
+
+    // Tomas
+    private int contentFiltering() {
+        Map<Double, Comment> comments = new HashMap<Double, Comment>();
+        return commentIntensity(comments);
+    }
+
+    // Daan
+    private int commentIntensity(Map<Double, Comment> comments) {
+        //determine timestamp
+        return 0;
+    }
+
+
+    // Jordy
+    private int featureEssentia() {
+        return 0;
+    }
+
+
+
+
 
     /**
      * This function decides which algorithm to use and computes a snippet in different ways.

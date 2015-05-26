@@ -24,7 +24,7 @@ public class ContentFilter {
      * @param content the content of a comment
      * @return true if the content contains a positive message
      */
-    public boolean contentFilter(final String content) {
+    public D contentFilter(final String content) {
         String body = content.toLowerCase();
         boolean res = false;
         for (String p : positive) {
