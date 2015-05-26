@@ -139,11 +139,89 @@ public class MixSplitterTest extends BasicTest {
      * Tests the {@link MixSplitter#getJaccardDistance(List, List)} method.
      */
     @Test
-    public void testGetJaccardDistanceEmpty() {
+    public void testGetJaccardDistanceBothEmpty() {
         final List<Float> empty = new ArrayList<Float>();
         final double expected = 0.0;
-        final double delta = 0.01;
+        final double delta = 0.001;
         assertEquals(expected, getSplitter().getJaccardDistance(empty, empty),
+                delta);
+    }
+
+    /**
+     * Tests the {@link MixSplitter#getJaccardDistance(List, List)} method.
+     */
+    @Test
+    public void testGetJaccardDistanceFirstEmpty() {
+        final List<Float> empty = new ArrayList<Float>();
+        final List<Float> second = asList(3.0f, 2.1f, 1.1f);
+        final double expected = 1.0;
+        final double delta = 0.001;
+        assertEquals(expected, getSplitter().getJaccardDistance(empty, second),
+                delta);
+    }
+
+    /**
+     * Tests the {@link MixSplitter#getJaccardDistance(List, List)} method.
+     */
+    @Test
+    public void testGetJaccardDistanceSecondEmpty() {
+        final List<Float> empty = new ArrayList<Float>();
+        final List<Float> first = asList(3.0f, 2.1f, 1.1f);
+        final double expected = 1.0;
+        final double delta = 0.001;
+        assertEquals(expected, getSplitter().getJaccardDistance(first, empty),
+                delta);
+    }
+
+    /**
+     * Tests the {@link MixSplitter#getJaccardDistance(List, List)} method.
+     */
+    @Test
+    public void testGetJaccardDistance() {
+        final List<Float> first = asList(3.0f, 1.2f, 4.3f, 88.6f, 2.1f);
+        final List<Float> second = asList(3.0f, 2.1f, 1.1f);
+        final double expected = (double) 4 / 6;
+        final double delta = 0.001;
+        assertEquals(expected, getSplitter().getJaccardDistance(first, second),
+                delta);
+    }
+
+    /**
+     * Tests the {@link MixSplitter#getJaccardDistance(List, List)} method.
+     */
+    @Test
+    public void testGetJaccardDistanceAgain() {
+        final List<Float> second = asList(3.0f, 1.2f, 4.3f, 88.6f, -2.2f);
+        final List<Float> first = asList(3.0f, 2.1f, 1.1f, 0.0f);
+        final double expected = 0.875;
+        final double delta = 0.001;
+        assertEquals(expected, getSplitter().getJaccardDistance(first, second),
+                delta);
+    }
+
+    /**
+     * Tests the {@link MixSplitter#getJaccardDistance(List, List)} method.
+     */
+    @Test
+    public void testGetJaccardDistanceNoIntersect() {
+        final List<Float> first = asList(3.0f, 1.2f, 4.3f, 88.6f, -2.2f);
+        final List<Float> second = asList(3.3f, 2.1f, 1.1f, 0.0f);
+        final double expected = 1.0;
+        final double delta = 0.001;
+        assertEquals(expected, getSplitter().getJaccardDistance(first, second),
+                delta);
+    }
+
+    /**
+     * Tests the {@link MixSplitter#getJaccardDistance(List, List)} method.
+     */
+    @Test
+    public void testGetJaccardDistanceDoublesInLists() {
+        final List<Float> first = asList(3.0f, 2.1f, 3.0f);
+        final List<Float> second = asList(4.2f, 3.0f, 6.1f);
+        final double expected = 0.75;
+        final double delta = 0.001;
+        assertEquals(expected, getSplitter().getJaccardDistance(first, second),
                 delta);
     }
 }
