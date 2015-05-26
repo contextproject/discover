@@ -61,7 +61,7 @@ public class MixSplitterTest extends BasicTest {
      *            The numbers to have in the list.
      * @return The list containing the given numbers.
      */
-    protected List<Float> asList(final float... numbers) {
+    protected static List<Float> asList(final float... numbers) {
         List<Float> floats = new ArrayList<Float>(numbers.length);
         for (float f : numbers) {
             floats.add(f);

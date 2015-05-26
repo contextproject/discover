@@ -90,19 +90,37 @@ public class Shingle {
         return new Shingle(union);
     }
 
+    /**
+     * Returns the size of the Shingle.
+     * @return The size of the data in the shingle.
+     */
     public int size() {
         return data.size();
     }
 
-    public void add(Float e) {
+    /**
+     * Adds float e to the data of the shingle.
+     * @param e The float you want to add.
+     */
+    public void add(final Float e) {
         data.add(e);
     }
-
+    
+    /**
+     * Retrieves the data used by the Shingle.
+     * @return The data the shingle operates on.
+     */
     public List<Float> getData() {
         return data;
     }
 
-    public void setData(List<Float> data) {
+    /**
+     * Changes the data this Shingle operates on to the given list.
+     * Since this is changing the current Shingle this should be used with
+     * caution.
+     * @param data The new data to operate on.
+     */
+    public void setData(final List<Float> data) {
         this.data = data;
     }
 
