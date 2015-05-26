@@ -1,6 +1,7 @@
-package models.database;
+package models.database.retriever;
 
 import controllers.Application;
+import models.database.DatabaseConnector;
 import models.snippet.Comment;
 
 import java.sql.ResultSet;
@@ -47,7 +48,7 @@ public class CommentRetriever {
         try {
             while (resultSet.next()) {
                 Comment current = new Comment(resultSet.getInt("user_id"),
-                        resultSet.getInt("timestamp"), resultSet.getString("text"));
+                        resultSet.getInt("timestamp"));
                 result.add(current);
             }
         } catch (SQLException e) {

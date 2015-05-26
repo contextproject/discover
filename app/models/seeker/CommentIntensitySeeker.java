@@ -44,11 +44,10 @@ public class CommentIntensitySeeker implements Seeker {
     /**
      * Seeks the Snippet to be used of a given song with a unknown duration.
      *
-     * @param trackid The set of comments to use
      * @return A TimedSnippet object
      */
     @Override
-    public TimedSnippet seek(final int trackid) {
+    public TimedSnippet seek() {
         return new TimedSnippet(0);
     }
 

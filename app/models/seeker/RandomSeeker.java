@@ -45,7 +45,7 @@ public class RandomSeeker implements Seeker {
 
 
     @Override
-    public TimedSnippet seek(int trackid) {
+    public TimedSnippet seek() {
         return new TimedSnippet(start);
     }
 }

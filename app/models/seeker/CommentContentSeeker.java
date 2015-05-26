@@ -62,7 +62,7 @@ public class CommentContentSeeker implements Seeker {
     }
 
     @Override
-    public TimedSnippet seek(int trackid) {
+    public TimedSnippet seek() {
         return null;
     }
 }

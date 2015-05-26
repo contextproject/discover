@@ -30,10 +30,9 @@ public class Comment {
      * @param userId id of the user
      * @param time   time of the given comment, will be saved as thousand
      */
-    public Comment(final int userId, final int time, final String body) {
+    public Comment(final int userId, final int time) {
         this.userid = userId;
         this.timestamp = time;
-        this.body = body;
     }
 
     /**

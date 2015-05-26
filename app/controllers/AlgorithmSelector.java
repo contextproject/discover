@@ -1,9 +1,7 @@
 package controllers;
 
-import models.database.CommentRetriever;
+import models.database.retriever.CommentRetriever;
 import models.seeker.CommentContentSeeker;
-import models.seeker.RandomSeeker;
-import models.seeker.Seeker;
 import models.snippet.Comment;
 
 import java.util.HashMap;
