@@ -1,9 +1,11 @@
-package models.snippet;
+package models.seeker;
+
+import models.snippet.TimedSnippet;
 
 /**
  * Filters the content of a comment.
  */
-public class ContentFilter {
+public class CommentContentSeeker implements Seeker {
 
     /**
      * List of positive words.
@@ -24,7 +26,7 @@ public class ContentFilter {
      * @param content the content of a comment
      * @return true if the content contains a positive message
      */
-    public D contentFilter(final String content) {
+    public boolean contentFilter(final String content) {
         String body = content.toLowerCase();
         boolean res = false;
         for (String p : positive) {
@@ -57,5 +59,10 @@ public class ContentFilter {
         return body.contains(":)") || body.contains("<3")
                 || body.contains(":d") || body.contains(":-)")
                 || body.contains("=d");
+    }
+
+    @Override
+    public TimedSnippet seek(int trackid) {
+        return null;
     }
 }

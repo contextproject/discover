@@ -1,5 +1,6 @@
 package models.snippet;
 
+import controllers.AlgorithmSelector;
 import controllers.Application;
 import models.database.DatabaseConnector;
 

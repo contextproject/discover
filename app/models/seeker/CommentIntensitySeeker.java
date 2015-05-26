@@ -1,4 +1,7 @@
-package models.snippet;
+package models.seeker;
+
+import models.snippet.Comment;
+import models.snippet.TimedSnippet;
 
 import java.util.Set;
 import java.util.TreeSet;
@@ -17,10 +20,7 @@ public class CommentIntensitySeeker implements Seeker {
      * @return a start time
      */
     protected static int getStartTime(final Set<Comment> coms, final int duration) {
-        if (coms.isEmpty()) {
-            return 0;
-        }
-        int start = 0;
+        int start = -1;
         int maxcount = 0;
         Set<Integer> passed = new TreeSet<Integer>();
         for (Comment c : coms) {
@@ -44,12 +44,12 @@ public class CommentIntensitySeeker implements Seeker {
     /**
      * Seeks the Snippet to be used of a given song with a unknown duration.
      *
-     * @param coms The set of comments to use
+     * @param trackid The set of comments to use
      * @return A TimedSnippet object
      */
     @Override
-    public TimedSnippet seek(final Set<Comment> coms) {
-        return new TimedSnippet(getStartTime(coms, TimedSnippet.getDefaultDuration()));
+    public TimedSnippet seek(final int trackid) {
+        return new TimedSnippet(0);
     }
 
     /**

@@ -1,6 +1,12 @@
-package models.snippet;
+package controllers;
 
 import models.database.CommentRetriever;
+import models.seeker.CommentIntensitySeeker;
+import models.seeker.CommentContentSeeker;
+import models.seeker.RandomSeeker;
+import models.seeker.Seeker;
+import models.snippet.Comment;
+import models.snippet.TimedSnippet;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -18,14 +24,11 @@ public class AlgorithmSelector {
     private final int trackid;
 
     /**
-     * A variable which indicates if a song has enough comments.
+     * The set of comments of the current track.
      */
-    private boolean enoughComments = false;
+    private Set<Comment> comments;
 
-    /**
-     * A comment retriever object to use.
-     */
-    private CommentRetriever retriever;
+    private int noComments;
 
     /**
      * Constructor for making a AlgorithmSelector object.
@@ -34,11 +37,11 @@ public class AlgorithmSelector {
      */
     public AlgorithmSelector(final int trackid) {
         this.trackid = trackid;
-        retriever = new CommentRetriever();
-        int commentAmount = retriever.getAmountOfComments(trackid);
-        if (commentAmount > 5) {
-            enoughComments = true;
-        }
+        CommentRetriever retriever = new CommentRetriever(trackid);
+        comments = retriever.getComments();
+        noComments = retriever.getNoComments();
+
+        Seeker bla = new RandomSeeker();
     }
 
     public double masterMethod() {
@@ -52,12 +55,15 @@ public class AlgorithmSelector {
     // Tomas
     private int contentFiltering() {
         Map<Double, Comment> comments = new HashMap<Double, Comment>();
-        return commentIntensity(comments);
+        return -1;
     }
 
     // Daan
-    private int commentIntensity(Map<Double, Comment> comments) {
-        //determine timestamp
+    private int commentIntensity() {
+//        CommentIntensitySeeker cis = new CommentIntensitySeeker();
+//        TimedSnippet ts = cis.seek(comments);
+//        return ts.getStartTime();
+
         return 0;
     }
 
@@ -76,19 +82,19 @@ public class AlgorithmSelector {
      *
      * @return the snippet for the start time and duration of a Snippet.
      */
-    public TimedSnippet getSnippet() {
-        if (enoughComments) {
-            HashMap<Comment, String> map = (HashMap<Comment, String>) retriever
-                    .getCommentsWithString(trackid);
-            Set<Comment> set = processContent(map);
-            CommentIntensitySeeker cis = new CommentIntensitySeeker();
-            TimedSnippet ts = cis.seek(set);
-
-            return ts;
-        } else {
-            return new TimedSnippet(0, TimedSnippet.getDefaultDuration());
-        }
-    }
+//    public TimedSnippet getSnippet() {
+//        if (enoughComments) {
+//            HashMap<Comment, String> map = (HashMap<Comment, String>) retriever
+//                    .getCommentsWithString(trackid);
+//            Set<Comment> set = processContent(map);
+//            CommentIntensitySeeker cis = new CommentIntensitySeeker();
+//            TimedSnippet ts = cis.seek(set);
+//
+//            return ts;
+//        } else {
+//            return new TimedSnippet(0, TimedSnippet.getDefaultDuration());
+//        }
+//    }
 
     /**
      * Processes the content of the comments retrieved with CommentRetriever.
@@ -98,7 +104,7 @@ public class AlgorithmSelector {
      */
     private Set<Comment> processContent(final HashMap<Comment, String> map) {
         HashSet<Comment> result = new HashSet<Comment>();
-        ContentFilter cf = new ContentFilter();
+        CommentContentSeeker cf = new CommentContentSeeker();
 
         for (Comment c : map.keySet()) {
             String s = map.get(c);
