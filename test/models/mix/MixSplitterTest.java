@@ -16,7 +16,7 @@ import static org.junit.Assert.assertEquals;
  * @see BasicTest
  * 
  * @since 21-05-2015
- * @version 21-05-2015
+ * @version 26-05-2015
  * 
  * @author stefan boodt
  * @author arthur hovenesyan

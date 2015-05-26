@@ -8,7 +8,7 @@ import java.util.List;
  * pieces.
  * 
  * @since 21-05-2015
- * @version 21-05-2015
+ * @version 26-05-2015
  * 
  * @see Shingle
  * 
