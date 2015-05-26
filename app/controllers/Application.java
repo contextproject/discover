@@ -18,18 +18,6 @@ public class Application extends Controller {
     private static DatabaseConnector databaseConnector;
 
     /**
-     * The index method is called when the application is started and no other
-     * messages have been passed.
-     *
-     * @return an http ok response with the rendered page.
-     */
-    public static Result index() {
-        String url = "w.soundcloud.com/tracks/67016624";
-        Double starttime = getStartTime(67016624);
-        return ok(index.render(url, starttime));
-    }
-
-    /**
      * Renders a page with the given track id to load the widget.
      *
      * @param trackId , the id of the track we are searching for.
@@ -39,6 +27,17 @@ public class Application extends Controller {
         String url = "w.soundcloud.com/tracks/" + trackId;
         double starttime = getStartTime(Integer.parseInt(trackId));
         return ok(index.render(url, starttime));
+    }
+
+    /**
+     * The index method is called when the application is started and
+     * no other messages have been passed.
+     *
+     * @return an http ok response with the rendered page.
+     */
+    public static Result index() {
+        String url = "w.soundcloud.com/tracks/67016624";
+        return ok(index.render(url, getStartTime(67016624)));
     }
 
     /**
@@ -54,7 +53,7 @@ public class Application extends Controller {
 //		return ts.getStartTime();
         return 0;
     }
-
+    
     /**
      * Selects a random track from the database.
      *
@@ -68,6 +67,7 @@ public class Application extends Controller {
         double starttime = getStartTime(trackId);
         return ok(index.render(url, starttime));
     }
+
 
     /**
      * Setter for the DatabaseConnector object.

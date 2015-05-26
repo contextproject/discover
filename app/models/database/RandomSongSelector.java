@@ -37,7 +37,7 @@ public final class RandomSongSelector {
     private RandomSongSelector() {
         trackid = "track_id";
         query = "SELECT DISTINCT " + trackid
-                + " FROM comments"
+                + " FROM tracks"
                 + " ORDER BY RAND()"
                 + " LIMIT 1";
     }
