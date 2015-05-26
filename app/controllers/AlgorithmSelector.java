@@ -1,12 +1,10 @@
 package controllers;
 
 import models.database.CommentRetriever;
-import models.seeker.CommentIntensitySeeker;
 import models.seeker.CommentContentSeeker;
 import models.seeker.RandomSeeker;
 import models.seeker.Seeker;
 import models.snippet.Comment;
-import models.snippet.TimedSnippet;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -40,8 +38,6 @@ public class AlgorithmSelector {
         CommentRetriever retriever = new CommentRetriever(trackid);
         comments = retriever.getComments();
         noComments = retriever.getNoComments();
-
-        Seeker bla = new RandomSeeker();
     }
 
     public double masterMethod() {
@@ -72,9 +68,6 @@ public class AlgorithmSelector {
     private int featureEssentia() {
         return 0;
     }
-
-
-
 
 
     /**
