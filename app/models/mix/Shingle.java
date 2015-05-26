@@ -8,26 +8,13 @@ import java.util.List;
  */
 public class Shingle {
 
-	private List<Float> data;
+	private ArrayList<Float> data;
 
 	/**
-	 * Constructor for the ShingleSet.
-	 * @param k The size of the shingles.
+	 * @param k The size of the shingle.
 	 */
-	public Shingle(int k) {
-		this.data = new ArrayList<Float>(k);
-	}
-
-	/**
-	 * Add shingles of size k to the set from String s.
-	 * @param s, The string that is to be transformed to shingles.
-	 */
-	public void shingleString(Float s) {
-//		if (!(s.length() < size)) {
-//			for (int i = 0; i+size <= s.length(); i++) {
-//				this.add(s.substring(i,i+size));
-//			}
-//		}
+	public Shingle(ArrayList<Float> data) {
+		this.data = data;
 	}
 
 	/**
@@ -36,14 +23,26 @@ public class Shingle {
 	 * @return The Jaccard distance between this set and the other set.
 	 */
 	public double jaccardDistance(Shingle other) {
-		double ans = 0;
-//		TreeSet<String> part = (TreeSet) this.clone();
-//		TreeSet<String> whole = (TreeSet) this.clone();
-//		part.retainAll(other);
-//		whole.addAll(other);
-//		double ans = (double) part.size() / (double) whole.size();
+		Shingle part = this;
+		part.getData().retainAll(other.getData());
+		double ans = (double) part.size() / (double) this.size();
 		return 1-ans; 
 	}
-	
 
+	public int size() {
+		return data.size();
+	}
+	
+	public void add(Float e) {
+		data.add(e);
+	}
+	
+	public List<Float> getData() {
+		return data;
+	}
+
+	public void setData(ArrayList<Float> data) {
+		this.data = data;
+	}
+	
 }
