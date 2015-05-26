@@ -9,7 +9,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 
-
+import models.seeker.CommentIntensitySeeker;
+import models.seeker.CommentContentSeeker;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -22,14 +23,14 @@ public class ContentFilterTest {
 	/**
 	 * A contentfilter object.
 	 */
-	private ContentFilter cf;
+	private CommentContentSeeker cf;
 
 	/**
 	 * Setting up the class to test with.
 	 */
 	@Before
 	public void initialize() {
-		cf = new ContentFilter();
+		cf = new CommentContentSeeker();
 	}
 
 	/**

@@ -1,78 +1,68 @@
 package models.database;
 
 import controllers.Application;
+import models.snippet.Comment;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
-
-import models.snippet.Comment;
 
 /**
  * Class to retrieve the comments from the database.
  */
 public class CommentRetriever {
 
-	/**
-	 * Database connector.
-	 */
-	private DatabaseConnector databaseConnector;
+    /**
+     * Database connector.
+     */
+    private DatabaseConnector databaseConnector;
 
-	/**
-	 * Constructor.
-	 */
-	public CommentRetriever() {
-		databaseConnector = Application.getDatabaseConnector();
-	}
+    private int trackid;
 
-	/**
-	 * Gets the number of comments a comment has.
-	 * 
-	 * @param trackid
-	 *            the track id of a song.
-	 * @return amount of comments of that song.
-	 */
-	public final int getAmountOfComments(final int trackid) {
-		ResultSet comments = databaseConnector
-				  .executeQuery("SELECT comment_count "
-						+ "FROM tracks WHERE track_id = " + trackid);
-		int res = 0;
+    private Set<Comment> comments;
 
-		try {
-			while (comments.next()) {
-				res = comments.getInt("comment_count");
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return res;
-	}
+    private int noComments;
 
-	/**
-	 * Gets the comments of the song corresponding to the given track id.
-	 *
-	 * @param trackid
-	 *            the track id of the song
-	 * @return A set of comments of the song
-	 */
-	public final Set<Comment> getComments(final int trackid) {
-		ResultSet comments = databaseConnector
-				  .executeQuery("SELECT user_id, timestamp,"
-						+ " text FROM comments WHERE track_id = " + trackid);
-		HashSet<Comment> result = new HashSet<Comment>();
+    /**
+     * Constructor.
+     */
+    public CommentRetriever(int trackid) {
+        databaseConnector = Application.getDatabaseConnector();
+        this.trackid = trackid;
+        something();
+    }
 
-		try {
-			while (comments.next()) {
-				Comment current = new Comment(comments.getInt("user_id"),
-						   comments.getInt("timestamp"), comments.getString("text"));
-				result.add(current);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return result;
-	}
+    /**
+     * Gets the comments of the song corresponding to the given track id.
+     *
+     * @return A set of comments of the song
+     */
+    private final void something() {
+        ResultSet resultSet = databaseConnector
+                .executeQuery("SELECT user_id, timestamp,"
+                        + " text FROM comments WHERE track_id = " + trackid);
+        HashSet<Comment> result = new HashSet<Comment>();
+
+        try {
+            while (resultSet.next()) {
+                Comment current = new Comment(resultSet.getInt("user_id"),
+                        resultSet.getInt("timestamp"), resultSet.getString("text"));
+                result.add(current);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        noComments = result.size();
+        comments = result;
+    }
+
+    public Set<Comment> getComments() {
+        return comments;
+    }
+
+    public int getNoComments() {
+        return noComments;
+    }
 }

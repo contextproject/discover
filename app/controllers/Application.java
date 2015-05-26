@@ -2,7 +2,6 @@ package controllers;
 
 import models.database.DatabaseConnector;
 import models.database.RandomSongSelector;
-import models.snippet.AlgorithmSelector;
 import models.snippet.TimedSnippet;
 import play.mvc.Controller;
 import play.mvc.Result;

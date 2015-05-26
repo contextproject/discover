@@ -3,6 +3,7 @@ package models.snippet;
 import java.util.HashSet;
 import java.util.Set;
 
+import models.seeker.CommentIntensitySeeker;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -81,7 +82,7 @@ public class CommentIntensitySeekerTest {
         Set<Comment> set = new HashSet<Comment>();
         TimedSnippet ts = cis.seek(set);
         assertEquals(0, ts.getStartTime());
-        assertEquals(30000, ts.getDuration());
+        assertEquals(30000, ts.getWindow());
     }
 
     /**
@@ -96,7 +97,7 @@ public class CommentIntensitySeekerTest {
         set.add(c6);
         TimedSnippet ts = cis.seek(set);
         assertEquals(15000, ts.getStartTime());
-        assertEquals(30000, ts.getDuration());
+        assertEquals(30000, ts.getWindow());
     }
 
     /**
@@ -114,7 +115,7 @@ public class CommentIntensitySeekerTest {
         assertEquals(30000, TimedSnippet.getDefaultDuration());
         assertEquals(5000, Comment.getPeriod());
         assertEquals(40000, ts.getStartTime());
-        assertEquals(30000, ts.getDuration());
+        assertEquals(30000, ts.getWindow());
     }
 
     /**
@@ -127,7 +128,7 @@ public class CommentIntensitySeekerTest {
         set.add(c9);
         TimedSnippet ts = cis.seek(set);
         assertEquals(5000, ts.getStartTime());
-        assertEquals(30000, ts.getDuration());
+        assertEquals(30000, ts.getWindow());
     }
 
     /**
@@ -142,7 +143,7 @@ public class CommentIntensitySeekerTest {
         set.add(c6);
         TimedSnippet ts = cis.seekDuration(set, 45000);
         assertEquals(15000, ts.getStartTime());
-        assertEquals(45000, ts.getDuration());
+        assertEquals(45000, ts.getWindow());
     }
 
     /**
@@ -156,7 +157,7 @@ public class CommentIntensitySeekerTest {
         set.add(com);
         TimedSnippet ts = cis.seek(set);
         assertEquals(0, ts.getStartTime());
-        assertEquals(30000, ts.getDuration());
+        assertEquals(30000, ts.getWindow());
         verify(com, times(7)).getTime();
         verify(com).hashCode();
     }
