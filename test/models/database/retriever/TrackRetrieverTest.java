@@ -10,18 +10,16 @@ import static org.junit.Assert.*;
 
 public class TrackRetrieverTest {
 
-    //Retriever retriever;
+    Retriever retriever;
 
     @Before
     public void startUp() {
-        //retriever = new TrackRetriever(100005416);
+        retriever = new TrackRetriever(100005416);
     }
 
     @Test
     public void testGetAll() throws Exception {
-        //ResultSet resultSet = retriever.retrieve();
-        //assertEquals(100005416, resultSet.getInt("track_id"));
-
-        assertEquals(0, 0);
+        ResultSet resultSet = retriever.retrieve();
+        assertEquals(100005416, resultSet.getInt("track_id"));
     }
 }

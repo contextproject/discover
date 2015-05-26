@@ -1,22 +1,24 @@
 package models.database.retriever;
 
 import controllers.Application;
+import models.database.DatabaseConnector;
 
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 
+/**
+ * Class to retrieve the information of the track from the database.
+ */
 public class TrackRetriever implements Retriever {
+
+    /**
+     * The DatabaseConnector object.
+     */
+    private DatabaseConnector databaseConnector;
 
     /**
      * The ResultSet object of the query.
      */
     private ResultSet resultSet;
-
-    /**
-     * The PreparedStatement object for the query
-     */
-    private PreparedStatement preparedStatement;
 
     /**
      * The id of the track.
@@ -28,29 +30,36 @@ public class TrackRetriever implements Retriever {
      *
      * @param trackid The id of the track
      */
-    public TrackRetriever(int trackid) {
+    public TrackRetriever(final int trackid) {
         this.trackid = trackid;
-        String query = "SELECT ? FROM tracks WHERE track_id = " + trackid;
-        try {
-            preparedStatement = Application.getDatabaseConnector().getConnection().prepareStatement(query);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        this.databaseConnector = Application.getDatabaseConnector();
     }
 
     /**
      * Get all the information of the track from the database.
      */
-    public void getAll() throws SQLException {
-        preparedStatement.setString(0, "*");
-        resultSet = preparedStatement.executeQuery();
+    public void getAll() {
+        resultSet = databaseConnector.executeQuery(
+                "SELECT * FROM tracks WHERE track_id = " + trackid
+        );
     }
 
     /**
      * Get the user id of the track from the database.
      */
     public void getUserID() {
+        resultSet = databaseConnector.executeQuery(
+                "SELECT user_id FROM tracks WHERE track_id = " + trackid
+        );
+    }
 
+    /**
+     * Get the duration of the track from the database.
+     */
+    public void getDuration() {
+        resultSet = databaseConnector.executeQuery(
+                "SELECT duration FROM tracks WHERE track_id = " + trackid
+        );
     }
 
 

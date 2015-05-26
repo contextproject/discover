@@ -2,12 +2,10 @@ package models.database.retriever;
 
 import controllers.Application;
 import models.database.DatabaseConnector;
-import models.database.retriever.CommentRetriever;
 import models.snippet.Comment;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Iterator;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
@@ -16,11 +14,6 @@ import static org.junit.Assert.assertEquals;
  * Test class for the CommentRetriever class.
  */
 public class CommentRetrieverTest {
-
-    /**
-     * Comment retriever object.
-     */
-    private CommentRetriever commentRetriever;
 
     /**
      * DatabaseConnector object.
@@ -34,43 +27,36 @@ public class CommentRetrieverTest {
     public void setUp() {
         databaseConnector = new DatabaseConnector();
         databaseConnector.loadDrivers();
-        databaseConnector.makeConnection("jdbc:mysql://188.166.78.36/contextbase", "context",
-                "password");
+        databaseConnector.makeConnection("jdbc:mysql://188.166.78.36/contextbase", "context", "password");
         Application.setDatabaseConnector(databaseConnector);
-
-        commentRetriever = new CommentRetriever(114419538);
     }
 
     /**
-     * Checking the amountofcomments function.
+     * Test for the getComments() method.
      *
-     * @throws Exception if something goes wrong.
+     * @throws Exception Exception
      */
     @Test
-    public void getAmountOfCommentsTest() throws Exception {
-        // Song with highest amount of comments
-        int ac = commentRetriever.getNoComments();
-        assertEquals(20120, ac);
+    public void getCommentsTest() throws Exception {
+        // Track with one comment and highest playback count
+        CommentRetriever commentRetriever = new CommentRetriever(62683860);
+        assertEquals(1, commentRetriever.getNoComments());
+
+        Set<Comment> comments = commentRetriever.getComments();
+        Comment comment = comments.iterator().next();
+        assertEquals(11408439, comment.getUser());
+        assertEquals(52052, comment.getTimestamp());
     }
 
-//    /**
-//     * Checking the getcomments function.
-//     *
-//     * @throws Exception if something goes wrong.
-//     */
-//    @Test
-//    public void getCommentsTest() throws Exception {
-//        databaseConnector.executeUpdate("INSERT INTO with_features_comments "
-//                + "VALUES (1, 1, 1, '2015-01-01 12:00:00', 1, 'test')");
-//        Set<Comment> comments = commentRetriever.getComments();
-//        Iterator<Comment> it = comments.iterator();
-//        while (it.hasNext()) {
-//            Comment comment = it.next();
-//            assertEquals(1, comment.getUser());
-//            assertEquals(1, comment.getTimestamp());
-//        }
-//        databaseConnector.executeUpdate("DELETE FROM with_features_comments WHERE track_id = 1 "
-//                + "AND comment_id = 1 " + "AND user_id = 1 AND created_at = '2015-01-01 12:00:00' "
-//                + "AND timestamp = 1 AND text = 'test'");
-//    }
+    /**
+     * Test for the getNoComments() method.
+     *
+     * @throws Exception Exception
+     */
+    @Test
+    public void getNoCommentsTest() throws Exception {
+        // Track with highest amount of comments
+        CommentRetriever commentRetriever = new CommentRetriever(114419538);
+        assertEquals(8135, commentRetriever.getNoComments());
+    }
 }

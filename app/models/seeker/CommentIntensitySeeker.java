@@ -1,5 +1,6 @@
 package models.seeker;
 
+import models.database.retriever.CommentRetriever;
 import models.snippet.Comment;
 import models.snippet.TimedSnippet;
 
@@ -8,26 +9,44 @@ import java.util.TreeSet;
 
 /**
  * This class returns the start time for a snippet,
- * based on the comment intensity of that song.
+ * based on the comment intensity of the track.
  */
 public class CommentIntensitySeeker implements Seeker {
 
     /**
+     * The id of the track.
+     */
+    private int trackid;
+
+    /**
+     * The set of comments of the track.
+     */
+    private Set<Comment> comments;
+
+    /**
+     * Constructor.
+     *
+     * @param trackid The id of the track
+     */
+    public CommentIntensitySeeker(int trackid) {
+        this.trackid = trackid;
+        this.comments = new CommentRetriever(trackid).getComments();
+    }
+
+    /**
      * Generates a start time for a snippet.
      *
-     * @param coms     The set of comments of a given song
-     * @param duration The duration of that given song
      * @return a start time
      */
-    protected static int getStartTime(final Set<Comment> coms, final int duration) {
+    private int getStartTime() {
         int start = -1;
         int maxcount = 0;
         Set<Integer> passed = new TreeSet<Integer>();
-        for (Comment c : coms) {
+        for (Comment c : comments) {
             int count = 0;
             if (!passed.contains(c.getTime())) {
-                for (Comment c2 : coms) {
-                    if (c2.getTime() >= c.getTime() && c2.getTime() <= (c.getTime() + duration)) {
+                for (Comment c2 : comments) {
+                    if (c2.getTime() >= c.getTime() && c2.getTime() <= c.getTime()) {
                         count++;
                     }
                 }
@@ -41,24 +60,32 @@ public class CommentIntensitySeeker implements Seeker {
         return start;
     }
 
+
+
     /**
-     * Seeks the Snippet to be used of a given song with a unknown duration.
+     * Seeks the snippet to be used of a given song.
      *
      * @return A TimedSnippet object
      */
     @Override
     public TimedSnippet seek() {
-        return new TimedSnippet(0);
+        return new TimedSnippet(getStartTime());
     }
 
-    /**
-     * Seeks the snippet to be used of a given song with the duration known.
-     *
-     * @param coms     The set of comments to use
-     * @param duration The duration of the song
-     * @return A TimedSnippet object
-     */
-    public TimedSnippet seekDuration(final Set<Comment> coms, final int duration) {
-        return new TimedSnippet(getStartTime(coms, duration), duration);
+
+    public int getTrackid() {
+        return trackid;
+    }
+
+    public void setTrackid(int trackid) {
+        this.trackid = trackid;
+    }
+
+    public Set<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(Set<Comment> comments) {
+        this.comments = comments;
     }
 }

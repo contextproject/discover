@@ -19,30 +19,38 @@ public class CommentRetriever {
      */
     private DatabaseConnector databaseConnector;
 
+    /**
+     * The id of the track.
+     */
     private int trackid;
 
+    /**
+     * The set of comments of the track.
+     */
     private Set<Comment> comments;
 
+    /**
+     * The number of comments of the track.
+     */
     private int noComments;
 
     /**
      * Constructor.
+     *
+     * @param trackid The id of the track
      */
-    public CommentRetriever(int trackid) {
+    public CommentRetriever(final int trackid) {
         databaseConnector = Application.getDatabaseConnector();
         this.trackid = trackid;
-        something();
+        retrieveComments();
     }
 
     /**
      * Gets the comments of the song corresponding to the given track id.
-     *
-     * @return A set of comments of the song
      */
-    private final void something() {
-        ResultSet resultSet = databaseConnector
-                .executeQuery("SELECT user_id, timestamp,"
-                        + " text FROM comments WHERE track_id = " + trackid);
+    private void retrieveComments() {
+        ResultSet resultSet = databaseConnector.executeQuery(
+                "SELECT * FROM comments WHERE track_id = " + trackid);
         HashSet<Comment> result = new HashSet<Comment>();
 
         try {
@@ -59,10 +67,18 @@ public class CommentRetriever {
         comments = result;
     }
 
+    /**
+     * Get the comments of the track.
+     * @return Set of comments of the track
+     */
     public Set<Comment> getComments() {
         return comments;
     }
 
+    /**
+     * Get the number of comments of the track.
+     * @return The number of comments of the track.
+     */
     public int getNoComments() {
         return noComments;
     }
