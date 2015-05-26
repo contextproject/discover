@@ -79,7 +79,7 @@ public class CommentIntensitySeekerTest {
     @Test
     public void testSeekZero() {
         Set<Comment> set = new HashSet<Comment>();
-        TimedSnippet ts = CommentIntensitySeeker.seek(set);
+        TimedSnippet ts = cis.seek(set);
         assertEquals(0, ts.getStartTime());
         assertEquals(30000, ts.getDuration());
     }
@@ -94,7 +94,7 @@ public class CommentIntensitySeekerTest {
         set.add(c4);
         set.add(c5);
         set.add(c6);
-        TimedSnippet ts = CommentIntensitySeeker.seek(set);
+        TimedSnippet ts = cis.seek(set);
         assertEquals(15000, ts.getStartTime());
         assertEquals(30000, ts.getDuration());
     }
@@ -110,7 +110,7 @@ public class CommentIntensitySeekerTest {
         set.add(c7);
         set.add(c8);
         set.add(c9);
-        TimedSnippet ts = CommentIntensitySeeker.seek(set);
+        TimedSnippet ts = cis.seek(set);
         assertEquals(30000, TimedSnippet.getDefaultDuration());
         assertEquals(5000, Comment.getPeriod());
         assertEquals(40000, ts.getStartTime());
@@ -125,7 +125,7 @@ public class CommentIntensitySeekerTest {
         Set<Comment> set = new HashSet<Comment>();
         set.add(c1);
         set.add(c9);
-        TimedSnippet ts = CommentIntensitySeeker.seek(set);
+        TimedSnippet ts = cis.seek(set);
         assertEquals(5000, ts.getStartTime());
         assertEquals(30000, ts.getDuration());
     }
@@ -154,7 +154,7 @@ public class CommentIntensitySeekerTest {
         Comment com = mock(Comment.class);
         when(com.getTime()).thenReturn(0);
         set.add(com);
-        TimedSnippet ts = CommentIntensitySeeker.seek(set);
+        TimedSnippet ts = cis.seek(set);
         assertEquals(0, ts.getStartTime());
         assertEquals(30000, ts.getDuration());
         verify(com, times(7)).getTime();

@@ -3,6 +3,7 @@ package controllers;
 import models.database.DatabaseConnector;
 import models.database.RandomSongSelector;
 import models.snippet.AlgorithmSelector;
+import models.snippet.TimedSnippet;
 import play.mvc.Controller;
 import play.mvc.Result;
 import views.html.index;
@@ -51,8 +52,8 @@ public class Application extends Controller {
 	 */
 	public static double getStartTime(final int trackId) {
 		AlgorithmSelector as = new AlgorithmSelector(trackId);
-		int start = as.getStartTime();
-		return start;
+		TimedSnippet ts = as.getSnippet();
+		return ts.getStartTime();
 	}
 
 	/**

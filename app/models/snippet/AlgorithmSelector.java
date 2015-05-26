@@ -42,21 +42,22 @@ public class AlgorithmSelector {
 	}
 	
 	/**
-	 * This function decides which algorithm to use.
-	 * @return the start time for a preview.
+	 * This function decides which algorithm to use and computes a snippet in differentways.
+	 * @return the snippet for the start time and duration of a Snippet.
 	 */
-	public int getStartTime() {
+	public TimedSnippet getSnippet() {
 		if (enoughComments) {
 
 			HashMap<Comment, String> map = (HashMap<Comment, String>) retriever
 					  .getCommentsWithString(trackid);
 			Set<Comment> set = processContent(map);
-			TimedSnippet ts = CommentIntensitySeeker.seek(set);
+			CommentIntensitySeeker cis = new CommentIntensitySeeker();
+			TimedSnippet ts = cis.seek(set);
 
-			return ts.getStartTime();
+			return ts;
 
 		} else {
-			return 0;
+			return new TimedSnippet(0,TimedSnippet.getDefaultDuration());
 		}
 	}
 
