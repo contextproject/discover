@@ -190,4 +190,214 @@ public class ShingleTest extends BasicTest {
         assertEquals(expected, first.jaccardDistance(second),
                 delta);
     }
+    
+    /**
+     * Tests the {@link Shingle#toString()} method.
+     */
+    @Test
+    public void testToString() {
+        final List<Float> floats = asList(3.0f, 2.1f);
+        shingle.setData(floats);
+        final String expected = "Shingle(3.0, 2.1)";
+        assertEquals(expected, shingle.toString());
+    }
+    
+    /**
+     * Tests the {@link Shingle#toString()} method.
+     */
+    @Test
+    public void testToStringEmpty() {
+        final List<Float> floats = asList();
+        shingle.setData(floats);
+        final String expected = "Shingle()";
+        assertEquals(expected, shingle.toString());
+    }
+    
+    /**
+     * Tests the {@link Shingle#hashCode()} method.
+     */
+    @Test
+    public void testHashCode() {
+        assertEquals(shingle.copy().hashCode(), shingle.hashCode());
+    }
+    
+    /**
+     * Tests the {@link Shingle#equals(Object)} method.
+     */
+    @Test
+    public void testEqualsOnCopy() {
+        assertEquals(shingle.copy().hashCode(), shingle.hashCode());
+    }
+    
+    /**
+     * Tests the {@link Shingle#equals(Object)} method. This method is
+     * relying on the good working of the {@link Shingle#copy()} method.
+     */
+    @Test
+    public void testEqualsDifferentSizes() {
+        final Shingle other = shingle.copy();
+        final float num = 4.0f;
+        other.add(num);
+        assertFalse(shingle.equals(other));
+    }
+    
+    /**
+     * Tests the {@link Shingle#equals(Object)} method.
+     */
+    @Test
+    public void testEqualsDifferentLists() {
+        final Shingle other = new Shingle(asList(1.0f, 0.0f));
+        final List<Float> floats = asList(2.0f, 1.0f);
+        shingle.setData(floats);
+        assertFalse(shingle.equals(other));
+    }
+    
+    /**
+     * Tests the {@link Shingle#union(Shingle)} method.
+     */
+    @Test
+    public void testUnion() {
+        final Shingle other = new Shingle(asList(1.0f, 0.0f));
+        final List<Float> floats = asList(2.0f, 1.0f);
+        shingle.setData(floats);
+        final Shingle union = new Shingle(asList(2.0f, 1.0f, 0.0f));
+        assertEquals(union, shingle.union(other));
+    }
+    
+    /**
+     * Tests the {@link Shingle#union(Shingle)} method.
+     */
+    @Test
+    public void testUnionBothEmpty() {
+        final List<Float> empty = asList();
+        final Shingle other = new Shingle(empty);
+        shingle.setData(empty);
+        final Shingle union = new Shingle(asList());
+        assertEquals(union, shingle.union(other));
+    }
+    
+    /**
+     * Tests the {@link Shingle#union(Shingle)} method.
+     */
+    @Test
+    public void testUnionThisEmpty() {
+        final List<Float> empty = asList();
+        final Shingle other = new Shingle(asList(1.0f, 2.0f));
+        shingle.setData(empty);
+        final Shingle union = other;
+        assertEquals(union, shingle.union(other));
+    }
+    
+    /**
+     * Tests the {@link Shingle#union(Shingle)} method.
+     */
+    @Test
+    public void testUnionOtherEmpty() {
+        final List<Float> empty = asList();
+        final Shingle other = new Shingle(empty);
+        shingle.setData(asList(1.0f));
+        final Shingle union = shingle;
+        assertEquals(union, shingle.union(other));
+    }
+    
+    /**
+     * Tests the {@link Shingle#union(Shingle)} method to see if the
+     * current Shingle changes value, which it should not.
+     */
+    @Test
+    public void testUnionAltered() {
+        final List<Float> list = asList(1.0f);
+        final Shingle other = new Shingle(list);
+        shingle.setData(asList(2.0f));
+        final List<Float> expected = shingle.getData();
+        shingle.union(other);
+        assertEquals(expected, shingle.getData());
+    }
+    
+    /**
+     * Tests the {@link Shingle#union(Shingle)} method to see if the
+     * current Shingle changes value, which it should not.
+     */
+    @Test
+    public void testUnionAlteredWithDoubles() {
+        final List<Float> list = asList(1.0f);
+        final Shingle other = new Shingle(list);
+        shingle.setData(asList(2.0f, 2.0f));
+        final List<Float> expected = shingle.getData();
+        shingle.union(other);
+        assertEquals(expected, shingle.getData());
+    }
+    
+    /**
+     * Tests the {@link Shingle#union(Shingle)} method to see if the
+     * current Shingle changes value, which it should not.
+     */
+    @Test
+    public void testUnionWithDoubles() {
+        final List<Float> list = asList(1.0f);
+        final Shingle other = new Shingle(list);
+        shingle.setData(asList(2.0f, 2.0f));
+        final Shingle expected = new Shingle(asList(1.0f, 2.0f));
+        assertEquals(expected, shingle.union(other));
+    }
+    
+    /**
+     * Tests the {@link Shingle#unique()} method.
+     */
+    @Test
+    public void testUniqueEmpty() {
+        final List<Float> empty = asList();
+        shingle.setData(empty);
+        shingle.unique();
+        assertEquals(empty, shingle.getData());
+    }
+    
+    /**
+     * Tests the {@link Shingle#unique()} method.
+     */
+    @Test
+    public void testUniqueNoDoubles() {
+        final List<Float> nums = asList(2.0f, 1.0f, 0.0f);
+        shingle.setData(nums);
+        shingle.unique();
+        assertEquals(nums, shingle.getData());
+    }
+    
+    /**
+     * Tests the {@link Shingle#size()} method.
+     */
+    @Test
+    public void testSize0() {
+        shingle.setData(asList());
+        assertEquals(0, shingle.size());
+    }
+    
+    /**
+     * Tests the {@link Shingle#size()} method.
+     */
+    @Test
+    public void testSize() {
+        shingle.setData(asList(0.0f, 1.0f));
+        assertEquals(2, shingle.size());
+    }
+    
+    /**
+     * Tests the {@link Shingle#size()} method.
+     */
+    @Test
+    public void testSizeWithDoubles() {
+        shingle.setData(asList(0.0f, 1.0f, 2.0f, 1.0f));
+        final int expected = 4;
+        assertEquals(expected, shingle.size());
+    }
+    
+    /**
+     * Tests the {@link Shingle#add(Float)} method.
+     */
+    @Test
+    public void testAdd() {
+        shingle.setData(asList());
+        shingle.add(0.0f);
+        assertEquals(1, shingle.size());
+    }
 }

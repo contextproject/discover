@@ -69,7 +69,9 @@ public class Shingle {
 
     /**
      * Unionizes two Shingles. This method uses a functional way of using to
-     * ensure that both of the shingles are unaltered.
+     * ensure that both of the shingles are unaltered. The resulting Shingle
+     * is not only a union of the two but also has a unique dataset, meaning a
+     * dataset that is free of duplicates.
      * 
      * @param other
      *            The other shingle.
@@ -78,16 +80,14 @@ public class Shingle {
     public Shingle union(final Shingle other) {
         List<Float> union = new ArrayList<Float>(this.size() + other.size());
         for (Float f : data) {
-            if (!union.contains(f)) {
-                union.add(f);
-            }
+            union.add(f);
         }
         for (Float f : other.getData()) {
-            if (!union.contains(f)) {
-                union.add(f);
-            }
+            union.add(f);
         }
-        return new Shingle(union);
+        Shingle shingle = new Shingle(union);
+        shingle.unique();
+        return shingle;
     }
 
     /**
@@ -123,6 +123,30 @@ public class Shingle {
     public void setData(final List<Float> data) {
         this.data = data;
     }
+    
+    /**
+     * {@inheritDoc}
+     * 
+     * <p>
+     * The toString method of the class Shingle returns the string
+     * "Shingle()" with the string representation of the data inside of
+     * the parenthesis. Actually it simply mentions all values there and
+     * ignores the toString method of the data.
+     * </p>
+     */
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder("Shingle(");
+        final int prefixlength = builder.length();
+        for (Float f : data) {
+            builder.append(f.toString() + ", ");
+        }
+        if (builder.length() > prefixlength + 2) {
+            builder.delete(builder.length() - 2, builder.length());
+        }
+        builder.append(")");
+        return builder.toString();
+    }
 
     /**
      * Makes this Shingle unique by removing all doubles from the data.
@@ -144,5 +168,50 @@ public class Shingle {
      */
     protected Shingle copy() {
         return new Shingle(this);
+    }
+    
+    /**
+     * {@inheritDoc}
+     * 
+     * <p>
+     * Checks if other is equal to the current Shingle.
+     * Two Shingles are considered equal if and only if
+     * <ul>
+     *  <li> The jaccard distance between them is 0.0 </li>
+     *  <li> If both are Shingles </li>
+     * </ul>
+     * </p>
+     * <p>
+     * Note that this means that the order of the elements in the data is
+     * not important. Using the {@link List#equals(Object)} method is accepting
+     * that the order is important.
+     * </p>
+     */
+    @Override
+    public boolean equals(final Object other) {
+        /*
+         * This could be done without if but that would make the code more
+         * unreadable and makes the code have 4 paths instead of 3 (guess
+         * pathcounting is difficult to do automatically).
+         */
+        if (other instanceof Shingle) {
+            final Shingle that = (Shingle) other;
+            return this.jaccardDistance(that) == 0.0;
+        }
+        return false;
+    }
+    
+    /**
+     * {@inheritDoc}
+     * 
+     * <p>
+     * The hashcode of a Shingle, is equivalent to the
+     * hashCode of it's data. Therefore this method is equivalent to
+     * {@link #getData()} and then calling {@link #hashCode()} on it.
+     * </p>
+     */
+    @Override
+    public int hashCode() {
+        return getData().hashCode();
     }
 }
