@@ -8,12 +8,15 @@ import java.util.List;
  */
 public class Shingle {
 
-	private ArrayList<Float> data;
+	/**
+	 * The data that the shingle consists of and operates on.
+	 */
+	private List<Float> data;
 
 	/**
-	 * @param k The size of the shingle.
+	 * @param data The data to be stored in the shingle.
 	 */
-	public Shingle(ArrayList<Float> data) {
+	public Shingle(final List<Float> data) {
 		this.data = data;
 	}
 
