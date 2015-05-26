@@ -62,14 +62,14 @@ public class CommentIntensitySeekerTest {
     @Before
     public void makeComments() {
         cis = new CommentIntensitySeeker();
-        c1 = new Comment(1, 5000);
-        c3 = new Comment(3, 15000);
-        c4 = new Comment(4, 16000);
-        c5 = new Comment(5, 18000);
-        c6 = new Comment(6, 21000);
-        c7 = new Comment(7, 50000);
-        c8 = new Comment(8, 41000);
-        c9 = new Comment(9, 42000);
+        c1 = new Comment(1, 5000, "");
+        c3 = new Comment(3, 15000, "");
+        c4 = new Comment(4, 16000, "");
+        c5 = new Comment(5, 18000, "");
+        c6 = new Comment(6, 21000, "");
+        c7 = new Comment(7, 50000, "");
+        c8 = new Comment(8, 41000, "");
+        c9 = new Comment(9, 42000, "");
 
     }
 

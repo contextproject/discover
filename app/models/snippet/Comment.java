@@ -53,6 +53,15 @@ public class Comment {
     public int getUser() {
         return userid;
     }
+    
+    /**
+     * Give the content of a comment.
+     *
+     * @return content of a comment
+     */
+    public String getBody() {
+        return body;
+    }
 
     /**
      * A method to simplify tests with comments.

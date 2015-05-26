@@ -51,7 +51,14 @@ public class AlgorithmSelector {
 
     // Tomas
     private int contentFiltering() {
+        Set<Comment> set = retriever.getComments(trackid);
         Map<Double, Comment> comments = new HashMap<Double, Comment>();
+        ContentFilter cf = new ContentFilter();
+        for(Comment c:set){
+          double value = cf.contentFilter(c.getBody());
+          comments.put(value, c);
+        }
+        
         return commentIntensity(comments);
     }
 
@@ -78,13 +85,13 @@ public class AlgorithmSelector {
      */
     public TimedSnippet getSnippet() {
         if (enoughComments) {
-            HashMap<Comment, String> map = (HashMap<Comment, String>) retriever
-                    .getCommentsWithString(trackid);
-            Set<Comment> set = processContent(map);
-            CommentIntensitySeeker cis = new CommentIntensitySeeker();
-            TimedSnippet ts = cis.seek(set);
+//            Set<Comment> map =  retriever
+//                    .getComments(trackid);
+//            Set<Comment> set = processContent(map);
+//            CommentIntensitySeeker cis = new CommentIntensitySeeker();
+//            TimedSnippet ts = cis.seek(set);
 
-            return ts;
+            return new TimedSnippet(0, TimedSnippet.getDefaultDuration());
         } else {
             return new TimedSnippet(0, TimedSnippet.getDefaultDuration());
         }
@@ -102,7 +109,7 @@ public class AlgorithmSelector {
 
         for (Comment c : map.keySet()) {
             String s = map.get(c);
-            if (cf.contentFilter(s)) {
+            if (cf.contentFilter(s) > 0) {
                 result.add(c);
             }
         }

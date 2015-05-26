@@ -32,9 +32,9 @@ public class CommentTest {
      */
     @Before
     public void makeComments() {
-        c1 = new Comment(1, 5000);
-        c2 = new Comment(2, 12321);
-        c3 = new Comment(1, 12321);
+        c1 = new Comment(1, 5000, "I like this");
+        c2 = new Comment(2, 12321, "test1");
+        c3 = new Comment(1, 12321, "test2");
     }
 
     /**
@@ -53,6 +53,16 @@ public class CommentTest {
     public void testGetTime() {
         assertEquals(5000, c1.getTime());
         assertEquals(10000, c2.getTime());
+    }
+    
+    /**
+     * Testing the getBody method.
+     */
+    @Test
+    public void testGetBody() {
+        assertEquals("I like this", c1.getBody());
+        assertEquals("test1", c2.getBody());
+        assertEquals("test2", c3.getBody());
     }
 
     /**
