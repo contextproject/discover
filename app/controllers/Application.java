@@ -52,8 +52,8 @@ public class Application extends Controller {
 	 */
 	public static double getStartTime(final int trackId) {
 		AlgorithmSelector as = new AlgorithmSelector(trackId);
-		TimedSnippet ts = as.getSnippet();
-		return ts.getStartTime();
+		double ts = as.determineStart();
+		return ts;
 	}
 
 	/**

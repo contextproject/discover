@@ -10,7 +10,7 @@ public class ContentFilter {
 	 */
 	private final String[] positive = { "great", "brilliant", "beautiful",
 		"awesome", "amazing", "perfect", "good", "like", "love", "best",
-		"nice", "super", "cool", "massive", "wicked", "sick" };
+		"nice", "super", "cool", "massive", "wicked", "sick" , "wonderfull" };
 
 	/**
 	 * List of negative words.

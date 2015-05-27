@@ -42,7 +42,7 @@ public class AlgorithmSelector {
 		}
 	}
 
-	public double masterMethod() {
+	public double determineStart() {
 		int timeCI = contentFiltering();
 		int timeFE = featureEssentia();
 
@@ -67,10 +67,15 @@ public class AlgorithmSelector {
 		return commentIntensity(comments);
 	}
 
-	// Daan
-	private int commentIntensity(Map<Double, Comment> comments) {
-		// determine timestamp
-		return 0;
+	/**
+	 * Uses the comment intensity on the weighted map.
+	 * @param comments the map of comments with their value assigned by the contentfilter
+	 * @return the start time computed by the intensity seeker
+	 */
+	private int commentIntensity(final Map<Double, Comment> comments) {
+		CommentIntensitySeeker cis = new CommentIntensitySeeker();
+		TimedSnippet ts  = cis.seek(comments);
+		return ts.getStartTime();
 	}
 
 	// Jordy
