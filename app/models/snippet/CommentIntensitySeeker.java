@@ -93,8 +93,10 @@ public class CommentIntensitySeeker implements Seeker {
 	private static int computeWeight(final Entry<Double, Comment> c,
 			  final Entry<Double, Comment> d) {
 		if (c.getKey() == 1 && d.getKey() == 1) {
+			return 3;
+		} else if( (c.getKey() == 1 | d.getKey() == 1)  ){
 			return 2;
-		} else {
+		}	else {
 			return 1;
 		}
 

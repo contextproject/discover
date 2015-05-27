@@ -1,10 +1,14 @@
 package models.snippet;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
+
+
 
 
 import static org.junit.Assert.assertEquals;
@@ -127,6 +131,79 @@ public class CommentIntensitySeekerTest {
         set.add(c9);
         TimedSnippet ts = cis.seek(set);
         assertEquals(5000, ts.getStartTime());
+        assertEquals(30000, ts.getDuration());
+    }
+    
+    /**
+     * Test the second seek function.
+     */
+    @Test
+    public void testSeek4() {
+        Map<Double, Comment> set = new HashMap<Double, Comment>();
+        set.put(0.0, c3);
+        set.put(0.0, c4);
+        set.put(1.0, c8);
+        set.put(0.0, c9);
+        
+        TimedSnippet ts = cis.seek(set);
+        assertEquals(40000, ts.getStartTime());
+        assertEquals(30000, ts.getDuration());
+    }
+    
+    /**
+     * Test the second seek function.
+     */
+    @Test
+    public void testSeek5() {
+        Map<Double, Comment> set = new HashMap<Double, Comment>();
+        set.put(0.0, c3);
+        set.put(0.0, c4);
+        set.put(0.0, new Comment(10,13000,""));
+        set.put(0.0, new Comment(11,14000,""));
+        set.put(1.0, c8);
+        set.put(1.0, c9);
+        
+        
+        TimedSnippet ts = cis.seek(set);
+        assertEquals(10000, ts.getStartTime());
+        assertEquals(30000, ts.getDuration());
+    }
+    
+    /**
+     * Test the second seek function.
+     */
+    @Test
+    public void testSeek6() {
+        Map<Double, Comment> set = new HashMap<Double, Comment>();
+        set.put(0.0, c3);
+        set.put(1.0, c4);
+        set.put(1.0, new Comment(10,15000,""));
+        set.put(1.0, new Comment(11,14000,""));
+        set.put(1.0, c8);
+        set.put(1.0, c9);
+        
+        
+        TimedSnippet ts = cis.seek(set);
+        assertEquals(40000, ts.getStartTime());
+        assertEquals(30000, ts.getDuration());
+    }
+    
+    /**
+     * Test the second seek function.
+     */
+    @Test
+    public void testSeek7() {
+        Map<Double, Comment> set = new HashMap<Double, Comment>();
+        set.put(0.0, c3);
+        set.put(0.0, c4);
+        set.put(0.0, new Comment(10,15000,""));
+        set.put(0.0, new Comment(11,41000,""));
+        set.put(1.0, c8);
+        set.put(1.0, c9);
+        
+        
+        TimedSnippet ts = cis.seek(set);
+        assertEquals(40000, ts.getStartTime());
         assertEquals(30000, ts.getDuration());
     }
 

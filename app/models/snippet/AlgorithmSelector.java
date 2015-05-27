@@ -42,11 +42,16 @@ public class AlgorithmSelector {
 		}
 	}
 
+	/**
+	 * Determines the start time with the algorithm selector functions.
+	 * @return the start time
+	 */
 	public double determineStart() {
 		int timeCI = contentFiltering();
 		int timeFE = featureEssentia();
+		final double x = 100.0;
 
-		return (100 * timeCI + 0 * timeFE) / 100.0;
+		return (100 * timeCI + 0 * timeFE) / x;
 	}
 
 	// Tomas
