@@ -1,5 +1,7 @@
 package controllers;
 
+import java.util.Set;
+
 import models.database.CommentRetriever;
 import models.database.DatabaseConnector;
 import models.database.RandomSongSelector;
@@ -9,9 +11,7 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import views.html.index;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import com.fasterxml.jackson.databind.JsonNode;
 
 /**
  * This class is used to control the model and the view parts of the MVC. It
@@ -71,6 +71,35 @@ public class Application extends Controller {
         double[] results = new double[3];
         results[0] = starttime;
 		return ok(index.render(url, starttime));
+	}
+	
+	/**
+	 * Method used to pass a Json object with track waveform.
+	 * @return
+	 */
+	public static Result trackWaveform() {
+		JsonNode json = request().body().asJson();
+		if (json == null) {
+			return badRequest("Expecting Json data");
+		} else {
+			System.out.println(json);
+			return ok("DONE");
+		}
+	}
+	
+	/**
+	 * Method used to pass a Json object with track meta-data.
+	 * Example: {id:123, genre: "Ambient"}
+	 * @return
+	 */
+	public static Result trackMetadata() {
+		JsonNode json = request().body().asJson();
+		if (json == null) {
+			return badRequest("Expecting Json data");
+		} else {
+			System.out.println(json);
+			return ok("DONE");
+		}
 	}
 
 	/**
