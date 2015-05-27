@@ -1,4 +1,4 @@
-package models.database;
+package models.database.processor;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 /**
  * Class to process the .track files.
  */
-public class TrackProcessor extends Reader {
+public class TrackProcessor extends Processor {
 
     /**
      * To prepare a MySQL query.
@@ -54,7 +54,7 @@ public class TrackProcessor extends Reader {
                 + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try {
             preparedStatement = getDatabaseConnector().getConnection().prepareStatement(query);
-            preparedStatement.setObject(1, getTrackID(file));
+            preparedStatement.setObject(1, getTrackid(file));
         } catch (SQLException e) {
             e.printStackTrace();
         }

@@ -26,7 +26,6 @@ public class RandomSeeker implements Seeker {
      * Constructor.
      */
     public RandomSeeker(int trackid) {
-
         this.generate();
     }
 

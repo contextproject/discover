@@ -1,6 +1,7 @@
-package models.database;
+package models.database.processor;
 
 import controllers.Application;
+import models.database.DatabaseConnector;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,7 +14,7 @@ import java.util.regex.Pattern;
 /**
  * Class to read a given folder.
  */
-public class Reader {
+public class Processor {
 
     /**
      * DatabaseConnector object to the database.
@@ -26,7 +27,7 @@ public class Reader {
      * @param folder The folder to be read.
      * @throws IOException IOException
      */
-    public Reader(final File folder) throws IOException {
+    public Processor(final File folder) throws IOException {
         databaseConnector = Application.getDatabaseConnector();
         readFolder(folder);
     }
@@ -78,7 +79,7 @@ public class Reader {
      * @param file The file object of the comment file
      * @return The track id
      */
-    protected String getTrackID(final File file) {
+    protected String getTrackid(final File file) {
         Pattern pattern = Pattern.compile("\\d+");
         Matcher matcher = pattern.matcher(file.getName());
         if (matcher.find()) {

@@ -2,6 +2,7 @@ package controllers;
 
 import models.database.DatabaseConnector;
 import models.database.RandomSongSelector;
+import models.seeker.CommentIntensitySeeker;
 import play.mvc.Controller;
 import play.mvc.Result;
 import views.html.index;
@@ -48,10 +49,7 @@ public class Application extends Controller {
      * @return the start-time of the snippet.
      */
     public static double getStartTime(final int trackId) {
-//		AlgorithmSelector as = new AlgorithmSelector(trackId);
-//		TimedSnippet ts = as.getSnippet();
-//		return ts.getStartTime();
-        return 0;
+        return new CommentIntensitySeeker(trackId).seek().getStartTime();
     }
 
     /**

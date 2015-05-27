@@ -1,7 +1,8 @@
 package models.seeker;
 
 import models.database.retriever.CommentRetriever;
-import models.snippet.Comment;
+import models.record.CommentList;
+import models.record.Comment;
 import models.snippet.TimedSnippet;
 
 import java.util.Set;
@@ -21,7 +22,7 @@ public class CommentIntensitySeeker implements Seeker {
     /**
      * The set of comments of the track.
      */
-    private Set<Comment> comments;
+    private CommentList comments;
 
     /**
      * Constructor.
@@ -81,11 +82,11 @@ public class CommentIntensitySeeker implements Seeker {
         this.trackid = trackid;
     }
 
-    public Set<Comment> getComments() {
+    public CommentList getComments() {
         return comments;
     }
 
-    public void setComments(Set<Comment> comments) {
+    public void setComments(CommentList comments) {
         this.comments = comments;
     }
 }

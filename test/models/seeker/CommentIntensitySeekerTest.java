@@ -1,4 +1,4 @@
-//package models.snippet;
+package models.seeker;
 //
 //import java.util.HashSet;
 //import java.util.Set;
@@ -14,10 +14,10 @@
 //import static org.mockito.Mockito.verify;
 //import static org.mockito.Mockito.when;
 //
-///**
-// * Test for the CommentIntensitySeeker.
-// */
-//public class CommentIntensitySeekerTest {
+/**
+ * Test for the CommentIntensitySeeker.
+ */
+public class CommentIntensitySeekerTest {
 //
 //    /**
 //     * CommentIntensitySeeker object.
@@ -128,4 +128,4 @@
 //        verify(com, times(7)).getTime();
 //        verify(com).hashCode();
 //    }
-//}
+}

@@ -2,8 +2,7 @@ package models.database.retriever;
 
 import controllers.Application;
 import models.database.DatabaseConnector;
-
-import java.sql.ResultSet;
+import models.record.Track;
 
 /**
  * Class to retrieve the information of the track from the database.
@@ -16,14 +15,9 @@ public class TrackRetriever implements Retriever {
     private DatabaseConnector databaseConnector;
 
     /**
-     * The ResultSet object of the query.
+     * The Track entity.
      */
-    private ResultSet resultSet;
-
-    /**
-     * The id of the track.
-     */
-    private int trackid;
+    private Track track;
 
     /**
      * Constructor.
@@ -31,40 +25,33 @@ public class TrackRetriever implements Retriever {
      * @param trackid The id of the track
      */
     public TrackRetriever(final int trackid) {
-        this.trackid = trackid;
         this.databaseConnector = Application.getDatabaseConnector();
+        track = new Track(databaseConnector.executeQuery(
+                "SELECT * FROM tracks WHERE track_id = " + trackid
+        ));
     }
 
     /**
      * Get all the information of the track from the database.
      */
-    public void getAll() {
-        resultSet = databaseConnector.executeQuery(
-                "SELECT * FROM tracks WHERE track_id = " + trackid
-        );
+    public Track getAll() {
+        return track;
     }
 
     /**
      * Get the user id of the track from the database.
      */
-    public void getUserID() {
-        resultSet = databaseConnector.executeQuery(
-                "SELECT user_id FROM tracks WHERE track_id = " + trackid
-        );
+    public int getTrackID() {
+        return track.getTrackID();
     }
 
     /**
-     * Get the duration of the track from the database.
+     * Retrieves information of the track provided.
+     *
+     * @return The Record entity of the track
      */
-    public void getDuration() {
-        resultSet = databaseConnector.executeQuery(
-                "SELECT duration FROM tracks WHERE track_id = " + trackid
-        );
-    }
-
-
     @Override
-    public ResultSet retrieve() {
-        return resultSet;
+    public Track retrieve() {
+        return track;
     }
 }

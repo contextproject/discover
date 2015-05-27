@@ -1,11 +1,12 @@
-package models.snippet;
+package models.record;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
- * The Comment class which can contain the user id and timestamp of a comment.
- * Contains simple get methods to get the user id or timestamp and a set method
- * to change the period which will change the timestamp.
+ * Class to represent a comment.
  */
-public class Comment {
+public class Comment implements Record {
 
     /**
      * A standard number for computing the rounded time of a timestamp.
@@ -13,26 +14,47 @@ public class Comment {
     private static int period = 5000;
 
     /**
-     * The user id of a comment.
+     * The id of the track.
+     */
+    private int trackid;
+
+    /**
+     * The user id of the comment.
      */
     private int userid;
 
     /**
-     * The actual timestamp.
+     * The timestamp of the comment.
      */
     private int timestamp;
 
-    private String body;
+    /**
+     * Constructor.
+     */
+    public Comment() {
+    }
 
     /**
-     * Creates a new comment object.
+     * Constructor.
      *
-     * @param userId id of the user
-     * @param time   time of the given comment, will be saved as thousand
+     * @param resultSet The ResultSet object of the comment
      */
-    public Comment(final int userId, final int time) {
-        this.userid = userId;
-        this.timestamp = time;
+    public Comment(ResultSet resultSet) {
+        try {
+            if (resultSet.next()) {
+                trackid = resultSet.getInt("track_id");
+                userid = resultSet.getInt("user_id");
+                timestamp = resultSet.getInt("timestamp");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public Comment(int trackid, int userid, int timestamp) {
+        this.trackid = trackid;
+        this.userid = userid;
+        this.timestamp = timestamp;
     }
 
     /**
@@ -45,18 +67,27 @@ public class Comment {
     }
 
     /**
-     * Give the user id of a comment.
+     * Getter of the trackid of the comment.
      *
-     * @return user id
+     * @return The trackid of the comment
      */
-    public int getUser() {
+    public int getTrackid() {
+        return trackid;
+    }
+
+    /**
+     * Getter of the userid of the comment.
+     *
+     * @return The userid of the comment
+     */
+    public int getUserid() {
         return userid;
     }
 
     /**
-     * A method to simplify tests with comments.
+     * Getter of the timestamp of the comment.
      *
-     * @return the actual time stamp
+     * @return The timestamp of the comment
      */
     public int getTimestamp() {
         return timestamp;
@@ -83,16 +114,14 @@ public class Comment {
     /**
      * Equals method for comments.
      */
-    @Override
     public boolean equals(final Object other) {
         if (other instanceof Comment) {
             Comment com = (Comment) other;
-            return this.getUser() == com.getUser()
+            return this.getUserid() == com.getUserid()
                     && this.getTime() == com.getTime();
         }
         return false;
     }
-
 
     /**
      * Simple hash method based on user id and time stamp.

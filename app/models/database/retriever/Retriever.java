@@ -1,6 +1,6 @@
 package models.database.retriever;
 
-import java.sql.ResultSet;
+import models.record.Record;
 
 /**
  * A Retriever interface.
@@ -10,7 +10,7 @@ public interface Retriever {
     /**
      * Retrieves information of the track provided.
      *
-     * @return The ResultSet
+     * @return The Record entity of the track
      */
-    ResultSet retrieve();
+    Record retrieve();
 }

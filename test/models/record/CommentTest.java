@@ -1,4 +1,4 @@
-package models.snippet;
+package models.record;
 
 import org.junit.After;
 import org.junit.Before;
@@ -8,11 +8,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-/**
- * Tests for the Comment class.
- *
- */
 public class CommentTest {
+
 
     /**
      * Comment 1.
@@ -32,9 +29,9 @@ public class CommentTest {
      */
     @Before
     public void makeComments() {
-        c1 = new Comment(1, 5000);
-        c2 = new Comment(2, 12321);
-        c3 = new Comment(1, 12321);
+        c1 = new Comment(1, 1, 5000);
+        c2 = new Comment(1, 2, 12321);
+        c3 = new Comment(1, 1, 12321);
     }
 
     /**
@@ -42,8 +39,8 @@ public class CommentTest {
      */
     @Test
     public void testGetUser() {
-        assertEquals(1, c1.getUser());
-        assertEquals(2, c2.getUser());
+        assertEquals(1, c1.getUserid());
+        assertEquals(2, c2.getUserid());
     }
 
     /**
@@ -138,5 +135,6 @@ public class CommentTest {
     public void after() {
         Comment.setPeriod(5000);
     }
+
 
 }
