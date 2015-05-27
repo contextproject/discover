@@ -7,6 +7,7 @@ GET			/                   controllers.Application.index()
 GET			/tracks/:url        controllers.Application.getSong(url: String)
 GET			/random             controllers.Application.getRandomSong()
 POST		/jsonTrackMeta		controllers.Application.trackMetadata()
-POST		/jsonWaveform		controllers.Application.trackWaveform()
+POST		/splitWaveform		controllers.Application.splitWaveform()
+
 # Map static resources from the /public folder to the /assets URL path
-GET        /assets/*file        controllers.Assets.at(path="/public", file)
+GET         /assets/*file        controllers.Assets.at(path="/public", file)

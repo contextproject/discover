@@ -1,5 +1,6 @@
 package controllers;
 
+import java.util.Iterator;
 import java.util.Set;
 
 import models.database.CommentRetriever;
@@ -12,6 +13,8 @@ import play.mvc.Result;
 import views.html.index;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 /**
  * This class is used to control the model and the view parts of the MVC. It
@@ -34,7 +37,7 @@ public class Application extends Controller {
 
 	/**
 	 * Renders a page with the given track id to load the widget.
-	 * @param trackId , the id of the track we are searching for.
+	 * @param trackId the id of the track we are searching for.
 	 * @return an http ok response with the new rendered page.
 	 */
 	public static Result getSong(final String trackId) {
@@ -48,7 +51,7 @@ public class Application extends Controller {
 	/**
 	 * Retrieves a start-time calculated by the CommentIntensitySeeker
 	 * for the given track id.
-	 * @param trackId , the id of the track.
+	 * @param trackId the id of the track.
 	 * @return the start-time of the snippet.
 	 */
 	public static double getStartTime(final int trackId) {
@@ -74,37 +77,46 @@ public class Application extends Controller {
 	}
 	
 	/**
-	 * Method used to pass a Json object with track waveform.
-	 * @return
+	 * Method used to pass a Iterator object with track waveform 
+	 * on to the MixSplitter class.
+	 * @return ok response with the start times for the mix.
 	 */
-	public static Result trackWaveform() {
+	public static Result splitWaveform() {
 		JsonNode json = request().body().asJson();
 		if (json == null) {
 			return badRequest("Expecting Json data");
 		} else {
-			System.out.println(json);
-			return ok("DONE");
+			Iterator<JsonNode> it = json.elements();
+			//TO-DO: send the iterator to the MixSplitter.
+			//TO-DO: receive the answer from the splitter and make a proper success message.
+			ObjectMapper mapper = new ObjectMapper();
+			ObjectNode objNode = mapper.createObjectNode();
+			JsonNode response = objNode.put("message", "File was transvered successfully");
+			return ok(response);
 		}
 	}
 	
 	/**
 	 * Method used to pass a Json object with track meta-data.
+	 * This will be used in the future to insert non-existing 
 	 * Example: {id:123, genre: "Ambient"}
-	 * @return
+	 * @return ok response with a 
 	 */
 	public static Result trackMetadata() {
 		JsonNode json = request().body().asJson();
 		if (json == null) {
 			return badRequest("Expecting Json data");
 		} else {
-			System.out.println(json);
-			return ok("DONE");
+			ObjectMapper mapper = new ObjectMapper();
+			ObjectNode objNode = mapper.createObjectNode();
+			JsonNode response = objNode.put("message", "File was transvered successfully");
+			return ok(response);
 		}
 	}
 
 	/**
 	 * Setter for the DatabaseConnector object.
-	 * @param dbc , the new DatabaseConnector object.
+	 * @param dbc the new DatabaseConnector object.
 	 */
 	public static void setDatabaseConnector(final DatabaseConnector dbc) {
 		databaseConnector = dbc;

@@ -20,7 +20,7 @@ $("#sendWave").click(function() {
     	    dataType: "json",
     	    data: JSON.stringify(waveform.data),
     	    contentType: "application/json; charset=utf-8",
-    	    url: "/jsonWaveform",
+    	    url: "/splitWaveform",
     	        success: function(data){
     	        	console.log(data);
     	        }
@@ -114,8 +114,8 @@ $("#prev").click(function() {
 // connect with Soundcloud
 // initialize client with app credentials
 SC.initialize({
-	client_id : '70a5f42778b461b7fbae504a5e436c06',
-	redirect_uri : 'http://localhost:9000/assets/html/callback.html'
+	client_id: '70a5f42778b461b7fbae504a5e436c06',
+	redirect_uri: 'http://localhost:9000/assets/html/callback.html'
 });
 
 $("#connect").click(
