@@ -49,7 +49,7 @@ public class MixSplitter {
      *         beginning of a new piece.
      */
     public List<Integer> split() {
-        final double threshold = 0.4f;
+        final double threshold = 0.4;
         final int songtime = 30000;
         return split(splitToShingles(), threshold, songtime);
     }
@@ -84,7 +84,8 @@ public class MixSplitter {
         for (int i = 0; i < amountOfShingles - 1; i++) {
             final double distance = shingles.get(i).jaccardDistance(shingles.get(i + 1));
             if (distance > threshold) {
-                starttimes.add(new Double(((i + 1) * songtime) / amountOfShingles).intValue());
+                final int integer = ((i + 1) * songtime) / amountOfShingles;
+                starttimes.add(integer);
             }
         }
         return starttimes;
