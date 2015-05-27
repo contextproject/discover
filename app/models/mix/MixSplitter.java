@@ -8,7 +8,7 @@ import java.util.List;
  * pieces.
  * 
  * @since 21-05-2015
- * @version 26-05-2015
+ * @version 27-05-2015
  * 
  * @see Shingle
  * 
@@ -49,8 +49,44 @@ public class MixSplitter {
      *         beginning of a new piece.
      */
     public List<Integer> split() {
-        List<Integer> starttimes = new ArrayList<Integer>();
+        final double threshold = 0.4f;
+        final int songtime = 30000;
+        return split(splitToShingles(), threshold, songtime);
+    }
 
+    /**
+     * Splits the mix into different pieces.
+     * 
+     * @param shingles The shingles that are to be compared.
+     * @param threshold The threshold to check, when the threshold is passed the two
+     * Shingles belong to a different song in our assumption.
+     * @param songtime The duration of the song you are splitting.
+     * @return The list of new starttimes, for which every starttime is the
+     *         beginning of a new piece.
+     */
+    protected List<Integer> split(final List<Shingle> shingles, final double threshold
+            , final int songtime) {
+        if (threshold < 0.0 || threshold > 1.0) {
+            throw new IllegalArgumentException("The threshold to split mix "
+                    + trackID + " was equal to " + threshold + " but must be between 0.0 and 1.0");
+        } else if (songtime <= 0) {
+            throw new IllegalArgumentException("The songtime of the mix "
+                    + trackID + " was equal to " + songtime + " but must be larger than 0.");
+        }
+        List<Integer> starttimes = new ArrayList<Integer>();
+        starttimes.add(0);
+        /*
+         *  Just in case someone enters a LinkedList or other list that
+         *  calculates it's size instead of remembering it.
+         */
+        final int amountOfShingles = shingles.size();
+        // The - 1 is to not do this to the last one.
+        for (int i = 0; i < amountOfShingles - 1; i++) {
+            final double distance = shingles.get(i).jaccardDistance(shingles.get(i + 1));
+            if (distance > threshold) {
+                starttimes.add(new Double(((i + 1) * songtime) / amountOfShingles).intValue());
+            }
+        }
         return starttimes;
     }
 
@@ -59,9 +95,8 @@ public class MixSplitter {
      * 
      * @return The list of Shingles that you can then compare.
      */
-    public List<List<Float>> splitToShingles() {
-
-        return null;
+    public List<Shingle> splitToShingles() {
+        return new ArrayList<Shingle>();
     }
 
     /**

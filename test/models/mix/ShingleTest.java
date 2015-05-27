@@ -15,7 +15,7 @@ import static org.junit.Assert.assertFalse;
  * This class tests the Shingle class.
  * 
  * @since 26-05-2015
- * @version 26-05-2015
+ * @version 27-05-2015
  * 
  * @author stefan boodt
  * @author arthur hovenesyan
@@ -32,11 +32,6 @@ public class ShingleTest extends BasicTest {
     public void setUp() throws Exception {
         super.setUp();
         setShingle(new Shingle(new ArrayList<Float>()));
-    }
-
-    @Override
-    public void tearDown() throws Exception {
-        super.tearDown();
     }
     
     /**
@@ -186,6 +181,32 @@ public class ShingleTest extends BasicTest {
         final Shingle first = new Shingle(asList(3.0f, 2.1f, 3.0f));
         final Shingle second = new Shingle(asList(4.2f, 3.0f, 4.2f, 6.1f, 3.0f));
         final double expected = 0.75;
+        final double delta = 0.001;
+        assertEquals(expected, first.jaccardDistance(second),
+                delta);
+    }
+
+    /**
+     * Tests the {@link Shingle#jaccardDistance(Shingle)} method.
+     */
+    @Test
+    public void testGetJaccardDistance2() {
+        final Shingle first = new Shingle(asList(3.0f, 1.1f, 4.3f, 88.6f, 2.1f));
+        final Shingle second = new Shingle(asList(8.0f, 2.1f, 1.1f, 1.1f, 20.3f, 3.0f, 12.9f));
+        final double expected = (double) 5 / 8;
+        final double delta = 0.001;
+        assertEquals(expected, first.jaccardDistance(second),
+                delta);
+    }
+
+    /**
+     * Tests the {@link Shingle#jaccardDistance(Shingle)} method.
+     */
+    @Test
+    public void testGetJaccardDistance3() {
+        final Shingle first = new Shingle(asList(3.0f, 3.0f, 3.0f, 2.1f));
+        final Shingle second = new Shingle(asList(2.99f, 8.0f, 2.1f, 1.1f, 20.3f, 3.0f, 12.9f));
+        final double expected = (double) 5 / 7;
         final double delta = 0.001;
         assertEquals(expected, first.jaccardDistance(second),
                 delta);

@@ -16,7 +16,7 @@ import static org.junit.Assert.assertEquals;
  * @see BasicTest
  * 
  * @since 21-05-2015
- * @version 26-05-2015
+ * @version 27-05-2015
  * 
  * @author stefan boodt
  * @author arthur hovenesyan
@@ -70,6 +70,21 @@ public class MixSplitterTest extends BasicTest {
     }
 
     /**
+     * Returns the given numbers as a list.
+     * 
+     * @param numbers
+     *            The numbers to have in the list.
+     * @return The list containing the given numbers.
+     */
+    protected static List<Integer> asListInt(final int... numbers) {
+        List<Integer> ints = new ArrayList<Integer>(numbers.length);
+        for (int f : numbers) {
+            ints.add(f);
+        }
+        return ints;
+    }
+
+    /**
      * Sets the splitter under test.
      * 
      * @param splitter
@@ -94,7 +109,194 @@ public class MixSplitterTest extends BasicTest {
      */
     @Test
     public void testSplitEmpty() {
-        assertEquals(new ArrayList<Integer>(), getSplitter().split());
+        final List<Integer> expected = new ArrayList<Integer>();
+        expected.add(0);
+        getSplitter().setData(new ArrayList<Float>());
+        assertEquals(expected, getSplitter().split());
+    }
+
+    /**
+     * Tests the {@link MixSplitter#split(List, double, int)} method on an empty dataset.
+     */
+    @Test
+    public void testSplitEmptyHardEmpty() {
+        final List<Integer> expected = new ArrayList<Integer>();
+        expected.add(0);
+        getSplitter().setData(new ArrayList<Float>());
+        assertEquals(expected, getSplitter().split(new ArrayList<Shingle>(), 1.0, 1));
+    }
+
+    /**
+     * Tests the {@link MixSplitter#split(List, double, int)} method.
+     */
+    @Test (expected = IllegalArgumentException.class)
+    public void testSplitNegativeThreshold() {
+        getSplitter().split(new ArrayList<Shingle>(), -1.0, 0);
+    }
+    
+    /**
+     * Tests the {@link MixSplitter#split(List, double, int)} method.
+     */
+    @Test (expected = IllegalArgumentException.class)
+    public void testSplitTooHighThreshold() {
+        getSplitter().split(new ArrayList<Shingle>(), 2.0, 0);
+    }
+    
+    /**
+     * Tests the {@link MixSplitter#split(List, double, int)} method.
+     */
+    @Test (expected = IllegalArgumentException.class)
+    public void testSplitNegativeSongTime() {
+        getSplitter().split(new ArrayList<Shingle>(), 0.0, -1);
+    }
+    
+    /**
+     * Tests the {@link MixSplitter#split(List, double, int)} method.
+     */
+    @Test (expected = IllegalArgumentException.class)
+    public void testSplitSongTimeIs0() {
+        getSplitter().split(new ArrayList<Shingle>(), 0.0, 0);
+    }
+
+    /**
+     * Tests the {@link MixSplitter#split(List, double, int)} method.
+     */
+    @Test
+    public void testSplitThresholdOf0() {
+        final List<Integer> expected = asListInt(0, 4, 8, 12, 16);
+        final int songtime = 20;
+        final float f0 = 10.0f;
+        final float f1 = 1.4f;
+        final float f2 = 4.2f;
+        final float f3 = 1.8f;
+        final double threshold = 0.0;
+        final List<Shingle> shingles = new ArrayList<Shingle>();
+        shingles.add(new Shingle(asList(0.0f, 2.0f, 1.0f)));
+        shingles.add(new Shingle(asList(0.0f, f2, 1.0f)));
+        shingles.add(new Shingle(asList(0.0f, f0, f1)));
+        shingles.add(new Shingle(asList(0.0f, 1.0f, f1)));
+        shingles.add(new Shingle(asList(f3, f2, 2.0f)));
+        assertEquals(expected, getSplitter().split(shingles, threshold, songtime));
+    }
+
+    /**
+     * Tests the {@link MixSplitter#split(List, double, int)} method.
+     */
+    @Test
+    public void testSplitThresholdOf0DuplicateShingles() {
+        final List<Integer> expected = asListInt(0, 8, 16);
+        final int songtime = 20;
+        final float f0 = 10.0f;
+        final float f1 = 1.4f;
+        final float f2 = 4.2f;
+        final float f3 = 1.8f;
+        final double threshold = 0.0;
+        final List<Shingle> shingles = new ArrayList<Shingle>();
+        shingles.add(new Shingle(asList(0.0f, 2.0f, 1.0f)));
+        shingles.add(new Shingle(asList(0.0f, 2.0f, 1.0f)));
+        shingles.add(new Shingle(asList(0.0f, f0, f1)));
+        shingles.add(new Shingle(asList(0.0f, f0, f1)));
+        shingles.add(new Shingle(asList(f3, f2, 2.0f)));
+        assertEquals(expected, getSplitter().split(shingles, threshold, songtime));
+    }
+
+    /**
+     * Tests the {@link MixSplitter#split(List, double, int)} method.
+     */
+    @Test
+    public void testSplitThresholdOf0NoIntersection() {
+        final List<Integer> expected = asListInt(0, 4, 8);
+        final int songtime = 12;
+        final float f0 = 10.0f;
+        final float f1 = 1.4f;
+        final float f2 = 4.2f;
+        final float f3 = 1.8f;
+        final double threshold = 0.0;
+        final List<Shingle> shingles = new ArrayList<Shingle>();
+        shingles.add(new Shingle(asList(0.0f, 2.0f, 1.0f)));
+        shingles.add(new Shingle(asList(f0, f2, f1)));
+        shingles.add(new Shingle(asList(0.0f, f3, 1.0f)));
+        assertEquals(expected, getSplitter().split(shingles, threshold, songtime));
+    }
+
+    /**
+     * Tests the {@link MixSplitter#split(List, double, int)} method.
+     */
+    @Test
+    public void testSplitThresholdOfZeroNineNoIntersection() {
+        final List<Integer> expected = asListInt(0, 4, 8);
+        final int songtime = 12;
+        final float f0 = 10.0f;
+        final float f1 = 1.4f;
+        final float f2 = 4.2f;
+        final float f3 = 1.8f;
+        final double threshold = 0.9;
+        final List<Shingle> shingles = new ArrayList<Shingle>();
+        shingles.add(new Shingle(asList(0.0f, 2.0f, 1.0f)));
+        shingles.add(new Shingle(asList(f0, f2, f1)));
+        shingles.add(new Shingle(asList(0.0f, f3, 1.0f)));
+        assertEquals(expected, getSplitter().split(shingles, threshold, songtime));
+    }
+
+    /**
+     * Tests the {@link MixSplitter#split(List, double, int)} method.
+     */
+    @Test
+    public void testSplitThresholdOf1NoIntersection() {
+        final List<Integer> expected = asListInt(0);
+        final int songtime = 12;
+        final float f0 = 10.0f;
+        final float f1 = 1.4f;
+        final float f2 = 4.2f;
+        final float f3 = 1.8f;
+        final double threshold = 1.0;
+        final List<Shingle> shingles = new ArrayList<Shingle>();
+        shingles.add(new Shingle(asList(0.0f, 2.0f, 1.0f)));
+        shingles.add(new Shingle(asList(f0, f2, f1)));
+        shingles.add(new Shingle(asList(0.0f, f3, 1.0f)));
+        assertEquals(expected, getSplitter().split(shingles, threshold, songtime));
+    }
+
+    /**
+     * Tests the {@link MixSplitter#split(List, double, int)} method.
+     */
+    @Test
+    public void testSplitThresholdOf1CopiedShingles() {
+        final List<Integer> expected = asListInt(0);
+        final int songtime = 20;
+        final float f0 = 10.0f;
+        final float f1 = 1.4f;
+        final float f2 = 4.2f;
+        final float f3 = 1.8f;
+        final double threshold = 1.0;
+        final List<Shingle> shingles = new ArrayList<Shingle>();
+        shingles.add(new Shingle(asList(0.0f, 2.0f, 1.0f)));
+        shingles.add(new Shingle(asList(0.0f, 2.0f, 1.0f)));
+        shingles.add(new Shingle(asList(0.0f, f0, f1)));
+        shingles.add(new Shingle(asList(0.0f, f0, f1)));
+        shingles.add(new Shingle(asList(f3, f2, 2.0f)));
+        assertEquals(expected, getSplitter().split(shingles, threshold, songtime));
+    }
+
+    /**
+     * Tests the {@link MixSplitter#split(List, double, int)} method.
+     */
+    @Test
+    public void testSplitThresholdOf1() {
+        final List<Integer> expected = asListInt(0);
+        final int songtime = 20;
+        final float f0 = 10.0f;
+        final float f1 = 1.4f;
+        final float f2 = 4.2f;
+        final float f3 = 1.8f;
+        final double threshold = 1.0;
+        final List<Shingle> shingles = new ArrayList<Shingle>();
+        shingles.add(new Shingle(asList(0.0f, 2.0f, 1.0f)));
+        shingles.add(new Shingle(asList(0.0f, f2, 1.0f)));
+        shingles.add(new Shingle(asList(0.0f, f0, f1)));
+        shingles.add(new Shingle(asList(0.0f, 1.0f, f1)));
+        shingles.add(new Shingle(asList(f3, f2, 2.0f)));
+        assertEquals(expected, getSplitter().split(shingles, threshold, songtime));
     }
 
     /**
