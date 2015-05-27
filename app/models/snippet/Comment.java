@@ -22,6 +22,9 @@ public class Comment {
      */
     private int timestamp;
 
+    /**
+     * The content of a comment.
+     */
     private String body;
 
     /**
@@ -29,6 +32,7 @@ public class Comment {
      *
      * @param userId id of the user
      * @param time   time of the given comment, will be saved as thousand
+     * @param body content of a comment
      */
     public Comment(final int userId, final int time, final String body) {
         this.userid = userId;
