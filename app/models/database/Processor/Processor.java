@@ -1,19 +1,17 @@
-package models.database;
+package models.database.processor;
 
 import controllers.Application;
+import models.database.DatabaseConnector;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
  * Class to read a given folder.
  */
-public class Reader {
+public abstract class Processor {
 
     /**
      * DatabaseConnector object to the database.
@@ -26,7 +24,7 @@ public class Reader {
      * @param folder The folder to be read.
      * @throws IOException IOException
      */
-    public Reader(final File folder) throws IOException {
+    public Processor(final File folder) throws IOException {
         databaseConnector = Application.getDatabaseConnector();
         readFolder(folder);
     }
@@ -51,25 +49,12 @@ public class Reader {
     }
 
     /**
-     * Reads a file and passes each line to the readLine method.
+     * Reads a file.
      *
      * @param file The file to be read
      * @throws IOException IOException
      */
     protected void readFile(final File file) throws IOException {
-        List<String> lines = Files.readAllLines(file.toPath(), Charset.defaultCharset());
-        for (String line : lines) {
-            readLine(line, file);
-        }
-    }
-
-    /**
-     * Reads a line.
-     *
-     * @param line The line to be read
-     * @param file The file of the line
-     */
-    protected void readLine(final String line, final File file) {
     }
 
     /**
@@ -78,7 +63,7 @@ public class Reader {
      * @param file The file object of the comment file
      * @return The track id
      */
-    protected String getTrackID(final File file) {
+    protected String getTrackid(final File file) {
         Pattern pattern = Pattern.compile("\\d+");
         Matcher matcher = pattern.matcher(file.getName());
         if (matcher.find()) {
