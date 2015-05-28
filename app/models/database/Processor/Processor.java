@@ -52,26 +52,12 @@ public class Processor {
     }
 
     /**
-     * Reads a file and passes each line to the readLine method.
+     * Reads a file.
      *
      * @param file The file to be read
      * @throws IOException IOException
      */
-    protected void readFile(final File file) throws IOException {
-        List<String> lines = Files.readAllLines(file.toPath(), Charset.defaultCharset());
-        for (String line : lines) {
-            readLine(line, file);
-        }
-    }
-
-    /**
-     * Reads a line.
-     *
-     * @param line The line to be read
-     * @param file The file of the line
-     */
-    protected void readLine(final String line, final File file) {
-    }
+    protected void readFile(final File file) throws IOException {}
 
     /**
      * Extracts the track id from the file name.

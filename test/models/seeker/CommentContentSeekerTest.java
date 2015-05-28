@@ -1,18 +1,10 @@
 package models.seeker;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
-
-
-import models.seeker.CommentIntensitySeeker;
-import models.seeker.CommentContentSeeker;
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * This class tests the ContentFilter. It simply checks if content of a comment
@@ -110,49 +102,4 @@ public class CommentContentSeekerTest {
         assertTrue(cf.contentFilter(s4));
         assertTrue(cf.contentFilter(s5));
     }
-
-    /**
-     * A test in combination with the CommentIntensitySeeker. (Can be moved to
-     * another test class)
-     */
-//	@Test
-//	public void testWithCIS() {
-//		HashMap<Comment, String> map = new HashMap<Comment, String>();
-//		Comment c1 = new Comment(1, 45000);
-//		map.put(c1, "shit part");
-//		Comment c2 = new Comment(2, 80000);
-//		map.put(c2, "worthless!!");
-//		Comment c3 = new Comment(3, 45000);
-//		map.put(c3, "@user1: you are shit");
-//		Comment c4 = new Comment(4, 21000);
-//		map.put(c4, "love it");
-//
-//		Comment c5 = new Comment(5, 50000);
-//		map.put(c5, "best part");
-//		Comment c6 = new Comment(6, 53000);
-//		map.put(c6, "really good");
-//		Comment c7 = new Comment(7, 50000);
-//		map.put(c7, "oke");
-//		Comment c8 = new Comment(8, 62000);
-//		map.put(c8, "=D");
-//		HashSet<Comment> goodcom = new HashSet<Comment>();
-//		Set<Comment> allcom = map.keySet();
-//
-//		for (Comment c : map.keySet()) {
-//			String content = map.get(c);
-//			if (cf.contentFilter(content)) {
-//				goodcom.add(c);
-//			}
-//		}
-//
-//		CommentIntensitySeeker cis = new CommentIntensitySeeker();
-//
-//		TimedSnippet tsgood = cis.seek(goodcom);
-//		TimedSnippet tsall = cis.seek(allcom);
-//
-//		assertEquals(50000, tsgood.getStartTime());
-//		assertEquals(45000, tsall.getStartTime());
-//
-//	}
-
 }

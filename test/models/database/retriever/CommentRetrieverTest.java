@@ -7,6 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * Test class for the CommentRetriever class.
@@ -30,17 +31,39 @@ public class CommentRetrieverTest {
     }
 
     /**
+     * Test for the constructor
+     *
+     * @throws Exception Exception
+     */
+    @Test
+    public void testCommentRetriever() {
+        CommentRetriever commentRetriever = new CommentRetriever(100005416);
+        assertNotNull(commentRetriever.getComments());
+    }
+
+    /**
      * Test for the getComments() method.
      *
      * @throws Exception Exception
      */
     @Test
-    public void getCommentsTest() throws Exception {
+    public void testGetComments() throws Exception {
         // Track with one comment and highest playback count
         CommentRetriever commentRetriever = new CommentRetriever(62683860);
         assertEquals(1, commentRetriever.getNoComments());
 
         CommentList comments = commentRetriever.getComments();
         assertEquals(1, comments.size());
+    }
+
+    /**
+     * Test for the getNoComments() method
+     *
+     * @throws Exception Exception
+     */
+    @Test
+    public void testNoGetComments() throws Exception {
+        CommentRetriever commentRetriever = new CommentRetriever(100005416);
+        assertEquals(47, commentRetriever.getNoComments());
     }
 }

@@ -31,8 +31,7 @@ public class Comment implements Record {
     /**
      * Constructor.
      */
-    public Comment() {
-    }
+    public Comment() {}
 
     /**
      * Constructor.
@@ -41,11 +40,9 @@ public class Comment implements Record {
      */
     public Comment(ResultSet resultSet) {
         try {
-            if (resultSet.next()) {
-                trackid = resultSet.getInt("track_id");
-                userid = resultSet.getInt("user_id");
-                timestamp = resultSet.getInt("timestamp");
-            }
+            trackid = resultSet.getInt("track_id");
+            userid = resultSet.getInt("user_id");
+            timestamp = resultSet.getInt("timestamp");
         } catch (SQLException e) {
             e.printStackTrace();
         }

@@ -1,8 +1,8 @@
 package models.seeker;
 
 import models.database.retriever.CommentRetriever;
-import models.record.CommentList;
 import models.record.Comment;
+import models.record.CommentList;
 import models.snippet.TimedSnippet;
 
 import java.util.Set;
@@ -60,8 +60,6 @@ public class CommentIntensitySeeker implements Seeker {
         }
         return start;
     }
-
-
 
     /**
      * Seeks the snippet to be used of a given song.
