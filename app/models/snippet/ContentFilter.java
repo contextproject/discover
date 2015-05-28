@@ -25,9 +25,9 @@ public class ContentFilter {
 	 *            the content of a comment
 	 * @return true if the content contains a positive message
 	 */
-	public double contentFilter(final String content) {
+	public int contentFilter(final String content) {
 		String body = content.toLowerCase();
-		double res = 0;
+		int res = 0;
 		for (String p : positive) {
 			if (body.contains(p)) {
 				res = 1;
@@ -37,12 +37,12 @@ public class ContentFilter {
 
 		for (String n : negative) {
 			if (body.contains(n)) {
-				return (double) -1;
+				return -1;
 			}
 		}
 
 		if (res == 1) {
-			return (double) res;
+			return res;
 		} else {
 			return findEmoticons(body);
 		}
@@ -55,7 +55,7 @@ public class ContentFilter {
 	 *            content of a comment
 	 * @return true if the content contains a happy emoticon
 	 */
-	public double findEmoticons(final String body) {
+	public int findEmoticons(final String body) {
 		if (body.contains(":)") || body.contains("<3") || body.contains(":d")
 				  || body.contains(":-)") || body.contains("=d")) {
 			return 1;

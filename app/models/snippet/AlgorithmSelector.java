@@ -54,7 +54,6 @@ public class AlgorithmSelector {
 		return (100 * timeCI + 0 * timeFE) / x;
 	}
 
-	// Tomas
 	/**
 	 * This part of the algorithm selector where the comments are used in the ContentFilter.
 	 * 
@@ -65,8 +64,8 @@ public class AlgorithmSelector {
 		Map<Double, Comment> comments = new HashMap<Double, Comment>();
 		ContentFilter cf = new ContentFilter();
 		for (Comment c : set) {
-			double value = cf.contentFilter(c.getBody());
-			comments.put(value, c);
+			int value = cf.contentFilter(c.getBody());
+			comments.put((double) value, c);
 		}
 
 		return commentIntensity(comments);
@@ -83,7 +82,10 @@ public class AlgorithmSelector {
 		return ts.getStartTime();
 	}
 
-	// Jordy
+	/**
+	 * This function is for the feature essentia.
+	 * @return start time computed by this function
+	 */
 	private int featureEssentia() {
 		return 0;
 	}

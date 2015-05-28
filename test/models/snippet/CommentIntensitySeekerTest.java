@@ -158,8 +158,8 @@ public class CommentIntensitySeekerTest {
         Map<Double, Comment> set = new HashMap<Double, Comment>();
         set.put(0.0, c3);
         set.put(0.0, c4);
-        set.put(0.0, new Comment(10,13000,""));
-        set.put(0.0, new Comment(11,14000,""));
+        set.put(0.0, new Comment(10, 13000, ""));
+        set.put(0.0, new Comment(11, 14000, ""));
         set.put(1.0, c8);
         set.put(1.0, c9);
         
@@ -177,8 +177,8 @@ public class CommentIntensitySeekerTest {
         Map<Double, Comment> set = new HashMap<Double, Comment>();
         set.put(0.0, c3);
         set.put(1.0, c4);
-        set.put(1.0, new Comment(10,15000,""));
-        set.put(1.0, new Comment(11,14000,""));
+        set.put(1.0, new Comment(10, 15000, ""));
+        set.put(1.0, new Comment(11, 14000, ""));
         set.put(1.0, c8);
         set.put(1.0, c9);
         
@@ -196,8 +196,8 @@ public class CommentIntensitySeekerTest {
         Map<Double, Comment> set = new HashMap<Double, Comment>();
         set.put(0.0, c3);
         set.put(0.0, c4);
-        set.put(0.0, new Comment(10,15000,""));
-        set.put(0.0, new Comment(11,41000,""));
+        set.put(0.0, new Comment(10, 15000, ""));
+        set.put(0.0, new Comment(11, 41000, ""));
         set.put(1.0, c8);
         set.put(1.0, c9);
         

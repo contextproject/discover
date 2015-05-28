@@ -6,9 +6,9 @@ import models.database.DatabaseConnector;
 import org.junit.Before;
 import org.junit.Test;
 
-
-
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+
 
 /**
  * Tests for the AlgortihmSelector.
@@ -41,9 +41,8 @@ public class AlgorithmSelectorTest {
 	public void selectorTest1() {
 		// song with a lot of comments
 		AlgorithmSelector as = new AlgorithmSelector(114419538);
-		TimedSnippet ts = as.getSnippet();
-
-		//assertNotEquals(0, ts.getStartTime());
+		double start = as.determineStart();
+		assertNotEquals(0.0, start);
 	}
 
 	/**
