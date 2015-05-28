@@ -2,7 +2,7 @@ package models.seeker;
 
 import java.util.List;
 
-import models.snippet.CommentIntensitySeeker;
+import models.seeker.CommentIntensitySeeker;
 
 /**
  * This class seeks the comment intensity in mixes. It uses a start and
@@ -20,7 +20,7 @@ import models.snippet.CommentIntensitySeeker;
  * @author arthur hovenesyan
  *
  */
-public class MixSeeker extends CommentIntensitySeeker {
+public class MixSeeker {
 
     /**
      * The integers that contain the starttimes of the pieces of the mix.
@@ -33,7 +33,6 @@ public class MixSeeker extends CommentIntensitySeeker {
      * startpoints of the different 
      */
     public MixSeeker(final List<Integer> starttimesOfPieces) {
-        super();
         setStarttimes(starttimesOfPieces);
     }
     
