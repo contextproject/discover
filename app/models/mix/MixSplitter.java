@@ -8,7 +8,7 @@ import java.util.List;
  * pieces.
  * 
  * @since 21-05-2015
- * @version 27-05-2015
+ * @version 28-05-2015
  * 
  * @see Shingle
  * 
@@ -97,7 +97,31 @@ public class MixSplitter {
      * @return The list of Shingles that you can then compare.
      */
     public List<Shingle> splitToShingles() {
-        return new ArrayList<Shingle>();
+        return splitToShingles(10, 5);
+    }
+    
+    /**
+     * Splits the {@link #data} into different Shingles that can then be compared.
+     * @param size The size of each Shingle.
+     * @param stepsize The size of the steps between two shingles, when set to 1 every shingle
+     * units will start next to each other, when set to 5 then the start of each shingle will be 5
+     * away from the previous one
+     * @return The list of Shingles that you can then compare.
+     */
+    public List<Shingle> splitToShingles(final int size, final int stepsize) {
+        if (size <= 0) {
+            throw new IllegalArgumentException("The size of the shingle should be positive but was "
+                    + size);
+        } else if (stepsize <= 0) {
+            throw new IllegalArgumentException("The stepsize of the shingle should be positive"
+                    + "but was " + stepsize);
+        }
+        List<Shingle> shingles = new ArrayList<Shingle>();
+        final int datasize = data.size(); // Saves a lot of time on really large collections.
+        for (int i = 0; i < datasize; i += stepsize) {
+            shingles.add(new Shingle(data.subList(i, Math.min(i + size, datasize))));
+        }
+        return shingles;
     }
 
     /**

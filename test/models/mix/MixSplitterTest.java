@@ -16,7 +16,7 @@ import static org.junit.Assert.assertEquals;
  * @see BasicTest
  * 
  * @since 21-05-2015
- * @version 27-05-2015
+ * @version 28-05-2015
  * 
  * @author stefan boodt
  * @author arthur hovenesyan
@@ -425,5 +425,130 @@ public class MixSplitterTest extends BasicTest {
         final double delta = 0.001;
         assertEquals(expected, getSplitter().getJaccardDistance(first, second),
                 delta);
+    }
+    
+    /**
+     * Tests the {@link MixSplitter#splitToShingles(int, int)} method.
+     */
+    @Test (expected = IllegalArgumentException.class)
+    public void testSplitToShinglesBoth0() {
+        splitter.splitToShingles(0, 0);
+    }
+    
+    /**
+     * Tests the {@link MixSplitter#splitToShingles(int, int)} method.
+     */
+    @Test (expected = IllegalArgumentException.class)
+    public void testSplitToShinglesSize0() {
+        splitter.splitToShingles(0, 1);
+    }
+    
+    /**
+     * Tests the {@link MixSplitter#splitToShingles(int, int)} method.
+     */
+    @Test (expected = IllegalArgumentException.class)
+    public void testSplitToShinglesStepsize0() {
+        splitter.splitToShingles(1, 0);
+    }
+    
+    /**
+     * Tests the {@link MixSplitter#splitToShingles(int, int)} method.
+     */
+    @Test (expected = IllegalArgumentException.class)
+    public void testSplitToShinglesNegativeSize() {
+        splitter.splitToShingles(-1, 1);
+    }
+    
+    /**
+     * Tests the {@link MixSplitter#splitToShingles(int, int)} method.
+     */
+    @Test (expected = IllegalArgumentException.class)
+    public void testSplitToShinglesNegativeStepsize() {
+        splitter.splitToShingles(1, -1);
+    }
+    
+    /**
+     * Tests the {@link MixSplitter#splitToShingles()} method.
+     */
+    @Test
+    public void testSplitToShinglesEmpty() {
+        splitter.setData(asList());
+        List<Shingle> expected = new ArrayList<Shingle>();
+        assertEquals(expected, splitter.splitToShingles());
+    }
+    
+    /**
+     * Tests the {@link MixSplitter#splitToShingles(int, int)} method.
+     */
+    @Test
+    public void testSplitToShinglesEmptyWithArguments() {
+        splitter.setData(asList());
+        List<Shingle> expected = new ArrayList<Shingle>();
+        assertEquals(expected, splitter.splitToShingles(10, 1));
+    }
+    
+    /**
+     * Tests the {@link MixSplitter#splitToShingles(int, int)} method.
+     */
+    @Test
+    public void testSplitToShinglesTooLargeSize() {
+        final List<Float> floats = asList(1.0f, 2.0f, 0.0f);
+        splitter.setData(floats);
+        List<Shingle> expected = new ArrayList<Shingle>();
+        expected.add(new Shingle(floats));
+        expected.add(new Shingle(asList(2.0f, 0.0f)));
+        expected.add(new Shingle(asList(0.0f)));
+        assertEquals(expected, splitter.splitToShingles(10, 1));
+    }
+    
+    /**
+     * Tests the {@link MixSplitter#splitToShingles(int, int)} method.
+     */
+    @Test
+    public void testSplitToShinglesTooLargeStepsize() {
+        final List<Float> floats = asList(1.0f, 2.0f, 0.0f);
+        splitter.setData(floats);
+        List<Shingle> expected = new ArrayList<Shingle>();
+        expected.add(new Shingle(asList(1.0f)));
+        assertEquals(expected, splitter.splitToShingles(1, 4));
+    }
+    
+    /**
+     * Tests the {@link MixSplitter#splitToShingles(int, int)} method.
+     */
+    @Test
+    public void testSplitToShinglesBothTooLarge() {
+        final List<Float> floats = asList(1.0f, 2.0f, 0.0f);
+        splitter.setData(floats);
+        List<Shingle> expected = new ArrayList<Shingle>();
+        expected.add(new Shingle(floats));
+        assertEquals(expected, splitter.splitToShingles(10, 5));
+    }
+    
+    /**
+     * Tests the {@link MixSplitter#splitToShingles(int, int)} method.
+     */
+    @Test
+    public void testSplitToShinglesWithGaps() {
+        final List<Float> floats = asList(1.0f, 2.0f, 0.0f, 2.0f);
+        splitter.setData(floats);
+        List<Shingle> expected = new ArrayList<Shingle>();
+        expected.add(new Shingle(asList(1.0f)));
+        expected.add(new Shingle(asList(0.0f)));
+        assertEquals(expected, splitter.splitToShingles(1, 2));
+    }
+    
+    /**
+     * Tests the {@link MixSplitter#splitToShingles(int, int)} method.
+     */
+    @Test
+    public void testSplitToShinglesBoth1() {
+        final List<Float> floats = asList(1.0f, 2.0f, 0.0f);
+        splitter.setData(floats);
+        List<Shingle> expected = new ArrayList<Shingle>();
+        expected.add(new Shingle(asList(1.0f)));
+        expected.add(new Shingle(asList(2.0f)));
+        expected.add(new Shingle(asList(0.0f)));
+        assertEquals(expected, splitter.splitToShingles(1, 1));
     }
 }
