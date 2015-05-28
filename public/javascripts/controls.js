@@ -77,9 +77,7 @@ function reloadWidget() {
 			}
 			sendData(message, "/request", setStartTime);
 			// use the following line if you want to re-render the page.
-			// window.location.href = "http://localhost:9000/tracks/" +
-			// sounds[pos].id;
-
+			// window.location.href = "http://localhost:9000/tracks/" + sounds[pos].id;
 		});
 	});
 
@@ -137,6 +135,23 @@ $("#prev").click(function() {
 	widget.prev();
 });
 
+--
+$("#favorites").click(function() {
+	if (SC.accessToken() != null) {
+		SC.get('/me', function(me) {
+			widget.load("api.soundcloud.com/users/" + me.id + "/favorites", { 
+				auto_play : false 
+			});
+		});
+	} else {
+		SC.connect(function() {
+			SC.get('/me', function(me) {
+				widget.load("api.soundcloud.com/users/" + me.id + "/favorites", {});
+			});
+		});
+	}
+});
+
 // connect with Soundcloud
 // initialize client with app credentials
 SC.initialize({
@@ -144,18 +159,18 @@ SC.initialize({
 	redirect_uri : 'http://localhost:9000/assets/html/callback.html'
 });
 
-// 
-$("#connect").click( function() {
-	// initiate auth popup
-	if (SC.accessToken() == null) {
-		SC.connect(function() {
-			SC.get('/me', function(me) {
-				widget.load("api.soundcloud.com/users/" + me.id + "/favorites", {});
-				$("#connect").html("Disconnect");
-			});
+$("#connect").click(
+		function() {
+			// initiate auth popup
+			if (SC.accessToken() == null) {
+				SC.connect(function() {
+					SC.get('/me', function(me) {
+						widget.load("api.soundcloud.com/users/" + me.id + "/favorites", {});
+						$("#connect").html("Disconnect");
+					});
+				});
+			} else {
+				SC.accessToken(null);
+				$("#connect").html("Connect");
+			}
 		});
-	} else {
-		SC.accessToken(null);
-		$("#connect").html("Connect");
-	}
-});
