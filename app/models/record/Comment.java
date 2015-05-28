@@ -39,7 +39,7 @@ public class Comment implements Record {
      *
      * @param resultSet The ResultSet object of the comment
      */
-    public Comment(ResultSet resultSet) {
+    public Comment(final ResultSet resultSet) {
         try {
             if (resultSet.next()) {
                 trackid = resultSet.getInt("track_id");

@@ -1,13 +1,14 @@
 package models.database;
 
 import controllers.Application;
-
 import static org.junit.Assert.assertEquals;
+
 
 
 import java.util.Iterator;
 import java.util.Set;
 
+import models.database.retriever.CommentRetriever;
 import models.snippet.Comment;
 
 import org.junit.Before;
@@ -40,7 +41,7 @@ public class CommentRetrieverTest {
 						"context", "password");
 		Application.setDatabaseConnector(databaseConnector);
 
-		commentRetriever = new CommentRetriever();
+		
 	}
 
 	/**
@@ -52,7 +53,8 @@ public class CommentRetrieverTest {
 	@Test
 	public void getAmountOfCommentsTest() throws Exception {
 		// Song with highest amount of comments
-		int ac = commentRetriever.getAmountOfComments(114419538);
+		commentRetriever = new CommentRetriever(114419538);
+		int ac = commentRetriever.getNoComments();
 		assertEquals(20120, ac);
 	}
 
@@ -66,7 +68,8 @@ public class CommentRetrieverTest {
 	public void getCommentsTest() throws Exception {
 		databaseConnector.executeUpdate("INSERT INTO with_features_comments "
 				  + "VALUES (1, 1, 1, '2015-01-01 12:00:00', 1, 'test')");
-		Set<Comment> comments = commentRetriever.getComments(1);
+		commentRetriever = new CommentRetriever(1);
+		Set<Comment> comments = commentRetriever.getComments();
 		Iterator<Comment> it = comments.iterator();
 		while (it.hasNext()) {
 			Comment comment = it.next();

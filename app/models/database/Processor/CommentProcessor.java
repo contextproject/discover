@@ -1,4 +1,4 @@
-package models.database.processor;
+package models.database.Processor;
 
 import controllers.Application;
 import models.database.DatabaseConnector;

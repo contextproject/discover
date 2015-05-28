@@ -65,4 +65,10 @@ public class CommentContentSeeker implements Seeker {
 			return 0;
 		}
 	}
+
+	@Override
+	public TimedSnippet seek() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
