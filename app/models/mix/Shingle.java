@@ -17,14 +17,14 @@ public class Shingle {
     /**
      * The data that the shingle consists of and operates on.
      */
-    private List<Float> data;
+    private List<Double> data;
 
     /**
-     * @param data
+     * @param second
      *            The data to be stored in the shingle.
      */
-    public Shingle(final List<Float> data) {
-        setData(data);
+    public Shingle(final List<Double> second) {
+        setData(second);
     }
 
     /**
@@ -37,8 +37,8 @@ public class Shingle {
      *            The Shingle to copy.
      */
     protected Shingle(final Shingle shingle) {
-        List<Float> data = new ArrayList<Float>(shingle.size());
-        for (Float f : shingle.data) {
+        List<Double> data = new ArrayList<Double>(shingle.size());
+        for (Double f : shingle.data) {
             data.add(f);
         }
         setData(data);
@@ -78,11 +78,11 @@ public class Shingle {
      * @return The union of the two shingles.
      */
     public Shingle union(final Shingle other) {
-        List<Float> union = new ArrayList<Float>(this.size() + other.size());
-        for (Float f : data) {
+        List<Double> union = new ArrayList<Double>(this.size() + other.size());
+        for (Double f : data) {
             union.add(f);
         }
-        for (Float f : other.getData()) {
+        for (Double f : other.getData()) {
             union.add(f);
         }
         Shingle shingle = new Shingle(union);
@@ -102,7 +102,7 @@ public class Shingle {
      * Adds float e to the data of the shingle.
      * @param e The float you want to add.
      */
-    public void add(final Float e) {
+    public void add(final Double e) {
         data.add(e);
     }
     
@@ -110,7 +110,7 @@ public class Shingle {
      * Retrieves the data used by the Shingle.
      * @return The data the shingle operates on.
      */
-    public List<Float> getData() {
+    public List<Double> getData() {
         return data;
     }
 
@@ -118,10 +118,10 @@ public class Shingle {
      * Changes the data this Shingle operates on to the given list.
      * Since this is changing the current Shingle this should be used with
      * caution.
-     * @param data The new data to operate on.
+     * @param second The new data to operate on.
      */
-    public void setData(final List<Float> data) {
-        this.data = data;
+    public void setData(final List<Double> second) {
+        this.data = second;
     }
     
     /**
@@ -138,7 +138,7 @@ public class Shingle {
     public String toString() {
         StringBuilder builder = new StringBuilder("Shingle(");
         final int prefixlength = builder.length();
-        for (Float f : data) {
+        for (Double f : data) {
             builder.append(f.toString() + ", ");
         }
         if (builder.length() > prefixlength + 2) {
@@ -152,8 +152,8 @@ public class Shingle {
      * Makes this Shingle unique by removing all doubles from the data.
      */
     protected void unique() {
-        List<Float> unique = new ArrayList<Float>(size());
-        for (Float f : data) {
+        List<Double> unique = new ArrayList<Double>(size());
+        for (Double f : data) {
             if (!unique.contains(f)) {
                 unique.add(f);
             }

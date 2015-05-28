@@ -31,7 +31,7 @@ public class ShingleTest extends BasicTest {
     @Override
     public void setUp() throws Exception {
         super.setUp();
-        setShingle(new Shingle(new ArrayList<Float>()));
+        setShingle(new Shingle(new ArrayList<Double>()));
     }
     
     /**
@@ -57,7 +57,7 @@ public class ShingleTest extends BasicTest {
      */
     @Test
     public void testGetAndSet() {
-        final List<Float> expected = asList(3.2f, 1.1f, -10.2f);
+        final List<Double> expected = asList(3.2, 1.1, -10.2);
         getShingle().setData(expected);
         assertEquals(expected, getShingle().getData());
     }
@@ -79,7 +79,7 @@ public class ShingleTest extends BasicTest {
         final Shingle s = getShingle();
         final int expected = s.size();
         final Shingle copy = s.copy();
-        copy.add(1.0f);
+        copy.add(1.0);
         assertEquals(expected, s.size());
     }
 
@@ -88,7 +88,7 @@ public class ShingleTest extends BasicTest {
      */
     @Test
     public void testGetJaccardDistanceBothEmpty() {
-        final Shingle empty = new Shingle(new ArrayList<Float>());
+        final Shingle empty = new Shingle(new ArrayList<Double>());
         final double expected = 0.0;
         final double delta = 0.001;
         assertEquals(expected, empty.jaccardDistance(empty),
@@ -100,8 +100,8 @@ public class ShingleTest extends BasicTest {
      */
     @Test
     public void testGetJaccardDistanceFirstEmpty() {
-        final Shingle empty = new Shingle(new ArrayList<Float>());
-        final Shingle second = new Shingle(asList(3.9f, 2.1f, 1.0f));
+        final Shingle empty = new Shingle(new ArrayList<Double>());
+        final Shingle second = new Shingle(asList(3.9, 2.1, 1.0));
         final double expected = 1.0;
         final double delta = 0.001;
         assertEquals(expected, empty.jaccardDistance(second),
@@ -113,8 +113,8 @@ public class ShingleTest extends BasicTest {
      */
     @Test
     public void testGetJaccardDistanceSecondEmpty() {
-        final Shingle empty = new Shingle(new ArrayList<Float>());
-        final Shingle first = new Shingle(asList(3.0f, 2.1f, 1.1f));
+        final Shingle empty = new Shingle(new ArrayList<Double>());
+        final Shingle first = new Shingle(asList(3.0, 2.1, 1.1));
         final double expected = 1.0;
         final double delta = 0.001;
         assertEquals(expected, first.jaccardDistance(empty),
@@ -126,8 +126,8 @@ public class ShingleTest extends BasicTest {
      */
     @Test
     public void testGetJaccardDistance() {
-        final Shingle first = new Shingle(asList(3.0f, 1.1f, 4.3f, 88.6f, 2.1f));
-        final Shingle second = new Shingle(asList(8.0f, 2.1f, 1.1f));
+        final Shingle first = new Shingle(asList(3.0, 1.1, 4.3, 88.6, 2.1));
+        final Shingle second = new Shingle(asList(8.0, 2.1, 1.1));
         final double expected = (double) 4 / 6;
         final double delta = 0.001;
         assertEquals(expected, first.jaccardDistance(second),
@@ -139,8 +139,8 @@ public class ShingleTest extends BasicTest {
      */
     @Test
     public void testGetJaccardDistanceAgain() {
-        final Shingle second = new Shingle(asList(0.0f, 1.2f, 4.3f, 88.6f, -2.2f));
-        final Shingle first = new Shingle(asList(3.0f, 2.1f, 1.1f, 0.0f));
+        final Shingle second = new Shingle(asList(0.0, 1.2, 4.3, 88.6, -2.2));
+        final Shingle first = new Shingle(asList(3.0, 2.1, 1.1, 0.0));
         final double expected = 0.875;
         final double delta = 0.001;
         assertEquals(expected, first.jaccardDistance(second),
@@ -152,8 +152,8 @@ public class ShingleTest extends BasicTest {
      */
     @Test
     public void testGetJaccardDistanceNoIntersect() {
-        final Shingle first = new Shingle(asList(3.0f, -10.2f, 1.2f, 4.3f, 88.6f, -2.2f));
-        final Shingle second = new Shingle(asList(3.3f, 2.1f, 1.1f, 0.0f, 100.1f));
+        final Shingle first = new Shingle(asList(3.0, -10.2, 1.2, 4.3, 88.6, -2.2));
+        final Shingle second = new Shingle(asList(3.3, 2.1, 1.1, 0.0, 100.1));
         final double expected = 1.0;
         final double delta = 0.001;
         assertEquals(expected, first.jaccardDistance(second),
@@ -165,8 +165,8 @@ public class ShingleTest extends BasicTest {
      */
     @Test
     public void testGetJaccardDistanceDoublesInLists() {
-        final Shingle first = new Shingle(asList(3.0f, 2.1f, 3.0f));
-        final Shingle second = new Shingle(asList(4.2f, 3.0f, 6.1f));
+        final Shingle first = new Shingle(asList(3.0, 2.1, 3.0));
+        final Shingle second = new Shingle(asList(4.2, 3.0, 6.1));
         final double expected = 0.75;
         final double delta = 0.001;
         assertEquals(expected, first.jaccardDistance(second),
@@ -178,8 +178,8 @@ public class ShingleTest extends BasicTest {
      */
     @Test
     public void testGetJaccardDistanceDoublesInBothLists() {
-        final Shingle first = new Shingle(asList(3.0f, 2.1f, 3.0f));
-        final Shingle second = new Shingle(asList(4.2f, 3.0f, 4.2f, 6.1f, 3.0f));
+        final Shingle first = new Shingle(asList(3.0, 2.1, 3.0));
+        final Shingle second = new Shingle(asList(4.2, 3.0, 4.2, 6.1, 3.0));
         final double expected = 0.75;
         final double delta = 0.001;
         assertEquals(expected, first.jaccardDistance(second),
@@ -191,8 +191,8 @@ public class ShingleTest extends BasicTest {
      */
     @Test
     public void testGetJaccardDistance2() {
-        final Shingle first = new Shingle(asList(3.0f, 1.1f, 4.3f, 88.6f, 2.1f));
-        final Shingle second = new Shingle(asList(8.0f, 2.1f, 1.1f, 1.1f, 20.3f, 3.0f, 12.9f));
+        final Shingle first = new Shingle(asList(3.0, 1.1, 4.3, 88.6, 2.1));
+        final Shingle second = new Shingle(asList(8.0, 2.1, 1.1, 1.1, 20.3, 3.0, 12.9));
         final double expected = (double) 5 / 8;
         final double delta = 0.001;
         assertEquals(expected, first.jaccardDistance(second),
@@ -204,8 +204,8 @@ public class ShingleTest extends BasicTest {
      */
     @Test
     public void testGetJaccardDistance3() {
-        final Shingle first = new Shingle(asList(3.0f, 3.0f, 3.0f, 2.1f));
-        final Shingle second = new Shingle(asList(2.99f, 8.0f, 2.1f, 1.1f, 20.3f, 3.0f, 12.9f));
+        final Shingle first = new Shingle(asList(3.0, 3.0, 3.0, 2.1));
+        final Shingle second = new Shingle(asList(2.99, 8.0, 2.1, 1.1, 20.3, 3.0, 12.9));
         final double expected = (double) 5 / 7;
         final double delta = 0.001;
         assertEquals(expected, first.jaccardDistance(second),
@@ -217,8 +217,8 @@ public class ShingleTest extends BasicTest {
      */
     @Test
     public void testToString() {
-        final List<Float> floats = asList(3.0f, 2.1f);
-        shingle.setData(floats);
+        final List<Double> doubles = asList(3.0, 2.1);
+        shingle.setData(doubles);
         final String expected = "Shingle(3.0, 2.1)";
         assertEquals(expected, shingle.toString());
     }
@@ -228,8 +228,8 @@ public class ShingleTest extends BasicTest {
      */
     @Test
     public void testToStringEmpty() {
-        final List<Float> floats = asList();
-        shingle.setData(floats);
+        final List<Double> doubles = asList();
+        shingle.setData(doubles);
         final String expected = "Shingle()";
         assertEquals(expected, shingle.toString());
     }
@@ -257,7 +257,7 @@ public class ShingleTest extends BasicTest {
     @Test
     public void testEqualsDifferentSizes() {
         final Shingle other = shingle.copy();
-        final float num = 4.0f;
+        final double num = 4.0;
         other.add(num);
         assertFalse(shingle.equals(other));
     }
@@ -267,9 +267,9 @@ public class ShingleTest extends BasicTest {
      */
     @Test
     public void testEqualsDifferentLists() {
-        final Shingle other = new Shingle(asList(1.0f, 0.0f));
-        final List<Float> floats = asList(2.0f, 1.0f);
-        shingle.setData(floats);
+        final Shingle other = new Shingle(asList(1.0, 0.0));
+        final List<Double> doubles = asList(2.0, 1.0);
+        shingle.setData(doubles);
         assertFalse(shingle.equals(other));
     }
     
@@ -278,10 +278,10 @@ public class ShingleTest extends BasicTest {
      */
     @Test
     public void testUnion() {
-        final Shingle other = new Shingle(asList(1.0f, 0.0f));
-        final List<Float> floats = asList(2.0f, 1.0f);
-        shingle.setData(floats);
-        final Shingle union = new Shingle(asList(2.0f, 1.0f, 0.0f));
+        final Shingle other = new Shingle(asList(1.0, 0.0));
+        final List<Double> doubles = asList(2.0, 1.0);
+        shingle.setData(doubles);
+        final Shingle union = new Shingle(asList(2.0, 1.0, 0.0));
         assertEquals(union, shingle.union(other));
     }
     
@@ -290,7 +290,7 @@ public class ShingleTest extends BasicTest {
      */
     @Test
     public void testUnionBothEmpty() {
-        final List<Float> empty = asList();
+        final List<Double> empty = asList();
         final Shingle other = new Shingle(empty);
         shingle.setData(empty);
         final Shingle union = new Shingle(asList());
@@ -302,8 +302,8 @@ public class ShingleTest extends BasicTest {
      */
     @Test
     public void testUnionThisEmpty() {
-        final List<Float> empty = asList();
-        final Shingle other = new Shingle(asList(1.0f, 2.0f));
+        final List<Double> empty = asList();
+        final Shingle other = new Shingle(asList(1.0, 2.0));
         shingle.setData(empty);
         final Shingle union = other;
         assertEquals(union, shingle.union(other));
@@ -314,9 +314,9 @@ public class ShingleTest extends BasicTest {
      */
     @Test
     public void testUnionOtherEmpty() {
-        final List<Float> empty = asList();
+        final List<Double> empty = asList();
         final Shingle other = new Shingle(empty);
-        shingle.setData(asList(1.0f));
+        shingle.setData(asList(1.0));
         final Shingle union = shingle;
         assertEquals(union, shingle.union(other));
     }
@@ -327,10 +327,10 @@ public class ShingleTest extends BasicTest {
      */
     @Test
     public void testUnionAltered() {
-        final List<Float> list = asList(1.0f);
+        final List<Double> list = asList(1.0);
         final Shingle other = new Shingle(list);
-        shingle.setData(asList(2.0f));
-        final List<Float> expected = shingle.getData();
+        shingle.setData(asList(2.0));
+        final List<Double> expected = shingle.getData();
         shingle.union(other);
         assertEquals(expected, shingle.getData());
     }
@@ -341,10 +341,10 @@ public class ShingleTest extends BasicTest {
      */
     @Test
     public void testUnionAlteredWithDoubles() {
-        final List<Float> list = asList(1.0f);
+        final List<Double> list = asList(1.0);
         final Shingle other = new Shingle(list);
-        shingle.setData(asList(2.0f, 2.0f));
-        final List<Float> expected = shingle.getData();
+        shingle.setData(asList(2.0, 2.0));
+        final List<Double> expected = shingle.getData();
         shingle.union(other);
         assertEquals(expected, shingle.getData());
     }
@@ -355,10 +355,10 @@ public class ShingleTest extends BasicTest {
      */
     @Test
     public void testUnionWithDoubles() {
-        final List<Float> list = asList(1.0f);
+        final List<Double> list = asList(1.0);
         final Shingle other = new Shingle(list);
-        shingle.setData(asList(2.0f, 2.0f));
-        final Shingle expected = new Shingle(asList(1.0f, 2.0f));
+        shingle.setData(asList(2.0, 2.0));
+        final Shingle expected = new Shingle(asList(1.0, 2.0));
         assertEquals(expected, shingle.union(other));
     }
     
@@ -367,7 +367,7 @@ public class ShingleTest extends BasicTest {
      */
     @Test
     public void testUniqueEmpty() {
-        final List<Float> empty = asList();
+        final List<Double> empty = asList();
         shingle.setData(empty);
         shingle.unique();
         assertEquals(empty, shingle.getData());
@@ -378,7 +378,7 @@ public class ShingleTest extends BasicTest {
      */
     @Test
     public void testUniqueNoDoubles() {
-        final List<Float> nums = asList(2.0f, 1.0f, 0.0f);
+        final List<Double> nums = asList(2.0, 1.0, 0.0);
         shingle.setData(nums);
         shingle.unique();
         assertEquals(nums, shingle.getData());
@@ -398,7 +398,7 @@ public class ShingleTest extends BasicTest {
      */
     @Test
     public void testSize() {
-        shingle.setData(asList(0.0f, 1.0f));
+        shingle.setData(asList(0.0, 1.0));
         assertEquals(2, shingle.size());
     }
     
@@ -407,18 +407,18 @@ public class ShingleTest extends BasicTest {
      */
     @Test
     public void testSizeWithDoubles() {
-        shingle.setData(asList(0.0f, 1.0f, 2.0f, 1.0f));
+        shingle.setData(asList(0.0, 1.0, 2.0, 1.0));
         final int expected = 4;
         assertEquals(expected, shingle.size());
     }
     
     /**
-     * Tests the {@link Shingle#add(Float)} method.
+     * Tests the {@link Shingle#add(Double)} method.
      */
     @Test
     public void testAdd() {
         shingle.setData(asList());
-        shingle.add(0.0f);
+        shingle.add(0.0);
         assertEquals(1, shingle.size());
     }
 }

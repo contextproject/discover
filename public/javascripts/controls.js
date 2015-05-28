@@ -77,8 +77,7 @@ function reloadWidget() {
 			}
 			sendData(message, "/request", setStartTime);
 			// use the following line if you want to re-render the page.
-			// window.location.href = "http://localhost:9000/tracks/" +
-			// sounds[pos].id;
+			// window.location.href = "http://localhost:9000/tracks/" + sounds[pos].id;
 
 		});
 	});
