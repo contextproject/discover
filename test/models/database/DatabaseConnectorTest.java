@@ -3,15 +3,15 @@ package models.database;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
 
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
 
 
 /**
@@ -40,9 +40,7 @@ public class DatabaseConnectorTest {
 
     @Test
     public void executeEmptyUpdateTest() throws Exception {
-        DatabaseConnector mockedDBC = mock(DatabaseConnector.class);
-        mockedDBC.executeUpdate("");
-        verifyZeroInteractions(mockedDBC);
+        assertFalse(databaseConnector.executeUpdate(""));
     }
 
     @Test
@@ -53,6 +51,21 @@ public class DatabaseConnectorTest {
         String query = "INSERT INTO table VALUES (1, 1, 1, '2015-01-01 12:00:00', 1, \"test\")";
         mockedDBC.executeUpdate(query);
         verify(mockedStatement).executeUpdate(query);
+    }
+
+    @Test
+    public void executeUpdateExceptionTest() throws Exception {
+        assertFalse(databaseConnector.executeUpdate("INVALID SQL QUERY"));
+    }
+
+    @Test
+    public void executeQueryTest() throws Exception {
+        assertNotNull(databaseConnector.executeQuery("SELECT * FROM comments LIMIT 1"));
+    }
+
+    @Test
+    public void executeQueryExceptionTest() throws Exception {
+        assertNull(databaseConnector.executeQuery(""));
     }
 
     @After

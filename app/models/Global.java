@@ -1,5 +1,6 @@
 package models;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import models.database.DatabaseConnector;
 import play.Application;
 import play.GlobalSettings;
@@ -16,6 +17,11 @@ public class Global extends GlobalSettings {
     private DatabaseConnector databaseConnector = new DatabaseConnector();
 
     /**
+     * The ObjectMapper object used for JsonNode creations.
+     */
+    private ObjectMapper mapper = new ObjectMapper();
+
+    /**
      * The method that gets called on the start of the play application.
      * The connection to the database gets established here.
      *
@@ -30,6 +36,7 @@ public class Global extends GlobalSettings {
         databaseConnector.makeConnection(url, username, password);
 
         controllers.Application.setDatabaseConnector(databaseConnector);
+        controllers.Application.setObjectMapper(mapper);
     }
 
     /**
