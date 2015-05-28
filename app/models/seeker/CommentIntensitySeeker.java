@@ -125,7 +125,8 @@ public class CommentIntensitySeeker implements Seeker {
      * @return The weight of the comment.
      */
     private static int getWeight(final Comment comment) {
-        return 2 + filter.contentFilter(comment.getBody());
+    	CommentContentSeeker filt = new CommentContentSeeker();
+        return 2 + filt.contentFilter(comment.getBody());
     
     }
 
