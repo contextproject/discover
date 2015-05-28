@@ -1,4 +1,4 @@
-package models.snippet;
+package models.seeker;
 
 import java.util.ArrayList;
 import java.util.List;

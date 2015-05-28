@@ -1,6 +1,8 @@
-package models.snippet;
+package models.seeker;
 
 import java.util.List;
+
+import models.snippet.CommentIntensitySeeker;
 
 /**
  * This class seeks the comment intensity in mixes. It uses a start and
