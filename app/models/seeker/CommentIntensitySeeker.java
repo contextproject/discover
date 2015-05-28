@@ -2,7 +2,7 @@ package models.seeker;
 
 import models.database.retriever.CommentRetriever;
 import models.record.Comment;
-import models.record.CommentList;
+import models.utility.CommentList;
 import models.snippet.TimedSnippet;
 
 import java.util.Set;

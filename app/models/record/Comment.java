@@ -1,11 +1,13 @@
 package models.record;
 
+import javax.persistence.Entity;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
  * Class to represent a comment.
  */
+@Entity
 public class Comment implements Record {
 
     /**

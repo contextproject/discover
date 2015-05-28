@@ -5,16 +5,13 @@ import models.database.DatabaseConnector;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
  * Class to read a given folder.
  */
-public class Processor {
+public abstract class Processor {
 
     /**
      * DatabaseConnector object to the database.
@@ -57,7 +54,8 @@ public class Processor {
      * @param file The file to be read
      * @throws IOException IOException
      */
-    protected void readFile(final File file) throws IOException {}
+    protected void readFile(final File file) throws IOException {
+    }
 
     /**
      * Extracts the track id from the file name.

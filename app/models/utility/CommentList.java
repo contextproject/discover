@@ -1,4 +1,6 @@
-package models.record;
+package models.utility;
+
+import models.record.Comment;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
