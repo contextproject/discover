@@ -5,7 +5,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import models.database.DatabaseConnector;
 import models.database.RandomSongSelector;
+import models.database.retriever.TrackRetriever;
+import models.record.Track;
 import models.seeker.CommentIntensitySeeker;
+import play.Logger;
 import play.mvc.Controller;
 import play.mvc.Result;
 import views.html.index;
@@ -66,8 +69,13 @@ public class Application extends Controller {
         } else {
             ObjectNode objNode = mapper.createObjectNode();
             int trackID = json.get("track").get("id").asInt();
+            int duration = json.get("track").get("duration").asInt();
+            Track track = new Track();
+            track.setTrackid(trackID);
+            track.setDuration(duration);
             int starttime = getStartTime(trackID);
-            JsonNode response = objNode.put("response", starttime);
+            int starttime2 = getStartTime(track);
+            JsonNode response = objNode.put("response", starttime2);
             return ok(response);
         }
     }
@@ -80,7 +88,12 @@ public class Application extends Controller {
      * @return the start-time of the snippet.
      */
     public static int getStartTime(final int trackId) {
-        return new CommentIntensitySeeker(trackId).seek().getStartTime();
+        return new CommentIntensitySeeker(
+                new TrackRetriever(trackId).getAll()).seek().getStartTime();
+    }
+
+    public static int getStartTime(final Track track) {
+        return AlgorithmSelector.determineStart(track);
     }
 
     /**

@@ -2,8 +2,9 @@ package models.seeker;
 
 import models.database.retriever.CommentRetriever;
 import models.record.Comment;
-import models.utility.CommentList;
+import models.record.Track;
 import models.snippet.TimedSnippet;
+import models.utility.CommentList;
 
 import java.util.Set;
 import java.util.TreeSet;
@@ -17,7 +18,7 @@ public class CommentIntensitySeeker implements Seeker {
     /**
      * The id of the track.
      */
-    private int trackid;
+    private Track track;
 
     /**
      * The set of comments of the track.
@@ -27,11 +28,11 @@ public class CommentIntensitySeeker implements Seeker {
     /**
      * Constructor.
      *
-     * @param trackid The id of the track
+     * @param track The track
      */
-    public CommentIntensitySeeker(int trackid) {
-        this.trackid = trackid;
-        this.comments = new CommentRetriever(trackid).getComments();
+    public CommentIntensitySeeker(final Track track) {
+        this.track = track;
+        this.comments = new CommentRetriever(track.getTrackid()).getComments();
     }
 
     /**
@@ -40,7 +41,7 @@ public class CommentIntensitySeeker implements Seeker {
      * @return a start time
      */
     private int getStartTime() {
-        int start = -1;
+        int start = 0;
         int maxcount = 0;
         Set<Integer> passed = new TreeSet<Integer>();
         for (Comment c : comments) {
@@ -71,13 +72,22 @@ public class CommentIntensitySeeker implements Seeker {
         return new TimedSnippet(getStartTime());
     }
 
-
-    public int getTrackid() {
-        return trackid;
+    /**
+     * Getter of the track
+     *
+     * @return The track
+     */
+    public Track getTrack() {
+        return track;
     }
 
-    public void setTrackid(int trackid) {
-        this.trackid = trackid;
+    /**
+     * Setter of the track
+     *
+     * @param track The track
+     */
+    public void setTrack(final Track track) {
+        this.track = track;
     }
 
     public CommentList getComments() {
