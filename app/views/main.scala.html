@@ -1,15 +1,94 @@
-@(snipStart: Double)(content: Html)
+@(start: Double)(player: Html)
 
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="UTF-8">
-		<title>"Welcome to the Soundcloud Discovery Page!"</title>
-		<link rel="stylesheet" type="text/css" href="@routes.Assets.at("stylesheets/index.css")">
-		<script type="text/javascript" src="@routes.Assets.at("javascripts/api.js")"></script>
-		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-		<script type="text/javascript" src="http://connect.soundcloud.com/sdk.js"></script>
-	</head>
-	<body>@content
-	</body>
+    <head>
+        <title>"Welcome to the Soundcloud Discovery Page!"</title>
+
+        <meta charset="UTF-8">
+
+        <script type="text/javascript" src="@routes.Assets.at("javascripts/api.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.at("javascripts/scroll.js")"></script>
+
+        <script type="text/javascript" src="http://connect.soundcloud.com/sdk.js"></script>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="@routes.Assets.at("stylesheets/photon.css")" />
+        <link rel="stylesheet" href="@routes.Assets.at("stylesheets/main.css")" />
+
+        <script>
+            $.getScript("/assets/javascripts/controls.js");
+        </script>
+
+        <script>
+            var start = @start;
+        </script>
+    </head>
+
+    <body onload="loadScroll()" onunload="saveScroll()">
+            <!-- Header -->
+        <section id="header">
+            <div class="inner">
+                    <!-- <span class="icon major fa-cloud"></span> -->
+                <h1><strong>Discover</strong></h1>
+                <p> Find the music you love</p>
+                <ul class="actions">
+                    <li><a href="#one" class="button scrolly">Discover</a></li>
+                </ul>
+            </div>
+        </section>
+
+            <!-- One -->
+        <section id="one" class="main style1">
+            <div class="container">
+                <div class="row 150%">
+                    <div class="8u 12u$(medium)">
+                        <input type="text" id="url" placeholder="Enter Soundcloud URL of the track.">
+                    </div>
+                    <div class="4u$ 12u$(medium)">
+                        <button class="control" type="submit" id="reload">Reload</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="two" class="main style1">
+            <div class="container">
+                <div class="row 150%">
+                    <div class="8u 12u$(medium)">
+                        <div class="player">
+                            @player
+                        </div>
+                    </div>
+                    <div class="4u$ 12u$(medium) important(medium)">
+                        <div class="controls">
+                            <input type="range" class="control" id="volume">
+
+                            <button class="control" id="preview">Preview</button> <br>
+                            <button class="control" id="next">Next</button> <br>
+                            <button class="control" id="prev">Previous</button> <br>
+                            <button class="control" id="rand">Random Song</button> <br>
+                            <button class="control" id="clear">Clear Events</button> <br>
+                            <button class="control" id="connect">Connect</button> <br>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+            <!-- Footer -->
+        <section id="footer">
+            <ul class="icons">
+                <li><a href="#" class="icon alt fa-twitter"><span class="label">Twitter</span></a></li>
+                <li><a href="#" class="icon alt fa-facebook"><span class="label">Facebook</span></a></li>
+                <li><a href="#" class="icon alt fa-instagram"><span class="label">Instagram</span></a></li>
+                <li><a href="#" class="icon alt fa-github"><span class="label">GitHub</span></a></li>
+                <li><a href="#" class="icon alt fa-envelope"><span class="label">Email</span></a></li>
+            </ul>
+            <ul class="copyright">
+                <li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+            </ul>
+        </section>
+    </body>
 </html>
