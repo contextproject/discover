@@ -1,5 +1,7 @@
 package controllers;
 
+import java.util.Set;
+
 import models.database.CommentRetriever;
 import models.database.DatabaseConnector;
 import models.database.RandomSongSelector;
@@ -9,9 +11,9 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import views.html.index;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 /**
  * This class is used to control the model and the view parts of the MVC. It
@@ -22,6 +24,9 @@ public class Application extends Controller {
 	/** The database object of the controller. */
 	private static DatabaseConnector databaseConnector;
 
+	/** The ObjectMapper used to create JsonNode objects*/
+	private static ObjectMapper mapper;
+	
 	/**
 	 * The index method is called when the application is started and
 	 * no other messages have been passed.
@@ -34,24 +39,45 @@ public class Application extends Controller {
 
 	/**
 	 * Renders a page with the given track id to load the widget.
-	 * @param trackId , the id of the track we are searching for.
+	 * @param trackId the id of the track we are searching for.
 	 * @return an http ok response with the new rendered page.
 	 */
 	public static Result getSong(final String trackId) {
-		String url = "w.soundcloud.com/tracks/" + trackId;
-        double[] results = new double[3];
-		double starttime = getStartTime(Integer.parseInt(trackId));
-        results[0] = starttime;
-		return ok(index.render(url, starttime));
+		JsonNode json = request().body().asJson();
+		if (json == null) {
+			String url = "w.soundcloud.com/tracks/" + trackId;
+			int starttime = getStartTime(Integer.parseInt(trackId));
+			return ok(index.render(url, starttime));
+		} else {
+			ObjectMapper mapper = new ObjectMapper();
+			ObjectNode objNode = mapper.createObjectNode();
+			int starttime = getStartTime(Integer.parseInt(trackId));
+			JsonNode response = objNode.put("response", starttime);
+			return ok(response);
+		}
+		
 	}
-
+	
+	public static Result TrackRequest() {
+		JsonNode json = request().body().asJson();
+		if (json == null) {
+			return badRequest("Object is empty");
+		} else {
+			ObjectNode objNode = mapper.createObjectNode();
+			int trackID = json.get("track").get("id").asInt();
+			int starttime = getStartTime(trackID);
+			JsonNode response = objNode.put("response", starttime);
+			return ok(response);
+		}
+	}
+ 
 	/**
 	 * Retrieves a start-time calculated by the CommentIntensitySeeker
 	 * for the given track id.
-	 * @param trackId , the id of the track.
+	 * @param trackId the id of the track.
 	 * @return the start-time of the snippet.
 	 */
-	public static double getStartTime(final int trackId) {
+	public static int getStartTime(final int trackId) {
 		CommentRetriever commentRetriever = new CommentRetriever();
 		Set<Comment> coms = commentRetriever.getComments(trackId);
 		int start = CommentIntensitySeeker.seek(coms).getStartTime();
@@ -67,15 +93,48 @@ public class Application extends Controller {
 		selector = RandomSongSelector.getRandomSongSelector();
 		int trackId = selector.getRandomSong();
 		String url = "w.soundcloud.com/tracks/" + trackId;
-		double starttime = getStartTime(trackId);
-        double[] results = new double[3];
-        results[0] = starttime;
+		int starttime = getStartTime(trackId);
 		return ok(index.render(url, starttime));
+	}
+	
+	/**
+	 * Method used to pass a JsonNode object with track waveform 
+	 * on to the MixSplitter class.
+	 * @return ok response with the start times for the mix.
+	 */
+	public static Result splitWaveform() {
+		JsonNode json = request().body().asJson();
+		if (json == null) {
+			return badRequest("Expecting Json data");
+		} else {
+			System.out.println("The object has been received");
+			//TO-DO: send the iterator to the MixSplitter.
+			//TO-DO: receive the answer from the splitter and send array of start times.
+			ObjectNode objNode = mapper.createObjectNode();
+			JsonNode response = objNode.put("response", "File was transvered successfully");
+			return ok(response);
+		}
+	}
+	
+	/**
+	 * Method used to pass a Json object with track meta-data.
+	 * This will be used in the future to insert non-existing tracks.
+	 * @return ok response with a 
+	 */
+	public static Result trackMetadata() {
+		JsonNode json = request().body().asJson();
+		if (json == null) {
+			return badRequest("Expecting Json data");
+		} else {
+			ObjectNode objNode = mapper.createObjectNode();
+			JsonNode response = objNode.put("message", "File was transvered successfully");
+			return ok(response);
+		}
 	}
 
 	/**
 	 * Setter for the DatabaseConnector object.
-	 * @param dbc , the new DatabaseConnector object.
+	 * @param dbc the new DatabaseConnector object.
 	 */
 	public static void setDatabaseConnector(final DatabaseConnector dbc) {
 		databaseConnector = dbc;
@@ -87,5 +146,21 @@ public class Application extends Controller {
 	 */
 	public static DatabaseConnector getDatabaseConnector() {
 		return databaseConnector;
+	}
+	
+	/**
+	 * Setter for the ObjectMapper object.
+	 * @param dbc the new ObjectMapper object.
+	 */
+	public static void setObjectMapper(final ObjectMapper om) {
+		mapper = om;
+	}
+
+	/**
+	 * Getter for the ObjectMapper Object of the controller.
+	 * @return the ObjectMapper Object.
+	 */
+	public static ObjectMapper getObjectMapper() {
+		return mapper;
 	}
 }
