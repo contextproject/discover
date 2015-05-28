@@ -89,10 +89,8 @@ public class CommentIntensitySeeker implements Seeker {
 			if (!passed.contains(c.getValue().getTime())) {
 
 				for (Entry<Double, Comment> c2 : entryset) {
-					if (c2.getValue().getTime() >= c.getValue().getTime()
-							  && c2.getValue().getTime() <= (c.getValue()
-									.getTime() + duration)) {
-						count += computeWeight(c, c2);
+					if (isInRange(c2.getValue().getTime(), c.getValue().getTime(), duration)) {
+						count += c2.getKey();
 					}
 				}
 
@@ -107,25 +105,16 @@ public class CommentIntensitySeeker implements Seeker {
 	}
 
 	/**
-	 * Computes the weight of two comment who are in the same range.
-	 * 
-	 * @param c
-	 *            first comment entry.
-	 * @param d
-	 *            second comment entry.
-	 * @return the weight of 2 comments.
-	 */
-	private static int computeWeight(final Entry<Double, Comment> c,
-			  final Entry<Double, Comment> d) {
-		if (c.getKey() == 1 && d.getKey() == 1) {
-			return 3;
-		} else if ((c.getKey() == 1 | d.getKey() == 1)) {
-			return 2;
-		} else {
-			return 1;
-		}
-
-	}
+     * Checks if time is between bottom and bottom + window.
+     * @param time The time to check.
+     * @param bottom The bottom of the range.
+     * @param window The size of the range.
+     * @return true iff it is in the range.
+     */
+    protected boolean isInRange(final int time, final int bottom, final int window) {
+        return time >= bottom && time <= (bottom + window);
+    }
+    
 
 	/**
 	 * Seeks the snippet to be used of a given song.

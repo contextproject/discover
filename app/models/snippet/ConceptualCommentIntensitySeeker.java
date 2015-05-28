@@ -3,6 +3,8 @@ package models.snippet;
 import java.util.Set;
 import java.util.TreeSet;
 
+import models.seeker.Seeker;
+
 /**
  * Class that can demonstrate how the CommentIntensitySeeker and
  * ContentFilter could be used together.
