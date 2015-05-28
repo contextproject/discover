@@ -61,7 +61,8 @@ $("#url").keypress(function(e) {
 function reloadWidget() {
 	// load the url in the widget
 	widget.load($("#url").val(), {
-		auto_play : false
+		auto_play : false,
+		likes : true
 	});
 	widget.bind(SC.Widget.Events.READY, function() {
 		widget.unbind(SC.Widget.Events.READY);

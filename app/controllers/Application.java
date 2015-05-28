@@ -34,8 +34,7 @@ public class Application extends Controller {
 	 */
 	public static Result index() {
 		String url = "w.soundcloud.com/tracks/67016624";
-//		return ok(index.render(url, getStartTime(67016624)));
-		return ok(index.render(url, 252000));
+		return ok(index.render(url, getStartTime(67016624)));
 	}
 
 	/**
