@@ -5,16 +5,13 @@ import models.database.DatabaseConnector;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
  * Class to read a given folder.
  */
-public class Processor {
+public abstract class Processor {
 
     /**
      * DatabaseConnector object to the database.
@@ -52,25 +49,12 @@ public class Processor {
     }
 
     /**
-     * Reads a file and passes each line to the readLine method.
+     * Reads a file.
      *
      * @param file The file to be read
      * @throws IOException IOException
      */
     protected void readFile(final File file) throws IOException {
-        List<String> lines = Files.readAllLines(file.toPath(), Charset.defaultCharset());
-        for (String line : lines) {
-            readLine(line, file);
-        }
-    }
-
-    /**
-     * Reads a line.
-     *
-     * @param line The line to be read
-     * @param file The file of the line
-     */
-    protected void readLine(final String line, final File file) {
     }
 
     /**

@@ -2,7 +2,7 @@ package models.database.retriever;
 
 import controllers.Application;
 import models.database.DatabaseConnector;
-import models.record.CommentList;
+import models.utility.CommentList;
 import models.record.Record;
 
 /**

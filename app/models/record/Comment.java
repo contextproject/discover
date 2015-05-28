@@ -1,11 +1,13 @@
 package models.record;
 
+import javax.persistence.Entity;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
  * Class to represent a comment.
  */
+@Entity
 public class Comment implements Record {
 
     /**
@@ -29,10 +31,14 @@ public class Comment implements Record {
     private int timestamp;
 
     /**
+     * The body of the comment.
+     */
+    private String body;
+
+    /**
      * Constructor.
      */
-    public Comment() {
-    }
+    public Comment() {}
 
     /**
      * Constructor.
@@ -41,11 +47,10 @@ public class Comment implements Record {
      */
     public Comment(final ResultSet resultSet) {
         try {
-            if (resultSet.next()) {
-                trackid = resultSet.getInt("track_id");
-                userid = resultSet.getInt("user_id");
-                timestamp = resultSet.getInt("timestamp");
-            }
+            trackid = resultSet.getInt("track_id");
+            userid = resultSet.getInt("user_id");
+            timestamp = resultSet.getInt("timestamp");
+            body = resultSet.getString("text");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -91,6 +96,15 @@ public class Comment implements Record {
      */
     public int getTimestamp() {
         return timestamp;
+    }
+
+    /**
+     * Getter of the body of the comment.
+     *
+     * @return The body of the comment
+     */
+    public String getBody() {
+        return body;
     }
 
     /**
