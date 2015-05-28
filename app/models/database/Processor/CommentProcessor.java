@@ -1,6 +1,7 @@
-package models.database;
+package models.database.processor;
 
 import controllers.Application;
+import models.database.DatabaseConnector;
 
 import java.io.File;
 import java.io.IOException;

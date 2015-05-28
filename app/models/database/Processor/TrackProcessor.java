@@ -1,16 +1,19 @@
-package models.database;
+package models.database.processor;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
  * Class to process the .track files.
  */
-public class TrackProcessor extends Reader {
+public class TrackProcessor extends Processor {
 
     /**
      * To prepare a MySQL query.
@@ -25,6 +28,19 @@ public class TrackProcessor extends Reader {
      */
     public TrackProcessor(final File folder) throws IOException {
         super(folder);
+    }
+
+    /**
+     * Reads a file and passes each line to the readLine method.
+     *
+     * @param file The file to be read
+     * @throws IOException IOException
+     */
+    protected void readFile(final File file) throws IOException {
+        List<String> lines = Files.readAllLines(file.toPath(), Charset.defaultCharset());
+        for (String line : lines) {
+            readLine(line, file);
+        }
     }
 
     /**
@@ -54,7 +70,7 @@ public class TrackProcessor extends Reader {
                 + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try {
             preparedStatement = getDatabaseConnector().getConnection().prepareStatement(query);
-            preparedStatement.setObject(1, getTrackID(file));
+            preparedStatement.setObject(1, getTrackid(file));
         } catch (SQLException e) {
             e.printStackTrace();
         }

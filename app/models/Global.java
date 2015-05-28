@@ -15,8 +15,8 @@ public class Global extends GlobalSettings {
      * DatabaseConnector object to the database.
      */
     private DatabaseConnector databaseConnector = new DatabaseConnector();
-    
-    /** 
+
+    /**
      * The ObjectMapper object used for JsonNode creations.
      */
     private ObjectMapper mapper = new ObjectMapper();
@@ -31,10 +31,10 @@ public class Global extends GlobalSettings {
         String url = "jdbc:mysql://188.166.78.36/contextbase";
         String username = "context";
         String password = "password";
-        
+
         databaseConnector.loadDrivers();
         databaseConnector.makeConnection(url, username, password);
-        
+
         controllers.Application.setDatabaseConnector(databaseConnector);
         controllers.Application.setObjectMapper(mapper);
     }

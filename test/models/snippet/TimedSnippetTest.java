@@ -1,5 +1,5 @@
 package models.snippet;
-import models.snippet.TimedSnippet;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -71,7 +71,7 @@ public class TimedSnippetTest {
      */
     @Test
     public void testGetDuration() {
-        assertEquals(TimedSnippet.getDefaultDuration(), snippet.getDuration());
+        assertEquals(TimedSnippet.getDefaultDuration(), snippet.getWindow());
     }
 
     /**
@@ -82,7 +82,7 @@ public class TimedSnippetTest {
         final int d = 100;
         final int st = 1000;
         final TimedSnippet s = new TimedSnippet(st, d);
-        assertEquals(d, s.getDuration());
+        assertEquals(d, s.getWindow());
     }
 
     /**
@@ -128,7 +128,7 @@ public class TimedSnippetTest {
         final int d = 100;
         final int st = 1000;
         final TimedSnippet s = new TimedSnippet(st, d);
-        assertEquals(d, s.getDuration());
+        assertEquals(d, s.getWindow());
     }
 
     /**
@@ -163,7 +163,7 @@ public class TimedSnippetTest {
     }
 
     /**
-     * Tests the {@link TimedSnippet#getDuration()}.
+     * Tests the {@link TimedSnippet#getWindow()}.
      */
     @Test
     public void testGetDurationZero() {
@@ -171,11 +171,11 @@ public class TimedSnippetTest {
         final int duration = 0;
         final TimedSnippet s = new TimedSnippet(newtime, duration);
         final int expected = TimedSnippet.getDefaultDuration();
-        assertEquals(expected, s.getDuration());
+        assertEquals(expected, s.getWindow());
     }
 
     /**
-     * Tests the {@link TimedSnippet#getDuration()}.
+     * Tests the {@link TimedSnippet#getWindow()}.
      */
     @Test
     public void testGetDurationNegative() {
@@ -183,6 +183,6 @@ public class TimedSnippetTest {
         final int duration = -1;
         final TimedSnippet s = TimedSnippet.createSnippet(newtime, duration);
         final int expected = TimedSnippet.getDefaultDuration();
-        assertEquals(expected, s.getDuration());
+        assertEquals(expected, s.getWindow());
     }
 }
