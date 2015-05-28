@@ -150,8 +150,7 @@ $("#connect").click( function() {
 	if (SC.accessToken() == null) {
 		SC.connect(function() {
 			SC.get('/me', function(me) {
-				widget.load("api.soundcloud.com/users/" + me.id
-						+ "/favorites", {});
+				widget.load("api.soundcloud.com/users/" + me.id + "/favorites", {});
 				$("#connect").html("Disconnect");
 			});
 		});
