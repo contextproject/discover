@@ -13,7 +13,7 @@ import static org.junit.Assert.assertEquals;
  * Tests the MixSeeker class.
  * 
  * @since 27-05-2015
- * @version 27-05-2015
+ * @version 29-05-2015
  * 
  * @see MixSeeker
  * @see CommentIntensitySeekerTest
@@ -91,11 +91,111 @@ public class MixSeekerTest /* extends CommentIntensitySeekerTest */ {
     }
 
     /**
+     * Tests the {@link MixSeeker#getStarttimesOfPieces()} as well as the
+     * {@link MixSeeker#setStarttimes(List)} method.
+     */
+    @Test
+    public void testGetStartTimesWrongOrder() {
+        final List<Integer> expected = asList(0, 1, 2, 3);
+        getSeeker().setStarttimes(asList(0, 2, 3, 1));
+        assertEquals(expected, getSeeker().getStarttimesOfPieces());
+    }
+
+    /**
      * Tests the {@link MixSeeker#setStarttimes()} method.
      */
     @Test (expected = IllegalArgumentException.class)
     public void testSetStartTimesEmpty() {
         final List<Integer> expected = asList();
         mixseeker.setStarttimes(expected);
+    }
+    
+    /**
+     * Tests the {@link MixSeeker#getEndOfSong()} method against itself.
+     */
+    @Test
+    public void testGetEndOfSong() {
+        /*
+         *  This tests actually only checks if the call is succeeding and if the
+         *  result is consistent, which means the same every time.
+         */
+        assertEquals(MixSeeker.getEndOfSong(), MixSeeker.getEndOfSong());
+    }
+    
+    /**
+     * Tests the {@link MixSeeker#getNextPieceStarttime(int)} method.
+     */
+    @Test (expected = IllegalArgumentException.class)
+    public void testgetNextPieceStarttimeNegativeTime() {
+        final List<Integer> starttimes = asList(10, 20, 30);
+        mixseeker.setStarttimes(starttimes);
+        final int expected = 10;
+        assertEquals(expected, mixseeker.getNextPieceStarttime(-10));
+    }
+    
+    /**
+     * Tests the {@link MixSeeker#getNextPieceStarttime(int)} method.
+     */
+    @Test (expected = IllegalArgumentException.class)
+    public void testgetNextPieceStarttimeUnderFirstBound() {
+        final List<Integer> starttimes = asList(10, 20, 30);
+        mixseeker.setStarttimes(starttimes);
+        final int expected = 10;
+        assertEquals(expected, mixseeker.getNextPieceStarttime(0));
+    }
+    
+    /**
+     * Tests the {@link MixSeeker#getNextPieceStarttime(int)} method.
+     */
+    @Test
+    public void testgetNextPieceStarttimeOnFirstBound() {
+        final List<Integer> starttimes = asList(0, 10, 20, 30);
+        mixseeker.setStarttimes(starttimes);
+        final int expected = 10;
+        assertEquals(expected, mixseeker.getNextPieceStarttime(0));
+    }
+    
+    /**
+     * Tests the {@link MixSeeker#getNextPieceStarttime(int)} method.
+     */
+    @Test
+    public void testgetNextPieceStarttime() {
+        final List<Integer> starttimes = asList(0, 10, 20, 30);
+        mixseeker.setStarttimes(starttimes);
+        final int expected = 20;
+        assertEquals(expected, mixseeker.getNextPieceStarttime(11));
+    }
+    
+    /**
+     * Tests the {@link MixSeeker#getNextPieceStarttime(int)} method.
+     */
+    @Test
+    public void testgetNextPieceStarttimeLastValue() {
+        final List<Integer> starttimes = asList(0, 10, 20, 30);
+        mixseeker.setStarttimes(starttimes);
+        final int expected = 30;
+        assertEquals(expected, mixseeker.getNextPieceStarttime(28));
+    }
+    
+    /**
+     * Tests the {@link MixSeeker#getNextPieceStarttime(int)} method.
+     */
+    @Test
+    public void testgetNextPieceStarttimeOnLastBound() {
+        final List<Integer> starttimes = asList(0, 10, 20, 30);
+        mixseeker.setStarttimes(starttimes);
+        final int expected = MixSeeker.getEndOfSong();
+        assertEquals(expected, mixseeker.getNextPieceStarttime(30));
+    }
+    
+    /**
+     * Tests the {@link MixSeeker#getNextPieceStarttime(int)} method.
+     */
+    @Test
+    public void testgetNextPieceStarttimeOverLastBound() {
+        final List<Integer> starttimes = asList(0, 10, 20, 30);
+        mixseeker.setStarttimes(starttimes);
+        final int expected = MixSeeker.getEndOfSong();
+        assertEquals(expected, mixseeker.getNextPieceStarttime(100));
     }
 }

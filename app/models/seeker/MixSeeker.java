@@ -1,11 +1,12 @@
 package models.seeker;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
  * This class seeks the comment intensity in mixes. It uses a start and
  * stop time to do it in addition to the regular start and stop done by
- * the CommentIntensitySeeker. Its responsability is to inquire to the
+ * the CommentIntensitySeeker. Its responsibility is to inquire to the
  * comment intensity in mixes.
  * 
  * @since 27-05-2015
@@ -19,6 +20,11 @@ import java.util.List;
  *
  */
 public class MixSeeker {
+    
+    /**
+     * The Integer that describes the end of the song.
+     */
+    private static int endOfSong = Integer.MAX_VALUE;
 
     /**
      * The integers that contain the starttimes of the pieces of the mix.
@@ -43,7 +49,9 @@ public class MixSeeker {
     }
     
     /**
-     * Sets the starttimes of the pieces to the given value.
+     * Sets the starttimes of the pieces to the given value. This method also sorts the
+     * starttimes in case they were not sorted so we can easily define interfalls for each
+     * value in the song.
      * @param starttimesOfPieces The list of starttimes for the different pieces of the mix.
      */
     protected void setStarttimes(final List<Integer> starttimesOfPieces) {
@@ -51,6 +59,36 @@ public class MixSeeker {
             throw new IllegalArgumentException("The starttimesOfPieces was empty, please provide"
                     + " at least one starttime, so the song is split into at least one piece.");
         }
+        Collections.sort(starttimesOfPieces);
         this.starttimesOfPieces = starttimesOfPieces;
+    }
+    
+    /**
+     * Returns the {@link #endOfSong} variable value.
+     * @return The value of {@link #endOfSong}. Which is {@value #endOfSong}.
+     */
+    public static int getEndOfSong() {
+        return endOfSong;
+    }
+    
+    /**
+     * This method returns the starttime of the next piece of the song.
+     * @param currenttime The current time of which you want to know when the new
+     * piece is starting.
+     * @return The starttime of the piece of the song that comes after the current song piece.
+     * The return value of {@link #endOfSong} describes that it was in the last piece.
+     */
+    public int getNextPieceStarttime(final int currenttime) {
+        // This can be easily done this way since starttimes is sorted.
+        if (currenttime < starttimesOfPieces.get(0)) {
+            throw new IllegalArgumentException("Currenttime " + currenttime + " is to small. First"
+                    + " part of the song begins at " + starttimesOfPieces.get(0));
+        }
+        for (Integer i: getStarttimesOfPieces()) {
+            if (i > currenttime) {
+                return i;
+            }
+        }
+        return endOfSong;
     }
 }
