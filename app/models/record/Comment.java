@@ -38,14 +38,15 @@ public class Comment implements Record {
     /**
      * Constructor.
      */
-    public Comment() {}
+    public Comment() {
+    }
 
     /**
      * Constructor.
      *
      * @param resultSet The ResultSet object of the comment
      */
-    public Comment(ResultSet resultSet) {
+    public Comment(final ResultSet resultSet) {
         try {
             trackid = resultSet.getInt("track_id");
             userid = resultSet.getInt("user_id");
@@ -56,7 +57,14 @@ public class Comment implements Record {
         }
     }
 
-    public Comment(int trackid, int userid, int timestamp) {
+    /**
+     * Constructor.
+     *
+     * @param trackid The id of the track
+     * @param userid The user id of the comment
+     * @param timestamp The timestamp of the comment
+     */
+    public Comment(final int trackid, final int userid, final int timestamp) {
         this.trackid = trackid;
         this.userid = userid;
         this.timestamp = timestamp;
@@ -127,6 +135,9 @@ public class Comment implements Record {
 
     /**
      * Equals method for comments.
+     *
+     * @param other The other object
+     * @return True if objects are equal
      */
     public boolean equals(final Object other) {
         if (other instanceof Comment) {
