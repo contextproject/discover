@@ -1,16 +1,20 @@
 package controllers;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import java.util.List;
+
 import models.database.DatabaseConnector;
 import models.database.RandomSongSelector;
+import models.mix.MixSplitter;
 import models.database.retriever.TrackRetriever;
 import models.record.Track;
 import models.seeker.CommentIntensitySeeker;
 import play.mvc.Controller;
 import play.mvc.Result;
 import views.html.index;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 /**
  * This class is used to control the model and the view parts of the MVC. It
@@ -62,7 +66,8 @@ public class Application extends Controller {
     }
 
     /**
-     * Request a track.
+     * Method is used to receive Json objects containing track information, 
+     * pass it on the AlgorithmChooser and return back the new start time.
      *
      * @return An http ok response with the new rendered page.
      */
@@ -130,11 +135,15 @@ public class Application extends Controller {
         if (json == null) {
             return badRequest("Expecting Json data");
         } else {
-            System.out.println("The object has been received");
             //TO-DO: send the iterator to the MixSplitter.
+            MixSplitter splitter = new MixSplitter(json.get("waveform"), json.get("track").get("id").asInt());
             //TO-DO: receive the answer from the splitter and send array of start times.
+            List<Integer> list = splitter.split();
+//            System.out.println(list.size());
+//            System.out.println(list.toString());
+            
             ObjectNode objNode = mapper.createObjectNode();
-            JsonNode response = objNode.put("response", "File was transvered successfully");
+            JsonNode response = objNode.put("response", list.toString());
             return ok(response);
         }
     }
