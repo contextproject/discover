@@ -1,21 +1,22 @@
 package models.snippet;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+
+import org.junit.Test;
+
+import basic.BasicTest;
 
 /**
  * Tests the Timed Snippet class.
  *
  * @author stefan boodt
- * @version 29-04-2015
+ * @version 30-05-2015
  * @see TimedSnippet
  * @since 29-04-2015
  */
-public class TimedSnippetTest {
+public class TimedSnippetTest extends BasicTest {
 
     /**
      * Snippet under test.
@@ -25,20 +26,13 @@ public class TimedSnippetTest {
     /**
      * Does some setup for the test.
      *
-     * @throws Exception If the setup fails.
+     * @throws Exception
+     *             If the setup fails.
      */
-    @Before
+    @Override
     public void setUp() throws Exception {
-        snippet = new TimedSnippet(5000);
-    }
-
-    /**
-     * Does some clean up for the test.
-     *
-     * @throws Exception If the clean up fails.
-     */
-    @After
-    public void tearDown() throws Exception {
+        super.setUp();
+        setSnippet(new TimedSnippet(5000));
     }
 
     /**
@@ -50,8 +44,28 @@ public class TimedSnippetTest {
     }
 
     /**
-     * Tests if the a snippet with the same values has the same hashcode. It uses copy to copy the
-     * snippet.
+     * Returns the snippet under test.
+     * 
+     * @return The snippet under test.
+     */
+    public TimedSnippet getSnippet() {
+        return snippet;
+    }
+
+    /**
+     * Sets the snippet under test.
+     * 
+     * @param snippet
+     *            The snippet under test.
+     */
+    public void setSnippet(final TimedSnippet snippet) {
+        setObjectUnderTest(snippet);
+        this.snippet = snippet;
+    }
+
+    /**
+     * Tests if the a snippet with the same values has the same hashcode. It
+     * uses copy to copy the snippet.
      */
     @Test
     public void testEqualsHashCodeSameValues() {
@@ -141,7 +155,8 @@ public class TimedSnippetTest {
     }
 
     /**
-     * Tests the {@link TimedSnippet#getStartTime()}. This is an on bounds test case.
+     * Tests the {@link TimedSnippet#getStartTime()}. This is an on bounds test
+     * case.
      */
     @Test
     public void testGetStarttimeZerp() {
@@ -184,5 +199,72 @@ public class TimedSnippetTest {
         final TimedSnippet s = TimedSnippet.createSnippet(newtime, duration);
         final int expected = TimedSnippet.getDefaultDuration();
         assertEquals(expected, s.getWindow());
+    }
+
+    /**
+     * Tests the {@link TimedSnippet#equals(Object)} method and the
+     * {@link TimedSnippet#copy()} method.
+     */
+    @Test
+    public void testEqualsAndCopy() {
+        assertEquals(snippet, snippet.copy());
+    }
+
+    /**
+     * Tests the {@link TimedSnippet#equals(Object)} method.
+     */
+    @Test
+    public void testEquals() {
+        final TimedSnippet copy = new TimedSnippet(snippet.getStartTime(),
+                snippet.getWindow());
+        assertEquals(snippet, copy);
+    }
+
+    /**
+     * Tests the {@link TimedSnippet#equals(Object)} method.
+     */
+    @Test
+    public void testEqualsDifferentWindow() {
+        final TimedSnippet copy = new TimedSnippet(snippet.getStartTime(),
+                snippet.getWindow() + 1);
+        assertNotEquals(snippet, copy);
+    }
+
+    /**
+     * Tests the {@link TimedSnippet#equals(Object)} method.
+     */
+    @Test
+    public void testEqualsDifferentStarttime() {
+        final TimedSnippet copy = new TimedSnippet(snippet.getStartTime() + 1,
+                snippet.getWindow());
+        assertNotEquals(snippet, copy);
+    }
+
+    /**
+     * Tests the {@link TimedSnippet#equals(Object)} method.
+     */
+    @Test
+    public void testEqualsBothWindow() {
+        final TimedSnippet copy = new TimedSnippet(snippet.getStartTime() - 1,
+                snippet.getWindow() + 1);
+        assertNotEquals(snippet, copy);
+    }
+
+    /**
+     * Tests the {@link TimedSnippet#equals(Object)} method.
+     */
+    @Test
+    public void testEqualsAndGetter() {
+        assertEquals(snippet, getSnippet().copy());
+    }
+
+    /**
+     * Tests the {@link TimedSnippet#toString()} method.
+     */
+    @Test
+    public void testToString() {
+        final String expected = "TimedSnippet(" + getSnippet().getStartTime()
+                + ", " + getSnippet().getWindow() + ")";
+        assertEquals(expected, getSnippet().toString());
     }
 }
