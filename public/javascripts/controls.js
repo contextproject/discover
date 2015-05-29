@@ -1,6 +1,7 @@
 // Soundcloud widget
 var widget = SC.Widget(document.getElementById("sc-widget"));
 var waveform;
+var mixSplits;
 
 // Prepare all the data to be sent when the widget is ready
 widget.bind(SC.Widget.Events.READY, function() {
@@ -33,12 +34,6 @@ function sendData(data, url, callback) {
 	}
 }
 
-// Set the new start time of the preview.
-function setStartTime(newStart) {
-	start = newStart;
-	songStart = parseFloat(start) - (snipWin / 2);
-	songEnd = songStart + snipWin
-}
 
 // sends the waveform of the current track
 $("#sendWave").click(function() {
@@ -95,8 +90,21 @@ var snipWin = 10000.00;
 var songStart = parseFloat(start) - (snipWin / 2);
 var songEnd = songStart + snipWin;
 
-// During the event the current track is seeked to the set songStart and played.
-$("#preview").click(function() {
+//Set the new start time of the preview.
+function setStartTime(newStart) {
+	start = newStart;
+	songStart = parseFloat(start) - (snipWin / 2);
+	songEnd = Math.abs(songStart) + snipWin
+}
+
+//During the event the current track is seeked to the set songStart and played.
+$("#preview").click( function() {
+		preview(songStart,songEnd);
+});
+
+function preview(sStart, sEnd) {
+	console.log(sStart);
+	console.log(sEnd);
 	widget.bind(SC.Widget.Events.READY, function() {
 		if (widget.isPaused(function(paused) {
 			if (paused) {
@@ -104,7 +112,7 @@ $("#preview").click(function() {
 			}
 		}))
 		widget.bind(SC.Widget.Events.PLAY, function() {
-			widget.seekTo(songStart);
+			widget.seekTo(sStart);
 			widget.unbind(SC.Widget.Events.PLAY);
 			widget.unbind(SC.Widget.Events.READY);
 		});
@@ -112,13 +120,13 @@ $("#preview").click(function() {
 
 	widget.bind(SC.Widget.Events.PLAY_PROGRESS, function() {
 		widget.getPosition(function(position) {
-			if (position > songEnd) {
+			if (position > sEnd) {
 				widget.pause();
 				widget.unbind(SC.Widget.Events.PLAY_PROGRESS);
 			}
 		});
 	});
-});
+}
 
 // load the widget with a random song
 $("#rand").click(function() {
@@ -135,42 +143,43 @@ $("#prev").click(function() {
 	widget.prev();
 });
 
---
+//connect with Soundcloud
+$("#connect").click(
+	function() {
+		// initiate auth popup
+		if (SC.accessToken() == null) {
+			SC.connect(function() {
+				getFavorites();
+			});
+			$("#connect").html("Disconnect");
+		} else {
+			SC.accessToken(null);
+			$("#connect").html("Connect");
+		}
+	});
+
 $("#favorites").click(function() {
 	if (SC.accessToken() != null) {
-		SC.get('/me', function(me) {
-			widget.load("api.soundcloud.com/users/" + me.id + "/favorites", { 
-				auto_play : false 
-			});
-		});
+		getFavorites();
 	} else {
 		SC.connect(function() {
-			SC.get('/me', function(me) {
-				widget.load("api.soundcloud.com/users/" + me.id + "/favorites", {});
-			});
+			getFavorites();
+			$("#connect").html("Disconnect");
 		});
 	}
 });
 
-// connect with Soundcloud
-// initialize client with app credentials
+function getFavorites() {
+	SC.get('/me', function(me) {
+		widget.load("api.soundcloud.com/users/" + me.id + "/favorites", { 
+			auto_play : false 
+		});
+	});
+}
+
+//initialize client with app credentials
 SC.initialize({
 	client_id : '70a5f42778b461b7fbae504a5e436c06',
 	redirect_uri : 'http://localhost:9000/assets/html/callback.html'
 });
 
-$("#connect").click(
-		function() {
-			// initiate auth popup
-			if (SC.accessToken() == null) {
-				SC.connect(function() {
-					SC.get('/me', function(me) {
-						widget.load("api.soundcloud.com/users/" + me.id + "/favorites", {});
-						$("#connect").html("Disconnect");
-					});
-				});
-			} else {
-				SC.accessToken(null);
-				$("#connect").html("Connect");
-			}
-		});
