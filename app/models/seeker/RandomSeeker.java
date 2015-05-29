@@ -1,50 +1,43 @@
 package models.seeker;
 
+import models.record.Track;
 import models.snippet.TimedSnippet;
 
 /**
- * Give a random snippet.
+ * Generates a random start time for the track.
  */
 public class RandomSeeker implements Seeker {
 
     /**
-     * The id of the track
+     * The track.
      */
-    private int trackid;
-
-    /**
-     * The start of the snippet.
-     */
-    private int start;
-
-    /**
-     * The window of the snippet.
-     */
-    private int window;
+    private Track track;
 
     /**
      * Constructor.
+     *
+     * @param track The track
      */
-    public RandomSeeker(int trackid) {
-        this.generate();
-    }
-
-    private void generate() {
-        start = (int) Math.random() * 20000;
+    public RandomSeeker(final Track track) {
+        this.track = track;
     }
 
     /**
-     * Set the size of the window.
+     * Generates a random start time for a snippet.
      *
-     * @param window The new window in milliseconds
+     * @return The start time
      */
-    public void setWindow(final int window) {
-        this.window = window;
+    private int getStartTime() {
+        return (int) (Math.random() * track.getDuration());
     }
 
-
+    /**
+     * Seeks the snippet to be used of a given song.
+     *
+     * @return A TimedSnippet object
+     */
     @Override
     public TimedSnippet seek() {
-        return new TimedSnippet(start);
+        return new TimedSnippet(getStartTime());
     }
 }

@@ -1,31 +1,46 @@
 package controllers;
 
+import models.record.Track;
+import models.seeker.CommentIntensitySeeker;
+import models.seeker.RandomSeeker;
+
 /**
  * Selects which algorithm could be used best and also combines algorithms.
  */
-public class AlgorithmSelector {
+public final class AlgorithmSelector {
 
     /**
-     * The track id of the current song.
+     * Constructor.
      */
-    private int trackid;
-
-    /**
-     * Constructor for making a AlgorithmSelector object.
-     *
-     * @param trackid the id of a song.
-     */
-    public AlgorithmSelector(final int trackid) {
-        this.trackid = trackid;
+    private AlgorithmSelector() {
     }
 
     /**
      * Determine the start of the snippet for the track.
      *
+     * @param track The track
      * @return The start of the snippet
      */
-    public int determineStart() {
-        return 0;
+    public static int determineStart(final Track track) {
+        int start;
+
+        start = commentIntensity(track);
+
+        // no comments for the track
+        if (start == 0) {
+            start = random(track);
+        }
+        return start;
+    }
+
+    /**
+     * Determine the start of the snippet based on the intensity of the comments.
+     *
+     * @param track The track
+     * @return The start of the snippet
+     */
+    private static int commentIntensity(final Track track) {
+        return new CommentIntensitySeeker(track).seek().getStartTime();
     }
 
     /**
@@ -33,16 +48,7 @@ public class AlgorithmSelector {
      *
      * @return The start of the snippet
      */
-    private int commentContent() {
-        return 0;
-    }
-
-    /**
-     * Determine the start of the snippet based on the intensity of the comments.
-     *
-     * @return The start of the snippet
-     */
-    private int commentIntensity() {
+    private static int commentContent() {
         return 0;
     }
 
@@ -51,7 +57,17 @@ public class AlgorithmSelector {
      *
      * @return The start of the snippet
      */
-    private int featureEssentia() {
+    private static int featureEssentia() {
         return 0;
+    }
+
+    /**
+     * Determine a random start of the snippet.
+     *
+     * @param track The track
+     * @return The start of the snippet
+     */
+    private static int random(final Track track) {
+        return new RandomSeeker(track).seek().getStartTime();
     }
 }

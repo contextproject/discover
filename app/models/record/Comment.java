@@ -38,28 +38,50 @@ public class Comment implements Record {
     /**
      * Constructor.
      */
-    public Comment() {}
+    public Comment() {
+    }
 
     /**
      * Constructor.
      *
      * @param resultSet The ResultSet object of the comment
      */
-    public Comment(ResultSet resultSet) {
-        try {
-            trackid = resultSet.getInt("track_id");
-            userid = resultSet.getInt("user_id");
-            timestamp = resultSet.getInt("timestamp");
-            body = resultSet.getString("text");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+    public Comment(final ResultSet resultSet) {
+        process(resultSet);
     }
 
-    public Comment(int trackid, int userid, int timestamp) {
+    /**
+     * Constructor.
+     *
+     * @param trackid The id of the track
+     * @param userid The user id of the comment
+     * @param timestamp The timestamp of the comment
+     */
+    public Comment(final int trackid, final int userid, final int timestamp) {
         this.trackid = trackid;
         this.userid = userid;
         this.timestamp = timestamp;
+    }
+
+    /**
+     * Processes the ResultSet of comments of the track
+     *
+     * @param resultSet The ResultSet of the track
+     * @return True if succeeds
+     */
+    protected boolean process(final ResultSet resultSet) {
+        try {
+            while (resultSet.next()) {
+                trackid = resultSet.getInt("track_id");
+                userid = resultSet.getInt("user_id");
+                timestamp = resultSet.getInt("timestamp");
+                body = resultSet.getString("text");
+            }
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     /**
@@ -127,6 +149,9 @@ public class Comment implements Record {
 
     /**
      * Equals method for comments.
+     *
+     * @param other The other object
+     * @return True if objects are equal
      */
     public boolean equals(final Object other) {
         if (other instanceof Comment) {

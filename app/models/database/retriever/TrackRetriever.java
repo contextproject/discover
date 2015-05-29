@@ -33,6 +33,8 @@ public class TrackRetriever implements Retriever {
 
     /**
      * Get all the information of the track from the database.
+     *
+     * @return The track
      */
     public Track getAll() {
         return track;
@@ -40,9 +42,11 @@ public class TrackRetriever implements Retriever {
 
     /**
      * Get the user id of the track from the database.
+     *
+     * @return The user id of the track
      */
     public int getTrackID() {
-        return track.getTrackID();
+        return track.getTrackid();
     }
 
     /**

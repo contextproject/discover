@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import models.database.DatabaseConnector;
 import models.database.RandomSongSelector;
+import models.database.retriever.TrackRetriever;
+import models.record.Track;
 import models.seeker.CommentIntensitySeeker;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -22,7 +24,7 @@ public class Application extends Controller {
     private static DatabaseConnector databaseConnector;
 
     /**
-     * The ObjectMapper used to create JsonNode objects
+     * The ObjectMapper used to create JsonNode objects.
      */
     private static ObjectMapper mapper;
 
@@ -59,6 +61,11 @@ public class Application extends Controller {
 
     }
 
+    /**
+     * Request a track.
+     *
+     * @return An http ok response with the new rendered page.
+     */
     public static Result TrackRequest() {
         JsonNode json = request().body().asJson();
         if (json == null) {
@@ -66,8 +73,12 @@ public class Application extends Controller {
         } else {
             ObjectNode objNode = mapper.createObjectNode();
             int trackID = json.get("track").get("id").asInt();
-            int starttime = getStartTime(trackID);
-            JsonNode response = objNode.put("response", starttime);
+            int duration = json.get("track").get("duration").asInt();
+            Track track = new Track();
+            track.setTrackid(trackID);
+            track.setDuration(duration);
+            int starttime2 = getStartTime(track);
+            JsonNode response = objNode.put("response", starttime2);
             return ok(response);
         }
     }
@@ -76,11 +87,22 @@ public class Application extends Controller {
      * Retrieves a start-time calculated by the CommentIntensitySeeker for the
      * given track id.
      *
-     * @param trackId , the id of the track.
+     * @param trackId The id of the track.
      * @return the start-time of the snippet.
      */
     public static int getStartTime(final int trackId) {
-        return new CommentIntensitySeeker(trackId).seek().getStartTime();
+        return new CommentIntensitySeeker(
+                new TrackRetriever(trackId).getAll()).seek().getStartTime();
+    }
+
+    /**
+     * Get the start time calculated by the AlgorithmSelector.
+     *
+     * @param track The track
+     * @return The start time of the snippet.
+     */
+    public static int getStartTime(final Track track) {
+        return AlgorithmSelector.determineStart(track);
     }
 
     /**
