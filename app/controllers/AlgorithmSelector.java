@@ -1,6 +1,5 @@
 package controllers;
 
-import models.database.retriever.CommentRetriever;
 import models.seeker.CommentIntensitySeeker;
 import models.snippet.TimedSnippet;
 

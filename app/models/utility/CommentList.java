@@ -26,4 +26,8 @@ public class CommentList extends ArrayList<Comment> {
 			e.printStackTrace();
 		}
 	}
+
+	public CommentList() {
+
+	}
 }

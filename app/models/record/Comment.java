@@ -69,6 +69,7 @@ public class Comment implements Record {
 		this.trackid = trackid;
 		this.userid = userid;
 		this.timestamp = timestamp;
+		this.body = body;
 	}
 
 	/**
