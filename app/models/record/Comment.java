@@ -47,14 +47,7 @@ public class Comment implements Record {
      * @param resultSet The ResultSet object of the comment
      */
     public Comment(final ResultSet resultSet) {
-        try {
-            trackid = resultSet.getInt("track_id");
-            userid = resultSet.getInt("user_id");
-            timestamp = resultSet.getInt("timestamp");
-            body = resultSet.getString("text");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        process(resultSet);
     }
 
     /**
@@ -68,6 +61,27 @@ public class Comment implements Record {
         this.trackid = trackid;
         this.userid = userid;
         this.timestamp = timestamp;
+    }
+
+    /**
+     * Processes the ResultSet of comments of the track
+     *
+     * @param resultSet The ResultSet of the track
+     * @return True if succeeds
+     */
+    protected boolean process(final ResultSet resultSet) {
+        try {
+            while (resultSet.next()) {
+                trackid = resultSet.getInt("track_id");
+                userid = resultSet.getInt("user_id");
+                timestamp = resultSet.getInt("timestamp");
+                body = resultSet.getString("text");
+            }
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     /**

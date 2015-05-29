@@ -32,13 +32,25 @@ public class Track implements Record {
      * @param resultSet The ResultSet of the track
      */
     public Track(final ResultSet resultSet) {
+        process(resultSet);
+    }
+
+    /**
+     * Processes the ResultSet of the track
+     *
+     * @param resultSet The ResultSet of the track
+     * @return True if succeeds
+     */
+    protected boolean process(final ResultSet resultSet) {
         try {
             while (resultSet.next()) {
                 trackid = resultSet.getInt("track_id");
                 duration = resultSet.getInt("duration");
             }
+            return true;
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
     }
 

@@ -1,12 +1,16 @@
 package models.record;
 
+import models.database.DatabaseConnector;
 import models.record.Comment;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.sql.ResultSet;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 public class CommentTest {
@@ -26,13 +30,50 @@ public class CommentTest {
     private Comment c3;
 
     /**
+     * DatabaseConnector
+     */
+    DatabaseConnector databaseConnector;
+
+    /**
      * Setting up 2 comments to test with.
      */
     @Before
     public void makeComments() {
+        databaseConnector = new DatabaseConnector();
+        databaseConnector.loadDrivers();
+        databaseConnector.makeConnection("jdbc:mysql://188.166.78.36/contextbase", "context", "password");
+
         c1 = new Comment(1, 1, 5000);
         c2 = new Comment(1, 2, 12321);
         c3 = new Comment(1, 1, 12321);
+    }
+
+    /**
+     * Test for the constructor.
+     */
+    @Test
+    public void testComment() {
+        assertNotNull(new Comment());
+    }
+
+    /**
+     * Test for the process() method.
+     */
+    @Test
+    public void testProcess1() {
+        ResultSet resultSet = databaseConnector.executeQuery("SELECT * FROM comments LIMIT 1");
+        Comment comment = new Comment();
+        assertTrue(comment.process(resultSet));
+    }
+
+    /**
+     * Test for the process() method.
+     */
+    @Test
+    public void testProcess2() {
+        ResultSet resultSet = databaseConnector.executeQuery("SELECT * FROM tracks LIMIT 1");
+        Comment comment = new Comment();
+        assertFalse(comment.process(resultSet));
     }
 
     /**

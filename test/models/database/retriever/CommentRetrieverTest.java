@@ -15,16 +15,11 @@ import static org.junit.Assert.assertNotNull;
 public class CommentRetrieverTest {
 
     /**
-     * DatabaseConnector object.
-     */
-    private DatabaseConnector databaseConnector;
-
-    /**
      * Setting up the database connection.
      */
     @Before
     public void setUp() {
-        databaseConnector = new DatabaseConnector();
+        DatabaseConnector databaseConnector = new DatabaseConnector();
         databaseConnector.loadDrivers();
         databaseConnector.makeConnection("jdbc:mysql://188.166.78.36/contextbase", "context", "password");
         Application.setDatabaseConnector(databaseConnector);
@@ -54,16 +49,5 @@ public class CommentRetrieverTest {
 
         CommentList comments = commentRetriever.getComments();
         assertEquals(1, comments.size());
-    }
-
-    /**
-     * Test for the getNoComments() method
-     *
-     * @throws Exception Exception
-     */
-    @Test
-    public void testNoGetComments() throws Exception {
-        CommentRetriever commentRetriever = new CommentRetriever(100005416);
-        assertEquals(47, commentRetriever.getNoComments());
     }
 }
