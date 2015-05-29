@@ -2,8 +2,6 @@ package models.seeker;
 
 import java.util.List;
 
-import models.seeker.CommentIntensitySeeker;
-
 /**
  * This class seeks the comment intensity in mixes. It uses a start and
  * stop time to do it in addition to the regular start and stop done by
@@ -11,7 +9,7 @@ import models.seeker.CommentIntensitySeeker;
  * comment intensity in mixes.
  * 
  * @since 27-05-2015
- * @version 27-05-2015
+ * @version 29-05-2015
  * 
  * @see CommentIntensitySeeker
  * @see MixSplitter

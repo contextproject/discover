@@ -1,17 +1,17 @@
 package models.mix;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import com.fasterxml.jackson.databind.JsonNode;
 
 /**
  * The Class that is responsable for the splitting of the mix in several smaller
  * pieces.
  * 
  * @since 21-05-2015
- * @version 28-05-2015
+ * @version 29-05-2015
  * 
  * @see Shingle
  * 
@@ -90,7 +90,7 @@ public class MixSplitter {
 	 *         beginning of a new piece.
 	 */
 	protected List<Integer> split(final List<Shingle> shingles,
-			final double threshold, final int songtime) {
+	        final double threshold, final int songtime) {
 		if (threshold < 0.0 || threshold > 1.0) {
 			throw new IllegalArgumentException("The threshold to split mix "
 					+ trackID + " was equal to " + threshold
@@ -110,7 +110,7 @@ public class MixSplitter {
 		// The - 1 is to not do this to the last one.
 		for (int i = 0; i < amountOfShingles - 1; i++) {
 			final double distance = shingles.get(i).jaccardDistance(
-					shingles.get(i + 1));
+			        shingles.get(i + 1));
 			if (distance > threshold) {
 				final int integer = ((i + 1) * songtime) / amountOfShingles;
 				starttimes.add(integer);
@@ -156,7 +156,7 @@ public class MixSplitter {
 											// collections.
 		for (int i = 0; i < datasize; i += stepsize) {
 			shingles.add(new Shingle(data.subList(i,
-					Math.min(i + size, datasize))));
+			        Math.min(i + size, datasize))));
 		}
 		return shingles;
 	}
@@ -172,7 +172,7 @@ public class MixSplitter {
 	 * @return The jaccard distance between first and second.
 	 */
 	public double getJaccardDistance(final List<Double> first,
-			final List<Double> second) {
+	        final List<Double> second) {
 		return getJaccardDistance(new Shingle(first), new Shingle(second));
 	}
 
