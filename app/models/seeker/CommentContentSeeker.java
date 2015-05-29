@@ -1,11 +1,9 @@
 package models.seeker;
 
-import models.snippet.TimedSnippet;
-
 /**
  * Filters the content of a comment.
  */
-public class CommentContentSeeker implements Seeker {
+public class CommentContentSeeker {
 
 	/**
 	 * List of positive words.
@@ -64,11 +62,5 @@ public class CommentContentSeeker implements Seeker {
 		} else {
 			return 0;
 		}
-	}
-
-	@Override
-	public TimedSnippet seek() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 }
