@@ -1,7 +1,9 @@
 // Soundcloud widget
 var widget = SC.Widget(document.getElementById("sc-widget"));
+var mixSplits = [60000, 120000, 180000, 240000];
+var snipWin = 10000.00;
+var splitPointer = -1;
 var waveform;
-var mixSplits;
 
 // Prepare all the data to be sent when the widget is ready
 widget.bind(SC.Widget.Events.READY, function() {
@@ -34,6 +36,29 @@ function sendData(data, url, callback) {
 	}
 }
 
+//select the next song if present
+$("#next").click(function() {
+	splitPointer++;
+	if((splitPointer < mixSplits.length) && (splitPointer >= 0)) {
+		widgetClearEvents();
+		var sPartial = mixSplits[splitPointer];
+		preview(sPartial, sPartial + snipWin);
+	} else {
+		splitPointer--;
+	}
+});
+
+// select the previous song if present
+$("#prev").click(function() {
+	splitPointer--;
+	if((splitPointer < mixSplits.length) && (splitPointer >= 0)) {
+		widgetClearEvents();
+		var sPartial = mixSplits[splitPointer];
+		preview(sPartial, sPartial + snipWin);
+	} else {
+		splitPointer++;
+	}
+});
 
 // sends the waveform of the current track
 $("#sendWave").click(function() {
@@ -86,9 +111,8 @@ $("#volume").on("input change", function() {
 });
 
 // play the snippet of the song
-var snipWin = 10000.00;
 var songStart = parseFloat(start) - (snipWin / 2);
-var songEnd = songStart + snipWin;
+var songEnd = Math.abs(songStart) + snipWin;
 
 //Set the new start time of the preview.
 function setStartTime(newStart) {
@@ -103,8 +127,6 @@ $("#preview").click( function() {
 });
 
 function preview(sStart, sEnd) {
-	console.log(sStart);
-	console.log(sEnd);
 	widget.bind(SC.Widget.Events.READY, function() {
 		if (widget.isPaused(function(paused) {
 			if (paused) {
@@ -128,19 +150,15 @@ function preview(sStart, sEnd) {
 	});
 }
 
+function widgetClearEvents() {
+	widget.unbind(SC.Widget.Events.PLAY);
+	widget.unbind(SC.Widget.Events.READY);
+	widget.unbind(SC.Widget.Events.PLAY_PROGRESS);
+}
+
 // load the widget with a random song
 $("#rand").click(function() {
 	window.location.href = "http://localhost:9000/random";
-});
-
-// select the next song if present
-$("#next").click(function() {
-	widget.next();
-});
-
-// select the previous song if present
-$("#prev").click(function() {
-	widget.prev();
 });
 
 //connect with Soundcloud
