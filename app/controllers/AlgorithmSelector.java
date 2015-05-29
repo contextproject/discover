@@ -14,10 +14,6 @@ public class AlgorithmSelector {
 	 */
 	private final int trackid;
 
-	/**
-	 * A comment retriever object to use.
-	 */
-	private CommentRetriever retriever;
 
 	/**
 	 * Constructor for making a AlgorithmSelector object.
@@ -27,7 +23,6 @@ public class AlgorithmSelector {
 	 */
 	public AlgorithmSelector(final int trackid) {
 		this.trackid = trackid;
-		retriever = new CommentRetriever(trackid);
 	}
 
 	/**

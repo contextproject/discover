@@ -22,12 +22,7 @@ public class CommentIntensitySeeker implements Seeker {
 	/**
 	 * The set of comments of the track.
 	 */
-	private static CommentList comments;
-	
-	/**
-	 * The set of comments of the track.
-	 */
-	private static CommentContentSeeker filter;
+	private CommentList comments;
 
 	/**
 	 * Constructor.
@@ -71,14 +66,10 @@ public class CommentIntensitySeeker implements Seeker {
 
 	/**
 	 * Generates a start time for a snippet.
-	 *
-	 * @param coms
-	 *            A map of comments of a given song
-	 * @param duration
-	 *            The duration of that given song
 	 * @return a start time
 	 */
-	protected static int getStartTime() {
+	protected int getStartTime() {
+		
 		if (comments.isEmpty()) {
 			return 0;
 		}
@@ -140,19 +131,35 @@ public class CommentIntensitySeeker implements Seeker {
 		return new TimedSnippet(getStartTime());
 	}
 
+	/**
+	 * Returns the trackid of where this seeker is invoked on.
+	 * @return track id
+	 */
 	public int getTrackid() {
 		return trackid;
 	}
 
-	public void setTrackid(int trackid) {
+	/**
+	 * Sets the track id for a this seeker instance.
+	 * @param trackid id of the song.
+	 */
+	public void setTrackid(final int trackid) {
 		this.trackid = trackid;
 	}
 
+	/**
+	 * Returns the needed commentlist for the intensity seeker.
+	 * @return the actual commentlist.
+	 */
 	public CommentList getComments() {
 		return comments;
 	}
 
-	public void setComments(CommentList comments) {
+	/**
+	 * Sets a commentlist for a instance of this seeker.
+	 * @param comments the new commentlist.
+	 */
+	public void setComments(final CommentList comments) {
 		this.comments = comments;
 	}
 }
