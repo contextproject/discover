@@ -3,16 +3,22 @@ package controllers;
 import models.record.Track;
 import models.seeker.CommentIntensitySeeker;
 import models.seeker.RandomSeeker;
-import play.Logger;
 
 /**
  * Selects which algorithm could be used best and also combines algorithms.
  */
-public class AlgorithmSelector {
+public final class AlgorithmSelector {
+
+    /**
+     * Constructor.
+     */
+    private AlgorithmSelector() {
+    }
 
     /**
      * Determine the start of the snippet for the track.
      *
+     * @param track The track
      * @return The start of the snippet
      */
     public static int determineStart(final Track track) {
@@ -30,6 +36,7 @@ public class AlgorithmSelector {
     /**
      * Determine the start of the snippet based on the intensity of the comments.
      *
+     * @param track The track
      * @return The start of the snippet
      */
     private static int commentIntensity(final Track track) {
@@ -55,8 +62,9 @@ public class AlgorithmSelector {
     }
 
     /**
-     * Determine a random start of the snippet
+     * Determine a random start of the snippet.
      *
+     * @param track The track
      * @return The start of the snippet
      */
     private static int random(final Track track) {

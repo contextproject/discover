@@ -23,14 +23,15 @@ public class Track implements Record {
     /**
      * Constructor.
      */
-    public Track() {}
+    public Track() {
+    }
 
     /**
      * Constructor that accepts a ResultSet to build the track.
      *
      * @param resultSet The ResultSet of the track
      */
-    public Track(ResultSet resultSet) {
+    public Track(final ResultSet resultSet) {
         try {
             while (resultSet.next()) {
                 trackid = resultSet.getInt("track_id");
@@ -53,11 +54,12 @@ public class Track implements Record {
     /**
      * Setter of the id of the track.
      *
-     * @return The id of the track
+     * @param trackid  The id of the track
      */
     public void setTrackid(final int trackid) {
         this.trackid = trackid;
     }
+
     /**
      * Getter of the duration of the track.
      *

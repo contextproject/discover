@@ -8,6 +8,9 @@ import org.junit.Test;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+/**
+ * Test for the AlgorithmSelector class.
+ */
 public class AlgorithmSelectorTest {
 
     /**
@@ -15,6 +18,9 @@ public class AlgorithmSelectorTest {
      */
     private Track track;
 
+    /**
+     * Set up.
+     */
     @Before
     public void setUp() {
         DatabaseConnector databaseConnector = new DatabaseConnector();
@@ -27,16 +33,22 @@ public class AlgorithmSelectorTest {
         track.setDuration(50000);
     }
 
+    /**
+     * Test of the determineStart() method.
+     */
     @Test
     public void testDetermineStart() {
         assertNotNull(AlgorithmSelector.determineStart(track));
     }
 
+    /**
+     * Tets of the random() method.
+     */
     @Test
     public void testRandom() {
         int start = AlgorithmSelector.determineStart(track);
 
         assertTrue(track.getDuration() >= start);
-        assertTrue(0  <= start);
+        assertTrue(0 <= start);
     }
 }
