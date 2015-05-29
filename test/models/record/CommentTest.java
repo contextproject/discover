@@ -30,9 +30,9 @@ public class CommentTest {
      */
     @Before
     public void makeComments() {
-        c1 = new Comment(1, 1, 5000);
-        c2 = new Comment(1, 2, 12321);
-        c3 = new Comment(1, 1, 12321);
+        c1 = new Comment(1, 1, 5000, "");
+        c2 = new Comment(1, 2, 12321, "");
+        c3 = new Comment(1, 1, 12321, "");
     }
 
     /**
