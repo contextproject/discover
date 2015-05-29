@@ -17,7 +17,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>multimediaservices5</groupId>
@@ -225,7 +226,7 @@ under the License.
                 <artifactId>maven-checkstyle-plugin</artifactId>
                 <version>2.14</version>
                 <configuration>
-                	<configLocation>CheckStyleForMaven.xml</configLocation>
+                    <configLocation>CheckStyleForMaven.xml</configLocation>
                     <failOnViolation>false</failOnViolation>
                 </configuration>
             </plugin>
@@ -245,7 +246,8 @@ under the License.
 
     <profiles>
         <profile>
-            <id>eclipse</id> <!-- for M2Eclipse only -->
+            <id>eclipse</id>
+            <!-- for M2Eclipse only -->
             <build>
                 <plugins>
                     <plugin>
@@ -258,11 +260,15 @@ under the License.
                         <executions>
                             <execution>
                                 <id>default-compile</id>
-                                <goals><goal>compile</goal></goals>
+                                <goals>
+                                    <goal>compile</goal>
+                                </goals>
                             </execution>
                             <execution>
                                 <id>default-testCompile</id>
-                                <goals><goal>testCompile</goal></goals>
+                                <goals>
+                                    <goal>testCompile</goal>
+                                </goals>
                             </execution>
                         </executions>
                     </plugin>

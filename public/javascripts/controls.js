@@ -1,7 +1,7 @@
 // Soundcloud widget
 var widget = SC.Widget(document.getElementById("sc-widget"));
 var mixSplits = [60000, 120000, 180000, 240000];
-var snipWin = 10000.00;
+var snipWin = 5000.00;
 var splitPointer = -1;
 var waveform;
 
@@ -26,7 +26,8 @@ function sendData(data, url, callback) {
 			contentType : "application/json; charset=utf-8",
 			url : url,
 			success : function(data) {
-				callback(data.response)
+				console.log(data);
+				callback(data.response);
 			}
 		});
 	} else {
@@ -67,10 +68,14 @@ $("#sendWave").click(function() {
 			"track" : sounds[0],
 			"waveform" : waveform.data
 		}
-		sendData(message, "/splitWaveform", setStartTime);
+		sendData(message, "/splitWaveform", setMixSplit);
 	});
 	//TO-DO: implement the receiving and setting of multiple start times.
 });
+
+function setMixSplit(newSp) {
+	console.log(newSp);
+}
 
 // if the reload button is clicked on, call the reloadWidget function
 $("#reload").click(function() {
