@@ -62,7 +62,13 @@ $("#prev").click(function() {
 
 // sends the waveform of the current track
 $("#sendWave").click(function() {
-	sendData(waveform.data, "/splitWaveform", setStartTime)
+	widget.getSounds(function(sounds) {
+		var message = {
+			"track" : sounds[0],
+			"waveform" : waveform.data
+		}
+		sendData(message, "/splitWaveform", setStartTime);
+	});
 	//TO-DO: implement the receiving and setting of multiple start times.
 });
 

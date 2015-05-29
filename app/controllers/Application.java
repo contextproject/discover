@@ -1,14 +1,18 @@
 package controllers;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import java.util.List;
+
 import models.database.DatabaseConnector;
 import models.database.RandomSongSelector;
+import models.mix.MixSplitter;
 import models.seeker.CommentIntensitySeeker;
 import play.mvc.Controller;
 import play.mvc.Result;
 import views.html.index;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 /**
  * This class is used to control the model and the view parts of the MVC. It
@@ -108,9 +112,11 @@ public class Application extends Controller {
         if (json == null) {
             return badRequest("Expecting Json data");
         } else {
-            System.out.println("The object has been received");
             //TO-DO: send the iterator to the MixSplitter.
+            MixSplitter splitter = new MixSplitter(json.get("waveform"), json.get("track").get("id").asInt());
             //TO-DO: receive the answer from the splitter and send array of start times.
+            List<Integer> list = splitter.split();
+            System.out.println(list.size());
             ObjectNode objNode = mapper.createObjectNode();
             JsonNode response = objNode.put("response", "File was transvered successfully");
             return ok(response);

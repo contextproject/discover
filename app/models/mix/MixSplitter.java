@@ -58,7 +58,7 @@ public class MixSplitter {
 		Iterator<JsonNode> it = json.elements();
 		List<Double> data = new ArrayList<Double>();
 		while (it.hasNext()) {
-			data.add(it.next().asDouble());
+			data.add(Math.round(it.next().asDouble() * 10000.00) / 10000.00);
 		}
 		this.setData(data);
 		this.setTrackID(trackID);
@@ -71,8 +71,8 @@ public class MixSplitter {
 	 *         beginning of a new piece.
 	 */
 	public List<Integer> split() {
-		final double threshold = 0.4;
-		final int songtime = 30000;
+		final double threshold = 0.85;
+		final int songtime = 300000;
 		return split(splitToShingles(), threshold, songtime);
 	}
 
@@ -125,7 +125,7 @@ public class MixSplitter {
 	 * @return The list of Shingles that you can then compare.
 	 */
 	public List<Shingle> splitToShingles() {
-		return splitToShingles(10, 5);
+		return splitToShingles(20, 15);
 	}
 
 	/**
