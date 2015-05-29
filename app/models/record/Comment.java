@@ -64,7 +64,7 @@ public class Comment implements Record {
     }
 
     /**
-     * Processes the ResultSet of comments of the track
+     * Processes the ResultSet of comments of the track.
      *
      * @param resultSet The ResultSet of the track
      * @return True if succeeds
@@ -90,7 +90,8 @@ public class Comment implements Record {
      * @return the rounded time
      */
     public int getTime() {
-        return (int) (Math.floor(timestamp / period) * period);
+        final double division = timestamp / period;
+        return (int) (Math.floor(division) * period);
     }
 
     /**

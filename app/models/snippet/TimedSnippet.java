@@ -112,10 +112,27 @@ public class TimedSnippet {
     public static TimedSnippet createSnippet(final int starttime, final int durationInSeconds) {
         return new TimedSnippet(starttime, durationInSeconds * 1000);
     }
+    
+    /**
+     * {@inheritDoc}
+     * 
+     * <p>
+     * The TimedSnippet equals compares both starttime and window.
+     * </p>
+     */
+    @Override
+    public boolean equals(final Object other) {
+        if (other instanceof TimedSnippet) {
+            TimedSnippet that = (TimedSnippet) other;
+            return this.starttime == that.starttime
+                    && this.window == that.window;
+        }
+        return false;
+    }
 
     /**
      * {@inheritDoc}
-     * <p/>
+     * 
      * <p>
      * The hashCode of a TimedSnippet is a function of both the starttime and the window.
      * </p>
