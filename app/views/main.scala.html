@@ -10,15 +10,24 @@
         <script type="text/javascript" src="@routes.Assets.at("javascripts/api.js")"></script>
         <script type="text/javascript" src="@routes.Assets.at("javascripts/scroll.js")"></script>
         <script type="text/javascript" src="@routes.Assets.at("javascripts/waveform.js")"></script>
+
+
 		<!--<script type="text/javascript" src="@routes.Assets.at("javascripts/controls.js")"></script> -->
-		
+
         <script type="text/javascript" src="http://connect.soundcloud.com/sdk.js"></script>
         <!-- <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script> -->
         <script type="text/javascript" src="@routes.Assets.at("js/jquery.min.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.at("javascripts/jquery-1.10.1.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.at("javascripts/jquery.cookie.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.at("javascripts/modernizr.mq.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.at("javascripts/jquery.joyride-2.1.js")"></script>
 
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="stylesheet" href="@routes.Assets.at("stylesheets/photon.css")" />
         <link rel="stylesheet" href="@routes.Assets.at("stylesheets/main.css")" />
+        <link rel="stylesheet" href="@routes.Assets.at("stylesheets/joyride-2.1.css")" />
+
+
 
         <script>
             $.getScript("/assets/javascripts/controls.js");
@@ -37,7 +46,7 @@
                 <h1><strong>Discover</strong></h1>
                 <p> Find the music you love</p>
                 <ul class="actions">
-                    <li><a href="#one" class="button scrolly">Discover</a></li>
+                    <li id="disc"><a href="#one" class="button scrolly">Discover</a></li>
                 </ul>
             </div>
         </section>
@@ -75,6 +84,7 @@
                             <button class="control" id="rand">Random Song</button> <br>
                             <button class="control" id="sendWave">Mix Splitter</button> <br>
                             <button class="control" id="connect">Connect</button> <br>
+                            <button class="control" id="help">Help tour</button> <br>
                         </div>
                     </div>
                 </div>
@@ -94,5 +104,74 @@
                 <li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
             </ul>
         </section>
+
+            <!-- Tip Content -->
+            <ol id="joyRideTipContent">
+                <li data-id="disc" data-text="Next">
+                    <h2>Welcome to Discover</h2>
+                    <p>The place to discover new music.</p>
+                </li>
+                <li data-id="url" data-button="Next">
+                    <h2>Search bar</h2>
+                    <p>Here you can put the URL of the song you want to listen to.</p>
+                </li>
+                <li data-id="reload" data-button="Next" >
+                    <h2>Reload!!</h2>
+                    <p>Load the song which you filled in, in the previous step.</p>
+                </li>
+                <li data-class="sound__content" data-button="Next" >
+                    <h2>SoundCloud player</h2>
+                    <p>This is the SoundCloud player where you can actually play the music, comment on the song and etc.</p>
+                </li>
+                <li data-id="volume" data-button="Next" >
+                    <h2>Change the volume!</h2>
+                    <p>Here you can change the volume of the song that is playing</p>
+                </li>
+                <li data-id="preview" data-button="Next" >
+                    <h2>Preview a song</h2>
+                    <p>This gives you a short 10 second preview of how the song sounds like.</p>
+                </li>
+                <li data-id="next" data-button="Next" >
+                    <h2>Next!</h2>
+                    <p>Gives the next song. Only available with mixes or playlists.</p>
+                </li>
+                <li data-id="prev" data-button="Next" >
+                    <h2>Opposite of Next.</h2>
+                </li>
+                <li data-id="rand" data-button="Next" >
+                    <h2>Something else?</h2>
+                    <p>Loads a random song from SoundCloud.</p>
+                </li>
+                <li data-id="sendWave" data-button="Next">
+                    <h2>Split the Mix!</h2>
+                    <p>Splits a mix.</p>
+                </li>
+                <li data-id="connect" data-button="Next" >
+                    <h2>Account login</h2>
+                    <p>Allows you to connect with you SoundCloud account</p>
+                </li>
+                <li data-id="help" data-button="Close">
+                    <h2>Lost it?</h2>
+                    <p>If you forgot something you can take this tour again.</p>
+                </li>
+            </ol>
+
+            <script>
+                $(window).load(function() {
+                    $('#joyRideTipContent').joyride({
+                        autoStart : true,
+                        cookieMonster : false,     // true or false to control whether cookies are used
+                        postStepCallback : function (index, tip) {
+                            if (index == 2) {
+                                $(this).joyride('set_li', false, 1);
+                            }
+                        },
+                        modal:true,
+                        expose:true
+
+                    });
+                });
+            </script>
+
     </body>
 </html>
