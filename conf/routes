@@ -4,11 +4,13 @@
 
 # Home page
 GET			/                   controllers.Application.index()
-POST		/request       		controllers.Application.TrackRequest()
+POST		/request       		controllers.Application.trackRequest()
 GET			/tracks/:url        controllers.Application.getSong(url: String)
 GET			/random             controllers.Application.getRandomSong()
 POST		/trackMeta			controllers.Application.trackMetadata()
 POST		/splitWaveform		controllers.Application.splitWaveform()
+POST		/userLike			controllers.Application.userLike()
+POST		/userDislike		controllers.Application.userDislike()
 
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*file        controllers.Assets.at(path="/public", file)

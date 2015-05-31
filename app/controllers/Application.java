@@ -71,7 +71,7 @@ public class Application extends Controller {
      *
      * @return An http ok response with the new rendered page.
      */
-    public static Result TrackRequest() {
+    public static Result trackRequest() {
         JsonNode json = request().body().asJson();
         if (json == null) {
             return badRequest("Object is empty");
@@ -87,7 +87,35 @@ public class Application extends Controller {
             return ok(response);
         }
     }
+    
+    /**
+     * Receives a Json object containing information about a track that the
+     * user has liked. This information is passed to the recommender for processing.
+     */
+    public static Result userLike() {
+    	JsonNode json = request().body().asJson();
+    	 if (json == null) {
+             return badRequest("Object is empty");
+         } else {
+        	 System.out.println("Information about a Liked song has been received.");
+             return ok("");
+         }
+    }
 
+    /**
+     * Receives a Json object containing information about a track that the
+     * user has disliked. This information is passed to the recommender for processing.
+     */
+    public static Result userDislike() {
+    	JsonNode json = request().body().asJson();
+    	 if (json == null) {
+             return badRequest("Object is empty");
+         } else {
+        	 System.out.println("Information about a disliked song has been received.");
+             return ok("");
+         }
+    }
+    
     /**
      * Retrieves a start-time calculated by the CommentIntensitySeeker for the
      * given track id.

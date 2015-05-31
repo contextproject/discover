@@ -31,10 +31,44 @@ function sendData(data, url, callback) {
 			}
 		});
 	} else {
-		console.log("Object is not usable");
-		console.log(data !== undefined);
+		console.log("Object is not usable, given data is undefined");
 		console.log(data.length > 0);
 	}
+}
+
+//event for disliking a song
+$("#dislike").click(function() {
+	if (SC.accessToken() != null) {
+		widget.getCurrentSoundIndex(function(index) {
+			widget.getSounds(function(sounds) {
+				sendData(sounds[index], "/userDislike", function() {});
+				SC.delete('/me/favorites/' + sounds[index].id);
+			});
+		});
+	} 
+});
+
+// event for liking a song
+$("#like").click(function() {
+	if (SC.accessToken() == null) {
+		console.log("null");
+		SC.connect(function() {
+			like();
+		});
+	} else {
+		console.log("not null");
+		like();
+	}
+});
+
+// like the current song
+function like() {
+	widget.getCurrentSoundIndex(function(index) {
+		widget.getSounds(function(sounds) {
+			sendData(sounds[index], "/userLike", function() {});
+			SC.put('/me/favorites/' + sounds[index].id);
+		});
+	});
 }
 
 //select the next song if present
