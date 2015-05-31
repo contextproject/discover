@@ -93,7 +93,7 @@ public class CommentTest {
         assertEquals(5000, c1.getTime());
         assertEquals(10000, c2.getTime());
     }
-
+    
     /**
      * Testing the setPeriod. The timestamp can change after setting a new period
      */
@@ -177,6 +177,4 @@ public class CommentTest {
     public void after() {
         Comment.setPeriod(5000);
     }
-
-
 }
