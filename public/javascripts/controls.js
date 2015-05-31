@@ -127,7 +127,7 @@ function reloadWidget() {
 	// load the url in the widget
 	widget.load($("#url").val(), {
 		auto_play : false,
-		likes : true
+		likes : false
 	});
 	widget.bind(SC.Widget.Events.READY, function() {
 		widget.unbind(SC.Widget.Events.READY);
@@ -171,6 +171,7 @@ $("#preview").click( function() {
 		preview(songStart,songEnd);
 });
 
+// Preview a snippet on the current track.
 function preview(sStart, sEnd) {
 	widget.bind(SC.Widget.Events.READY, function() {
 		if (widget.isPaused(function(paused) {
@@ -195,6 +196,7 @@ function preview(sStart, sEnd) {
 	});
 }
 
+// clear all events on the widget
 function widgetClearEvents() {
 	widget.unbind(SC.Widget.Events.PLAY);
 	widget.unbind(SC.Widget.Events.READY);
@@ -235,7 +237,8 @@ $("#favorites").click(function() {
 function getFavorites() {
 	SC.get('/me', function(me) {
 		widget.load("api.soundcloud.com/users/" + me.id + "/favorites", { 
-			auto_play : false 
+			auto_play : false,
+			likes : false
 		});
 	});
 }
