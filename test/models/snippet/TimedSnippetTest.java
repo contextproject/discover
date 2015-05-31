@@ -3,6 +3,7 @@ package models.snippet;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
@@ -266,5 +267,54 @@ public class TimedSnippetTest extends BasicTest {
         final String expected = "TimedSnippet(" + getSnippet().getStartTime()
                 + ", " + getSnippet().getWindow() + ")";
         assertEquals(expected, getSnippet().toString());
+    }
+    
+    /**
+     * Tests the {@link TimedSnippet#compareTo(TimedSnippet)} method.
+     */
+    @Test
+    public void testCompareSameAddress() {
+        assertEquals(0, snippet.compareTo(snippet));
+    }
+    
+    /**
+     * Tests the {@link TimedSnippet#compareTo(TimedSnippet)} method.
+     */
+    @Test
+    public void testCompareEqualCopy() {
+        assertEquals(0, snippet.compareTo(snippet.copy()));
+    }
+    
+    /**
+     * Tests the {@link TimedSnippet#compareTo(TimedSnippet)} method. It
+     * checks that the compare method does not look at the window.
+     */
+    @Test
+    public void testCompareDifferentWindow() {
+        final TimedSnippet other = new TimedSnippet(snippet.getStartTime(),
+                snippet.getWindow() + 10);
+        assertEquals(0, snippet.compareTo(other));
+    }
+    
+    /**
+     * Tests the {@link TimedSnippet#compareTo(TimedSnippet)} method.
+     * In this test the snippet is smaller than what it is compared to.
+     */
+    @Test
+    public void testCompareSmaller() {
+        final TimedSnippet other = new TimedSnippet(snippet.getStartTime() + 10,
+                snippet.getWindow());
+        assertTrue(snippet.compareTo(other) < 0);
+    }
+    
+    /**
+     * Tests the {@link TimedSnippet#compareTo(TimedSnippet)} method.
+     * In this test the Snippet is larger.
+     */
+    @Test
+    public void testCompareLarger() {
+        final TimedSnippet other = new TimedSnippet(snippet.getStartTime() - 10,
+                snippet.getWindow());
+        assertTrue(snippet.compareTo(other) > 0);
     }
 }

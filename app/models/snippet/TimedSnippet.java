@@ -7,7 +7,7 @@ package models.snippet;
  * @version 30-05-2015
  * @since 29-04-2015
  */
-public class TimedSnippet {
+public class TimedSnippet implements Comparable<TimedSnippet> {
 
     /**
      * The start time of the snippet.
@@ -163,5 +163,10 @@ public class TimedSnippet {
     @Override
     public String toString() {
         return "TimedSnippet(" + getStartTime() + ", " + getWindow() + ")";
+    }
+
+    @Override
+    public int compareTo(final TimedSnippet other) {
+        return this.getStartTime() - other.getStartTime();
     }
 }
