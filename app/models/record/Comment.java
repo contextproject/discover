@@ -64,6 +64,24 @@ public class Comment implements Record {
     }
 
     /**
+     * Gives the period in which a timestamp is being rounded.
+     *
+     * @return the period
+     */
+    public static int getPeriod() {
+        return period;
+    }
+
+    /**
+     * Changes the period in which the time stamp should be computed.
+     *
+     * @param per new period time
+     */
+    public static void setPeriod(final int per) {
+        period = per;
+    }
+
+    /**
      * Processes the ResultSet of comments of the track
      *
      * @param resultSet The ResultSet of the track
@@ -130,29 +148,12 @@ public class Comment implements Record {
     }
 
     /**
-     * Changes the period in which the time stamp should be computed.
-     *
-     * @param per new period time
-     */
-    public static void setPeriod(final int per) {
-        period = per;
-    }
-
-    /**
-     * Gives the period in which a timestamp is being rounded.
-     *
-     * @return the period
-     */
-    public static int getPeriod() {
-        return period;
-    }
-
-    /**
      * Equals method for comments.
      *
      * @param other The other object
      * @return True if objects are equal
      */
+    @Override
     public boolean equals(final Object other) {
         if (other instanceof Comment) {
             Comment com = (Comment) other;

@@ -9,7 +9,7 @@ public class CommentContentSeeker {
      * List of positive words.
      */
     private final String[] positive = {"great", "brilliant", "beautiful",
-            "awesome", "amazing", "perfect", "good", "like", "love", "best",
+            "awesome", "amazing", "perfect", "good", "addLike", "love", "best",
             "nice", "super", "cool", "massive", "wicked", "sick", "wonderfull"};
 
     /**

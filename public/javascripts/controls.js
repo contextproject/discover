@@ -67,7 +67,7 @@ $("#sendWave").click(function() {
 		var message = {
 			"track" : sounds[0],
 			"waveform" : waveform.data
-		}
+        };
 		sendData(message, "/splitWaveform", setMixSplit);
 	});
 	//TO-DO: implement the receiving and setting of multiple start times.
@@ -91,7 +91,8 @@ $("#url").keypress(function(e) {
 // reload the widget with the url submitted in the input field
 function reloadWidget() {
 	// load the url in the widget
-	widget.load($("#url").val(), {
+    var url = $("#url");
+    widget.load(url.val(), {
 		auto_play : false,
 		likes : true
 	});
@@ -105,7 +106,7 @@ function reloadWidget() {
 			var message = {
 				"track" : sounds[pos],
 				"waveform" : waveform.data
-			}
+            };
 			sendData(message, "/request", setStartTime);
 			// use the following line if you want to re-render the page.
 			// window.location.href = "http://localhost:9000/tracks/" + sounds[pos].id;
@@ -113,7 +114,7 @@ function reloadWidget() {
 	});
 
 	// empty the input field
-	$("#url").val("");
+    url.val("");
 }
 
 // change the volume of the widget
@@ -200,9 +201,15 @@ $("#favorites").click(function() {
 
 function getFavorites() {
 	SC.get('/me', function(me) {
-		widget.load("api.soundcloud.com/users/" + me.id + "/favorites", { 
+        widget.load("api.soundcloud.com/users/" + me.id + "/favorites", {
 			auto_play : false 
 		});
+
+        $.getJSON("http://api.soundcloud.com/users/" + me.id + "/favorites.json?client_id=70a5f42778b461b7fbae504a5e436c06", function (data) {
+            sendData(data, "/likes", function () {
+                console.log("favorites send back to server.")
+            });
+        })
 	});
 }
 
@@ -211,4 +218,3 @@ SC.initialize({
 	client_id : '70a5f42778b461b7fbae504a5e436c06',
 	redirect_uri : 'http://localhost:9000/assets/html/callback.html'
 });
-

@@ -68,9 +68,9 @@ public class CommentContentSeekerTest {
 	 */
 	@Test
 	public void testContentFilter5() {
-		String s1 = "I don't like this ";
-		assertTrue(-1 == cf.contentFilter(s1));
-		assertTrue(0 == cf.findEmoticons(s1));
+        String s1 = "I don't addLike this ";
+        assertTrue(-1 == cf.contentFilter(s1));
+        assertTrue(0 == cf.findEmoticons(s1));
 	}
 
 	/**
