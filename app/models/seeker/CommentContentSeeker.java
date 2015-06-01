@@ -1,27 +1,69 @@
 package models.seeker;
 
+import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Filters the content of a comment.
  */
 public class CommentContentSeeker {
 
     /**
+     * The map containing the Scores.
+     */
+    private Map<String, Integer> scores;
+
+    /**
      * List of positive words.
      */
-    private final String[] positive = {"great", "brilliant", "beautiful",
+    private final String[] positive = { "great", "brilliant", "beautiful",
             "awesome", "amazing", "perfect", "good", "like", "love", "best",
-            "nice", "super", "cool", "massive", "wicked", "sick", "wonderfull"};
+            "nice", "super", "cool", "massive", "wicked", "sick", "wonderfull" };
 
     /**
      * List of negative words.
      */
-    private final String[] negative = {"hate", "n't", "nt", "not", "bad",
-            "terrible", "worst", "suck"};
+    private final String[] negative = { "hate", "n't", "nt", "not", "bad",
+            "terrible", "worst", "suck" };
+    
+    /**
+     * Creates a new CommentContentSeeker.
+     */
+    public CommentContentSeeker() {
+        setScores(new HashMap<String, Integer>());
+    }
+    
+    /**
+     * Builds the CommentIntensitySeeker from the given uri.
+     * @param xmluri The uri to an XML file containing the scores. It's
+     * body.
+     */
+    public CommentContentSeeker(final URI xmluri) {
+        setScores(new HashMap<String, Integer>());
+    }
+    
+    /**
+     * Sets the scores map to the given value.
+     * @param scores The new Scores.
+     */
+    public void setScores(final Map<String, Integer> scores) {
+        this.scores = scores;
+    }
+    
+    /**
+     * Gets the scores map used by the scores.
+     * @return The scores used.
+     */
+    public Map<String, Integer> getScores() {
+        return scores;
+    }
 
     /**
      * Checks if a string contains a word from the list above.
      *
-     * @param content the content of a comment
+     * @param content
+     *            the content of a comment
      * @return true if the content contains a positive message
      */
     public int contentFilter(final String content) {
@@ -50,7 +92,8 @@ public class CommentContentSeeker {
     /**
      * Checks if the content of a comment contains a positive emoticon.
      *
-     * @param body content of a comment
+     * @param body
+     *            content of a comment
      * @return true if the content contains a happy emoticon
      */
     public int findEmoticons(final String body) {
