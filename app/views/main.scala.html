@@ -27,7 +27,21 @@
         <link rel="stylesheet" href="@routes.Assets.at("stylesheets/main.css")" />
         <link rel="stylesheet" href="@routes.Assets.at("stylesheets/joyride-2.1.css")" />
 
+        <script>
+        $(window).load(function() {
+            $('#joyRideTipContent').joyride({
+                autoStart : true,
+                postStepCallback : function (index, tip) {
+                    if (index == 2) {
+                        $(this).joyride('set_li', false, 1);
+                    }
+                },
+                modal:true,
+                expose:true
 
+            });
+        });
+        </script>
 
         <script>
             $.getScript("/assets/javascripts/controls.js");
@@ -111,7 +125,7 @@
                     <h2>Welcome to Discover</h2>
                     <p>The place to discover new music.</p>
                 </li>
-                <li data-id="url" data-button="Next">
+                <li data-id="url" data-button="Next" >
                     <h2>Search bar</h2>
                     <p>Here you can put the URL of the song you want to listen to.</p>
                 </li>
@@ -133,45 +147,31 @@
                 </li>
                 <li data-id="next" data-button="Next" >
                     <h2>Next!</h2>
-                    <p>Gives the next song. Only available with mixes or playlists.</p>
+                    <p>Gives the next song or gives the next part of the current song.</p>
                 </li>
                 <li data-id="prev" data-button="Next" >
-                    <h2>Opposite of Next.</h2>
+                    <h2>Previous</h2>
+                    <p>Opposite of next.</p>
                 </li>
                 <li data-id="rand" data-button="Next" >
-                    <h2>Something else?</h2>
+                    <h2>You want something else?</h2>
                     <p>Loads a random song from SoundCloud.</p>
                 </li>
-                <li data-id="sendWave" data-button="Next">
+                <li data-id="sendWave" data-button="Next" >
                     <h2>Split the Mix!</h2>
-                    <p>Splits a mix.</p>
+                    <p>Splits a mix in different part to play separately.</p>
                 </li>
                 <li data-id="connect" data-button="Next" >
                     <h2>Account login</h2>
                     <p>Allows you to connect with you SoundCloud account</p>
                 </li>
-                <li data-id="help" data-button="Close">
+                <li data-id="help"  data-button="Close">
                     <h2>Lost it?</h2>
                     <p>If you forgot something you can take this tour again.</p>
                 </li>
             </ol>
 
-            <script>
-                $(window).load(function() {
-                    $('#joyRideTipContent').joyride({
-                        autoStart : true,
-                        cookieMonster : false,     // true or false to control whether cookies are used
-                        postStepCallback : function (index, tip) {
-                            if (index == 2) {
-                                $(this).joyride('set_li', false, 1);
-                            }
-                        },
-                        modal:true,
-                        expose:true
 
-                    });
-                });
-            </script>
 
     </body>
 </html>
