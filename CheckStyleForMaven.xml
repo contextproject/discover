@@ -120,8 +120,10 @@ The CheckStyle file explicitly for maven usage. It is roughly the same as the ot
   <module name="FileLength"/>
   <module name="FileTabCharacter"/>
   <module name="RegexpSingleline">
+    <property name="severity" value="ignore"/>
     <property name="format" value="\s+$"/>
     <property name="message" value="Line has trailing spaces."/>
+    <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
   </module>
   <module name="SuppressionCommentFilter"/>
   <module name="SuppressWarningsFilter"/>

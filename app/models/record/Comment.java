@@ -8,7 +8,7 @@ import java.sql.SQLException;
  * Class to represent a comment.
  */
 @Entity
-public class Comment implements Record {
+public class Comment implements Record, Comparable<Comment> {
 
     /**
      * A standard number for computing the rounded time of a timestamp.
@@ -62,6 +62,21 @@ public class Comment implements Record {
         this.userid = userid;
         this.timestamp = timestamp;
     }
+    
+    /**
+     * Constructor.
+     *
+     * @param trackid The id of the track
+     * @param userid The user id of the comment
+     * @param timestamp The timestamp of the comment
+     * @param body The content of the comment
+     */
+    public Comment(final int trackid, final int userid, final int timestamp, final String body) {
+        this.trackid = trackid;
+        this.userid = userid;
+        this.timestamp = timestamp;
+        this.body = body;
+    }
 
     /**
      * Gives the period in which a timestamp is being rounded.
@@ -82,7 +97,7 @@ public class Comment implements Record {
     }
 
     /**
-     * Processes the ResultSet of comments of the track
+     * Processes the ResultSet of comments of the track.
      *
      * @param resultSet The ResultSet of the track
      * @return True if succeeds
@@ -108,7 +123,8 @@ public class Comment implements Record {
      * @return the rounded time
      */
     public int getTime() {
-        return (int) (Math.floor(timestamp / period) * period);
+        final double division = (double) timestamp / period;
+        return (int) (Math.floor(division) * period);
     }
 
     /**
@@ -170,5 +186,17 @@ public class Comment implements Record {
      */
     public int hashCode() {
         return userid + timestamp;
+    }
+
+    @Override
+    public int compareTo(final Comment other) {
+        final int result;
+        final int track = this.trackid - other.trackid;
+        if (track == 0) {
+            result = this.getTime() - other.getTime();
+        } else {
+            result = track;
+        }
+        return result;
     }
 }
