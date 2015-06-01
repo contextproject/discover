@@ -101,6 +101,7 @@ The CheckStyle configuration for the discover project
       <property name="severity" value="ignore"/>
       <property name="separated" value="true"/>
       <property name="sortStaticImportsAlphabetically" value="true"/>
+      <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
     </module>
     <module name="GenericWhitespace"/>
     <module name="CovariantEquals"/>
@@ -127,8 +128,10 @@ The CheckStyle configuration for the discover project
   <module name="FileLength"/>
   <module name="FileTabCharacter"/>
   <module name="RegexpSingleline">
+    <property name="severity" value="ignore"/>
     <property name="format" value="\s+$"/>
     <property name="message" value="Line has trailing spaces."/>
+    <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
   </module>
   <module name="SuppressionCommentFilter"/>
   <module name="SuppressWarningsFilter"/>

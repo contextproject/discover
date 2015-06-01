@@ -36,7 +36,7 @@ public class Track implements Record {
     }
 
     /**
-     * Processes the ResultSet of the track
+     * Processes the ResultSet of the track.
      *
      * @param resultSet The ResultSet of the track
      * @return True if succeeds

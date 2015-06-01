@@ -8,7 +8,7 @@ import java.sql.SQLException;
  * Class to represent a comment.
  */
 @Entity
-public class Comment implements Record {
+public class Comment implements Record, Comparable<Comment> {
 
     /**
      * A standard number for computing the rounded time of a timestamp.
@@ -64,7 +64,7 @@ public class Comment implements Record {
     }
 
     /**
-     * Processes the ResultSet of comments of the track
+     * Processes the ResultSet of comments of the track.
      *
      * @param resultSet The ResultSet of the track
      * @return True if succeeds
@@ -90,7 +90,8 @@ public class Comment implements Record {
      * @return the rounded time
      */
     public int getTime() {
-        return (int) (Math.floor(timestamp / period) * period);
+        final double division = (double) timestamp / period;
+        return (int) (Math.floor(division) * period);
     }
 
     /**
@@ -169,5 +170,17 @@ public class Comment implements Record {
      */
     public int hashCode() {
         return userid + timestamp;
+    }
+
+    @Override
+    public int compareTo(final Comment other) {
+        final int result;
+        final int track = this.trackid - other.trackid;
+        if (track == 0) {
+            result = this.getTime() - other.getTime();
+        } else {
+            result = track;
+        }
+        return result;
     }
 }
