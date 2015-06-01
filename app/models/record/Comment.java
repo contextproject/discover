@@ -62,6 +62,21 @@ public class Comment implements Record {
         this.userid = userid;
         this.timestamp = timestamp;
     }
+    
+    /**
+     * Constructor.
+     *
+     * @param trackid The id of the track
+     * @param userid The user id of the comment
+     * @param timestamp The timestamp of the comment
+     * @param body The content of the comment
+     */
+    public Comment(final int trackid, final int userid, final int timestamp, final String body) {
+        this.trackid = trackid;
+        this.userid = userid;
+        this.timestamp = timestamp;
+        this.body = body;
+    }
 
     /**
      * Processes the ResultSet of comments of the track
