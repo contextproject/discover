@@ -1,13 +1,15 @@
 package controllers;
 
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+
+//import org.json.JSONArray;
 
 import models.database.DatabaseConnector;
 import models.database.RandomSongSelector;
 import models.mix.MixSplitter;
-import models.database.retriever.TrackRetriever;
 import models.record.Track;
-import models.seeker.CommentIntensitySeeker;
 import play.mvc.Controller;
 import play.mvc.Result;
 import views.html.index;
@@ -44,28 +46,6 @@ public class Application extends Controller {
     }
 
     /**
-     * Renders a page with the given track id to load the widget.
-     *
-     * @param trackId the id of the track we are searching for.
-     * @return an http ok response with the new rendered page.
-     */
-    public static Result getSong(final String trackId) {
-        JsonNode json = request().body().asJson();
-        if (json == null) {
-            String url = "w.soundcloud.com/tracks/" + trackId;
-            int starttime = getStartTime(Integer.parseInt(trackId));
-            return ok(index.render(url, starttime));
-        } else {
-            ObjectMapper mapper = new ObjectMapper();
-            ObjectNode objNode = mapper.createObjectNode();
-            int starttime = getStartTime(Integer.parseInt(trackId));
-            JsonNode response = objNode.put("response", starttime);
-            return ok(response);
-        }
-
-    }
-
-    /**
      * Method is used to receive Json objects containing track information, 
      * pass it on the AlgorithmChooser and return back the new start time.
      *
@@ -75,14 +55,16 @@ public class Application extends Controller {
         JsonNode json = request().body().asJson();
         if (json == null) {
             return badRequest("Object is empty");
+        } else if(json.get("track") == null) {
+        	return badRequest("Object does not contain a 'track' subset.");
         } else {
-            ObjectNode objNode = mapper.createObjectNode();
             int trackID = json.get("track").get("id").asInt();
             int duration = json.get("track").get("duration").asInt();
             Track track = new Track();
             track.setTrackid(trackID);
             track.setDuration(duration);
             int starttime2 = getStartTime(track);
+            ObjectNode objNode = mapper.createObjectNode();
             JsonNode response = objNode.put("response", starttime2);
             return ok(response);
         }
@@ -115,28 +97,6 @@ public class Application extends Controller {
              return ok("");
          }
     }
-    
-    /**
-     * Retrieves a start-time calculated by the CommentIntensitySeeker for the
-     * given track id.
-     *
-     * @param trackId The id of the track.
-     * @return the start-time of the snippet.
-     */
-    public static int getStartTime(final int trackId) {
-        return new CommentIntensitySeeker(
-                new TrackRetriever(trackId).getAll()).seek().getStartTime();
-    }
-
-    /**
-     * Get the start time calculated by the AlgorithmSelector.
-     *
-     * @param track The track
-     * @return The start time of the snippet.
-     */
-    public static int getStartTime(final Track track) {
-        return AlgorithmSelector.determineStart(track);
-    }
 
     /**
      * Selects a random track from the database.
@@ -147,9 +107,13 @@ public class Application extends Controller {
         RandomSongSelector selector;
         selector = RandomSongSelector.getRandomSongSelector();
         int trackId = selector.getRandomSong();
-        String url = "w.soundcloud.com/tracks/" + trackId;
+        String widgetUrl = "w.soundcloud.com/tracks/" + trackId;
         int starttime = getStartTime(trackId);
-        return ok(index.render(url, starttime));
+        Map<String, String> map = new TreeMap<String, String>();
+        map.put("url", widgetUrl);
+        map.put("start", Integer.toString(starttime));
+        JsonNode response = mapper.valueToTree(map);
+        return ok(response);
     }
 
     /**
@@ -163,15 +127,11 @@ public class Application extends Controller {
         if (json == null) {
             return badRequest("Expecting Json data");
         } else {
-            //TO-DO: send the iterator to the MixSplitter.
             MixSplitter splitter = new MixSplitter(json.get("waveform"), json.get("track").get("id").asInt());
-            //TO-DO: receive the answer from the splitter and send array of start times.
             List<Integer> list = splitter.split();
-//            System.out.println(list.size());
-//            System.out.println(list.toString());
-            
-            ObjectNode objNode = mapper.createObjectNode();
-            JsonNode response = objNode.put("response", list.toString());
+            Map<String, List<Integer>> map = new TreeMap<String, List<Integer>>();
+            map.put("response", list);
+            JsonNode response = mapper.valueToTree(map);
             return ok(response);
         }
     }
@@ -191,6 +151,30 @@ public class Application extends Controller {
             JsonNode response = objNode.put("message", "File was transvered successfully");
             return ok(response);
         }
+    }
+    
+    /**
+     * Retrieves a start-time calculated by the CommentIntensitySeeker for the
+     * given track id.
+     *
+     * @param trackId The id of the track.
+     * @return the start-time of the snippet.
+     */
+    public static int getStartTime(final int trackId) {
+    	Track track = new Track();
+    	track.setDuration(-1);
+    	track.setTrackid(trackId);
+        return getStartTime(track);
+    }
+
+    /**
+     * Get the start time calculated by the AlgorithmSelector.
+     *
+     * @param track The track
+     * @return The start time of the snippet.
+     */
+    public static int getStartTime(final Track track) {
+        return AlgorithmSelector.determineStart(track);
     }
 
     /**

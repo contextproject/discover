@@ -5,7 +5,7 @@
 # Home page
 GET			/                   controllers.Application.index()
 POST		/request       		controllers.Application.trackRequest()
-GET			/tracks/:url        controllers.Application.getSong(url: String)
+#GET		/tracks/:url        controllers.Application.getSong(url: String)
 GET			/random             controllers.Application.getRandomSong()
 POST		/trackMeta			controllers.Application.trackMetadata()
 POST		/splitWaveform		controllers.Application.splitWaveform()

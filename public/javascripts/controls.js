@@ -26,7 +26,6 @@ function sendData(data, url, callback) {
 			contentType : "application/json; charset=utf-8",
 			url : url,
 			success : function(data) {
-				console.log(data);
 				callback(data.response);
 			}
 		});
@@ -205,7 +204,20 @@ function widgetClearEvents() {
 
 // load the widget with a random song
 $("#rand").click(function() {
-	window.location.href = "http://localhost:9000/random";
+	$.ajax({
+		type : "GET",
+		dataType : "json",
+		contentType : "application/json; charset=utf-8",
+		url : "/random",
+		success : function(data) {
+			console.log(data);
+			widget.load(data.url, {
+				auto_play : false,
+				likes : false
+			});
+			setStartTime(data.start)
+		}
+	});
 });
 
 //connect with Soundcloud
