@@ -7,10 +7,16 @@ $("#waveform").click(function () {
     $widget.bind(SC.Widget.Events.READY, function () {
         // get information about currently playing sound
         $widget.getSounds(function (currentSound) {
+            console.log("duration is " + currentSound.duration);
             SC.get("/tracks/" + currentSound[0].id, function (track) {
                 var waveform = new Waveform({
                     container: document.getElementById("example"),
-                    innerColor: "#0000FF"
+                    innerColor: function(x, y){
+                        if(x > songStart / track.duration && x < songEnd / track.duration) {
+                            return "#0000FF";
+                        }
+                        return "#333";
+                    }
                 });
 
                 waveform.dataFromSoundCloudTrack(track);
@@ -32,7 +38,7 @@ $("#current").click(function () {
             console.log(id);
         });
     });
-})
+});
 
 // Prepare all the data to be sent when the widget is ready
 $widget.bind(SC.Widget.Events.READY, function () {
