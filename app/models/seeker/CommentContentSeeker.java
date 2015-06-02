@@ -25,26 +25,29 @@ public class CommentContentSeeker {
      * @return true if the content contains a positive message
      */
     public int contentFilter(final String content) {
-        String body = content.toLowerCase();
-        int res = 0;
-        for (String p : positive) {
-            if (body.contains(p)) {
-                res = 1;
-                break;
+        if(content != null) {
+            String body = content.toLowerCase();
+            int res = 0;
+            for (String p : positive) {
+                if (body.contains(p)) {
+                    res = 1;
+                    break;
+                }
+            }
+
+            for (String n : negative) {
+                if (body.contains(n)) {
+                    return -1;
+                }
+            }
+
+            if (res == 1) {
+                return res;
+            } else {
+                return findEmoticons(body);
             }
         }
-
-        for (String n : negative) {
-            if (body.contains(n)) {
-                return -1;
-            }
-        }
-
-        if (res == 1) {
-            return res;
-        } else {
-            return findEmoticons(body);
-        }
+        return -1;
     }
 
     /**

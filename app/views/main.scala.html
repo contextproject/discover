@@ -12,7 +12,7 @@
         <script type="text/javascript" src="@routes.Assets.at("javascripts/waveform.js")"></script>
         <script type="text/javascript" src="@routes.Assets.at("js/jquery.min.js")"></script>
         <script type="text/javascript" src="http://connect.soundcloud.com/sdk.js"></script>
-
+        
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="stylesheet" href="@routes.Assets.at("stylesheets/photon.css")" />
         <link rel="stylesheet" href="@routes.Assets.at("stylesheets/main.css")" />
@@ -61,19 +61,22 @@
                             @player
                         </div>
                         <a id="favorites">My Collection</a>
+
+                        <div class="example-waveform" id="example">
+                            <canvas width="728" height="59"></canvas>
+                        </div>
                     </div>
                     <div class="4u$ 12u$(medium) important(medium)">
                         <div class="controls">
                             <label for="volume"></label><input type="range" class="control" id="volume">
 
                             <button class="control" id="preview">Preview</button> <br>
-                            <button class="control" id="next">Next</button> <br>
-                            <button class="control" id="prev">Previous</button> <br>
+                            <button class="control" id="prev">Prev</button><button class="control" id="next">Next</button> <br>
+                            <button class="control" id="like">Like</button><button class="control" id="dislike">Dislike</button><br>
                             <button class="control" id="rand">Random Song</button> <br>
                             <button class="control" id="sendWave">Mix Splitter</button> <br>
                             <button class="control" id="connect">Connect</button> <br>
-                            <button class="control" id="like">Like</button> <br>
-                            <button class="control" id="dislike">Dislike</button> <br>
+                            <button class="control" id="waveform">Waveform</button> <br>
                         </div>
                     </div>
                 </div>
