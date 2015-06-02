@@ -103,11 +103,12 @@ $("#sendWave").click(function() {
 		}
 		sendData(message, "/splitWaveform", setMixSplit);
 	});
-	//TO-DO: implement the receiving and setting of multiple start times.
 });
 
 function setMixSplit(newSp) {
+	mixSplits = newSp;
 	console.log(newSp);
+	
 }
 
 // if the reload button is clicked on, call the reloadWidget function
@@ -172,19 +173,20 @@ $("#preview").click( function() {
 
 // Preview a snippet on the current track.
 function preview(sStart, sEnd) {
-	widget.bind(SC.Widget.Events.READY, function() {
-		if (widget.isPaused(function(paused) {
-			if (paused) {
-				widget.play();
-			}
-		}))
-		widget.bind(SC.Widget.Events.PLAY, function() {
-			widget.seekTo(sStart);
-			widget.unbind(SC.Widget.Events.PLAY);
-			widget.unbind(SC.Widget.Events.READY);
-		});
-	});
-
+	
+	widget.isPaused(function(paused) {
+		if (paused) {
+			widget.bind(SC.Widget.Events.READY, function() {
+				widget.bind(SC.Widget.Events.PLAY, function() {
+					widget.seekTo(sStart);
+					widget.unbind(SC.Widget.Events.PLAY);
+					widget.unbind(SC.Widget.Events.READY);
+				});
+			widget.play();
+			});
+		}
+	}); 
+	
 	widget.bind(SC.Widget.Events.PLAY_PROGRESS, function() {
 		widget.getPosition(function(position) {
 			if (position > sEnd) {
@@ -193,6 +195,8 @@ function preview(sStart, sEnd) {
 			}
 		});
 	});
+	
+	widget.seekTo(sStart);
 }
 
 // clear all events on the widget
