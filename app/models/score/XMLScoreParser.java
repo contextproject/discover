@@ -30,6 +30,12 @@ import org.xml.sax.SAXException;
  * </ul>
  * </p>
  * 
+ * <p>
+ * This class is now a Singleton because that makes life so much easier and is
+ * easier on memory. See the {@link #createParser()} method for the method of creating a
+ * XMLScoreParser.
+ * </p>
+ * 
  * @since 01-06-2015
  * @version 02-06-2015
  * 
@@ -39,36 +45,36 @@ import org.xml.sax.SAXException;
  * @author stefan boodt
  *
  */
-public class XMLScoreParser {
+public final class XMLScoreParser implements ScoreParser {
+    
+    /**
+     * The parser to be used.
+     */
+    private static XMLScoreParser parser;
 
     /**
      * The score nodes tagname.
      */
-    private String scorenode = "score";
+    private final String scorenode = "score";
 
     /**
      * The tagname of the text.
      */
-    private String string = "string";
+    private final String string = "string";
 
     /**
      * The tagname of the points belonging to the text.
      */
-    private String points = "value";
-
+    private final String points = "value";
+    
     /**
-     * Parses the XML file pointed to by the given URI.
-     * 
-     * @param uri
-     *            The URI of the file.
-     * @return The scores that were contained in the file.
-     * @throws IOException
-     *             If the IO fails.
-     * @throws SAXException
-     *             If a parse error occurs.
-     * @throws ParserConfigurationException
-     *             If a DocumentBuilder cannot be created.
+     * Creates an XMLScoreParser.
      */
+    private XMLScoreParser() {
+        
+    }
+
+    @Override
     public Map<String, Integer> parseCaught(final URI uri) throws SAXException,
             IOException, ParserConfigurationException {
         Map<String, Integer> scores;
@@ -81,21 +87,7 @@ public class XMLScoreParser {
         return scores;
     }
 
-    /**
-     * Parses the XML file pointed to by the given URI.
-     * 
-     * @param uri
-     *            The URI of the file.
-     * @return The scores that were contained in the file.
-     * @throws IOException
-     *             If the IO fails.
-     * @throws SAXException
-     *             If a parse error occurs.
-     * @throws ParserConfigurationException
-     *             If a DocumentBuilder cannot be created.
-     * @throws InvalidXMLFormatException
-     *             If the XML is incorrectly formatted.
-     */
+    @Override
     public Map<String, Integer> parse(final URI uri) throws SAXException,
             IOException, ParserConfigurationException,
             InvalidXMLFormatException {
@@ -165,7 +157,7 @@ public class XMLScoreParser {
         final Set<String> olds = checked.keySet();
         final Set<String> newStrings = newones.keySet();
         for (String s : newStrings) {
-            if (olds.contains(s)) {
+            if (olds.contains(s.toLowerCase())) {
                 return s;
             }
         }
@@ -187,7 +179,7 @@ public class XMLScoreParser {
             throws InvalidXMLFormatException {
         final Map<String, Integer> scores = new HashMap<String, Integer>();
         for (int k = 0; k < texts.getLength(); k++) {
-            final String t = texts.item(k).getTextContent().trim();
+            final String t = texts.item(k).getTextContent().trim().toLowerCase();
             final Integer oldpoints = scores.put(t, pts);
             if (oldpoints != null) {
                 throw new InvalidXMLFormatException("Duplicate string " + t
@@ -195,6 +187,20 @@ public class XMLScoreParser {
             }
         }
         return scores;
+    }
+    
+    /**
+     * Creates a XMLScoreParser. If one already exists it returns that one
+     * instead of creating a new one. This enforces the Singleton design pattern.
+     * Due to the fact that all the XMLScoreParsers are equivalent and equal this method
+     * of creation has no backfires but saves a lot of memory if a lot of parsers are created.
+     * @return An XMLScoreParser you can use.
+     */
+    public static XMLScoreParser createParser() {
+        if (parser == null) {
+            parser = new XMLScoreParser();
+        }
+        return parser;
     }
 
     /**

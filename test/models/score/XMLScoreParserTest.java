@@ -2,6 +2,7 @@ package models.score;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -44,7 +45,7 @@ public class XMLScoreParserTest extends BasicTest {
     @Override
     public void setUp() throws Exception {
         super.setUp();
-        setParser(new XMLScoreParser());
+        setParser(XMLScoreParser.createParser());
     }
 
     /**
@@ -403,6 +404,45 @@ public class XMLScoreParserTest extends BasicTest {
         m2.put(k3, 5);
         m2.put(k5, 5);
         assertEquals(k3, getParser().getDouble(m1, m2));
+    }
+
+    /**
+     * Tests the {@link XMLScoreParser#parseCaught(URI)} method.
+     * 
+     * @throws IOException
+     *             if an IOException occurs.
+     * @throws InvalidXMLFormatException
+     *             If the XML is not formatted properly.
+     * @throws ParserConfigurationException
+     *             If the document builder can't be created.
+     * @throws SAXException
+     *             If a parse error occurs.
+     * @throws URISyntaxException
+     *             If the URI is wrongly formatted.
+     */
+    @Test
+    public void testParseScoresCaughtWithCapitals() throws IOException,
+            InvalidXMLFormatException, ParserConfigurationException,
+            SAXException, URISyntaxException {
+        final URI uri = XMLScoreParserTest.class.getResource("scoresWithCapitals.xml")
+                .toURI();
+        Map<String, Integer> scores = getParser().parseCaught(uri);
+        Map<String, Integer> expected = new HashMap<String, Integer>();
+        expected.put("yay!", 20);
+        expected.put("hi", 10);
+        expected.put("good", 10);
+        expected.entrySet();
+        assertEquals(expected, scores);
+    }
+    
+    /**
+     * Checks if the two parsers have the same address. This then
+     * requires that the Singleton is used properly.
+     */
+    @Test
+    public void testSingleton() {
+        final XMLScoreParser parser2 = XMLScoreParser.createParser();
+        assertTrue(parser == parser2);
     }
 
     /**
