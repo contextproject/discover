@@ -1,10 +1,9 @@
 // Soundcloud widget
 var widget = SC.Widget(document.getElementById("sc-widget"));
-var mixSplits = [60000, 120000, 180000, 240000];
+var mixSplits, waveform;
 var snipWin = 5000.00;
 var splitPointer = -1;
 var $widget = SC.Widget(document.getElementById("sc-widget"));
-var waveform;
 
 $("#current").click(function () {
     $widget.bind(SC.Widget.Events.READY, function () {
@@ -20,7 +19,7 @@ $("#current").click(function () {
 // Prepare all the data to be sent when the widget is ready
 $widget.bind(SC.Widget.Events.READY, function () {
     waveform = new Waveform({
-        container: document.getElementById("sc-widget"),
+        container: document.getElementById("sc-widget")
     });
     $widget.getSounds(function (sounds) {
         waveform.dataFromSoundCloudTrack(sounds[0]);
@@ -38,38 +37,77 @@ function sendData(data, url, callback) {
             contentType: "application/json; charset=utf-8",
             url: url,
             success: function (data) {
-                callback(data.response)
+                callback(data.response);
             }
         });
     } else {
-        console.log("Object is not usable");
-        console.log(data !== undefined);
+        console.log("Object is not usable, given data is undefined");
         console.log(data.length > 0);
     }
+}
 
+//event for disliking a song
+$("#dislike").click(function () {
+    if (SC.accessToken() != null) {
+        widget.getCurrentSoundIndex(function (index) {
+            widget.getSounds(function (sounds) {
+                sendData(sounds[index], "/userDislike", function () {
+                });
+                SC.delete('/me/favorites/' + sounds[index].id);
+            });
+        });
+    }
+});
+
+// event for liking a song
+$("#like").click(function () {
+    if (SC.accessToken() == null) {
+        console.log("null");
+        SC.connect(function () {
+            like();
+        });
+    } else {
+        console.log("not null");
+        like();
+    }
+});
+
+// like the current song
+function like() {
+    widget.getCurrentSoundIndex(function (index) {
+        widget.getSounds(function (sounds) {
+            sendData(sounds[index], "/userLike", function () {
+            });
+            SC.put('/me/favorites/' + sounds[index].id);
+        });
+    });
 }
 
 //select the next song if present
 $("#next").click(function () {
-    splitPointer++;
-    if ((splitPointer < mixSplits.length) && (splitPointer >= 0)) {
-        widgetClearEvents();
-        var sPartial = mixSplits[splitPointer];
-        preview(sPartial, sPartial + snipWin);
-    } else {
-        splitPointer--;
+    if (mixSplits != null && mixSplits != undefined) {
+        splitPointer++;
+        if ((splitPointer < mixSplits.length) && (splitPointer >= 0)) {
+            widgetClearEvents();
+            var sPartial = mixSplits[splitPointer];
+            preview(sPartial, sPartial + snipWin);
+        } else {
+            splitPointer--;
+        }
     }
 });
 
 // select the previous song if present
 $("#prev").click(function () {
-    splitPointer--;
-    if ((splitPointer < mixSplits.length) && (splitPointer >= 0)) {
-        widgetClearEvents();
-        var sPartial = mixSplits[splitPointer];
-        preview(sPartial, sPartial + snipWin);
-    } else {
-        splitPointer++;
+    if (mixSplits != null && mixSplits != undefined) {
+        splitPointer--;
+        if ((splitPointer < mixSplits.length) && (splitPointer >= 0)) {
+            widgetClearEvents();
+            var sPartial = mixSplits[splitPointer];
+            preview(sPartial, sPartial + snipWin);
+        } else {
+            splitPointer++;
+        }
     }
 });
 
@@ -79,13 +117,13 @@ $("#sendWave").click(function () {
         var message = {
             "track": sounds[0],
             "waveform": waveform.data
-        }
+        };
         sendData(message, "/splitWaveform", setMixSplit);
     });
-    //TO-DO: implement the receiving and setting of multiple start times.
 });
 
 function setMixSplit(newSp) {
+    mixSplits = newSp;
     console.log(newSp);
 }
 
@@ -102,8 +140,10 @@ $("#url").keypress(function (e) {
 
 // reload the widget with the url submitted in the input field
 function reloadWidget() {
+    mixSplits = null;
+    var url = $("url");
     // load the url in the widget
-    widget.load($("#url").val(), {
+    widget.load(url.val(), {
         auto_play: false,
         likes: true
     });
@@ -117,7 +157,7 @@ function reloadWidget() {
             var message = {
                 "track": sounds[pos],
                 "waveform": waveform.data
-            }
+            };
             sendData(message, "/request", setStartTime);
             // use the following line if you want to re-render the page.
             // window.location.href = "http://localhost:9000/tracks/" + sounds[pos].id;
@@ -125,7 +165,7 @@ function reloadWidget() {
     });
 
     // empty the input field
-    $("#url").val("");
+    url.val("");
 }
 
 // change the volume of the widget
@@ -149,18 +189,20 @@ $("#preview").click(function () {
     preview(songStart, songEnd);
 });
 
+// Preview a snippet on the current track.
 function preview(sStart, sEnd) {
-    widget.bind(SC.Widget.Events.READY, function () {
-        if (widget.isPaused(function (paused) {
-                if (paused) {
-                    widget.play();
-                }
-            }))
-            widget.bind(SC.Widget.Events.PLAY, function () {
-                widget.seekTo(sStart);
-                widget.unbind(SC.Widget.Events.PLAY);
-                widget.unbind(SC.Widget.Events.READY);
+    widgetClearEvents();
+    widget.isPaused(function (paused) {
+        if (paused) {
+            widget.bind(SC.Widget.Events.READY, function () {
+                widget.bind(SC.Widget.Events.PLAY, function () {
+                    widget.seekTo(sStart);
+                    widget.unbind(SC.Widget.Events.PLAY);
+                    widget.unbind(SC.Widget.Events.READY);
+                });
+                widget.play();
             });
+        }
     });
 
     widget.bind(SC.Widget.Events.PLAY_PROGRESS, function () {
@@ -171,8 +213,11 @@ function preview(sStart, sEnd) {
             }
         });
     });
+
+    widget.seekTo(sStart);
 }
 
+// clear all events on the widget
 function widgetClearEvents() {
     widget.unbind(SC.Widget.Events.PLAY);
     widget.unbind(SC.Widget.Events.READY);
@@ -181,7 +226,19 @@ function widgetClearEvents() {
 
 // load the widget with a random song
 $("#rand").click(function () {
-    window.location.href = "http://localhost:9000/random";
+    $.ajax({
+        type: "GET",
+        dataType: "json",
+        contentType: "application/json; charset=utf-8",
+        url: "/random",
+        success: function (data) {
+            widget.load(data.url, {
+                auto_play: false,
+                likes: false
+            });
+            setStartTime(data.start)
+        }
+    });
 });
 
 //connect with Soundcloud
@@ -213,7 +270,8 @@ $("#favorites").click(function () {
 function getFavorites() {
     SC.get('/me', function (me) {
         widget.load("api.soundcloud.com/users/" + me.id + "/favorites", {
-            auto_play: false
+            auto_play: false,
+            likes: false
         });
     });
 }

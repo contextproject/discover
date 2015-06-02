@@ -10,12 +10,6 @@ import models.seeker.RandomSeeker;
 public final class AlgorithmSelector {
 
     /**
-     * Constructor.
-     */
-    private AlgorithmSelector() {
-    }
-
-    /**
      * Determine the start of the snippet for the track.
      *
      * @param track The track
@@ -23,7 +17,6 @@ public final class AlgorithmSelector {
      */
     public static int determineStart(final Track track) {
         int start;
-
         start = commentIntensity(track);
 
         // no comments for the track
