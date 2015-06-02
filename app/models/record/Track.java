@@ -108,12 +108,10 @@ public class Track implements Record, Comparable<Track> {
      */
     @Override
     public boolean equals(final Object o) {
-        if (o instanceof Track) {
-            if (((Track) o).trackid == this.trackid) {
-                if (((Track) o).duration == this.duration) {
-                    return true;
-                }
-            }
+        if (o instanceof Track
+                && ((Track) o).trackid == this.trackid
+                && ((Track) o).duration == this.duration) {
+            return true;
         }
         return false;
     }
@@ -138,6 +136,10 @@ public class Track implements Record, Comparable<Track> {
      */
     @Override
     public int compareTo(@Nonnull final Track o) {
-        return (this.trackid - o.trackid) + (this.duration - o.duration);
+        int result = (this.trackid - o.trackid);
+        if (result == 0) {
+            result += (this.duration - o.duration);
+        }
+        return result;
     }
 }

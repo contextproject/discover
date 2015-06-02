@@ -3,7 +3,6 @@ var widget = SC.Widget(document.getElementById("sc-widget"));
 var mixSplits, waveform;
 var snipWin = 5000.00;
 var splitPointer = -1;
-var waveform;
 
 $("#current").click(function () {
     $widget.bind(SC.Widget.Events.READY, function () {

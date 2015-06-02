@@ -5,6 +5,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.Collections;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -157,9 +159,23 @@ public class TrackTest {
      * Test for the compareTo() method.
      */
     @Test
-    public void testCompareTo() {
+    public void testCompareTo1() {
         Track a = new Track(1, 1);
         Track b = new Track(2, 2);
-        assertEquals(-2, a.compareTo(b));
+        assertEquals(-1, a.compareTo(b));
+    }
+
+    /**
+     * Test for the compareTo() method.
+     */
+    @Test
+    public void testCompareTo2() {
+        Track a = new Track(1, 1);
+        Track b = new Track(2, 2);
+        ArrayList<Track> tracks = new ArrayList<Track>();
+        tracks.add(b);
+        tracks.add(a);
+        Collections.sort(tracks);
+        assertEquals(1, tracks.get(0).getTrackid());
     }
 }

@@ -47,7 +47,7 @@ public class SoundcloudProfileTest {
 
         soundcloudProfile.addLikes(trackList);
 
-        assertEquals(1, soundcloudProfile.likes.size());
+        assertEquals(1, soundcloudProfile.getLikes().size());
     }
 
     /**

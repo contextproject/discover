@@ -12,21 +12,26 @@ import models.utility.TrackList;
 public class SoundcloudProfile extends Profile {
 
     /**
-     * The user id
+     * The user id.
      */
     private int userid;
 
     /**
      * Constructor.
+     *
+     * @param userid The id of the user
      */
-    public SoundcloudProfile(int userid) {
+    public SoundcloudProfile(final int userid) {
         super();
         this.userid = userid;
     }
+
     /**
      * Adds the likes from Soundcloud to the addLike collection.
+     *
+     * @param tracks The tracks to add to the likes
      */
-    public void addLikes(TrackList tracks) {
+    public void addLikes(final TrackList tracks) {
         for (Track track : tracks) {
             addLike(track);
         }

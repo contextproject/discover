@@ -15,12 +15,12 @@ public class Profile {
     /**
      * The tracks the user has liked during the session.
      */
-    ArrayList<Track> likes;
+    private ArrayList<Track> likes;
 
     /**
-     * The tracks the user has disliked during the session
+     * The tracks the user has disliked during the session.
      */
-    ArrayList<Track> dislikes;
+    private ArrayList<Track> dislikes;
 
     /**
      * Constructor.
@@ -35,7 +35,7 @@ public class Profile {
      *
      * @param track The track to like
      */
-    public void addLike(Track track) {
+    public void addLike(final Track track) {
         likes.add(track);
     }
 
@@ -44,7 +44,7 @@ public class Profile {
      *
      * @param track The track to dislike
      */
-    public void addDislike(Track track) {
+    public void addDislike(final Track track) {
         dislikes.add(track);
     }
 
