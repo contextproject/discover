@@ -1,3 +1,7 @@
 .control {
     width: 75%;
 }
+
+#waveform {
+    display: none;
+}
