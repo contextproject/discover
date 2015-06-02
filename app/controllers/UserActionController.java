@@ -13,7 +13,7 @@ import static play.mvc.Results.ok;
 /**
  * Controller for the recommendation system.
  */
-public final class Recommender {
+public final class UserActionController {
 
     /**
      * The profile of this session.
@@ -55,7 +55,7 @@ public final class Recommender {
      *
      * @return A HTTP ok response
      */
-    public static Result likes() {
+    public static Result collection() {
         JsonNode jsonNode = request().body().asJson();
         TrackList trackList = Json.getTrackList(jsonNode);
         for (Track track : trackList) {
