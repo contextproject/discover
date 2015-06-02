@@ -118,7 +118,15 @@ $("#sendWave").click(function () {
             "track": sounds[0],
             "waveform": waveform.data
         };
-        sendData(message, "/splitWaveform", setMixSplit);
+        if(parseInt($("#numsplit").val()) == null ) {
+            sendData(message, "/splitWaveform", setMixSplit);
+        }else if(parseInt($("#numsplit").val()) >= 0){
+            var x = parseInt($("#numsplit").val());
+            sendData(message, "/nSplitWaveform/"+x, setMixSplit);
+        }else{
+            console.log("Number of splits must be greater or equal than zero");
+            sendData(message, "/splitWaveform", setMixSplit);
+        }
     });
 });
 

@@ -139,6 +139,27 @@ public class Application extends Controller {
 			return ok(response);
 		}
 	}
+	
+	/**
+	 * Method used to pass a JsonNode object with track waveform on to the
+	 * MixSplitter class.
+	 *
+	 * @return ok response with the start times for the mix.
+	 */
+	public static Result nSplitWaveform(String n) {
+		JsonNode json = request().body().asJson();
+		if (json == null) {
+			return badRequest("Expecting Json data");
+		} else {
+			int trackID = json.get("track").get("id").asInt();
+			MixSplitter splitter = new MixSplitter(json.get("waveform"), trackID);
+			List<Integer> list = splitter.split();
+			Map<String, List<Integer>> map = new TreeMap<String, List<Integer>>();
+			map.put("response", list);
+			JsonNode response = mapper.valueToTree(map);
+			return ok(response);
+		}
+	}
 
 	/**
 	 * Method used to pass a Json object with track meta-data. This will be used

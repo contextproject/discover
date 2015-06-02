@@ -9,6 +9,7 @@ POST		/request       		controllers.Application.trackRequest()
 GET			/random             controllers.Application.getRandomSong()
 POST		/trackMeta			controllers.Application.trackMetadata()
 POST		/splitWaveform		controllers.Application.splitWaveform()
+POST		/nSplitWaveform/:n	controllers.Application.nSplitWaveform(n: String)
 POST		/userLike			controllers.Application.userLike()
 POST		/userDislike		controllers.Application.userDislike()
 
