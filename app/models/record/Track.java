@@ -1,13 +1,12 @@
 package models.record;
 
-import javax.persistence.Entity;
+import javax.annotation.Nonnull;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
  * Class to represent a track.
  */
-@Entity
 public class Track implements Record, Comparable<Track> {
 
     /**
@@ -37,8 +36,11 @@ public class Track implements Record, Comparable<Track> {
 
     /**
      * Constructor.
+     *
+     * @param trackid  The id of the track
+     * @param duration The duration of the track
      */
-    public Track(int trackid, int duration) {
+    public Track(final int trackid, final int duration) {
         this.trackid = trackid;
         this.duration = duration;
     }
@@ -98,21 +100,44 @@ public class Track implements Record, Comparable<Track> {
         this.duration = duration;
     }
 
+    /**
+     * Equals method.
+     *
+     * @param o Other object
+     * @return True if objects are equals
+     */
     @Override
-    public boolean equals(Object o) {
-
-
+    public boolean equals(final Object o) {
+        if (o instanceof Track) {
+            if (((Track) o).trackid == this.trackid) {
+                if (((Track) o).duration == this.duration) {
+                    return true;
+                }
+            }
+        }
         return false;
     }
 
     /**
-     * Comparable of a Track object
+     * Hashcode() method.
+     *
+     * @return Hash of the object
+     */
+    @Override
+    public int hashCode() {
+        int result = trackid;
+        result = 31 * result + duration;
+        return result;
+    }
+
+    /**
+     * Comparable of a Track object.
      *
      * @param o The Track object to compare to
      * @return True if Objects are the same
      */
     @Override
-    public int compareTo(Track o) {
-        return this.trackid - o.trackid;
+    public int compareTo(@Nonnull final Track o) {
+        return (this.trackid - o.trackid) + (this.duration - o.duration);
     }
 }

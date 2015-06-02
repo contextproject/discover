@@ -15,9 +15,12 @@ public class Json {
      * @return A Track object
      */
     public static Track getTrack(JsonNode jsonNode) {
-        int trackid = jsonNode.get("id").asInt();
-        int duration = jsonNode.get("duration").asInt();
-        return new Track(trackid, duration);
+        if(jsonNode != null) {
+            int trackid = jsonNode.get("id").asInt();
+            int duration = jsonNode.get("duration").asInt();
+            return new Track(trackid, duration);
+        }
+        return null;
     }
 
     /**
@@ -26,10 +29,13 @@ public class Json {
      * @return A TrackList object
      */
     public static TrackList getTrackList(JsonNode jsonNode) {
-        TrackList trackList = new TrackList();
-        for (JsonNode track : jsonNode) {
-            trackList.add(getTrack(track));
+        if(jsonNode != null) {
+            TrackList trackList = new TrackList();
+            for (JsonNode track : jsonNode) {
+                trackList.add(getTrack(track));
+            }
+            return trackList;
         }
-        return trackList;
+        return null;
     }
 }
