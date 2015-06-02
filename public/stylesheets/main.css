@@ -1,3 +1,7 @@
+#next, #prev, #like, #dislike {
+    width: 37.5%
+}
+
 .control {
     width: 75%;
 }
