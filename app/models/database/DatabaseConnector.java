@@ -33,6 +33,7 @@ public class DatabaseConnector {
      * Executes the given query.
      *
      * @param query The query to be executed
+     * @return true if the update succeeds.
      */
     public final boolean executeUpdate(final String query) {
         try {
@@ -78,7 +79,8 @@ public class DatabaseConnector {
      * @param username The username to connect with
      * @param password The password of the username
      */
-    public final void makeConnection(final String url, final String username, final String password) {
+    public final void makeConnection(final String url, final String username,
+            final String password) {
         try {
             connection = DriverManager.getConnection(url, username, password);
             statement = connection.createStatement();
