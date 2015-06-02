@@ -9,9 +9,9 @@ GET         /tracks/:url          controllers.Application.getSong(url: String)
 GET         /random               controllers.Application.getRandomSong()
 POST        /trackMeta            controllers.Application.trackMetadata()
 POST        /splitWaveform        controllers.Application.splitWaveform()
-POST        /likes                controllers.Recommender.likes()
-POST        /like                 controllers.Recommender.like()
-POST        /dislike             controllers.Recommender.dislike()
+POST        /collection           controllers.UserActionController.collection()
+POST        /like                 controllers.UserActionController.like()
+POST        /dislike			  controllers.UserActionController.dislike()
 
 
 # Map static resources from the /public folder to the /assets URL path

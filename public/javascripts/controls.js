@@ -188,7 +188,7 @@ $("#connect").click(
         }
 
         $.getJSON("http://api.soundcloud.com/users/" + me.id + "/favorites.json?client_id=70a5f42778b461b7fbae504a5e436c06", function (data) {
-            sendData(data, "/likes", function () {
+            sendData(data, "/collection", function () {
                 console.log("favorites send back to server.")
             });
         })
