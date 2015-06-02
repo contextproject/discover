@@ -1,8 +1,21 @@
 package models.seeker;
 
+import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.TreeSet;
+
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.xml.sax.SAXException;
+
+import models.score.ScoreParser;
+import models.score.XMLScoreParser;
 
 /**
  * Filters the content of a comment.
@@ -13,42 +26,71 @@ public class CommentContentSeeker {
      * The map containing the Scores.
      */
     private Map<String, Integer> scores;
-
+    
     /**
-     * List of positive words.
+     * The sortedEntries in the scores map. Used to highly increase the
+     * speed of the {@link #contentFilter(String)} method since it now no
+     * longer needs to sort it for every comment fired at it.
      */
-    private final String[] positive = { "great", "brilliant", "beautiful",
-            "awesome", "amazing", "perfect", "good", "like", "love", "best",
-            "nice", "super", "cool", "massive", "wicked", "sick", "wonderfull" };
-
-    /**
-     * List of negative words.
-     */
-    private final String[] negative = { "hate", "n't", "nt", "not", "bad",
-            "terrible", "worst", "suck" };
+    private Set<Entry<String, Integer>> sortedEntries; 
     
     /**
      * Creates a new CommentContentSeeker.
      */
     public CommentContentSeeker() {
-        setScores(new HashMap<String, Integer>());
+        this(getURI("/public/xml/default-scores.xml"));
     }
     
     /**
-     * Builds the CommentIntensitySeeker from the given uri.
+     * Builds the CommentIntensitySeeker from the given uri. If the URI throws
+     * any errors when parsing it is set to a empty map.
      * @param xmluri The uri to an XML file containing the scores. It's
      * body.
      */
     public CommentContentSeeker(final URI xmluri) {
-        setScores(new HashMap<String, Integer>());
+        this(xmluri, XMLScoreParser.createParser());
     }
     
     /**
-     * Sets the scores map to the given value.
+     * Builds the CommentIntensitySeeker from the given uri. If an exception is
+     * thrown it initializes to an empty map.
+     * @param uri The uri to an XML file containing the scores. It's
+     * body.
+     * @param parser The parser to use to get the comments.
+     */
+    public CommentContentSeeker(final URI uri, final ScoreParser parser) {
+        try {
+            setScores(parser.parseCaught(uri));
+        } catch (SAXException | IOException | ParserConfigurationException e) {
+            e.printStackTrace();
+            setScores(new HashMap<String, Integer>());
+        }
+    }
+    
+    /**
+     * Gets the Default URI or throws an IllegalArgumentException if it is not
+     * valid.
+     * @param path The URI path.
+     * @return The URI.
+     */
+    protected static URI getURI(final String path) {
+        try {
+            return CommentContentSeeker.class.getResource(path).toURI();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            throw new IllegalArgumentException("URI for " + path + " is not valid.");
+        }
+    }
+    
+    /**
+     * Sets the scores map to the given value. It also builds the sortedEntries
+     * so it can be easily used by the filter.
      * @param scores The new Scores.
      */
     public void setScores(final Map<String, Integer> scores) {
         this.scores = scores;
+        final Set<Entry<String, Integer>> entrySet = scores.entrySet();
+        sortedEntries = doTheSort(entrySet);
     }
     
     /**
@@ -68,25 +110,31 @@ public class CommentContentSeeker {
      */
     public int contentFilter(final String content) {
         String body = content.toLowerCase();
-        int res = 0;
-        for (String p : positive) {
-            if (body.contains(p)) {
-                res = 1;
-                break;
+        for (Entry<String, Integer> entry : sortedEntries) {
+            if (body.contains(entry.getKey())) {
+                return entry.getValue();
             }
         }
-
-        for (String n : negative) {
-            if (body.contains(n)) {
-                return -1;
+        return findEmoticons(content);
+    }
+    
+    /**
+     * This method sorts the given Set to put the highest Integer first so
+     * we can check the highest score first.
+     * @param entries The Set to sort.
+     * @return The sorted set.
+     */
+    protected TreeSet<Entry<String, Integer>> doTheSort(final Set<Entry<String, Integer>> entries) {
+        final Comparator<Entry<String, Integer>> comp = new Comparator<Entry<String, Integer>>() {
+            @Override
+            public int compare(final Entry<String, Integer> e1,
+                    final Entry<String, Integer> e2) {
+                return e2.getValue() - e1.getValue();
             }
-        }
-
-        if (res == 1) {
-            return res;
-        } else {
-            return findEmoticons(body);
-        }
+        };
+        final TreeSet<Entry<String, Integer>> tree = new TreeSet<Entry<String, Integer>>(comp);
+        tree.addAll(entries);
+        return tree;
     }
 
     /**
