@@ -27,21 +27,6 @@
         <link rel="stylesheet" href="@routes.Assets.at("stylesheets/main.css")" />
         <link rel="stylesheet" href="@routes.Assets.at("stylesheets/joyride-2.1.css")" />
 
-        <script>
-        $(window).load(function() {
-            $('#joyRideTipContent').joyride({
-                autoStart : true,
-                postStepCallback : function (index, tip) {
-                    if (index == 2) {
-                        $(this).joyride('set_li', false, 1);
-                    }
-                },
-                modal:true,
-                expose:true
-
-            });
-        });
-        </script>
 
         <script>
             $.getScript("/assets/javascripts/controls.js");
@@ -98,7 +83,6 @@
                             <button class="control" id="rand">Random Song</button> <br>
                             <button class="control" id="sendWave">Mix Splitter</button> <br>
                             <button class="control" id="connect">Connect</button> <br>
-                            <button class="control" id="help">Help tour</button> <br>
                         </div>
                     </div>
                 </div>
@@ -120,10 +104,11 @@
         </section>
 
             <!-- Tip Content -->
-            <ol id="joyRideTipContent">
-                <li data-id="disc" data-text="Next">
+            <ol id="joyRideTipContent" class="joyRideTipContent">
+                <li data-id="disc" data-text="Next" data-options="">
                     <h2>Welcome to Discover</h2>
-                    <p>The place to discover new music.</p>
+                    <p>The place to discover new music. Take this tour to learn more about this page.</p>
+                    <p>(Press Escape to skip this tour or click on the 'Skip' button)</p>
                 </li>
                 <li data-id="url" data-button="Next" >
                     <h2>Search bar</h2>
@@ -170,7 +155,6 @@
                     <p>If you forgot something you can take this tour again.</p>
                 </li>
             </ol>
-
 
 
     </body>

@@ -16,6 +16,16 @@ widget.bind(SC.Widget.Events.READY, function() {
 	widget.unbind(SC.Widget.Events.READY);
 });
 
+$(window).load(function() {
+    $('#joyRideTipContent').joyride({
+        autoStart : true,
+        cookieMonster : true,
+        modal:true,
+        expose:true
+
+    });
+});
+
 // The method is used to send Data to the server
 function sendData(data, url, callback) {
 	if (data !== undefined) {
@@ -36,10 +46,6 @@ function sendData(data, url, callback) {
 		console.log(data.length > 0);
 	}
 }
-
-$("#help").click(function() {
-		$('#joyRideTipContent').joyride();
-});
 
 //select the next song if present
 $("#next").click(function() {

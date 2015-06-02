@@ -26,6 +26,7 @@
       'pauseAfter'           : [],        // array of indexes where to pause the tour after
       'tipAnimationFadeSpeed': 300,       // when tipAnimation = 'fade' this is speed in milliseconds for the transition
       'cookieMonster'        : false,     // true or false to control whether cookies are used
+       'cookieOff'           : false,
       'cookieName'           : 'joyride', // Name the cookie you'll use
       'cookieDomain'         : false,     // Will this cookie be attached to a domain, ie. '.notableapp.com'
       'cookiePath'           : false,     // Set to '/' if you want the cookie for the whole website
@@ -40,7 +41,7 @@
       'preStepCallback'      : $.noop,    // A method to call before each step
       'postStepCallback'     : $.noop,    // A method to call after each step
       'template' : { // HTML segments for tip layout
-        'link'    : '<a href="#close" class="joyride-close-tip">X</a>',
+        'link'    : '<a href="#close" class="joyride-close-tip">Skip</a>',
         'timer'   : '<div class="joyride-timer-indicator-wrap"><span class="joyride-timer-indicator"></span></div>',
         'tip'     : '<div class="joyride-tip-guide"><span class="joyride-nub"></span></div>',
         'wrapper' : '<div class="joyride-content-wrapper" role="dialog"></div>',
@@ -57,101 +58,114 @@
 
     methods = {
 
+      removeC : function(){
+        $.removeCookie(settings.cookieName, 'ridden', {
+          expires: 365,
+          domain: settings.cookieDomain,
+          path: settings.cookiePath
+        });
+      },
+
       init : function (opts) {
         return this.each(function () {
 
-          if ($.isEmptyObject(settings)) {
-            settings = $.extend(true, defaults, opts);
+            if (!$.isEmptyObject(settings)) {
+                methods.restart();
+            } else {
+                settings = $.extend(true, defaults, opts);
 
-            // non configurable settings
-            settings.document = window.document;
-            settings.$document = $(settings.document);
-            settings.$window = $(window);
-            settings.$content_el = $(this);
-            settings.$body = $(settings.tipContainer);
-            settings.body_offset = $(settings.tipContainer).position();
-            settings.$tip_content = $('> li', settings.$content_el);
-            settings.paused = false;
-            settings.attempts = 0;
+                // non configurable settings
+                settings.document = window.document;
+                settings.$document = $(settings.document);
+                settings.$window = $(window);
+                settings.$content_el = $(this);
+                settings.$body = $(settings.tipContainer);
+                settings.body_offset = $(settings.tipContainer).position();
+                settings.$tip_content = $('> li', settings.$content_el);
+                settings.paused = false;
+                settings.attempts = 0;
 
-            settings.tipLocationPatterns = {
-              top: ['bottom'],
-              bottom: [], // bottom should not need to be repositioned
-              left: ['right', 'top', 'bottom'],
-              right: ['left', 'top', 'bottom']
-            };
+                settings.tipLocationPatterns = {
+                    top: ['bottom'],
+                    bottom: [], // bottom should not need to be repositioned
+                    left: ['right', 'top', 'bottom'],
+                    right: ['left', 'top', 'bottom']
+                };
 
-            // are we using jQuery 1.7+
-            methods.jquery_check();
-
-            // can we create cookies?
-            if (!$.isFunction($.cookie)) {
-              settings.cookieMonster = false;
-            }
-
-            // generate the tips and insert into dom.
-            if ( (!settings.cookieMonster || !$.cookie(settings.cookieName) ) &&
-              (!settings.localStorage || !methods.support_localstorage() || !localStorage.getItem(settings.localStorageKey) ) ) {
-
-              settings.$tip_content.each(function (index) {
-                methods.create({$li : $(this), index : index});
-              });
-
-              // show first tip
-              if(settings.autoStart)
-              {
-                if (!settings.startTimerOnClick && settings.timer > 0) {
-                  methods.show('init');
-                  methods.startTimer();
-                } else {
-                  methods.show('init');
+                // are we using jQuery 1.7+
+                methods.jquery_check();
+                if (settings.cookieOff) {
+                    $.removeCookie(settings.cookieName, 'ridden', {
+                        expires: 365,
+                        domain: settings.cookieDomain,
+                        path: settings.cookiePath
+                    });
                 }
-              }
+                // can we create cookies?
+                if (!$.isFunction($.cookie)) {
+                    settings.cookieMonster = false;
+                }
 
-            }
+                // generate the tips and insert into dom.
+                if ((!settings.cookieMonster || !$.cookie(settings.cookieName) ) &&
+                    (!settings.localStorage || !methods.support_localstorage() || !localStorage.getItem(settings.localStorageKey) )) {
 
-            settings.$document.on('click.joyride', '.joyride-next-tip, .joyride-modal-bg', function (e) {
-              e.preventDefault();
+                    settings.$tip_content.each(function (index) {
+                        methods.create({$li: $(this), index: index});
+                    });
 
-              if (settings.$li.next().length < 1) {
-                methods.end();
-              } else if (settings.timer > 0) {
-                clearTimeout(settings.automate);
-                methods.hide();
-                methods.show();
-                methods.startTimer();
-              } else {
-                methods.hide();
-                methods.show();
-              }
+                    // show first tip
+                    if (settings.autoStart) {
+                        if (!settings.startTimerOnClick && settings.timer > 0) {
+                            methods.show('init');
+                            methods.startTimer();
+                        } else {
+                            methods.show('init');
+                        }
+                    }
 
-            });
+                }
 
-            settings.$document.on('click.joyride', '.joyride-close-tip', function (e) {
-              e.preventDefault();
-              methods.end(true /* isAborted */);
-            });
+                settings.$document.on('click.joyride', '.joyride-next-tip, .joyride-modal-bg', function (e) {
+                    e.preventDefault();
 
-            settings.$window.bind('resize.joyride', function (e) {
-              if(settings.$li){
-              if(settings.exposed && settings.exposed.length>0){
-                var $els = $(settings.exposed);
-                $els.each(function(){
-                  var $this = $(this);
-                  methods.un_expose($this);
-                  methods.expose($this);
+                    if (settings.$li.next().length < 1) {
+                        methods.end();
+                    } else if (settings.timer > 0) {
+                        clearTimeout(settings.automate);
+                        methods.hide();
+                        methods.show();
+                        methods.startTimer();
+                    } else {
+                        methods.hide();
+                        methods.show();
+                    }
+
                 });
-              }
-              if (methods.is_phone()) {
-                methods.pos_phone();
-              } else {
-                methods.pos_default();
-              }
-              }
-            });
-          } else {
-            methods.restart();
-          }
+
+                settings.$document.on('click.joyride', '.joyride-close-tip', function (e) {
+                    e.preventDefault();
+                    methods.end(true /* isAborted */);
+                });
+
+                settings.$window.bind('resize.joyride', function (e) {
+                    if (settings.$li) {
+                        if (settings.exposed && settings.exposed.length > 0) {
+                            var $els = $(settings.exposed);
+                            $els.each(function () {
+                                var $this = $(this);
+                                methods.un_expose($this);
+                                methods.expose($this);
+                            });
+                        }
+                        if (methods.is_phone()) {
+                            methods.pos_phone();
+                        } else {
+                            methods.pos_default();
+                        }
+                    }
+                });
+            }
 
         });
       },
