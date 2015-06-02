@@ -1,9 +1,8 @@
 // Soundcloud widget
 var widget = SC.Widget(document.getElementById("sc-widget"));
-var mixSplits = [60000, 120000, 180000, 240000];
+var mixSplits, waveform;
 var snipWin = 5000.00;
 var splitPointer = -1;
-var waveform;
 
 // Prepare all the data to be sent when the widget is ready
 widget.bind(SC.Widget.Events.READY, function() {
@@ -72,25 +71,29 @@ function like() {
 
 //select the next song if present
 $("#next").click(function() {
-	splitPointer++;
-	if((splitPointer < mixSplits.length) && (splitPointer >= 0)) {
-		widgetClearEvents();
-		var sPartial = mixSplits[splitPointer];
-		preview(sPartial, sPartial + snipWin);
-	} else {
-		splitPointer--;
+	if(mixSplits != null && mixSplits != undefined) {
+		splitPointer++;
+		if((splitPointer < mixSplits.length) && (splitPointer >= 0)) {
+			widgetClearEvents();
+			var sPartial = mixSplits[splitPointer];
+			preview(sPartial, sPartial + snipWin);
+		} else {
+			splitPointer--;
+		}
 	}
 });
 
 // select the previous song if present
 $("#prev").click(function() {
-	splitPointer--;
-	if((splitPointer < mixSplits.length) && (splitPointer >= 0)) {
-		widgetClearEvents();
-		var sPartial = mixSplits[splitPointer];
-		preview(sPartial, sPartial + snipWin);
-	} else {
-		splitPointer++;
+	if(mixSplits != null && mixSplits != undefined) {
+		splitPointer--;
+		if((splitPointer < mixSplits.length) && (splitPointer >= 0)) {
+			widgetClearEvents();
+			var sPartial = mixSplits[splitPointer];
+			preview(sPartial, sPartial + snipWin);
+		} else {
+			splitPointer++;
+		}
 	}
 });
 
@@ -173,7 +176,7 @@ $("#preview").click( function() {
 
 // Preview a snippet on the current track.
 function preview(sStart, sEnd) {
-	
+	widgetClearEvents();
 	widget.isPaused(function(paused) {
 		if (paused) {
 			widget.bind(SC.Widget.Events.READY, function() {
@@ -214,7 +217,6 @@ $("#rand").click(function() {
 		contentType : "application/json; charset=utf-8",
 		url : "/random",
 		success : function(data) {
-			console.log(data);
 			widget.load(data.url, {
 				auto_play : false,
 				likes : false
