@@ -3,8 +3,9 @@ package models.mix;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
+
+import models.json.Json;
 
 /**
  * The Class that is responsable for the splitting of the mix in several smaller
@@ -49,19 +50,11 @@ public class MixSplitter {
 	 * Creates a new MixSplitter which can split the given mix into different
 	 * pieces.
 	 * 
-	 * @param json
-	 *            The data to split in a JsonNode format.
-	 * @param trackID
-	 *            The id of the track to split.
+	 * @param json The data to split in a JsonNode format.
+	 * @param trackID The id of the track to split.
 	 */
 	public MixSplitter(final JsonNode json, final int trackID) {
-		Iterator<JsonNode> it = json.elements();
-		List<Double> data = new ArrayList<Double>();
-		while (it.hasNext()) {
-			data.add(Math.round(it.next().asDouble() * 10000.00) / 10000.00);
-		}
-		this.setData(data);
-		this.setTrackID(trackID);
+		new MixSplitter(Json.getWaveform(json), trackID);
 	}
 
 	/**
