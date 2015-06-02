@@ -1,0 +1,12 @@
+<scores>
+	<score>
+		<value>100</value>
+		<string>hi</string>
+		<string>boo</string>
+		<string>boo</string>
+	</score>
+	<score>
+		<string>drie</string>
+		<value>300</value>
+	</score>
+</scores>

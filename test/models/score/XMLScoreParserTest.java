@@ -1,32 +1,37 @@
-package score;
+package models.score;
 
 import static org.junit.Assert.assertEquals;
-
+import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import basic.BasicTest;
 
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.Test;
+import javax.xml.parsers.ParserConfigurationException;
 
+import models.score.XMLScoreParser.InvalidXMLFormatException;
+
+import org.junit.Test;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-
-import score.XMLScoreParser.InvalidXMLFormatException;
+import org.xml.sax.SAXException;
 
 /**
  * This class tests the XMLScoreParser class.
  * 
  * @since 01-06-2015
- * @version 01-06=2015
+ * @version 02-06=2015
  * 
  * @see XMLScoreParser
  * 
- * @author stefanboodt
+ * @author stefan boodt
  *
  */
 public class XMLScoreParserTest extends BasicTest {
@@ -35,24 +40,27 @@ public class XMLScoreParserTest extends BasicTest {
      * The XML score parser.
      */
     private XMLScoreParser parser;
-    
+
     @Override
     public void setUp() throws Exception {
         super.setUp();
         setParser(new XMLScoreParser());
     }
-    
+
     /**
      * Sets the parser under test.
-     * @param parser The new parser under test.
+     * 
+     * @param parser
+     *            The new parser under test.
      */
     protected void setParser(final XMLScoreParser parser) {
         setObjectUnderTest(parser);
         this.parser = parser;
     }
-    
+
     /**
      * Returns the XML parser.
+     * 
      * @return The parser of the xml scores under test.
      */
     protected XMLScoreParser getParser() {
@@ -60,9 +68,11 @@ public class XMLScoreParserTest extends BasicTest {
     }
 
     /**
-     * Tests the {@link XMLScoreParser#addScores(Map, org.w3c.dom.NodeList, int)}
-     * method.
-     * @throws InvalidXMLFormatException If the XML is wrongly formatted.
+     * Tests the
+     * {@link XMLScoreParser#addScores(Map, org.w3c.dom.NodeList, int)} method.
+     * 
+     * @throws InvalidXMLFormatException
+     *             If the XML is wrongly formatted.
      */
     @Test
     public void testAddScoresDifferentNodes() throws InvalidXMLFormatException {
@@ -84,9 +94,11 @@ public class XMLScoreParserTest extends BasicTest {
     }
 
     /**
-     * Tests the {@link XMLScoreParser#addScores(Map, org.w3c.dom.NodeList, int)}
-     * method.
-     * @throws InvalidXMLFormatException If the XML is wrongly formatted.
+     * Tests the
+     * {@link XMLScoreParser#addScores(Map, org.w3c.dom.NodeList, int)} method.
+     * 
+     * @throws InvalidXMLFormatException
+     *             If the XML is wrongly formatted.
      */
     @Test
     public void testAddScores() throws InvalidXMLFormatException {
@@ -100,9 +112,11 @@ public class XMLScoreParserTest extends BasicTest {
     }
 
     /**
-     * Tests the {@link XMLScoreParser#addScores(Map, org.w3c.dom.NodeList, int)}
-     * method.
-     * @throws InvalidXMLFormatException If the XML is wrongly formatted.
+     * Tests the
+     * {@link XMLScoreParser#addScores(Map, org.w3c.dom.NodeList, int)} method.
+     * 
+     * @throws InvalidXMLFormatException
+     *             If the XML is wrongly formatted.
      */
     @Test
     public void testAddScoresSameNode() throws InvalidXMLFormatException {
@@ -121,24 +135,285 @@ public class XMLScoreParserTest extends BasicTest {
     }
 
     /**
-     * Tests the {@link XMLScoreParser#addScores(Map, org.w3c.dom.NodeList, int)}
-     * method.
-     * @throws InvalidXMLFormatException If the XML is wrongly formatted.
+     * Tests the
+     * {@link XMLScoreParser#addScores(Map, org.w3c.dom.NodeList, int)} method.
+     * 
+     * @throws InvalidXMLFormatException
+     *             If the XML is wrongly formatted.
+     */
+    @Test(expected = InvalidXMLFormatException.class)
+    public void testAddScoresDuplicate() throws InvalidXMLFormatException {
+        Node n = mock(Node.class);
+        doReturn("drop").when(n).getTextContent();
+        NodeList l2 = new ArrayNodeList<Node>(n, n);
+        getParser().addScores(l2, 100);
+    }
+
+    /**
+     * Tests the
+     * {@link XMLScoreParser#addScores(Map, org.w3c.dom.NodeList, int)} method.
+     * 
+     * @throws InvalidXMLFormatException
+     *             If the XML is wrongly formatted.
      */
     @Test
     public void testAddScoresNoText() throws InvalidXMLFormatException {
         NodeList l2 = new ArrayNodeList<Node>();
-        assertEquals(new HashMap<String, Integer>(), getParser().addScores(l2, 10));
+        assertEquals(new HashMap<String, Integer>(),
+                getParser().addScores(l2, 10));
     }
-    
+
+    /**
+     * Tests the {@link XMLScoreParser#parseCaught(URI)} method.
+     * 
+     * @throws IOException
+     *             if an IOException occurs.
+     * @throws InvalidXMLFormatException
+     *             If the XML is not formatted properly.
+     * @throws ParserConfigurationException
+     *             If the document builder can't be created.
+     * @throws SAXException
+     *             If a parse error occurs.
+     * @throws URISyntaxException
+     *             If the URI is wrongly formatted.
+     */
+    @Test
+    public void testParseScoresCaught() throws IOException,
+            InvalidXMLFormatException, ParserConfigurationException,
+            SAXException, URISyntaxException {
+        final URI uri = XMLScoreParserTest.class.getResource("scores1.xml")
+                .toURI();
+        Map<String, Integer> scores = getParser().parseCaught(uri);
+        Map<String, Integer> expected = new HashMap<String, Integer>();
+        expected.put("yay!", 20);
+        expected.put("hi", 10);
+        expected.put("good", 10);
+        expected.entrySet();
+        assertEquals(expected, scores);
+    }
+
+    /**
+     * Tests the {@link XMLScoreParser#parse(URI)} method.
+     * 
+     * @throws IOException
+     *             if an IOException occurs.
+     * @throws InvalidXMLFormatException
+     *             If the XML is not formatted properly.
+     * @throws ParserConfigurationException
+     *             If the document builder can't be created.
+     * @throws SAXException
+     *             If a parse error occurs.
+     * @throws URISyntaxException
+     *             If the URI is wrongly formatted.
+     */
+    @Test
+    public void testParseScores() throws IOException,
+            InvalidXMLFormatException, ParserConfigurationException,
+            SAXException, URISyntaxException {
+        final URI uri = XMLScoreParserTest.class.getResource("scores1.xml")
+                .toURI();
+        Map<String, Integer> scores = getParser().parse(uri);
+        Map<String, Integer> expected = new HashMap<String, Integer>();
+        expected.put("yay!", 20);
+        expected.put("hi", 10);
+        expected.put("good", 10);
+        assertEquals(expected, scores);
+    }
+
+    /**
+     * Tests the {@link XMLScoreParser#parse(URI)} method.
+     * 
+     * @throws IOException
+     *             if an IOException occurs.
+     * @throws InvalidXMLFormatException
+     *             If the XML is not formatted properly.
+     * @throws ParserConfigurationException
+     *             If the document builder can't be created.
+     * @throws SAXException
+     *             If a parse error occurs.
+     * @throws URISyntaxException
+     *             If the URI is wrongly formatted.
+     */
+    @Test(expected = InvalidXMLFormatException.class)
+    public void testParseScoresDuplicateWord() throws IOException,
+            InvalidXMLFormatException, ParserConfigurationException,
+            SAXException, URISyntaxException {
+        final URI uri = XMLScoreParserTest.class.getResource(
+                "scoresDuplicateWords.xml").toURI();
+        getParser().parse(uri);
+    }
+
+    /**
+     * Tests the {@link XMLScoreParser#parse(URI)} method.
+     * 
+     * @throws IOException
+     *             if an IOException occurs.
+     * @throws InvalidXMLFormatException
+     *             If the XML is not formatted properly.
+     * @throws ParserConfigurationException
+     *             If the document builder can't be created.
+     * @throws SAXException
+     *             If a parse error occurs.
+     * @throws URISyntaxException
+     *             If the URI is wrongly formatted.
+     */
+    @Test(expected = InvalidXMLFormatException.class)
+    public void testParseScoresDoublePoints() throws IOException,
+            InvalidXMLFormatException, ParserConfigurationException,
+            SAXException, URISyntaxException {
+        final URI uri = XMLScoreParserTest.class.getResource(
+                "scoresDoublePoints.xml").toURI();
+        getParser().parse(uri);
+    }
+
+    /**
+     * Tests the {@link XMLScoreParser#parse(URI)} method.
+     * 
+     * @throws IOException
+     *             if an IOException occurs.
+     * @throws InvalidXMLFormatException
+     *             If the XML is not formatted properly.
+     * @throws ParserConfigurationException
+     *             If the document builder can't be created.
+     * @throws SAXException
+     *             If a parse error occurs.
+     * @throws URISyntaxException
+     *             If the URI is wrongly formatted.
+     */
+    @Test(expected = InvalidXMLFormatException.class)
+    public void testParseScoresNoPoints() throws IOException,
+            InvalidXMLFormatException, ParserConfigurationException,
+            SAXException, URISyntaxException {
+        final URI uri = XMLScoreParserTest.class.getResource(
+                "scoresNoPoints.xml").toURI();
+        getParser().parse(uri);
+    }
+
+    /**
+     * Tests the {@link XMLScoreParser#parse(URI)} method.
+     * 
+     * @throws IOException
+     *             if an IOException occurs.
+     * @throws InvalidXMLFormatException
+     *             If the XML is not formatted properly.
+     * @throws ParserConfigurationException
+     *             If the document builder can't be created.
+     * @throws SAXException
+     *             If a parse error occurs.
+     * @throws URISyntaxException
+     *             If the URI is wrongly formatted.
+     */
+    @Test(expected = InvalidXMLFormatException.class)
+    public void testParseScoresNoWords() throws IOException,
+            InvalidXMLFormatException, ParserConfigurationException,
+            SAXException, URISyntaxException {
+        final URI uri = XMLScoreParserTest.class.getResource(
+                "scoresNoWords.xml").toURI();
+        getParser().parse(uri);
+    }
+
+    /**
+     * Tests the {@link XMLScoreParser#parse(URI)} method.
+     * 
+     * @throws IOException
+     *             if an IOException occurs.
+     * @throws InvalidXMLFormatException
+     *             If the XML is not formatted properly.
+     * @throws ParserConfigurationException
+     *             If the document builder can't be created.
+     * @throws SAXException
+     *             If a parse error occurs.
+     * @throws URISyntaxException
+     *             If the URI is wrongly formatted.
+     */
+    @Test
+    public void testParseScoresWithOddSpaces() throws IOException,
+            InvalidXMLFormatException, ParserConfigurationException,
+            SAXException, URISyntaxException {
+        final URI uri = XMLScoreParserTest.class.getResource(
+                "scoresWithSpaces.xml").toURI();
+        Map<String, Integer> scores = getParser().parse(uri);
+        Map<String, Integer> expected = new HashMap<String, Integer>();
+        expected.put("yay!", 20);
+        expected.put("hi", 10);
+        expected.put("good", 10);
+        expected.put("drop", 100);
+        assertEquals(expected, scores);
+    }
+
+    /**
+     * Tests the {@link XMLScoreParser#parse(URI)} method.
+     * 
+     * @throws IOException
+     *             if an IOException occurs.
+     * @throws InvalidXMLFormatException
+     *             If the XML is not formatted properly.
+     * @throws ParserConfigurationException
+     *             If the document builder can't be created.
+     * @throws SAXException
+     *             If a parse error occurs.
+     * @throws URISyntaxException
+     *             If the URI is wrongly formatted.
+     */
+    @Test(expected = InvalidXMLFormatException.class)
+    public void testParseScores2() throws IOException,
+            InvalidXMLFormatException, ParserConfigurationException,
+            SAXException, URISyntaxException {
+        final URI uri = XMLScoreParserTest.class.getResource("scores2.xml")
+                .toURI();
+        getParser().parse(uri);
+    }
+
+    /**
+     * Tests the {@link XMLScoreParser#getDouble(Map, Map)} method.
+     */
+    @Test
+    public void testGetDouble() {
+        final Map<String, Integer> m1 = new HashMap<String, Integer>();
+        final Map<String, Integer> m2 = new HashMap<String, Integer>();
+        final String k1 = "hi";
+        final String k2 = "ppop";
+        final String k3 = "poop";
+        final String k4 = "boo";
+        final String k5 = "key";
+        m1.put(k1, 1);
+        m1.put(k2, 2);
+        m1.put(k3, 3);
+        m2.put(k4, 4);
+        m2.put(k5, 5);
+        assertNull(getParser().getDouble(m1, m2));
+    }
+
+    /**
+     * Tests the {@link XMLScoreParser#getDouble(Map, Map)} method.
+     */
+    @Test
+    public void testGetDoubleWithDoubles() {
+        final Map<String, Integer> m1 = new HashMap<String, Integer>();
+        final Map<String, Integer> m2 = new HashMap<String, Integer>();
+        final String k1 = "hi";
+        final String k2 = "ppop";
+        final String k3 = "poop";
+        final String k4 = "boo";
+        final String k5 = "key";
+        m1.put(k1, 1);
+        m1.put(k2, 2);
+        m1.put(k3, 3);
+        m2.put(k4, 4);
+        m2.put(k3, 5);
+        m2.put(k5, 5);
+        assertEquals(k3, getParser().getDouble(m1, m2));
+    }
+
     /**
      * Combination of nodelist and ArrayList to allow easy testing.
      * 
      * <p>
-     * Yes, we know about Mockito but the getLength method was being impossible when
-     * mocking because it threw WrongTypeOfReturnValue since it cannot return {@code int} as
-     * a return value since it does not extend {@code Object}. So it bridged to {@code Integer}
-     * which in turn was not an int. So that error was thrown.
+     * We know about Mockito but the getLength method was being impossible when
+     * mocking because it threw WrongTypeOfReturnValue since it cannot return
+     * {@code int} as a return value since it does not extend {@code Object}. So
+     * it bridged to {@code Integer} which in turn was not an int. So that error
+     * was thrown.
      * </p>
      * 
      * @since 01-06-2015
@@ -146,28 +421,31 @@ public class XMLScoreParserTest extends BasicTest {
      * 
      * @author stefan boodt
      *
-     * @param <Node> The parameter of the list.
+     * @param <Node>
+     *            The parameter of the list.
      */
-    protected static class ArrayNodeList<N extends Node> extends ArrayList<Node>
-        implements NodeList {
+    protected static class ArrayNodeList<N extends Node> extends
+            ArrayList<Node> implements NodeList {
 
         /**
          * The serial number.
          */
         private static final long serialVersionUID = 1L;
-        
+
         /**
          * Creates a new NodeArrayList.
          */
         public ArrayNodeList() {
             super();
         }
-        
+
         /**
          * Creates a ArrayNodeList from the given nodes.
-         * @param nodes The nodes in the list.
+         * 
+         * @param nodes
+         *            The nodes in the list.
          */
-        public ArrayNodeList(final Node ...nodes) {
+        public ArrayNodeList(final Node... nodes) {
             super(nodes.length);
             for (Node n : nodes) {
                 this.add(n);

@@ -1,9 +1,10 @@
-package score;
+package models.score;
 
 import java.io.IOException;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -22,34 +23,34 @@ import org.xml.sax.SAXException;
  * <p>
  * These conventions comply of the following things:
  * <ul>
- *  <li> The outermost part is {@code <scores>}</li>
- *  <li> Every score is then defined in between after this one.</li>
- *  <li> Every score is defined between {@code <score>}</li>
- *  <li> Every score has two subparts a {@code <string>} and {@code <value>}</li>
+ * <li>The outermost part is {@code <scores>}</li>
+ * <li>Every score is then defined in between after this one.</li>
+ * <li>Every score is defined between {@code <score>}</li>
+ * <li>Every score has two subparts a {@code <string>} and {@code <value>}</li>
  * </ul>
  * </p>
  * 
  * @since 01-06-2015
- * @version 01-06-2015
+ * @version 02-06-2015
  * 
  * @see Document
  * @see DocumentBuilderFactory
  * 
- * @author stefanboodt
+ * @author stefan boodt
  *
  */
 public class XMLScoreParser {
-    
+
     /**
      * The score nodes tagname.
      */
     private String scorenode = "score";
-    
+
     /**
      * The tagname of the text.
      */
     private String string = "string";
-    
+
     /**
      * The tagname of the points belonging to the text.
      */
@@ -57,34 +58,62 @@ public class XMLScoreParser {
 
     /**
      * Parses the XML file pointed to by the given URI.
-     * @param uri The URI of the file.
+     * 
+     * @param uri
+     *            The URI of the file.
      * @return The scores that were contained in the file.
-     * @throws IOException If the IO fails.
-     * @throws SAXException If a parse error occurs.
-     * @throws ParserConfigurationException If a DocumentBuilder cannot be created.
-     * @throws IllegalArgumentException If the uri is null.
+     * @throws IOException
+     *             If the IO fails.
+     * @throws SAXException
+     *             If a parse error occurs.
+     * @throws ParserConfigurationException
+     *             If a DocumentBuilder cannot be created.
      */
-    public Map<String, Integer> parse(final URI uri) throws SAXException,
-        IOException, ParserConfigurationException {
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder builder = factory.newDocumentBuilder();
-        Document doc = builder.parse(uri.toString());
-        doc.getDocumentElement().normalize();
+    public Map<String, Integer> parseCaught(final URI uri) throws SAXException,
+            IOException, ParserConfigurationException {
         Map<String, Integer> scores;
         try {
-            scores = getScores(doc.getElementsByTagName(scorenode));
+            scores = parse(uri);
         } catch (InvalidXMLFormatException e) {
             e.printStackTrace();
             scores = new HashMap<String, Integer>();
         }
         return scores;
     }
-    
+
+    /**
+     * Parses the XML file pointed to by the given URI.
+     * 
+     * @param uri
+     *            The URI of the file.
+     * @return The scores that were contained in the file.
+     * @throws IOException
+     *             If the IO fails.
+     * @throws SAXException
+     *             If a parse error occurs.
+     * @throws ParserConfigurationException
+     *             If a DocumentBuilder cannot be created.
+     * @throws InvalidXMLFormatException
+     *             If the XML is incorrectly formatted.
+     */
+    public Map<String, Integer> parse(final URI uri) throws SAXException,
+            IOException, ParserConfigurationException,
+            InvalidXMLFormatException {
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder = factory.newDocumentBuilder();
+        Document doc = builder.parse(uri.toString());
+        doc.getDocumentElement().normalize();
+        return getScores(doc.getElementsByTagName(scorenode));
+    }
+
     /**
      * Gets the scores in the nodelist and parses them.
-     * @param nodelist The list of scores to be used by the file.
+     * 
+     * @param nodelist
+     *            The list of scores to be used by the file.
      * @return The scores in the file.
-     * @throws InvalidXMLFormatException If the XML file is not formatted well.
+     * @throws InvalidXMLFormatException
+     *             If the XML file is not formatted well.
      */
     protected Map<String, Integer> getScores(final NodeList nodelist)
             throws InvalidXMLFormatException {
@@ -92,39 +121,73 @@ public class XMLScoreParser {
         Map<String, Integer> scores = new HashMap<String, Integer>();
         for (int i = 0; i < nodesnum; i++) {
             Node node = nodelist.item(i);
-            
+
             // Is always true but we check to be certain.
             if (node.getNodeType() == Node.ELEMENT_NODE) {
                 Element scorenode = (Element) node;
                 final NodeList text = scorenode.getElementsByTagName(string);
-                final int textlength = text.getLength();
-                if (textlength == 0) {
-                    throw new InvalidXMLFormatException("There was a score with no strings.");
+                final NodeList pointsNode = scorenode
+                        .getElementsByTagName(points);
+                if (text.getLength() == 0) {
+                    throw new InvalidXMLFormatException(
+                            "There was a score with no strings.");
+                } else if (pointsNode.getLength() != 1) {
+                    throw new InvalidXMLFormatException(
+                            "More than 1 score defined for some word"
+                                    + " in node " + scorenode.toString());
                 }
-                final NodeList pointsNode = scorenode.getElementsByTagName(points);
-                if (pointsNode.getLength() != 1) {
-                    throw new InvalidXMLFormatException("More than 1 score defined for some word"
-                            + " in node " + scorenode.toString());
+                final int pts = Integer.parseInt(pointsNode.item(0)
+                        .getTextContent().trim());
+                final Map<String, Integer> newscores = addScores(text, pts);
+                final String duplicate = getDouble(scores, newscores);
+                if (duplicate != null) {
+                    throw new InvalidXMLFormatException("Duplicate string "
+                            + duplicate + " found in the file.");
                 }
-                final int pts = Integer.parseInt(pointsNode.item(0).getTextContent().trim());
-                scores.putAll(addScores(text, pts));
+                scores.putAll(newscores);
             }
         }
         return scores;
     }
-    
+
+    /**
+     * Gets a double from the given lists. Checks if newones contains a key that
+     * is already in checked.
+     * 
+     * @param checked
+     *            The old list.
+     * @param newones
+     *            The new list.
+     * @return The duplicate string or {@code null} if none is found.
+     */
+    protected String getDouble(final Map<String, Integer> checked,
+            final Map<String, Integer> newones) {
+        final Set<String> olds = checked.keySet();
+        final Set<String> newStrings = newones.keySet();
+        for (String s : newStrings) {
+            if (olds.contains(s)) {
+                return s;
+            }
+        }
+        return null;
+    }
+
     /**
      * Adds the scores to the scores map.
-     * @param texts The text to add points to.
-     * @param pts The points awarded to text.
+     * 
+     * @param texts
+     *            The text to add points to.
+     * @param pts
+     *            The points awarded to text.
      * @return The new scores map.
-     * @throws InvalidXMLFormatException If the XML is not correctly formatted.
+     * @throws InvalidXMLFormatException
+     *             If the XML is not correctly formatted.
      */
     protected Map<String, Integer> addScores(final NodeList texts, final int pts)
             throws InvalidXMLFormatException {
         final Map<String, Integer> scores = new HashMap<String, Integer>();
         for (int k = 0; k < texts.getLength(); k++) {
-            final String t = texts.item(k).getTextContent();
+            final String t = texts.item(k).getTextContent().trim();
             final Integer oldpoints = scores.put(t, pts);
             if (oldpoints != null) {
                 throw new InvalidXMLFormatException("Duplicate string " + t
@@ -133,10 +196,10 @@ public class XMLScoreParser {
         }
         return scores;
     }
-    
+
     /**
-     * This class warns about the invalidness of the XML file supplied to
-     * the parser.
+     * This class warns about the invalidness of the XML file supplied to the
+     * parser.
      * 
      * @since 01-06-2015
      * @version 01-06-2015
@@ -152,17 +215,19 @@ public class XMLScoreParser {
          * The serial number of the exception.
          */
         private static final long serialVersionUID = 1L;
-        
+
         /**
          * Creates a new InvalidXML Format Exception.
          */
         public InvalidXMLFormatException() {
             super();
         }
-        
+
         /**
          * Creates a new XML Format Exception with the given message.
-         * @param message The error message.
+         * 
+         * @param message
+         *            The error message.
          */
         public InvalidXMLFormatException(final String message) {
             super(message);

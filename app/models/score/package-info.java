@@ -4,4 +4,4 @@
  *
  * @since 01-06-2015
  */
-package score;
+package models.score;

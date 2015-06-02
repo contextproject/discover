@@ -150,6 +150,11 @@ under the License.
             </resource>
         </resources>
         <testSourceDirectory>${basedir}/test</testSourceDirectory>
+        <testResources>
+      		<testResource>
+        		<directory>testresources</directory>
+      		</testResource>
+    	</testResources>
 
         <plugins>
             <plugin>
