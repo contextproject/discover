@@ -10,10 +10,8 @@
         <script type="text/javascript" src="@routes.Assets.at("javascripts/api.js")"></script>
         <script type="text/javascript" src="@routes.Assets.at("javascripts/scroll.js")"></script>
         <script type="text/javascript" src="@routes.Assets.at("javascripts/waveform.js")"></script>
-		<!--<script type="text/javascript" src="@routes.Assets.at("javascripts/controls.js")"></script> -->
 		
         <script type="text/javascript" src="http://connect.soundcloud.com/sdk.js"></script>
-        <!-- <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script> -->
         <script type="text/javascript" src="@routes.Assets.at("js/jquery.min.js")"></script>
 
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -54,6 +52,7 @@
                     </div>
                 </div>
             </div>
+
         </section>
 
         <section id="two" class="main style1">
@@ -64,6 +63,10 @@
                             @player
                         </div>
                         <a id="favorites">My Collection</a>
+
+                        <div class="example-waveform" id="example">
+                            <canvas width="728" height="59"></canvas>
+                        </div>
                     </div>
                     <div class="4u$ 12u$(medium) important(medium)">
                         <div class="controls">
@@ -75,6 +78,7 @@
                             <button class="control" id="rand">Random Song</button> <br>
                             <button class="control" id="sendWave">Mix Splitter</button> <br>
                             <button class="control" id="connect">Connect</button> <br>
+                            <button class="control" id="waveform">Waveform</button> <br>
                         </div>
                     </div>
                 </div>
