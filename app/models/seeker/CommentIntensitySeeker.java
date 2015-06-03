@@ -37,10 +37,12 @@ public class CommentIntensitySeeker implements Seeker {
 
     /**
      * Generates a start time for a snippet.
+     * 
+     * @param duration The duration of the snippet.
      *
      * @return a start time
      */
-    private int getStartTime() {
+    private int getStartTime(final int duration) {
         int start = 0;
         int maxcount = 0;
         Set<Integer> passed = new TreeSet<Integer>();
@@ -48,7 +50,7 @@ public class CommentIntensitySeeker implements Seeker {
             int count = 0;
             if (!passed.contains(c.getTime())) {
                 for (Comment c2 : comments) {
-                    if (isInRange(c2.getTime(), c.getTime(), TimedSnippet.getDefaultDuration())) {
+                    if (isInRange(c2.getTime(), c.getTime(), duration)) {
                         count += getWeight(c2);
                     }
                 }
@@ -93,7 +95,12 @@ public class CommentIntensitySeeker implements Seeker {
      */
     @Override
     public TimedSnippet seek() {
-        return new TimedSnippet(getStartTime());
+        return seek(TimedSnippet.getDefaultDuration());
+    }
+    
+    @Override
+    public TimedSnippet seek(final int duration) {
+        return new TimedSnippet(getStartTime(duration), duration);
     }
 
     /**

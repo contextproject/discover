@@ -18,4 +18,10 @@ public class FeatureEssentiaSeeker implements Seeker {
     public TimedSnippet seek() {
         return null;
     }
+
+    @Override
+    public TimedSnippet seek(final int duration) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 }

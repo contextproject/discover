@@ -38,6 +38,11 @@ public class RandomSeeker implements Seeker {
      */
     @Override
     public TimedSnippet seek() {
-        return new TimedSnippet(getStartTime());
+        return seek(TimedSnippet.getDefaultDuration());
+    }
+    
+    @Override
+    public TimedSnippet seek(final int duration) {
+        return new TimedSnippet(getStartTime(), duration);
     }
 }
