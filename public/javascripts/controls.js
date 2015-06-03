@@ -3,7 +3,6 @@ var widget = SC.Widget(document.getElementById("sc-widget"));
 var mixSplits, waveform;
 var snipWin = 5000.00;
 var splitPointer = -1;
-var $widget = SC.Widget(document.getElementById("sc-widget"));
 
 $("#current").click(function () {
     $widget.bind(SC.Widget.Events.READY, function () {
@@ -17,14 +16,14 @@ $("#current").click(function () {
 });
 
 // Prepare all the data to be sent when the widget is ready
-$widget.bind(SC.Widget.Events.READY, function () {
-    waveform = new Waveform({
-        container: document.getElementById("sc-widget")
-    });
-    $widget.getSounds(function (sounds) {
-        waveform.dataFromSoundCloudTrack(sounds[0]);
-    });
-    $widget.unbind(SC.Widget.Events.READY);
+widget.bind(SC.Widget.Events.READY, function() {
+	waveform = new Waveform({
+		container : document.getElementById("sc-widget")
+	});
+	widget.getSounds(function(sounds) {
+		waveform.dataFromSoundCloudTrack(sounds[0]);
+	});
+	widget.unbind(SC.Widget.Events.READY);
 });
 
 // The method is used to send Data to the server
