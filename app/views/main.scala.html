@@ -10,12 +10,8 @@
         <script type="text/javascript" src="@routes.Assets.at("javascripts/api.js")"></script>
         <script type="text/javascript" src="@routes.Assets.at("javascripts/scroll.js")"></script>
         <script type="text/javascript" src="@routes.Assets.at("javascripts/waveform.js")"></script>
-
-
-		<!--<script type="text/javascript" src="@routes.Assets.at("javascripts/controls.js")"></script> -->
-
+		
         <script type="text/javascript" src="http://connect.soundcloud.com/sdk.js"></script>
-        <!-- <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script> -->
         <script type="text/javascript" src="@routes.Assets.at("js/jquery.min.js")"></script>
         <script type="text/javascript" src="@routes.Assets.at("javascripts/jquery-1.10.1.js")"></script>
         <script type="text/javascript" src="@routes.Assets.at("javascripts/jquery.cookie.js")"></script>
@@ -62,6 +58,7 @@
                     </div>
                 </div>
             </div>
+
         </section>
 
         <section id="two" class="main style1">
@@ -72,17 +69,22 @@
                             @player
                         </div>
                         <a id="favorites">My Collection</a>
+
+                        <div class="example-waveform" id="example">
+                            <canvas width="728" height="59"></canvas>
+                        </div>
                     </div>
                     <div class="4u$ 12u$(medium) important(medium)">
                         <div class="controls">
                             <input type="range" class="control" id="volume">
 
                             <button class="control" id="preview">Preview</button> <br>
-                            <button class="control" id="next">Next</button> <br>
-                            <button class="control" id="prev">Previous</button> <br>
+                            <button class="control" id="prev">Prev</button><button class="control" id="next">Next</button> <br>
+                            <button class="control" id="like">Like</button><button class="control" id="dislike">Dislike</button><br>
                             <button class="control" id="rand">Random Song</button> <br>
                             <button class="control" id="sendWave">Mix Splitter</button> <br>
                             <button class="control" id="connect">Connect</button> <br>
+                            <button class="control" id="waveform">Waveform</button> <br>
                         </div>
                     </div>
                 </div>
@@ -130,7 +132,7 @@
                     <h2>Preview a song</h2>
                     <p>This gives you a short 10 second preview of how the song sounds like.</p>
                 </li>
-                <li data-id="next" data-button="Next" >
+                <li data-id="next" data-button="Next" data-options="tipLocation: left" >
                     <h2>Next!</h2>
                     <p>Gives the next song or gives the next part of the current song.</p>
                 </li>
@@ -149,6 +151,14 @@
                 <li data-id="connect" data-button="Next" >
                     <h2>Account login</h2>
                     <p>Allows you to connect with you SoundCloud account</p>
+                </li>
+                <li data-id="like" data-button="Next" >
+                    <h2>Like!</h2>
+                    <p>When you are connected with your account, then you are able to like the current song.</p>
+                </li>
+                <li data-id="dislike" data-button="Next" data-options="tipLocation: left" >
+                    <h2>Dislike!</h2>
+                    <p>You can also dislike a song.</p>
                 </li>
                 <li data-id="help"  data-button="Close">
                     <h2>Lost it?</h2>

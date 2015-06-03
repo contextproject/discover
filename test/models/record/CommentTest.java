@@ -1,9 +1,9 @@
 package models.record;
 
+import basic.BasicTest;
+
 import models.database.DatabaseConnector;
-import models.record.Comment;
-import org.junit.After;
-import org.junit.Before;
+
 import org.junit.Test;
 
 import java.sql.ResultSet;
@@ -13,7 +13,16 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-public class CommentTest {
+/**
+ * This class tests the Comment class.
+ * 
+ * @since 10-04-2015
+ * @version 31-05-2015
+ * 
+ * @see Comment
+ *
+ */
+public class CommentTest extends BasicTest {
 
 
     /**
@@ -30,22 +39,40 @@ public class CommentTest {
     private Comment c3;
 
     /**
-     * DatabaseConnector
+     * The DatabaseConnector used to connect to the database.
      */
-    DatabaseConnector databaseConnector;
+    private DatabaseConnector databaseConnector;
+    
+    /**
+     * Returns the DatabaseConnector that is being used.
+     * @return The database connector.
+     */
+    protected DatabaseConnector getDatabaseConnector() {
+        return databaseConnector;
+    }
+    
+    /**
+     * Sets the databaseConnector.
+     * @param databaseConnector The new connector.
+     */
+    protected void setDatabaseConnector(final DatabaseConnector databaseConnector) {
+        this.databaseConnector = databaseConnector;
+    }
 
     /**
      * Setting up 2 comments to test with.
      */
-    @Before
-    public void makeComments() {
-        databaseConnector = new DatabaseConnector();
+    @Override
+    public void setUp() {
+        setDatabaseConnector(new DatabaseConnector());
         databaseConnector.loadDrivers();
-        databaseConnector.makeConnection("jdbc:mysql://188.166.78.36/contextbase", "context", "password");
+        databaseConnector.makeConnection("jdbc:mysql://188.166.78.36/contextbase",
+                "context", "password");
 
         c1 = new Comment(1, 1, 5000);
         c2 = new Comment(1, 2, 12321);
         c3 = new Comment(1, 1, 12321);
+        setObjectUnderTest(c1); // For some superclass tests.
     }
 
     /**
@@ -93,7 +120,7 @@ public class CommentTest {
         assertEquals(5000, c1.getTime());
         assertEquals(10000, c2.getTime());
     }
-
+    
     /**
      * Testing the setPeriod. The timestamp can change after setting a new period
      */
@@ -169,14 +196,54 @@ public class CommentTest {
     public void testHash() {
         assertEquals(5001, c1.hashCode());
     }
+    
+    /**
+     * Tests the {@link Comment#compareTo(Comment)} method.
+     */
+    @Test
+    public void testCompare() {
+        assertEquals(0, c1.compareTo(c1));
+    }
+    
+    /**
+     * Tests the {@link Comment#compareTo(Comment)} method.
+     */
+    @Test
+    public void testCompareEqualTracksLargerTime() {
+        final Comment other = new Comment(c2.getTrackid(), c2.getUserid(),
+                c2.getTime() + Comment.getPeriod());
+        assertTrue(c2.compareTo(other) < 0);
+    }
+    
+    /**
+     * Tests the {@link Comment#compareTo(Comment)} method.
+     * The comparing comment is smaller.
+     */
+    @Test
+    public void testCompareSmallerTrack() {
+        final Comment other = new Comment(c2.getTrackid(), c2.getUserid(),
+                c2.getTime() - Comment.getPeriod());
+        final int compared = c2.compareTo(other);
+        assertTrue(compared > 0);
+    }
+    
+    /**
+     * Tests the {@link Comment#compareTo(Comment)} method.
+     * The comparing comment is smaller by it's trackid.
+     */
+    @Test
+    public void testCompareSmallerTrackID() {
+        final Comment other = new Comment(c2.getTrackid() - 1, c2.getUserid(),
+                c2.getTime() + Comment.getPeriod());
+        final int compared = c2.compareTo(other);
+        assertTrue(compared > 0);
+    }
 
     /**
      * Setting period back to default value.
      */
-    @After
-    public void after() {
+    @Override
+    public void tearDown() {
         Comment.setPeriod(5000);
     }
-
-
 }

@@ -10,8 +10,8 @@ import java.util.Set;
 import java.util.TreeSet;
 
 /**
- * This class returns the start time for a snippet,
- * based on the comment intensity of the track.
+ * This class returns the start time for a snippet, based on the comment
+ * intensity of the track.
  */
 public class CommentIntensitySeeker implements Seeker {
 
@@ -48,8 +48,8 @@ public class CommentIntensitySeeker implements Seeker {
             int count = 0;
             if (!passed.contains(c.getTime())) {
                 for (Comment c2 : comments) {
-                    if (c2.getTime() >= c.getTime() && c2.getTime() <= c.getTime()) {
-                        count++;
+                    if (isInRange(c2.getTime(), c.getTime(), TimedSnippet.getDefaultDuration())) {
+                        count += getWeight(c2);
                     }
                 }
                 if (count > maxcount) {
@@ -60,6 +60,30 @@ public class CommentIntensitySeeker implements Seeker {
             }
         }
         return start;
+    }
+
+    /**
+     * Checks if time is between bottom and bottom + window.
+     *
+     * @param time   The time to check.
+     * @param bottom The bottom of the range.
+     * @param window The size of the range.
+     * @return true iff it is in the range.
+     */
+    private static boolean isInRange(final int time, final int bottom, final int window) {
+        return time >= bottom && time <= (bottom + window);
+    }
+
+    /**
+     * Gets the weigth of the comment.
+     *
+     * @param comment The comment to gain the weight of.
+     * @return The weight of the comment.
+     */
+    private static int getWeight(final Comment comment) {
+        CommentContentSeeker filt = new CommentContentSeeker();
+        return 2 + filt.contentFilter(comment.getBody());
+
     }
 
     /**
@@ -90,11 +114,21 @@ public class CommentIntensitySeeker implements Seeker {
         this.track = track;
     }
 
+    /**
+     * Getter of the comments.
+     *
+     * @return The comments
+     */
     public CommentList getComments() {
         return comments;
     }
 
-    public void setComments(CommentList comments) {
+    /**
+     * Setter of the comments
+     *
+     * @param comments The comments
+     */
+    public void setComments(final CommentList comments) {
         this.comments = comments;
     }
 }

@@ -11,8 +11,8 @@ import java.util.ArrayList;
  */
 public class CommentList extends ArrayList<Comment> {
 
-    /**
-     * Constructor. Generates an object with all the comments from the ResultSet.
+	/**
+	 * Constructor. Generates an object with all the comments from the ResultSet.
      *
      * @param resultSet The ResultSet containing the comments
      */
