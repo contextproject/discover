@@ -237,23 +237,23 @@ public class MixSeekerTest extends CommentIntensitySeekerTest {
      */
     @Test
     public void testGetSnippets() {
-        ScoreStorage scores = new ScoreMap();
-        scores.add(10, 20);
-        scores.add(20, 10);
-        scores.add(30, 28);
-        scores.add(40, 200);
-        scores.add(50, 102);
-        scores.add(60, -40);
-        scores.add(70, 20);
-        scores.add(80, 201);
-        scores.add(90, 157);
-        scores.add(100, 92);
         Track track = new Track();
         track.setDuration(20);
         track.setTrackid(1024425);
         MixSeeker mixseeker = new MixSeeker(asList(0, 30, 70), track) {
             @Override
             public ScoreStorage calculateScores(final int duration) {
+                final ScoreStorage scores = new ScoreMap();
+                scores.add(10, 20);
+                scores.add(20, 10);
+                scores.add(30, 280);
+                scores.add(40, 200);
+                scores.add(50, 102);
+                scores.add(60, -40);
+                scores.add(70, 20);
+                scores.add(80, 201);
+                scores.add(90, 157);
+                scores.add(100, 92);
                 return scores;
             }
         };
@@ -271,23 +271,23 @@ public class MixSeekerTest extends CommentIntensitySeekerTest {
      */
     @Test
     public void testGetSnippetsDoubleValue() {
-        ScoreStorage scores = new ScoreMap();
-        scores.add(10, 20);
-        scores.add(20, 10);
-        scores.add(30, 280);
-        scores.add(40, 200);
-        scores.add(50, 102);
-        scores.add(60, -40);
-        scores.add(70, 20);
-        scores.add(80, 201);
-        scores.add(90, 157);
-        scores.add(100, 92);
         Track track = new Track();
         track.setDuration(20);
         track.setTrackid(1024425);
         MixSeeker mixseeker = new MixSeeker(asList(0, 30, 70), track) {
             @Override
             public ScoreStorage calculateScores(final int duration) {
+                final ScoreStorage scores = new ScoreMap();
+                scores.add(10, 20);
+                scores.add(20, 10);
+                scores.add(30, 280);
+                scores.add(40, 200);
+                scores.add(50, 102);
+                scores.add(60, -40);
+                scores.add(70, 20);
+                scores.add(80, 201);
+                scores.add(90, 157);
+                scores.add(100, 92);
                 return scores;
             }
         };
