@@ -84,17 +84,25 @@ public class ScoreMap implements ScoreStorage {
 
     @Override
     public int maxScoreStartTime() {
+        return maxScoreStartTime(Integer.MIN_VALUE, Integer.MAX_VALUE);
+    }
+
+    @Override
+    public int maxScoreStartTime(final int lowerbound, final int upperbound) {
         final Set<Entry<Integer, Integer>> entries = getScores().entrySet();
         int maxscore = Integer.MIN_VALUE;
         int starttime = -1;
-        if (!entries.isEmpty()) {
-            starttime = getScores().firstKey();
-            // Just for the case that there are only MIN_VALUE in the storage.
-        }
         for (Entry<Integer, Integer> e : entries) {
-            if (maxscore < e.getValue()) {
-                maxscore = e.getValue();
-                starttime = e.getKey();
+            if (e.getKey() >= lowerbound) {
+                if (e.getKey() <= upperbound) {
+                    if (maxscore < e.getValue()) {
+                        maxscore = e.getValue();
+                        starttime = e.getKey();
+                    } else if (starttime == -1) {
+                        starttime = e.getKey();
+                        // Just for the case that there are only MIN_VALUE in the storage.
+                    }
+                }
             }
         }
         return starttime;

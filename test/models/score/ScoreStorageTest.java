@@ -249,4 +249,52 @@ public abstract class ScoreStorageTest extends BasicTest {
         s.add(3, -7);
         assertEquals(-4, s.maxScore());
     }
+    
+    /**
+     * Tests the {@link ScoreStorage#maxScoreStartTime(int, int)} method.
+     */
+    @Test
+    public void testMaxScoreWithBounds() {
+        final ScoreStorage s = getStorage();
+        s.add(1, 100);
+        s.add(20, -30);
+        s.add(40, 111);
+        assertEquals(20, s.maxScoreStartTime(10, 30));
+    }
+    
+    /**
+     * Tests the {@link ScoreStorage#maxScoreStartTime(int, int)} method.
+     */
+    @Test
+    public void testMaxScoreWithBoundsSameValue() {
+        final ScoreStorage s = getStorage();
+        s.add(1, 100);
+        s.add(20, -30);
+        s.add(40, 111);
+        assertEquals(20, s.maxScoreStartTime(20, 20));
+    }
+    
+    /**
+     * Tests the {@link ScoreStorage#maxScoreStartTime(int, int)} method.
+     */
+    @Test
+    public void testMaxScoreWithBoundsSameValueWithMinimalValue() {
+        final ScoreStorage s = getStorage();
+        s.add(1, 100);
+        s.add(20, Integer.MIN_VALUE);
+        s.add(40, 111);
+        assertEquals(20, s.maxScoreStartTime(20, 20));
+    }
+    
+    /**
+     * Tests the {@link ScoreStorage#maxScoreStartTime(int, int)} method.
+     */
+    @Test
+    public void testMaxScoreWithBoundsUpperBoundBeforeLowerBound() {
+        final ScoreStorage s = getStorage();
+        s.add(1, 100);
+        s.add(20, -30);
+        s.add(40, 111);
+        assertEquals(-1, s.maxScoreStartTime(30, 10));
+    }
 }

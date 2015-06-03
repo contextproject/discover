@@ -39,6 +39,15 @@ public interface ScoreStorage {
     int maxScoreStartTime();
     
     /**
+     * Returns the starttime of the maximum score that is between upper and lower bound. This method
+     * should include the bounds itself.
+     * @param lowerbound The lowerbound of the search area.
+     * @param upperbound The upperbound of the search area.
+     * @return The starttime of the largest score with starttime between upper and lower bound.
+     */
+    int maxScoreStartTime(final int lowerbound, final int upperbound);
+    
+    /**
      * Returns the score associated with the given starttime or {@code 0} when
      * the score is not found in the storage.
      * @param starttime The starttime to request from the storage.
