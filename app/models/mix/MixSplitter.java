@@ -93,7 +93,7 @@ public class MixSplitter {
         List<Integer> starttimes = new ArrayList<Integer>();
         starttimes.add(0);
         /*
-		 * Just in case someone enters a LinkedList or other list that
+         * Just in case someone enters a LinkedList or other list that
 		 * calculates it's size instead of remembering it.
 		 */
         final int amountOfShingles = shingles.size();

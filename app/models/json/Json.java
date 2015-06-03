@@ -7,15 +7,21 @@ import models.utility.TrackList;
 /**
  * Processes the json from the web application.
  */
-public class Json {
+public final class Json {
 
     /**
-     * Convert the JsonNode object to a Track object
+     * Utility class.
+     */
+    private Json() { }
+
+    /**
+     * Convert the JsonNode object to a Track object.
      *
+     * @param jsonNode The JsonNode object
      * @return A Track object
      */
-    public static Track getTrack(JsonNode jsonNode) {
-        if(jsonNode != null) {
+    public static Track getTrack(final JsonNode jsonNode) {
+        if (jsonNode != null) {
             int trackid = jsonNode.get("id").asInt();
             int duration = jsonNode.get("duration").asInt();
             return new Track(trackid, duration);
@@ -24,12 +30,13 @@ public class Json {
     }
 
     /**
-     * Convert the JsonNode object to a TrackList object
+     * Convert the JsonNode object to a TrackList object.
      *
+     * @param jsonNode The JsonNode object
      * @return A TrackList object
      */
-    public static TrackList getTrackList(JsonNode jsonNode) {
-        if(jsonNode != null) {
+    public static TrackList getTrackList(final JsonNode jsonNode) {
+        if (jsonNode != null) {
             TrackList trackList = new TrackList();
             for (JsonNode track : jsonNode) {
                 trackList.add(getTrack(track));
