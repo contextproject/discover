@@ -1,21 +1,23 @@
 package models.recommender;
 
+import java.util.List;
+
 import models.utility.TrackList;
 
 public abstract class RecommendDecorator implements Recommender {
 	
-	public Recommender smallFish;
+	public Recommender recommender;
 	
 	public RecommendDecorator(Recommender recommender) {
-		this.smallFish = recommender;
+		this.recommender = recommender;
 	}
 	
 	@Override
-	public abstract TrackList recommend();
+	public abstract List<RecTuple> recommend();
 
 	@Override
-	public  TrackList getUserCollection() {
-		return smallFish.getUserCollection();
+	public TrackList getUserCollection() {
+		return recommender.getUserCollection();
 	}
 
 }

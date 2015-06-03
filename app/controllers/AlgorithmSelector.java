@@ -9,6 +9,9 @@ import models.seeker.RandomSeeker;
  */
 public final class AlgorithmSelector {
 
+	public enum Mode { AUTO, INTENSITY, CONTENT, RANDOM } 
+	
+	private static Mode curMode; 
     /**
      * Determine the start of the snippet for the track.
      *
@@ -16,14 +19,22 @@ public final class AlgorithmSelector {
      * @return The start of the snippet
      */
     public static int determineStart(final Track track) {
-        int start;
-        start = commentIntensity(track);
-
-        // no comments for the track
-        if (start == 0) {
-            start = random(track);
-        }
-        return start;
+        
+    	switch (curMode) {
+    		case INTENSITY:
+    			return commentIntensity(track);
+    		case RANDOM:
+    			return random(track);
+    		default: 
+		    	int start;
+		        start = commentIntensity(track);
+		
+		        // no comments for the track
+		        if (start == 0) {
+		            start = random(track);
+		        }
+		        return start;
+    	}
     }
 
     /**
@@ -62,5 +73,9 @@ public final class AlgorithmSelector {
      */
     private static int random(final Track track) {
         return new RandomSeeker(track).seek().getStartTime();
+    }
+    
+    public static void setMode(Mode mode) {
+    	curMode = mode;
     }
 }
