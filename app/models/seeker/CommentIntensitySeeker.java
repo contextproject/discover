@@ -97,7 +97,7 @@ public class CommentIntensitySeeker implements Seeker {
     }
 
     /**
-     * Getter of the track
+     * Getter of the track.
      *
      * @return The track
      */
@@ -106,7 +106,7 @@ public class CommentIntensitySeeker implements Seeker {
     }
 
     /**
-     * Setter of the track
+     * Setter of the track.
      *
      * @param track The track
      */
@@ -124,7 +124,7 @@ public class CommentIntensitySeeker implements Seeker {
     }
 
     /**
-     * Setter of the comments
+     * Setter of the comments.
      *
      * @param comments The comments
      */

@@ -37,6 +37,8 @@ public class Global extends GlobalSettings {
 
         controllers.Application.setDatabaseConnector(databaseConnector);
         controllers.Application.setObjectMapper(mapper);
+
+        controllers.UserActionController.initialize();
     }
 
     /**
