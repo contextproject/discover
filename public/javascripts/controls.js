@@ -140,7 +140,7 @@ $("#url").keypress(function (e) {
 // reload the widget with the url submitted in the input field
 function reloadWidget() {
     mixSplits = null;
-    var url = $("url");
+    var url = $("#url");
     // load the url in the widget
     widget.load(url.val(), {
         auto_play: false,
