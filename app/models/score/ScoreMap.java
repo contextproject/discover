@@ -93,15 +93,13 @@ public class ScoreMap implements ScoreStorage {
         int maxscore = Integer.MIN_VALUE;
         int starttime = -1;
         for (Entry<Integer, Integer> e : entries) {
-            if (e.getKey() >= lowerbound) {
-                if (e.getKey() <= upperbound) {
-                    if (maxscore < e.getValue()) {
-                        maxscore = e.getValue();
-                        starttime = e.getKey();
-                    } else if (starttime == -1) {
-                        starttime = e.getKey();
-                        // Just for the case that there are only MIN_VALUE in the storage.
-                    }
+            if (e.getKey() >= lowerbound && e.getKey() <= upperbound) {
+                if (maxscore < e.getValue()) {
+                    maxscore = e.getValue();
+                    starttime = e.getKey();
+                } else if (starttime == -1) {
+                    starttime = e.getKey();
+                    // Just for the case that there are only MIN_VALUE in the storage.
                 }
             }
         }
