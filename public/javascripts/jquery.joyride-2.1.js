@@ -26,7 +26,6 @@
       'pauseAfter'           : [],        // array of indexes where to pause the tour after
       'tipAnimationFadeSpeed': 300,       // when tipAnimation = 'fade' this is speed in milliseconds for the transition
       'cookieMonster'        : false,     // true or false to control whether cookies are used
-       'cookieOff'           : false,
       'cookieName'           : 'joyride', // Name the cookie you'll use
       'cookieDomain'         : false,     // Will this cookie be attached to a domain, ie. '.notableapp.com'
       'cookiePath'           : false,     // Set to '/' if you want the cookie for the whole website
@@ -94,13 +93,6 @@
 
                 // are we using jQuery 1.7+
                 methods.jquery_check();
-                if (settings.cookieOff) {
-                    $.removeCookie(settings.cookieName, 'ridden', {
-                        expires: 365,
-                        domain: settings.cookieDomain,
-                        path: settings.cookiePath
-                    });
-                }
                 // can we create cookies?
                 if (!$.isFunction($.cookie)) {
                     settings.cookieMonster = false;

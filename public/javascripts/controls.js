@@ -29,7 +29,7 @@ widget.bind(SC.Widget.Events.READY, function() {
 $(window).load(function() {
     $('#joyRideTipContent').joyride({
         autoStart : true,
-        cookieMonster : false,
+        cookieMonster : true,
         modal:true,
         expose:true
 
