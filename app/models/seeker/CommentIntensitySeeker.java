@@ -6,6 +6,7 @@ import models.record.Track;
 import models.snippet.TimedSnippet;
 import models.utility.CommentList;
 
+import java.util.Collections;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -46,19 +47,26 @@ public class CommentIntensitySeeker implements Seeker {
         int start = 0;
         int maxcount = 0;
         Set<Integer> passed = new TreeSet<Integer>();
+        Collections.sort(comments);
+        final int commentsize = comments.size(); // Done here for efficientcy.
         for (Comment c : comments) {
             int count = 0;
-            if (!passed.contains(c.getTime())) {
-                for (Comment c2 : comments) {
-                    if (isInRange(c2.getTime(), c.getTime(), duration)) {
+            final int time = c.getTime();
+            if (!passed.contains(time)) {
+                boolean finished = false;
+                for (int i = 0; !finished && i < commentsize; i++) {
+                    Comment c2 = comments.get(i);
+                    if (!(c2.getTime() <= time + duration)) {
+                        finished = true;
+                    } else if (isInRange(c2.getTime(), time, duration)) {
                         count += getWeight(c2);
                     }
                 }
                 if (count > maxcount) {
                     maxcount = count;
-                    start = c.getTime();
+                    start = time;
                 }
-                passed.add(c.getTime());
+                passed.add(time);
             }
         }
         return start;
