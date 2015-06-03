@@ -1,12 +1,12 @@
 package models.score;
 
-import static org.junit.Assert.*;
+import basic.BasicTest;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
-import basic.BasicTest;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Abstract test for all the score storages.
@@ -56,5 +56,197 @@ public abstract class ScoreStorageTest extends BasicTest {
     public void testIsEmpty() {
         getStorage().isEmpty();
     }
-
+    
+    /**
+     * Tests the {@link ScoreStorage#isEmpty()} and {@link ScoreStorage#clear()}
+     * methods.
+     */
+    @Test
+    public void testIsEmptyAfterClear() {
+        final ScoreStorage s = getStorage();
+        s.add(1, 10);
+        s.clear();
+        assertTrue(s.isEmpty());
+    }
+    
+    /**
+     * Tests the {@link ScoreStorage#add(int, int)} method.
+     */
+    @Test
+    public void testAdd() {
+        final ScoreStorage s = getStorage();
+        s.add(1, 10);
+        assertFalse(s.isEmpty());
+    }
+    
+    /**
+     * Tests the {@link ScoreStorage#add(int, int)} method.
+     */
+    @Test
+    public void testSize() {
+        final ScoreStorage s = getStorage();
+        s.add(1, 10);
+        assertEquals(1, s.size());
+    }
+    
+    /**
+     * Tests the {@link ScoreStorage#size()} method.
+     */
+    @Test
+    public void testSizeClear() {
+        final ScoreStorage s = getStorage();
+        s.add(1, 10);
+        s.clear();
+        assertEquals(0, s.size());
+    }
+    
+    /**
+     * Tests the {@link ScoreStorage#add(int, int)} and {@link ScoreStorage#size()} methods.
+     */
+    @Test
+    public void testSizeDuplicate() {
+        final ScoreStorage s = getStorage();
+        s.add(1, 10);
+        s.add(2, 11);
+        s.add(1, 20);
+        assertEquals(2, s.size());
+    }
+    
+    /**
+     * Tests the {@link ScoreStorage#get(int)} method.
+     */
+    @Test
+    public void testGet() {
+        final ScoreStorage s = getStorage();
+        s.add(1, 10);
+        s.add(2, 11);
+        s.add(1, 20);
+        assertEquals(11, s.get(2));
+    }
+    
+    /**
+     * Tests the {@link ScoreStorage#get(int)} and {@link ScoreStorage#add(int, int)} methods.
+     */
+    @Test
+    public void testGetDuplicate() {
+        final ScoreStorage s = getStorage();
+        s.add(1, 10);
+        s.add(2, 11);
+        s.add(1, 20);
+        assertEquals(30, s.get(1));
+    }
+    
+    /**
+     * Tests the {@link ScoreStorage#get(int)} method.
+     */
+    @Test
+    public void testGetNotFound() {
+        final ScoreStorage s = getStorage();
+        s.add(1, 10);
+        assertEquals(0, s.get(-199));
+    }
+    
+    /**
+     * Tests the {@link ScoreStorage#maxScoreStartTime()} method.
+     */
+    @Test
+    public void testMaxScoreStartTime() {
+        final ScoreStorage s = getStorage();
+        s.add(1, 10);
+        assertEquals(1, s.maxScoreStartTime());
+    }
+    
+    /**
+     * Tests the {@link ScoreStorage#maxScoreStartTime()} method.
+     */
+    @Test
+    public void testMaxScoreStartTimeDuplicateValue() {
+        final ScoreStorage s = getStorage();
+        s.add(1, 8);
+        s.add(2, 10);
+        s.add(3, 10);
+        s.add(4, 1);
+        assertEquals(2, s.maxScoreStartTime());
+    }
+    
+    /**
+     * Tests the {@link ScoreStorage#maxScoreStartTime()} method.
+     */
+    @Test
+    public void testMaxScoreStartTimeEmpty() {
+        final ScoreStorage s = getStorage();
+        assertEquals(-1, s.maxScoreStartTime());
+    }
+    
+    /**
+     * Tests the {@link ScoreStorage#maxScoreStartTime()} and
+     * {@link ScoreStorage#add(int, int)} methods.
+     */
+    @Test
+    public void testMaxScoreStartTimeDoubleAdd() {
+        final ScoreStorage s = getStorage();
+        s.add(1, 8);
+        s.add(2, 10);
+        s.add(3, 10);
+        s.add(4, 1);
+        s.add(1, 3);
+        assertEquals(1, s.maxScoreStartTime());
+    }
+    
+    /**
+     * Tests the {@link ScoreStorage#maxScore()} method.
+     */
+    @Test
+    public void testMaxScore() {
+        final ScoreStorage s = getStorage();
+        s.add(1, 10);
+        assertEquals(10, s.maxScore());
+    }
+    
+    /**
+     * Tests the {@link ScoreStorage#maxScore()} and
+     * {@link ScoreStorage#add(int, int)} methods.
+     */
+    @Test
+    public void testMaxScoreDoubleAdd() {
+        final ScoreStorage s = getStorage();
+        s.add(1, 8);
+        s.add(2, 10);
+        s.add(3, 10);
+        s.add(4, 1);
+        s.add(1, 3);
+        assertEquals(11, s.maxScore());
+    }
+    
+    /**
+     * Tests the {@link ScoreStorage#maxScore()} method.
+     */
+    @Test
+    public void testMaxScoreEmpty() {
+        final ScoreStorage s = getStorage();
+        assertEquals(0, s.maxScore());
+    }
+    
+    /**
+     * Tests the {@link ScoreStorage#maxScore()} method.
+     */
+    @Test
+    public void testMaxScoreMinValuesOnly() {
+        final ScoreStorage s = getStorage();
+        s.add(1, Integer.MIN_VALUE);
+        s.add(2, Integer.MIN_VALUE);
+        assertEquals(Integer.MIN_VALUE, s.maxScore()); // because of the default get.
+    }
+    
+    /**
+     * Tests the {@link ScoreStorage#maxScore()} method.
+     */
+    @Test
+    public void testMaxScoreNegativeScores() {
+        final ScoreStorage s = getStorage();
+        s.add(1, -10);
+        s.add(2, -4);
+        s.add(3, -7);
+        assertEquals(-4, s.maxScore());
+    }
 }

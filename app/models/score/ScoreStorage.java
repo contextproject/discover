@@ -32,8 +32,9 @@ public interface ScoreStorage {
     /**
      * Seeks the storage for the maximum amount of points and returns it's starttime.
      * @return The first starttime of the maximum score in the storage. It should return -1 if
-     * there is no maximal score, because every starttime has {@link Integer#MIN_VALUE} as score or
-     * because there is no score in the storage.
+     * there is no maximal score, because there is no score in the storage. If only
+     * {@link Integer#MIN_VALUE} is in the storage the first starttime
+     * in the storage should be returned.
      */
     int maxScoreStartTime();
     
@@ -51,4 +52,10 @@ public interface ScoreStorage {
      * @return The maximum score stored.
      */
     int maxScore();
+    
+    /**
+     * Returns the size of the storage.
+     * @return The storage size.
+     */
+    int size();
 }
