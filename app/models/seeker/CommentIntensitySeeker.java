@@ -37,6 +37,11 @@ public class CommentIntensitySeeker implements Seeker {
      * The Seeker that is decorated by this one.
      */
     private final Seeker decorate;
+    
+    /**
+     * The filter to get the scores out of.
+     */
+    private final CommentContentSeeker filter;
 
     /**
      * Creates a new CommentIntensitySeeker that moves over the given track.
@@ -54,10 +59,23 @@ public class CommentIntensitySeeker implements Seeker {
      * @param decorate The Seeker to decorate.
      */
     public CommentIntensitySeeker(final Track track, final Seeker decorate) {
+        this(track, decorate, new CommentContentSeeker());
+    }
+
+    
+    /**
+     * Creates a new CommentIntensitySeeker that moves over the given track and
+     * decorates the given Seeker.
+     * @param track The track to search.
+     * @param decorate The Seeker to decorate.
+     * @param filter The comment content filter to use and the appropriate scores within it.
+     */
+    public CommentIntensitySeeker(final Track track, final Seeker decorate,
+            final CommentContentSeeker filter) {
         setTrack(track);
         this.decorate = decorate;
         setComments(new CommentRetriever(track.getTrackid()).getComments());
-        
+        this.filter = filter;
     }
 
     /**
@@ -113,7 +131,7 @@ public class CommentIntensitySeeker implements Seeker {
      * @param upperbound The time to check against.
      * @return true iff time <= upperbound.
      */
-    private static boolean isBefore(final int time, final int upperbound) {
+    protected boolean isBefore(final int time, final int upperbound) {
         return time <= upperbound;
     }
 
@@ -125,7 +143,7 @@ public class CommentIntensitySeeker implements Seeker {
      * @param window The size of the range.
      * @return true iff it is in the range.
      */
-    protected static boolean isInRange(final int time, final int bottom, final int window) {
+    protected boolean isInRange(final int time, final int bottom, final int window) {
         return time >= bottom && isBefore(time, bottom + window);
     }
 
@@ -135,10 +153,8 @@ public class CommentIntensitySeeker implements Seeker {
      * @param comment The comment to gain the weight of.
      * @return The weight of the comment.
      */
-    private static int getWeight(final Comment comment) {
-        CommentContentSeeker filt = new CommentContentSeeker();
-        return 2 + filt.contentFilter(comment.getBody());
-
+    private int getWeight(final Comment comment) {
+        return 2 + getFilter().contentFilter(comment.getBody());
     }
 
     /**
@@ -190,5 +206,13 @@ public class CommentIntensitySeeker implements Seeker {
      */
     public void setComments(final CommentList comments) {
         this.comments = comments;
+    }
+    
+    /**
+     * Returns the filter used by this instance to retrieve the scores.
+     * @return The Filter used.
+     */
+    public CommentContentSeeker getFilter() {
+        return filter;
     }
 }

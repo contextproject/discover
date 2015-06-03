@@ -3,7 +3,8 @@ package models.seeker;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.After;
+import models.record.Track;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -13,7 +14,7 @@ import static org.junit.Assert.assertEquals;
  * Tests the MixSeeker class.
  * 
  * @since 27-05-2015
- * @version 29-05-2015
+ * @version 03-06-2015
  * 
  * @see MixSeeker
  * @see CommentIntensitySeekerTest
@@ -22,7 +23,7 @@ import static org.junit.Assert.assertEquals;
  * @author arthur hovenesyan
  *
  */
-public class MixSeekerTest /* extends CommentIntensitySeekerTest */ {
+public class MixSeekerTest extends CommentIntensitySeekerTest {
 
     /**
      * The mixseeker under test.
@@ -35,17 +36,11 @@ public class MixSeekerTest /* extends CommentIntensitySeekerTest */ {
      */
     @Before
     public void setUp() throws Exception {
-        //super.makeComments();
-        setSeeker(new MixSeeker(asList(2, 1)));
-    }
-
-    /**
-     * Does some clean up for the class.
-     * @throws Exception If the clean up fails.
-     */
-    @After
-    public void tearDown() throws Exception {
-        // For this class this is only a hook method.
+        super.setUp();
+        Track track = new Track();
+        track.setDuration(10000);
+        track.setTrackid(1029204);
+        setSeeker(new MixSeeker(asList(0, 2, 1), track));
     }
 
     /**
@@ -68,6 +63,7 @@ public class MixSeekerTest /* extends CommentIntensitySeekerTest */ {
      * @param seeker The seeker under test.
      */
     public void setSeeker(final MixSeeker seeker) {
+        super.setSeeker(seeker);
         this.mixseeker = seeker;
     }
     
@@ -75,6 +71,7 @@ public class MixSeekerTest /* extends CommentIntensitySeekerTest */ {
      * Gets the seeker under test.
      * @return The seeker under test.
      */
+    @Override
     public MixSeeker getSeeker() {
         return mixseeker;
     }
@@ -197,5 +194,15 @@ public class MixSeekerTest /* extends CommentIntensitySeekerTest */ {
         mixseeker.setStarttimes(starttimes);
         final int expected = MixSeeker.getEndOfSong();
         assertEquals(expected, mixseeker.getNextPieceStarttime(100));
+    }
+    
+    /**
+     * Tests the {@link MixSeeker#isInRange(int, int, int)} method.
+     */
+    @Test
+    public void testIsInRangeWhenInOtherPart() {
+        MixSeeker ms = getSeeker();
+        ms.setStarttimes(asList(9, 20, 40));
+        assertEquals("expected was false but got true.", false, ms.isInRange(23, 10, 30));
     }
 }

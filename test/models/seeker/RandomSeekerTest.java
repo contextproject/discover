@@ -17,7 +17,7 @@ import static org.junit.Assert.assertEquals;
  * @see RandomSeeker
  * @see BasicTest
  * 
- * @author stefanboodt
+ * @author stefan boodt
  *
  */
 public class RandomSeekerTest extends BasicTest {

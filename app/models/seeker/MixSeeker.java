@@ -3,6 +3,8 @@ package models.seeker;
 import java.util.Collections;
 import java.util.List;
 
+import models.record.Track;
+
 /**
  * This class seeks the comment intensity in mixes. It uses a start and
  * stop time to do it in addition to the regular start and stop done by
@@ -10,7 +12,7 @@ import java.util.List;
  * comment intensity in mixes.
  * 
  * @since 27-05-2015
- * @version 29-05-2015
+ * @version 03-06-2015
  * 
  * @see CommentIntensitySeeker
  * @see MixSplitter
@@ -19,7 +21,7 @@ import java.util.List;
  * @author arthur hovenesyan
  *
  */
-public class MixSeeker {
+public class MixSeeker extends CommentIntensitySeeker {
     
     /**
      * The Integer that describes the end of the song.
@@ -34,9 +36,23 @@ public class MixSeeker {
     /**
      * Generates a new MixSeeker.
      * @param starttimesOfPieces The integers that contain the timestamps of the
-     * startpoints of the different 
+     * startpoints of the different
+     * @param track The track to search.
      */
-    public MixSeeker(final List<Integer> starttimesOfPieces) {
+    public MixSeeker(final List<Integer> starttimesOfPieces, final Track track) {
+        this(starttimesOfPieces, track, new NullSeeker());
+    }
+    
+    /**
+     * Generates a new MixSeeker.
+     * @param starttimesOfPieces The integers that contain the timestamps of the
+     * startpoints of the different
+     * @param track The track to search.
+     * @param decorate The seeker to decorate and increase the functionality of.
+     */
+    public MixSeeker(final List<Integer> starttimesOfPieces, final Track track,
+            final Seeker decorate) {
+        super(track, decorate);
         setStarttimes(starttimesOfPieces);
     }
     
@@ -90,5 +106,11 @@ public class MixSeeker {
             }
         }
         return endOfSong;
+    }
+    
+    @Override
+    protected boolean isInRange(final int time, final int bottom, final int window) {
+        return super.isInRange(time, bottom, window)
+                && isBefore(time, getNextPieceStarttime(bottom));
     }
 }
