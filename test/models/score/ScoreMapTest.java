@@ -1,6 +1,7 @@
 package models.score;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.util.TreeMap;
@@ -84,5 +85,31 @@ public class ScoreMapTest extends ScoreStorageTest {
         putted.put(3, 20);
         map.setScores(putted);
         assertTrue(map.isEmpty());
+    }
+    
+    /**
+     * Tests the {@link ScoreMap#equals(Object)} method.
+     */
+    public void testEquals() {
+        final ScoreMap map = getStorage();
+        map.add(1, 1);
+        map.add(3, 20);
+        final ScoreMap against = getStorage();
+        against.add(1, 1);
+        against.add(3, 20);
+        assertTrue(map.equals(against));
+    }
+    
+    /**
+     * Tests the {@link ScoreMap#equals(Object)} method.
+     */
+    public void testEqualsFalse() {
+        final ScoreMap map = getStorage();
+        map.add(1, 1);
+        map.add(3, 20);
+        final ScoreMap against = getStorage();
+        against.add(1, 1);
+        against.add(3, 19);
+        assertFalse(map.equals(against));
     }
 }

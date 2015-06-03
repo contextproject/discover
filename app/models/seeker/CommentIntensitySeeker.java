@@ -3,6 +3,7 @@ package models.seeker;
 import models.database.retriever.CommentRetriever;
 import models.record.Comment;
 import models.record.Track;
+import models.score.ScoreStorage;
 import models.snippet.TimedSnippet;
 import models.utility.CommentList;
 
@@ -13,6 +14,12 @@ import java.util.TreeSet;
 /**
  * This class returns the start time for a snippet, based on the comment
  * intensity of the track.
+ * 
+ * @since 07-05-2015
+ * @version 03-06-2015
+ * 
+ * @author stefan boodt
+ * @author tomas heinsohn huala
  */
 public class CommentIntensitySeeker implements Seeker {
 
@@ -25,15 +32,32 @@ public class CommentIntensitySeeker implements Seeker {
      * The set of comments of the track.
      */
     private CommentList comments;
+    
+    /**
+     * The Seeker that is decorated by this one.
+     */
+    private final Seeker decorate;
 
     /**
-     * Constructor.
+     * Creates a new CommentIntensitySeeker that moves over the given track.
      *
      * @param track The track
      */
     public CommentIntensitySeeker(final Track track) {
-        this.track = track;
-        this.comments = new CommentRetriever(track.getTrackid()).getComments();
+        this(track, new NullSeeker());
+    }
+    
+    /**
+     * Creates a new CommentIntensitySeeker that moves over the given track and
+     * decorates the given Seeker.
+     * @param track The track to search.
+     * @param decorate The Seeker to decorate.
+     */
+    public CommentIntensitySeeker(final Track track, final Seeker decorate) {
+        setTrack(track);
+        this.decorate = decorate;
+        setComments(new CommentRetriever(track.getTrackid()).getComments());
+        
     }
 
     /**
@@ -44,8 +68,22 @@ public class CommentIntensitySeeker implements Seeker {
      * @return a start time
      */
     private int getStartTime(final int duration) {
-        int start = 0;
-        int maxcount = 0;
+        return calculateScores(duration).maxScoreStartTime();
+    }
+
+    @Override
+    public ScoreStorage calculateScores(final int duration) {
+        ScoreStorage storage = decorate.calculateScores(duration);
+        return updateStorage(duration, storage);
+    }
+    
+    /**
+     * Updates the storage storage by the score from the comment intensity seeker.
+     * @param duration The duration of the snippet and thus the search window.
+     * @param storage The storage to update.
+     * @return The updated storage.
+     */
+    private ScoreStorage updateStorage(final int duration, final ScoreStorage storage) {
         Set<Integer> passed = new TreeSet<Integer>();
         Collections.sort(comments);
         final int commentsize = comments.size(); // Done here for efficientcy.
@@ -56,20 +94,27 @@ public class CommentIntensitySeeker implements Seeker {
                 boolean finished = false;
                 for (int i = 0; !finished && i < commentsize; i++) {
                     Comment c2 = comments.get(i);
-                    if (!(c2.getTime() <= time + duration)) {
+                    if (!isBefore(c2.getTime(), time + duration)) {
                         finished = true;
                     } else if (isInRange(c2.getTime(), time, duration)) {
                         count += getWeight(c2);
                     }
                 }
-                if (count > maxcount) {
-                    maxcount = count;
-                    start = time;
-                }
                 passed.add(time);
+                storage.add(time, count);
             }
         }
-        return start;
+        return storage;
+    }
+    
+    /**
+     * Checks if time is less than or equal to upperbound.
+     * @param time The time.
+     * @param upperbound The time to check against.
+     * @return true iff time <= upperbound.
+     */
+    private static boolean isBefore(final int time, final int upperbound) {
+        return time <= upperbound;
     }
 
     /**
@@ -80,8 +125,8 @@ public class CommentIntensitySeeker implements Seeker {
      * @param window The size of the range.
      * @return true iff it is in the range.
      */
-    private static boolean isInRange(final int time, final int bottom, final int window) {
-        return time >= bottom && time <= (bottom + window);
+    protected static boolean isInRange(final int time, final int bottom, final int window) {
+        return time >= bottom && isBefore(time, bottom + window);
     }
 
     /**

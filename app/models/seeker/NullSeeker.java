@@ -49,7 +49,13 @@ public class NullSeeker implements Seeker {
 
     @Override
     public TimedSnippet seek(final int duration) {
-        return new TimedSnippet(storage.maxScoreStartTime());
+        return new TimedSnippet(calculateScores(duration).maxScoreStartTime(),
+                duration);
+    }
+
+    @Override
+    public ScoreStorage calculateScores(final int duration) {
+        return storage;
     }
 
 }

@@ -19,6 +19,13 @@ import static org.mockito.Mockito.when;
 
 /**
  * Test for the CommentIntensitySeeker.
+ * 
+ * @version 03-06-2015
+ * 
+ * @see CommentIntensitySeeker
+ * 
+ * @author tomas heinsohn huala
+ * 
  */
 public class CommentIntensitySeekerTest {
 

@@ -114,4 +114,18 @@ public class ScoreMap implements ScoreStorage {
     public int size() {
         return getScores().size();
     }
+    
+    @Override
+    public boolean equals(final Object other) {
+        if (other instanceof ScoreMap) {
+            ScoreMap that = (ScoreMap) other;
+            return this.scores.equals(that.scores);
+        }
+        return false;
+    }
+    
+    @Override
+    public int hashCode() {
+        return getScores().hashCode();
+    }
 }
