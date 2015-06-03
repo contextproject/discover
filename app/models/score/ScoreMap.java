@@ -108,7 +108,7 @@ public class ScoreMap implements ScoreStorage {
 
     @Override
     public int get(final int starttime) {
-        return getScores().getOrDefault(starttime, 0);
+        return getOrDefault(starttime, 0);
     }
 
     @Override
@@ -133,5 +133,19 @@ public class ScoreMap implements ScoreStorage {
     @Override
     public int hashCode() {
         return getScores().hashCode();
+    }
+    
+    /**
+     * Returns the score of starttime or defaultValue otherwise.
+     * @param starttime The starttime to search.
+     * @param defaultValue The default value.
+     * @return The value of starttime or defaultValue.
+     */
+    protected int getOrDefault(final int starttime, final int defaultValue) {
+        Integer score = getScores().get(starttime);
+        if (score == null) {
+            score = defaultValue;
+        }
+        return score;
     }
 }
