@@ -141,8 +141,8 @@ public class Application extends Controller {
 	}
 	
 	/**
-	 * Method used to pass a JsonNode object with track waveform on to the
-	 * MixSplitter class.
+	 * TO DO.
+	 * This function is just to keep the build working
 	 *
 	 * @return ok response with the start times for the mix.
 	 */
