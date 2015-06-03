@@ -1,5 +1,7 @@
 package models.score;
 
+import java.util.Map.Entry;
+import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -16,7 +18,7 @@ import java.util.TreeMap;
  * @author stefan boodt
  *
  */
-public class ScoreMap {
+public class ScoreMap implements ScoreStorage {
     
     /**
      * The Set storing the scores.
@@ -39,21 +41,20 @@ public class ScoreMap {
         setScores(scores);
     }
     
-    /**
-     * Adds the given score to the given time in the map.
-     * @param starttime The starttime of the score to add.
-     * @param points The number of points to add to the score.
-     */
+    @Override
     public void add(final int starttime, final int points) {
         final int score = getScores().getOrDefault(starttime, 0) + points;
         getScores().put(starttime, score);
     }
     
-    /**
-     * Clears the scores in the map. The map should be empty afterwards.
-     */
+    @Override
     public void clear() {
         getScores().clear();
+    }
+    
+    @Override
+    public boolean isEmpty() {
+        return getScores().isEmpty();
     }
     
     /**
@@ -72,5 +73,29 @@ public class ScoreMap {
      */
     protected SortedMap<Integer, Integer> getScores() {
         return scores;
+    }
+
+    @Override
+    public int maxScoreStartTime() {
+        final Set<Entry<Integer, Integer>> entries = getScores().entrySet();
+        int maxscore = Integer.MIN_VALUE;
+        int starttime = -1;
+        for (Entry<Integer, Integer> e : entries) {
+            if (maxscore < e.getValue()) {
+                maxscore = e.getValue();
+                starttime = e.getKey();
+            }
+        }
+        return starttime;
+    }
+
+    @Override
+    public int get(final int starttime) {
+        return getScores().getOrDefault(starttime, 0);
+    }
+
+    @Override
+    public int maxScore() {
+        return get(maxScoreStartTime());
     }
 }
