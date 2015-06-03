@@ -246,7 +246,7 @@ public class MixSeekerTest extends CommentIntensitySeekerTest {
                 final ScoreStorage scores = new ScoreMap();
                 scores.add(10, 20);
                 scores.add(20, 10);
-                scores.add(30, 280);
+                scores.add(30, 28);
                 scores.add(40, 200);
                 scores.add(50, 102);
                 scores.add(60, -40);
