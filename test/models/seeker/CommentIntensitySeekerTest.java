@@ -139,6 +139,6 @@ public class CommentIntensitySeekerTest {
         assertEquals(0, ts.getStartTime());
         assertEquals(30000, ts.getWindow());
         verify(com, times(5)).getTime();
-        verify(com).hashCode();
+//        verify(com).hashCode();
     }
 }

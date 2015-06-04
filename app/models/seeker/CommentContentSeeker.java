@@ -9,14 +9,14 @@ public class CommentContentSeeker {
      * List of positive words.
      */
     private final String[] positive = {"great", "brilliant", "beautiful",
-            "awesome", "amazing", "perfect", "good", "like", "love", "best",
-            "nice", "super", "cool", "massive", "wicked", "sick", "wonderfull"};
+        "awesome", "amazing", "perfect", "good", "like", "love", "best",
+        "nice", "super", "cool", "massive", "wicked", "sick", "wonderfull"};
 
     /**
      * List of negative words.
      */
     private final String[] negative = {"hate", "n't", "nt", "not", "bad",
-            "terrible", "worst", "suck"};
+        "terrible", "worst", "suck"};
 
     /**
      * Checks if a string contains a word from the list above.
@@ -25,7 +25,7 @@ public class CommentContentSeeker {
      * @return true if the content contains a positive message
      */
     public int contentFilter(final String content) {
-        if(content != null) {
+        if (content != null) {
             String body = content.toLowerCase();
             int res = 0;
             for (String p : positive) {

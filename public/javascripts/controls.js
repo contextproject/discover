@@ -3,7 +3,6 @@ var widget = SC.Widget(document.getElementById("sc-widget"));
 var mixSplits, waveform;
 var snipWin = 5000.00;
 var splitPointer = -1;
-var $widget = SC.Widget(document.getElementById("sc-widget"));
 
 $("#current").click(function () {
     $widget.bind(SC.Widget.Events.READY, function () {
@@ -17,14 +16,24 @@ $("#current").click(function () {
 });
 
 // Prepare all the data to be sent when the widget is ready
-$widget.bind(SC.Widget.Events.READY, function () {
-    waveform = new Waveform({
-        container: document.getElementById("sc-widget")
+widget.bind(SC.Widget.Events.READY, function() {
+	waveform = new Waveform({
+		container : document.getElementById("sc-widget")
+	});
+	widget.getSounds(function(sounds) {
+		waveform.dataFromSoundCloudTrack(sounds[0]);
+	});
+	widget.unbind(SC.Widget.Events.READY);
+});
+
+$(window).load(function() {
+    $('#joyRideTipContent').joyride({
+        autoStart : true,
+        cookieMonster : true,
+        modal:true,
+        expose:true
+
     });
-    $widget.getSounds(function (sounds) {
-        waveform.dataFromSoundCloudTrack(sounds[0]);
-    });
-    $widget.unbind(SC.Widget.Events.READY);
 });
 
 // The method is used to send Data to the server
@@ -118,7 +127,7 @@ $("#sendWave").click(function () {
             "track": sounds[0],
             "waveform": waveform.data
         };
-        if(parseInt($("#numsplit").val()) == null ) {
+        if($("#numsplit").val() == '' ) {
             sendData(message, "/splitWaveform", setMixSplit);
         }else if(parseInt($("#numsplit").val()) >= 0){
             var x = parseInt($("#numsplit").val());
@@ -149,7 +158,7 @@ $("#url").keypress(function (e) {
 // reload the widget with the url submitted in the input field
 function reloadWidget() {
     mixSplits = null;
-    var url = $("url");
+    var url = $("#url");
     // load the url in the widget
     widget.load(url.val(), {
         auto_play: false,

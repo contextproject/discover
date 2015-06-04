@@ -1,14 +1,13 @@
 package models.record;
 
-import javax.persistence.Entity;
+import javax.annotation.Nonnull;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
  * Class to represent a track.
  */
-@Entity
-public class Track implements Record {
+public class Track implements Record, Comparable<Track> {
 
     /**
      * The id of the track.
@@ -33,6 +32,17 @@ public class Track implements Record {
      */
     public Track(final ResultSet resultSet) {
         process(resultSet);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param trackid  The id of the track
+     * @param duration The duration of the track
+     */
+    public Track(final int trackid, final int duration) {
+        this.trackid = trackid;
+        this.duration = duration;
     }
 
     /**
@@ -66,7 +76,7 @@ public class Track implements Record {
     /**
      * Setter of the id of the track.
      *
-     * @param trackid  The id of the track
+     * @param trackid The id of the track
      */
     public void setTrackid(final int trackid) {
         this.trackid = trackid;
@@ -88,5 +98,48 @@ public class Track implements Record {
      */
     public void setDuration(final int duration) {
         this.duration = duration;
+    }
+
+    /**
+     * Equals method.
+     *
+     * @param o Other object
+     * @return True if objects are equals
+     */
+    @Override
+    public boolean equals(final Object o) {
+        if (o instanceof Track
+                && ((Track) o).trackid == this.trackid
+                && ((Track) o).duration == this.duration) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Hashcode() method.
+     *
+     * @return Hash of the object
+     */
+    @Override
+    public int hashCode() {
+        int result = trackid;
+        result = 31 * result + duration;
+        return result;
+    }
+
+    /**
+     * Comparable of a Track object.
+     *
+     * @param o The Track object to compare to
+     * @return True if Objects are the same
+     */
+    @Override
+    public int compareTo(@Nonnull final Track o) {
+        int result = (this.trackid - o.trackid);
+        if (result == 0) {
+            result += (this.duration - o.duration);
+        }
+        return result;
     }
 }
