@@ -5,9 +5,9 @@ var snipWin = 5000.00;
 var splitPointer = -1;
 
 $("#current").click(function () {
-    $widget.bind(SC.Widget.Events.READY, function () {
+    widget.bind(SC.Widget.Events.READY, function () {
         // get information about currently playing sound
-        $widget.getSounds(function (currentSound) {
+        widget.getSounds(function (currentSound) {
             console.log(currentSound[0]);
             var id = currentSound[0].id;
             console.log(id);
@@ -179,7 +179,7 @@ function reloadWidget() {
 
 // change the volume of the widget
 $("#volume").on("input change", function () {
-    $widget.setVolume(parseInt($('#volume').val()));
+    widget.setVolume(parseInt($('#volume').val()));
 });
 
 // play the snippet of the song
@@ -293,9 +293,9 @@ SC.initialize({
 
 // waveform, not in use
 $("#waveform").click(function () {
-    $widget.bind(SC.Widget.Events.READY, function () {
+    widget.bind(SC.Widget.Events.READY, function () {
         // get information about currently playing sound
-        $widget.getSounds(function (currentSound) {
+        widget.getSounds(function (currentSound) {
             console.log("duration is " + currentSound.duration);
             SC.get("/tracks/" + currentSound[0].id, function (track) {
                 var waveform = new Waveform({
