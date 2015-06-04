@@ -20,15 +20,20 @@ public class Track implements Record, Comparable<Track> {
     private int duration;
 
     /**
-     * Constructor.
+     * The id of the user that uploaded the track.
      */
-    public Track() {
-    }
+    private int userid;
+
+    /**
+     * Genre of the track.
+     */
+    private String genre;
 
     /**
      * Constructor that accepts a ResultSet to build the track.
      *
-     * @param resultSet The ResultSet of the track
+     * @param resultSet
+     *            The ResultSet of the track
      */
     public Track(final ResultSet resultSet) {
         process(resultSet);
@@ -37,18 +42,28 @@ public class Track implements Record, Comparable<Track> {
     /**
      * Constructor.
      *
-     * @param trackid  The id of the track
-     * @param duration The duration of the track
+     * @param trackid
+     *            The id of the track
+     * @param duration
+     *            The duration of the track
+     * @param userid
+     *            The user id of the track
+     * @param genre
+     *            The genre of the track
      */
-    public Track(final int trackid, final int duration) {
+    public Track(final int trackid, final int duration, final int userid,
+            final String genre) {
         this.trackid = trackid;
         this.duration = duration;
+        this.userid = userid;
+        this.genre = genre;
     }
 
     /**
      * Processes the ResultSet of the track.
      *
-     * @param resultSet The ResultSet of the track
+     * @param resultSet
+     *            The ResultSet of the track
      * @return True if succeeds
      */
     protected boolean process(final ResultSet resultSet) {
@@ -56,6 +71,8 @@ public class Track implements Record, Comparable<Track> {
             while (resultSet.next()) {
                 trackid = resultSet.getInt("track_id");
                 duration = resultSet.getInt("duration");
+                userid = resultSet.getInt("user_id");
+                genre = resultSet.getString("genre");
             }
             return true;
         } catch (SQLException e) {
@@ -76,7 +93,8 @@ public class Track implements Record, Comparable<Track> {
     /**
      * Setter of the id of the track.
      *
-     * @param trackid The id of the track
+     * @param trackid
+     *            The id of the track
      */
     public void setTrackid(final int trackid) {
         this.trackid = trackid;
@@ -94,25 +112,63 @@ public class Track implements Record, Comparable<Track> {
     /**
      * Setter of the duration of the track.
      *
-     * @param duration The duration of the track
+     * @param duration
+     *            The duration of the track
      */
     public void setDuration(final int duration) {
         this.duration = duration;
     }
 
     /**
+     * Getter for the user id of the track.
+     * 
+     * @return The user id of the track
+     */
+    public int getUserid() {
+        return userid;
+    }
+
+    /**
+     * Setter of the user id of the track.
+     *
+     * @param userid
+     *            The user id of the track.
+     */
+    public void setUserid(final int userid) {
+        this.userid = userid;
+    }
+
+    /**
+     * Getter for the genre of the track.
+     * 
+     * @return The genre of the track
+     */
+    public String getGenre() {
+        return genre;
+    }
+
+    /**
+     * Setter of the genre of the Track.
+     * 
+     * @param genre
+     *            The genre of the track.
+     */
+    public void setGenre(final String genre) {
+        this.genre = genre;
+    }
+
+    /**
      * Equals method.
      *
-     * @param o Other object
+     * @param o
+     *            Other object
      * @return True if objects are equals
      */
     @Override
     public boolean equals(final Object o) {
         if (o instanceof Track) {
             if (((Track) o).trackid == this.trackid) {
-                if (((Track) o).duration == this.duration) {
-                    return true;
-                }
+                return true;
             }
         }
         return false;
@@ -133,7 +189,8 @@ public class Track implements Record, Comparable<Track> {
     /**
      * Comparable of a Track object.
      *
-     * @param o The Track object to compare to
+     * @param o
+     *            The Track object to compare to
      * @return True if Objects are the same
      */
     @Override
