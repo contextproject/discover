@@ -2,7 +2,7 @@ package models.recommender;
 
 import java.util.List;
 
-import models.utility.TrackList;
+import models.profile.Profile;
 
 public class LikesRecommender extends RecommendDecorator implements Recommender {
 
@@ -29,8 +29,8 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
 	}
 	
 	@Override
-	public TrackList getUserCollection() {
-		return recommender.getUserCollection();
+	public Profile getUserProfile() {
+		return recommender.getUserProfile();
 	}
 
 }

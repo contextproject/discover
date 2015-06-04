@@ -2,7 +2,7 @@ package models.recommender;
 
 import java.util.List;
 
-import models.utility.TrackList;
+import models.profile.Profile;
 
 public abstract class RecommendDecorator implements Recommender {
 
@@ -16,8 +16,8 @@ public abstract class RecommendDecorator implements Recommender {
     public abstract List<RecTuple> recommend();
 
     @Override
-    public TrackList getUserCollection() {
-        return recommender.getUserCollection();
+    public Profile getUserProfile() {
+        return recommender.getUserProfile();
     }
 
 }

@@ -3,42 +3,41 @@ package models.recommender;
 import java.util.List;
 
 import models.database.retriever.GeneralTrackSelector;
-import models.record.Track;
-import models.utility.TrackList;
+import models.profile.Profile;
 
 public class BasicRecommender implements Recommender {
 
-	TrackList userCollection;
-	
-	private String query;
-	
-	public BasicRecommender(int size, TrackList collection) {
-		this.userCollection = collection;
-		this.query = "SELECT * FROM tracks ORDER BY RAND( )";
-		if(size != -1) {
-			query += (" LIMIT " + size);
-		}
-	}
-	
-	@Override
-	public List<RecTuple> recommend() {
-		GeneralTrackSelector seeker = new GeneralTrackSelector(query);
-		return seeker.asWeightedList(0.0);
-	}
-	
-	public String getQuery() {
-		return query;
-	}
+    Profile userProfile;
 
-	public void setQuery(String query) {
-		this.query = query;
-	}
+    private String query;
 
-	public TrackList getUserCollection() {
-		return userCollection;
-	}
-	
-	public List<Track> setUserCollection() {
-		return userCollection;
-	}
+    public BasicRecommender(Profile profile, int amount) {
+        this.userProfile = profile;
+        this.query = "SELECT * FROM tracks ORDER BY RAND( )";
+        if (amount != -1) {
+            query += (" LIMIT " + amount);
+        }
+    }
+
+    @Override
+    public List<RecTuple> recommend() {
+        GeneralTrackSelector seeker = new GeneralTrackSelector(query);
+        return seeker.asWeightedList(0.0);
+    }
+
+    public String getQuery() {
+        return query;
+    }
+
+    public void setQuery(String query) {
+        this.query = query;
+    }
+
+    public Profile getUserProfile() {
+        return userProfile;
+    }
+
+    public void setUserProfile(Profile userProfile) {
+        this.userProfile = userProfile;
+    }
 }

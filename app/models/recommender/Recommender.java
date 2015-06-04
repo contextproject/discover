@@ -2,11 +2,11 @@ package models.recommender;
 
 import java.util.List;
 
-import models.utility.TrackList;
+import models.profile.Profile;
 
 public interface Recommender {
 
 	List<RecTuple> recommend();
 	
-	TrackList getUserCollection();
+	Profile getUserProfile();
 }
