@@ -130,18 +130,6 @@ public class TrackTest {
      * Test for the equals() method.
      */
     @Test
-    public void testEquals3() {
-        Track a = new Track(1, 1);
-        Track b = new Track(1, 2);
-
-        assertFalse(a.equals(b));
-        assertFalse(b.equals(a));
-    }
-
-    /**
-     * Test for the equals() method.
-     */
-    @Test
     public void testEquals4() {
         assertFalse(new Track(1, 1).equals(2));
     }
