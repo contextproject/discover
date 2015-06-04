@@ -18,6 +18,10 @@ public class RecTuple implements Comparable<RecTuple> {
 		return (int) Math.round(this.getScore() - other.getScore());
 	}
 
+	public void addScore(double difference) {
+	    score += difference;
+	}
+	
 	public Track getTrack() {
 		return track;
 	}

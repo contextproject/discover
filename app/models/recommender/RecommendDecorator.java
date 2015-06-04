@@ -6,7 +6,7 @@ import models.profile.Profile;
 
 public abstract class RecommendDecorator implements Recommender {
 
-    public Recommender recommender;
+    protected Recommender recommender;
 
     public RecommendDecorator(Recommender recommender) {
         this.recommender = recommender;
