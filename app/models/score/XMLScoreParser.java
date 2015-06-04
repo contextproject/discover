@@ -120,26 +120,73 @@ public final class XMLScoreParser implements ScoreParser {
                 final NodeList text = scorenode.getElementsByTagName(STRING);
                 final NodeList pointsNode = scorenode
                         .getElementsByTagName(POINTS);
-                if (text.getLength() == 0) {
-                    throw new InvalidXMLFormatException(
-                            "There was a score with no strings.");
-                } else if (pointsNode.getLength() != 1) {
-                    throw new InvalidXMLFormatException(
-                            "More than 1 score defined for some word"
-                                    + " in node " + scorenode.toString());
-                }
-                final int pts = Integer.parseInt(pointsNode.item(0)
-                        .getTextContent().trim());
+                checkValid(scorenode, text, pointsNode); // Check validness of Nodes.
+                final int pts = getPoints(pointsNode);
                 final Map<String, Integer> newscores = addScores(text, pts);
-                final String duplicate = getDouble(scores, newscores);
-                if (duplicate != null) {
-                    throw new InvalidXMLFormatException("Duplicate string "
-                            + duplicate + " found in the file.");
-                }
+                checkDuplicates(scores, newscores);
+                // Add all scores to the storage.
                 scores.putAll(newscores);
             }
         }
         return scores;
+    }
+
+    /**
+     * Checks if the scores and newscores contain any common values. If
+     * they do then an InvalidXMLFormatException is thrown. This is an
+     * Exception because each XML file should only have one value for each
+     * word. That way it is always clear which value to use.
+     * @param scores The first map to check
+     * @param newscores The second map to check.
+     * @throws InvalidXMLFormatException If the two contain any common keys.
+     */
+    private void checkDuplicates(final Map<String, Integer> scores,
+            final Map<String, Integer> newscores)
+            throws InvalidXMLFormatException {
+        final String duplicate = getDouble(scores, newscores);
+        if (duplicate != null) {
+            throw new InvalidXMLFormatException("Duplicate string "
+                    + duplicate + " found in the file.");
+        }
+    }
+    
+    /**
+     * Returns the int value of the pointsNode nodelist.
+     * @param pointsNode The node containing the {@value #POINTS} tag.
+     * @return The points the words are worth.
+     * @throws InvalidXMLFormatException If the points were not numerical.
+     */
+    private int getPoints(final NodeList pointsNode) throws InvalidXMLFormatException {
+        final String text = pointsNode.item(0)
+                .getTextContent().trim();
+        try {
+            return Integer.parseInt(text);
+        } catch (NumberFormatException e) {
+            throw new InvalidXMLFormatException(pointsNode + " did not have a numeric points value."
+                    + " Try changing the file so it only contains numbers behind the " + POINTS
+                    + " tag.", e);
+        }
+    }
+
+    /**
+     * Checks if scorenode is valid. It checks for any string worth points and checks
+     * there is exactly one node with the value of {@value #POINTS}. It also checks for
+     * more than 0 occurences of the {@value #STRING} tag. 
+     * @param scorenode The parent node of text and pointsNode.
+     * @param text The text nodelist containing all the 
+     * @param pointsNode The node list containing the points tag.
+     * @throws InvalidXMLFormatException If one of the nodes are not valid.
+     */
+    private void checkValid(final Element scorenode, final NodeList text,
+            final NodeList pointsNode) throws InvalidXMLFormatException {
+        if (text.getLength() == 0) {
+            throw new InvalidXMLFormatException(
+                    "There was a score with no strings.");
+        } else if (pointsNode.getLength() != 1) {
+            throw new InvalidXMLFormatException(
+                    "More than 1 score defined for some word"
+                            + " in node " + scorenode.toString());
+        }
     }
 
     /**
@@ -240,6 +287,15 @@ public final class XMLScoreParser implements ScoreParser {
          */
         public InvalidXMLFormatException(final String message) {
             super(message);
+        }
+
+        /**
+         * Creates a new InvalidXML Format Exception.
+         * @param message The error message.
+         * @param cause The cause of this exception.
+         */
+        public InvalidXMLFormatException(final String message, final Throwable cause) {
+            super(message, cause);
         }
     }
 }

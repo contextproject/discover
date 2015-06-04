@@ -374,6 +374,29 @@ public class XMLScoreParserTest extends BasicTest {
     }
 
     /**
+     * Tests the {@link XMLScoreParser#parse(URI)} method.
+     * 
+     * @throws IOException
+     *             if an IOException occurs.
+     * @throws InvalidXMLFormatException
+     *             If the XML is not formatted properly.
+     * @throws ParserConfigurationException
+     *             If the document builder can't be created.
+     * @throws SAXException
+     *             If a parse error occurs.
+     * @throws URISyntaxException
+     *             If the URI is wrongly formatted.
+     */
+    @Test(expected = InvalidXMLFormatException.class)
+    public void testParseScoresPointsString() throws IOException,
+            InvalidXMLFormatException, ParserConfigurationException,
+            SAXException, URISyntaxException {
+        final URI uri = XMLScoreParserTest.class.getResource("scoresPointsString.xml")
+                .toURI();
+        getParser().parse(uri);
+    }
+
+    /**
      * Tests the {@link XMLScoreParser#getDouble(Map, Map)} method.
      */
     @Test
