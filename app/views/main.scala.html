@@ -11,11 +11,15 @@
         <script type="text/javascript" src="@routes.Assets.at("javascripts/scroll.js")"></script>
         <script type="text/javascript" src="@routes.Assets.at("javascripts/waveform.js")"></script>
         <script type="text/javascript" src="@routes.Assets.at("js/jquery.min.js")"></script>
-        <script type="text/javascript" src="http://connect.soundcloud.com/sdk.js"></script>
-        
+        <script type="text/javascript" src="@routes.Assets.at("javascripts/jquery.cookie.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.at("javascripts/modernizr.mq.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.at("javascripts/jquery.joyride-2.1.js")"></script>
+
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="stylesheet" href="@routes.Assets.at("stylesheets/photon.css")" />
         <link rel="stylesheet" href="@routes.Assets.at("stylesheets/main.css")" />
+        <link rel="stylesheet" href="@routes.Assets.at("stylesheets/joyride-2.1.css")" />
+
 
         <script>
             $.getScript("/assets/javascripts/controls.js");
@@ -34,7 +38,7 @@
                 <h1><strong>Discover</strong></h1>
                 <p> Find the music you love</p>
                 <ul class="actions">
-                    <li><a href="#one" class="button scrolly">Discover</a></li>
+                    <li id="disc"><a href="#one" class="button scrolly">Discover</a></li>
                 </ul>
             </div>
         </section>
@@ -96,5 +100,64 @@
                 <li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
             </ul>
         </section>
+
+            <!-- Tip Content -->
+            <ol id="joyRideTipContent" class="joyRideTipContent">
+                <li data-id="disc" data-text="Next" data-options="">
+                    <h2>Welcome to Discover</h2>
+                    <p>The place to discover new music. Take this tour to learn more about this page.</p>
+                    <p>(Press Escape to skip this tour or click on the 'Skip' button)</p>
+                </li>
+                <li data-id="url" data-button="Next" >
+                    <h2>Search bar</h2>
+                    <p>Here you can put the URL of the song you want to listen to.</p>
+                </li>
+                <li data-id="reload" data-button="Next" >
+                    <h2>Reload!!</h2>
+                    <p>Load the song which you filled in, in the previous step.</p>
+                </li>
+                <li data-class="sound__content" data-button="Next" >
+                    <h2>SoundCloud player</h2>
+                    <p>This is the SoundCloud player where you can actually play the music, comment on the song and etc.</p>
+                </li>
+                <li data-id="volume" data-button="Next" >
+                    <h2>Change the volume!</h2>
+                    <p>Here you can change the volume of the song that is playing</p>
+                </li>
+                <li data-id="preview" data-button="Next" >
+                    <h2>Preview a song</h2>
+                    <p>This gives you a short 10 second preview of how the song sounds like.</p>
+                </li>
+                <li data-id="next" data-button="Next" data-options="tipLocation: left" >
+                    <h2>Next!</h2>
+                    <p>Gives the next song or gives the next part of the current song.</p>
+                </li>
+                <li data-id="prev" data-button="Next" >
+                    <h2>Previous</h2>
+                    <p>Opposite of next.</p>
+                </li>
+                <li data-id="rand" data-button="Next" >
+                    <h2>You want something else?</h2>
+                    <p>Loads a random song from SoundCloud.</p>
+                </li>
+                <li data-id="sendWave" data-button="Next" >
+                    <h2>Split the Mix!</h2>
+                    <p>Splits a mix in different part to play separately.</p>
+                </li>
+                <li data-id="connect" data-button="Next" >
+                    <h2>Account login</h2>
+                    <p>Allows you to connect with you SoundCloud account</p>
+                </li>
+                <li data-id="like" data-button="Next" >
+                    <h2>Like!</h2>
+                    <p>When you are connected with your account, then you are able to like the current song.</p>
+                </li>
+                <li data-id="dislike" data-button="Close" data-options="tipLocation: left" >
+                    <h2>Dislike!</h2>
+                    <p>You can also dislike a song.</p>
+                </li>
+            </ol>
+
+
     </body>
 </html>
