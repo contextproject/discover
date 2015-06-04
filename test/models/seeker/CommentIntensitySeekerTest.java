@@ -17,7 +17,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.thenReturn;
 import static org.mockito.Mockito.when;
 
 /**
@@ -54,7 +53,7 @@ public class CommentIntensitySeekerTest extends BasicTest {
      * @throws Exception If the set up fails.
      */
     @BeforeClass
-    public void setUpBeforeClass() throws Exception {
+    public static void setUpBeforeClass() throws Exception {
         DatabaseConnector databaseConnector = new DatabaseConnector();
         databaseConnector.loadDrivers();
         databaseConnector.makeConnection("jdbc:mysql://188.166.78.36/contextbase",
@@ -67,7 +66,7 @@ public class CommentIntensitySeekerTest extends BasicTest {
      * @throws Exception If the clean up fails.
      */
     @AfterClass
-    public void tearDownAfterClass() throws Exception {
+    public static void tearDownAfterClass() throws Exception {
         Application.getDatabaseConnector().closeConnection();
         Application.setDatabaseConnector(null);
     }
