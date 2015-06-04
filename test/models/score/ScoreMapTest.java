@@ -12,7 +12,7 @@ import org.junit.Test;
  * Tests the ScoreMap class.
  * 
  * @since 03-06-2015
- * @version 03-06-2015
+ * @version 04-06-2015
  * 
  * @see ScoreMap
  * 
@@ -90,6 +90,7 @@ public class ScoreMapTest extends ScoreStorageTest {
     /**
      * Tests the {@link ScoreMap#equals(Object)} method.
      */
+    @Test
     public void testEquals() {
         final ScoreMap map = getStorage();
         map.add(1, 1);
@@ -103,13 +104,24 @@ public class ScoreMapTest extends ScoreStorageTest {
     /**
      * Tests the {@link ScoreMap#equals(Object)} method.
      */
+    @Test
     public void testEqualsFalse() {
         final ScoreMap map = getStorage();
         map.add(1, 1);
         map.add(3, 20);
-        final ScoreMap against = getStorage();
+        final ScoreMap against = new ScoreMap();
         against.add(1, 1);
         against.add(3, 19);
-        assertFalse(map.equals(against));
+        assertFalse("Map was: " + map.toString() + " and against was: " + against
+                + ". But they should not be equal.", map.equals(against));
+    }
+    
+    /**
+     * Tests the {@link ScoreMap#toString()} method.
+     */
+    @Test
+    public void testToString() {
+        assertEquals(getStorage().getScores().toString(),
+                getStorage().toString());
     }
 }

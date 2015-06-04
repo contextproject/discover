@@ -53,7 +53,7 @@ public class CommentIntensitySeekerTest extends BasicTest {
         super.setUp();
         Track track = new Track();
         track.setTrackid(32097940);
-        track.setDuration(10000);
+        track.setDuration(100000);
         list = new CommentList();
         setSeeker(new CommentIntensitySeeker(track));
         c1 = new Comment(1, 1, 5000, "l ");
@@ -108,7 +108,7 @@ public class CommentIntensitySeekerTest extends BasicTest {
         list.add(c6);
         commentIntensitySeeker.setComments(list);
         TimedSnippet ts = commentIntensitySeeker.seek();
-        assertEquals(15000, ts.getStartTime());
+        assertEquals(0, ts.getStartTime());
         assertEquals(30000, ts.getWindow());
     }
 
@@ -128,7 +128,10 @@ public class CommentIntensitySeekerTest extends BasicTest {
         TimedSnippet ts = commentIntensitySeeker.seek();
         assertEquals(30000, TimedSnippet.getDefaultDuration());
         assertEquals(5000, Comment.getPeriod());
-        assertEquals(40000, ts.getStartTime());
+        assertEquals(100000, getSeeker().getTrack().getDuration());
+        final String message = "ScoreStorage returned was "
+                + commentIntensitySeeker.calculateScores(TimedSnippet.getDefaultDuration());
+        assertEquals(message, 20000, ts.getStartTime());
         assertEquals(30000, ts.getWindow());
     }
 
@@ -142,7 +145,7 @@ public class CommentIntensitySeekerTest extends BasicTest {
         list.add(c9);
         commentIntensitySeeker.setComments(list);
         TimedSnippet ts = commentIntensitySeeker.seek();
-        assertEquals(5000, ts.getStartTime());
+        assertEquals(0, ts.getStartTime());
         assertEquals(30000, ts.getWindow());
     }
 

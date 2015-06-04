@@ -8,15 +8,13 @@ import models.snippet.TimedSnippet;
 import models.utility.CommentList;
 
 import java.util.Collections;
-import java.util.Set;
-import java.util.TreeSet;
 
 /**
  * This class returns the start time for a snippet, based on the comment
  * intensity of the track.
  * 
  * @since 07-05-2015
- * @version 03-06-2015
+ * @version 04-06-2015
  * 
  * @author stefan boodt
  * @author tomas heinsohn huala
@@ -102,25 +100,22 @@ public class CommentIntensitySeeker implements Seeker {
      * @return The updated storage.
      */
     private ScoreStorage updateStorage(final int duration, final ScoreStorage storage) {
-        Set<Integer> passed = new TreeSet<Integer>();
         Collections.sort(comments);
         final int commentsize = comments.size(); // Done here for efficientcy.
-        for (Comment c : comments) {
+        final int tracklength = track.getDuration();
+        final int stepsize = Comment.getPeriod();
+        for (int time = 0; time < tracklength; time += stepsize) {
             int count = 0;
-            final int time = c.getTime();
-            if (!passed.contains(time)) {
-                boolean finished = false;
-                for (int i = 0; !finished && i < commentsize; i++) {
-                    Comment c2 = comments.get(i);
-                    if (!isBefore(c2.getTime(), time + duration)) {
-                        finished = true;
-                    } else if (isInRange(c2.getTime(), time, duration)) {
-                        count += getWeight(c2);
-                    }
+            boolean finished = false;
+            for (int i = 0; !finished && i < commentsize; i++) {
+                Comment c2 = comments.get(i);
+                if (isInRange(c2.getTime(), time, duration)) {
+                    count += getWeight(c2);
+                } else if (!isBefore(c2.getTime(), time + duration)) {
+                    finished = true;
                 }
-                passed.add(time);
-                storage.add(time, count);
             }
+            storage.add(time, count);
         }
         return storage;
     }
@@ -153,7 +148,7 @@ public class CommentIntensitySeeker implements Seeker {
      * @param comment The comment to gain the weight of.
      * @return The weight of the comment.
      */
-    private int getWeight(final Comment comment) {
+    protected int getWeight(final Comment comment) {
         return 2 + getFilter().contentFilter(comment.getBody());
     }
 

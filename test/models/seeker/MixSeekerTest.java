@@ -3,10 +3,12 @@ package models.seeker;
 import java.util.ArrayList;
 import java.util.List;
 
+import models.record.Comment;
 import models.record.Track;
 import models.score.ScoreMap;
 import models.score.ScoreStorage;
 import models.snippet.TimedSnippet;
+import models.utility.CommentList;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -17,7 +19,7 @@ import static org.junit.Assert.assertEquals;
  * Tests the MixSeeker class.
  * 
  * @since 27-05-2015
- * @version 03-06-2015
+ * @version 04-06-2015
  * 
  * @see MixSeeker
  * @see CommentIntensitySeekerTest
@@ -41,9 +43,9 @@ public class MixSeekerTest extends CommentIntensitySeekerTest {
     public void setUp() throws Exception {
         super.setUp();
         Track track = new Track();
-        track.setDuration(10000);
+        track.setDuration(100000);
         track.setTrackid(1029204);
-        setSeeker(new MixSeeker(asList(0, 2, 1), track));
+        setSeeker(new MixSeeker(asList(0), track));
     }
 
     /**
@@ -338,6 +340,34 @@ public class MixSeekerTest extends CommentIntensitySeekerTest {
     public void testGetSnippetWholeEqualBounds() {
         final TimedSnippet selected = mixseeker.getSnippet(10, 20, 20, new ScoreMap());
         final TimedSnippet expected = new TimedSnippet(20, 0);
+        assertEquals(expected, selected);
+    }
+    
+    /**
+     * Tests the {@link MixSeeker#getSnippets(int)} and {@link MixSeeker#seek(int, int, int)}
+     * methods.
+     */
+    @Test
+    public void testGetSnippetsAndSeek() {
+        Track track = new Track();
+        track.setDuration(20);
+        final int trackid = 1024425;
+        track.setTrackid(trackid);
+        getSeeker().setStarttimes(asList(0, 1, 40000));
+        MixSeeker mixseeker = getSeeker();
+        final CommentList comments = new CommentList();
+        comments.add(new Comment(trackid, 1, 0));
+        comments.add(new Comment(trackid, 2, 30010));
+        comments.add(new Comment(trackid, 1, 36000));
+        comments.add(new Comment(trackid, 1, 41000));
+        comments.add(new Comment(trackid, 2, 40000));
+        mixseeker.setComments(comments);
+        final int duration = TimedSnippet.getDefaultDuration();
+        final List<TimedSnippet> selected = mixseeker.getSnippets(duration);
+        final List<TimedSnippet> expected = new ArrayList<TimedSnippet>();
+        expected.add(new TimedSnippet(0, 1));
+        expected.add(new TimedSnippet(10000, duration));
+        expected.add(new TimedSnippet(40000, duration));
         assertEquals(expected, selected);
     }
 }

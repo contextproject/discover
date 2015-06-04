@@ -11,7 +11,7 @@ import java.util.TreeMap;
  * uses a SortedMap to keep track of the scores.
  * 
  * @since 03-06-2015
- * @version 03-06-2015
+ * @version 04-06-2015
  * 
  * @see SortedMap
  * 
@@ -147,5 +147,10 @@ public class ScoreMap implements ScoreStorage {
             score = defaultValue;
         }
         return score;
+    }
+    
+    @Override
+    public String toString() {
+        return scores.toString();
     }
 }
