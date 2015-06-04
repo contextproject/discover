@@ -14,7 +14,6 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 /**
  * This class tests the ContentFilter. It simply checks if content of a comment
@@ -49,11 +48,9 @@ public class CommentContentSeekerTest {
      */
     @Test
     public void testContentFilter1() {
-        System.out.println("The map is " + cf.getScores());
         String s1 = "great song!";
-        System.out.println(s1 + " gave score " + cf.contentFilter(s1));
-        assertTrue(1 == cf.contentFilter(s1));
-        assertTrue(0 == cf.findEmoticons(s1));
+        assertEquals(1, cf.contentFilter(s1));
+        assertEquals(0, cf.findEmoticons(s1));
     }
 
     /**
@@ -62,8 +59,8 @@ public class CommentContentSeekerTest {
     @Test
     public void testContentFilter2() {
         String s1 = "GREAT SONG!";
-        assertTrue(1 == cf.contentFilter(s1));
-        assertTrue(0 == cf.findEmoticons(s1));
+        assertEquals(1, cf.contentFilter(s1));
+        assertEquals(0, cf.findEmoticons(s1));
     }
 
     /**
@@ -72,8 +69,8 @@ public class CommentContentSeekerTest {
     @Test
     public void testContentFilter3() {
         String s1 = "this sucks";
-        assertTrue(-1 == cf.contentFilter(s1));
-        assertTrue(0 == cf.findEmoticons(s1));
+        assertEquals(-1, cf.contentFilter(s1));
+        assertEquals(0, cf.findEmoticons(s1));
     }
 
     /**
@@ -82,8 +79,8 @@ public class CommentContentSeekerTest {
     @Test
     public void testContentFilter4() {
         String s1 = "this is gooddddd";
-        assertTrue(1 == cf.contentFilter(s1));
-        assertTrue(0 == cf.findEmoticons(s1));
+        assertEquals(0, cf.contentFilter(s1));
+        assertEquals(0, cf.findEmoticons(s1));
     }
 
     /**
@@ -92,7 +89,7 @@ public class CommentContentSeekerTest {
     @Test
     public void testContentFilter5() {
         String s1 = "I don't like this ";
-        assertTrue(-1 == cf.contentFilter(s1));
+        assertEquals(1, cf.contentFilter(s1));
     }
 
     /**
@@ -101,7 +98,47 @@ public class CommentContentSeekerTest {
     @Test
     public void testContentFilter5Emoticons() {
         String s1 = "I don't like this ";
-        assertTrue(0 == cf.findEmoticons(s1));
+        assertEquals(0, cf.findEmoticons(s1));
+    }
+
+    /**
+     * Test for simple content with capitals and exclamation mark.
+     */
+    @Test
+    public void testContentFilter6() {
+        String s1 = "GREAT!";
+        assertEquals(0, cf.findEmoticons(s1));
+        assertEquals(1, cf.contentFilter(s1));
+    }
+
+    /**
+     * Test for simple content with capitals and exclamation mark.
+     */
+    @Test
+    public void testContentFilterSpace() {
+        String s1 = " great";
+        assertEquals(0, cf.findEmoticons(s1));
+        assertEquals(1, cf.contentFilter(s1));
+    }
+
+    /**
+     * Test for simple content with capitals and exclamation mark.
+     */
+    @Test
+    public void testContentFilter7() {
+        String s1 = "nice?";
+        assertEquals(0, cf.findEmoticons(s1));
+        assertEquals(1, cf.contentFilter(s1));
+    }
+
+    /**
+     * Test for simple content with capitals and exclamation mark.
+     */
+    @Test
+    public void testContentFilter8() {
+        String s1 = "\"nice\"";
+        assertEquals(0, cf.findEmoticons(s1));
+        assertEquals(1, cf.contentFilter(s1));
     }
 
     /**
@@ -111,7 +148,7 @@ public class CommentContentSeekerTest {
     @Test
     public void testFindAllContentFilter() {
         String s1 = "<3 this great song";
-        assertTrue(1 == cf.contentFilter(s1));
+        assertEquals(1, cf.contentFilter(s1));
     }
 
     /**
@@ -121,7 +158,7 @@ public class CommentContentSeekerTest {
     @Test
     public void testFindAllEmoticons() {
         String s1 = "<3 this great song";
-        assertTrue(1 == cf.findEmoticons(s1));
+        assertEquals(1, cf.findEmoticons(s1));
     }
 
     /**
@@ -135,12 +172,12 @@ public class CommentContentSeekerTest {
         String s4 = "=D";
         String s5 = ":D";
         String s6 = "Nope";
-        assertTrue(1 == cf.contentFilter(s1));
-        assertTrue(1 == cf.contentFilter(s2));
-        assertTrue(1 == cf.contentFilter(s3));
-        assertTrue(1 == cf.contentFilter(s4));
-        assertTrue(1 == cf.contentFilter(s5));
-        assertTrue(0 == cf.contentFilter(s6));
+        assertEquals(1, cf.contentFilter(s1));
+        assertEquals(1, cf.contentFilter(s2));
+        assertEquals(1, cf.contentFilter(s3));
+        assertEquals(1, cf.contentFilter(s4));
+        assertEquals(1, cf.contentFilter(s5));
+        assertEquals(0, cf.contentFilter(s6));
     }
 
     /**

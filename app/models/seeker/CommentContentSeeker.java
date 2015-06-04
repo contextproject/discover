@@ -5,6 +5,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -110,12 +111,21 @@ public class CommentContentSeeker {
      */
     public int contentFilter(final String content) {
         String body = content.toLowerCase();
-        for (Entry<String, Integer> entry : sortedEntries) {
-            if (body.contains(entry.getKey())) {
-                return entry.getValue();
+        int maxscore = Integer.MIN_VALUE;
+        String[] words = body.split(" ");
+        for (String w : words) {
+            String word = w.replaceAll("[.|,|!|;|:|\"|\'|(|)]+", "");
+            word = word.trim().toLowerCase();
+            word = word.replace("?", "");
+            final Integer score = scores.get(word);
+            if (score != null && score.intValue() > maxscore) {
+                maxscore = score;
             }
         }
-        return findEmoticons(content);
+        if (maxscore == Integer.MIN_VALUE) {
+            return findEmoticons(body);
+        }
+        return maxscore;
     }
     
     /**
