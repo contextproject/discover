@@ -78,8 +78,7 @@ public class Application extends Controller {
 		if (json == null) {
 			return badRequest("Object is empty");
 		} else {
-			System.out
-					.println("Information about a Liked song has been received.");
+			System.out.println("Information about a Liked song has been received.");
 			return ok("");
 		}
 	}

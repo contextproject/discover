@@ -22,7 +22,9 @@ public class BasicRecommender implements Recommender {
     @Override
     public List<RecTuple> recommend() {
         GeneralTrackSelector seeker = new GeneralTrackSelector(query);
-        return seeker.asWeightedList(0.0);
+        List<RecTuple> res = seeker.asWeightedList(0.0);
+        System.out.println(res.size());
+        return res;
     }
 
     public String getQuery() {

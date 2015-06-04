@@ -25,32 +25,29 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
 	@Override
 	public List<RecTuple> recommend() {
 	    this.generateBoards();
-	    
-	    if (recommender != null) {
-			return evaluate();
-		} else {
-			return suggest();
-		}
+	    return evaluate();
+//	    if (recommender != null) {
+//			return evaluate();
+//		} else {
+//			return suggest();
+//		}
 	}
 
 	private List<RecTuple> evaluate() {
 		List<RecTuple> unweighted = recommender.recommend();
-//		ArrayList<RecTuple> weighted = new ArrayList<RecTuple>();
+		System.out.println("Size unweighted: " + unweighted.size());
 		for (RecTuple rt : unweighted) {
-		    if(genreBoard.containsKey(rt.getTrack().getGenre())) {
-		        rt.addScore(genreBoard.get(rt.getTrack().getGenre()));
+		    Object key = rt.getTrack().getGenre();
+		    if(genreBoard.containsKey(key)) {
+		        rt.addScore(genreBoard.get(key));
 		    }
-		    if(artistBoard.containsKey(rt.getTrack().getGenre())) {
-                rt.addScore(artistBoard.get(rt.getTrack().getGenre()));
+		    if(artistBoard.containsKey(key)) {
+                rt.addScore(artistBoard.get(key));
             }
 		}
 		return unweighted;
 	}
 
-	private List<RecTuple> suggest() {
-		return null;
-	}
-	
 	private void generateBoards() {
 	    if (recommender != null) {
 	        Profile pro = this.getUserProfile();
@@ -91,9 +88,9 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
 		return recommender.getUserProfile();
 	}
 	
-//	public static void main(String[] args) {
-//	    Profile pro = new Profile();
-//	    
-//	}
 
+    private List<RecTuple> suggest() {
+        return null;
+    }
+    
 }

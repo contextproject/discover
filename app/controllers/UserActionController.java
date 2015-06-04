@@ -1,14 +1,25 @@
 package controllers;
 
-import com.fasterxml.jackson.databind.JsonNode;
+
+import static play.mvc.Controller.request;
+import static play.mvc.Results.ok;
+
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+
 import models.json.Json;
+import models.mix.MixSplitter;
 import models.profile.Profile;
+import models.recommender.BasicRecommender;
+import models.recommender.LikesRecommender;
+import models.recommender.RecTuple;
+import models.recommender.Recommender;
 import models.record.Track;
 import models.utility.TrackList;
 import play.mvc.Result;
 
-import static play.mvc.Controller.request;
-import static play.mvc.Results.ok;
+import com.fasterxml.jackson.databind.JsonNode;
 
 /**
  * Controller for the recommendation system.
@@ -62,5 +73,14 @@ public final class UserActionController {
             profile.addLike(track);
         }
         return ok();
+    }
+    
+    public static Result recommend() {
+        System.out.println();
+        Recommender rec = new LikesRecommender(new BasicRecommender(profile, 10));
+        List<RecTuple> recs = rec.recommend();
+        System.out.println(recs.size());
+        System.out.println(recs.toString());
+        return ok(recs.toString());
     }
 }
