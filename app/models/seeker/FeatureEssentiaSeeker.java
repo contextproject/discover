@@ -1,5 +1,6 @@
 package models.seeker;
 
+import models.score.ScoreStorage;
 import models.snippet.TimedSnippet;
 
 /**
@@ -16,6 +17,18 @@ public class FeatureEssentiaSeeker implements Seeker {
 
     @Override
     public TimedSnippet seek() {
+        return null;
+    }
+
+    @Override
+    public TimedSnippet seek(final int duration) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public ScoreStorage calculateScores(final int duration) {
+        // TODO Auto-generated method stub
         return null;
     }
 }

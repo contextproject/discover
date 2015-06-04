@@ -1,7 +1,12 @@
 package models.seeker;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import models.record.Track;
+import models.score.ScoreStorage;
+import models.snippet.TimedSnippet;
 
 /**
  * This class seeks the comment intensity in mixes. It uses a start and
@@ -10,7 +15,7 @@ import java.util.List;
  * comment intensity in mixes.
  * 
  * @since 27-05-2015
- * @version 29-05-2015
+ * @version 03-06-2015
  * 
  * @see CommentIntensitySeeker
  * @see MixSplitter
@@ -19,7 +24,7 @@ import java.util.List;
  * @author arthur hovenesyan
  *
  */
-public class MixSeeker {
+public class MixSeeker extends CommentIntensitySeeker {
     
     /**
      * The Integer that describes the end of the song.
@@ -34,9 +39,23 @@ public class MixSeeker {
     /**
      * Generates a new MixSeeker.
      * @param starttimesOfPieces The integers that contain the timestamps of the
-     * startpoints of the different 
+     * startpoints of the different
+     * @param track The track to search.
      */
-    public MixSeeker(final List<Integer> starttimesOfPieces) {
+    public MixSeeker(final List<Integer> starttimesOfPieces, final Track track) {
+        this(starttimesOfPieces, track, new NullSeeker());
+    }
+    
+    /**
+     * Generates a new MixSeeker.
+     * @param starttimesOfPieces The integers that contain the timestamps of the
+     * startpoints of the different
+     * @param track The track to search.
+     * @param decorate The seeker to decorate and increase the functionality of.
+     */
+    public MixSeeker(final List<Integer> starttimesOfPieces, final Track track,
+            final Seeker decorate) {
+        super(track, decorate);
         setStarttimes(starttimesOfPieces);
     }
     
@@ -90,5 +109,65 @@ public class MixSeeker {
             }
         }
         return endOfSong;
+    }
+    
+    @Override
+    protected boolean isInRange(final int time, final int bottom, final int window) {
+        return super.isInRange(time, bottom, window)
+                && isBefore(time, getNextPieceStarttime(bottom));
+    }
+    
+    /**
+     * Seeks one snippet between the given bounds.
+     * @param window The window of the search mechanism and the duration of the snippet.
+     * @param lowerbound The lowerbound.
+     * @param upperbound The upperbound.
+     * @return The best snippet between the bounds.
+     */
+    public TimedSnippet seek(final int window, final int lowerbound,
+            final int upperbound) {
+        ScoreStorage scores = this.calculateScores(window);
+        return getSnippet(window, lowerbound, upperbound, scores);
+    }
+    
+    /**
+     * Gets all the snippets for the different subpieces.
+     * @param window The window to search.
+     * @return The list of all timedSnippets in the mix.
+     */
+    public List<TimedSnippet> getSnippets(final int window) {
+        final ScoreStorage scores = this.calculateScores(window);
+        List<TimedSnippet> snippets = new ArrayList<TimedSnippet>();
+        final int amountOfPieces = starttimesOfPieces.size();
+        for (int i = 0; i < amountOfPieces; i++) {
+            final int lowerbound = starttimesOfPieces.get(i);
+            final int upperbound = getNextPieceStarttime(lowerbound);
+            snippets.add(getSnippet(window, lowerbound,
+                    upperbound, scores));
+        }
+        return snippets;
+    }
+    
+    /**
+     * Seeks one snippet between the given bounds.
+     * @param window The window of the search mechanism and the duration of the snippet.
+     * @param lowerbound The lowerbound.
+     * @param upperbound The upperbound.
+     * @param scores The scores to be considered.
+     * @return The best snippet between the bounds.
+     */
+    protected TimedSnippet getSnippet(final int window, final int lowerbound, final int upperbound,
+            final ScoreStorage scores) {
+        if (lowerbound + window < upperbound) {
+            final TimedSnippet snippet = new TimedSnippet(
+                        scores.maxScoreStartTime(lowerbound, upperbound), window);
+            return snippet;
+        } else if (upperbound < lowerbound) {
+            throw new IllegalStateException("Cannot have an upperbound bigger than a lowerbound,"
+                    + "but the upperbound was " + upperbound + " while the lowerbound was "
+                    + lowerbound);
+        }
+        // The whole part is placable inside one snippet so return that snippet.
+        return new TimedSnippet(lowerbound, upperbound - lowerbound);
     }
 }

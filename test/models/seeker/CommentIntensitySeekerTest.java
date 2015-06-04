@@ -1,26 +1,37 @@
 package models.seeker;
 
-import controllers.Application;
-import models.database.DatabaseConnector;
-import models.database.retriever.CommentRetriever;
-import models.database.retriever.TrackRetriever;
+import basic.BasicTest;
+
 import models.record.Comment;
 import models.record.Track;
+
 import models.snippet.TimedSnippet;
+
 import models.utility.CommentList;
-import org.junit.Before;
+
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
  * Test for the CommentIntensitySeeker.
+ * 
+ * @since 08-05-2015
+ * @version 03-06-2015
+ * 
+ * @see CommentIntensitySeeker
+ * 
+ * @author tomas heinsohn huala
+ * @author stefan boodt
+ * 
  */
-public class CommentIntensitySeekerTest {
+public class CommentIntensitySeekerTest extends BasicTest {
 
     /**
      * CommentIntensitySeeker object.
@@ -37,20 +48,14 @@ public class CommentIntensitySeekerTest {
      */
     private CommentList list;
 
-    /**
-     * Set up.
-     */
-    @Before
-    public void setUp() {
-        DatabaseConnector databaseConnector = new DatabaseConnector();
-        databaseConnector.loadDrivers();
-        databaseConnector.makeConnection("jdbc:mysql://188.166.78.36/contextbase", "context", "password");
-        Application.setDatabaseConnector(databaseConnector);
-        TrackRetriever tr = new TrackRetriever(32097940);
-        Track track = tr.getAll();
-        CommentRetriever cr = new CommentRetriever(32097940);
-        list = cr.getComments();
-        commentIntensitySeeker = new CommentIntensitySeeker(track);
+    @Override
+    public void setUp() throws Exception {
+        super.setUp();
+        Track track = new Track();
+        track.setTrackid(32097940);
+        track.setDuration(100000);
+        list = new CommentList();
+        setSeeker(new CommentIntensitySeeker(track));
         c1 = new Comment(1, 1, 5000, "l ");
         c3 = new Comment(1, 3, 15000, "l ");
         c4 = new Comment(1, 4, 16000, "l ");
@@ -59,6 +64,23 @@ public class CommentIntensitySeekerTest {
         c7 = new Comment(1, 7, 50000, "l ");
         c8 = new Comment(1, 8, 41000, "l ");
         c9 = new Comment(1, 9, 42000, "l ");
+    }
+    
+    /**
+     * Sets the seeker under test.
+     * @param seeker The new seeker under test.
+     */
+    public void setSeeker(final CommentIntensitySeeker seeker) {
+        commentIntensitySeeker = seeker;
+        setObjectUnderTest(seeker);
+    }
+    
+    /**
+     * Gets the seeker under test.
+     * @return The seeker under test.
+     */
+    public CommentIntensitySeeker getSeeker() {
+        return commentIntensitySeeker;
     }
 
     /**
@@ -86,7 +108,7 @@ public class CommentIntensitySeekerTest {
         list.add(c6);
         commentIntensitySeeker.setComments(list);
         TimedSnippet ts = commentIntensitySeeker.seek();
-        assertEquals(15000, ts.getStartTime());
+        assertEquals(0, ts.getStartTime());
         assertEquals(30000, ts.getWindow());
     }
 
@@ -106,7 +128,10 @@ public class CommentIntensitySeekerTest {
         TimedSnippet ts = commentIntensitySeeker.seek();
         assertEquals(30000, TimedSnippet.getDefaultDuration());
         assertEquals(5000, Comment.getPeriod());
-        assertEquals(40000, ts.getStartTime());
+        assertEquals(100000, getSeeker().getTrack().getDuration());
+        final String message = "ScoreStorage returned was "
+                + commentIntensitySeeker.calculateScores(TimedSnippet.getDefaultDuration());
+        assertEquals(message, 20000, ts.getStartTime());
         assertEquals(30000, ts.getWindow());
     }
 
@@ -120,7 +145,7 @@ public class CommentIntensitySeekerTest {
         list.add(c9);
         commentIntensitySeeker.setComments(list);
         TimedSnippet ts = commentIntensitySeeker.seek();
-        assertEquals(5000, ts.getStartTime());
+        assertEquals(0, ts.getStartTime());
         assertEquals(30000, ts.getWindow());
     }
 
@@ -138,7 +163,45 @@ public class CommentIntensitySeekerTest {
         TimedSnippet ts = commentIntensitySeeker.seek();
         assertEquals(0, ts.getStartTime());
         assertEquals(30000, ts.getWindow());
-        verify(com, times(5)).getTime();
-//        verify(com).hashCode();
+    }
+    
+    /**
+     * Tests the {@link CommentIntensitySeeker#isInRange(int, int, int)} method.
+     */
+    @Test
+    public void testIsInRange() {
+        assertTrue(getSeeker().isInRange(20, 10, 30));
+    }
+    
+    /**
+     * Tests the {@link CommentIntensitySeeker#isInRange(int, int, int)} method.
+     */
+    @Test
+    public void testIsInRangeBefore() {
+        assertFalse(getSeeker().isInRange(0, 10, 30));
+    }
+    
+    /**
+     * Tests the {@link CommentIntensitySeeker#isInRange(int, int, int)} method.
+     */
+    @Test
+    public void testIsInRangeAfter() {
+        assertFalse(getSeeker().isInRange(50, 10, 30));
+    }
+    
+    /**
+     * Tests the {@link CommentIntensitySeeker#isInRange(int, int, int)} method.
+     */
+    @Test
+    public void testIsInRangeTop() {
+        assertTrue(getSeeker().isInRange(40, 10, 30));
+    }
+    
+    /**
+     * Tests the {@link CommentIntensitySeeker#getFilter()} method.
+     */
+    @Test
+    public void testGetFilter() {
+        assertNotNull(getSeeker().getFilter());
     }
 }
