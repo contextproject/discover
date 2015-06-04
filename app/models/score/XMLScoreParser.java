@@ -108,7 +108,7 @@ public final class XMLScoreParser implements ScoreParser {
      *             If the XML file is not formatted well.
      */
     protected Map<String, Integer> getScores(final NodeList nodelist)
-                throws InvalidXMLFormatException {
+        throws InvalidXMLFormatException {
         final int nodesnum = nodelist.getLength();
         Map<String, Integer> scores = new HashMap<String, Integer>();
         for (int i = 0; i < nodesnum; i++) {
@@ -176,7 +176,7 @@ public final class XMLScoreParser implements ScoreParser {
      *             If the XML is not correctly formatted.
      */
     protected Map<String, Integer> addScores(final NodeList texts, final int pts)
-                throws InvalidXMLFormatException {
+        throws InvalidXMLFormatException {
         final Map<String, Integer> scores = new HashMap<String, Integer>();
         for (int k = 0; k < texts.getLength(); k++) {
             final String t = texts.item(k).getTextContent().trim()

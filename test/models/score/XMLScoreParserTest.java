@@ -1,28 +1,36 @@
 package models.score;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 import basic.BasicTest;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.PrintStream;
+
 import java.net.URI;
 import java.net.URISyntaxException;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import models.score.XMLScoreParser.InvalidXMLFormatException;
-
 import org.junit.Test;
+
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
 import org.xml.sax.SAXException;
+
+import static models.score.XMLScoreParser.InvalidXMLFormatException;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * This class tests the XMLScoreParser class.
@@ -81,10 +89,10 @@ public class XMLScoreParserTest extends BasicTest {
         expected.put("ok", 20);
         expected.put("drop", 100);
         Map<String, Integer> created = new HashMap<String, Integer>();
-        ArrayNodeList l1 = new ArrayNodeList<Node>();
+        ArrayNodeList<Node> l1 = new ArrayNodeList<Node>();
         Node mocknode1 = mock(Node.class);
         doReturn("ok").when(mocknode1).getTextContent();
-        ArrayNodeList l2 = new ArrayNodeList<Node>();
+        ArrayNodeList<Node> l2 = new ArrayNodeList<Node>();
         Node mocknode2 = mock(Node.class);
         doReturn("drop").when(mocknode2).getTextContent();
         l1.add(mocknode1);
@@ -433,6 +441,42 @@ public class XMLScoreParserTest extends BasicTest {
         expected.put("good", 10);
         expected.entrySet();
         assertEquals(expected, scores);
+    }
+
+    /**
+     * Tests the {@link XMLScoreParser#parseCaught(URI)} method.
+     * 
+     * @throws IOException
+     *             if an IOException occurs.
+     * @throws ParserConfigurationException
+     *             If the document builder can't be created.
+     * @throws SAXException
+     *             If a parse error occurs.
+     * @throws URISyntaxException
+     *             If the URI is wrongly formatted.
+     */
+    @Test
+    public void testParseCaughtScoresNoWords() throws IOException,
+            ParserConfigurationException, SAXException, URISyntaxException {
+        Map<String, Integer> expected = new HashMap<String, Integer>();
+        final Map<String, Integer> result;
+        final PrintStream err = System.err;
+        final File dest = new File("PurposeFull error.txt");
+        System.setErr(new PrintStream(dest));
+        try {
+            final URI uri = XMLScoreParserTest.class.getResource(
+                    "scoresNoWords.xml").toURI();
+            result = getParser().parseCaught(uri);
+            
+        } catch (IOException | ParserConfigurationException
+                | SAXException | URISyntaxException e) {
+            throw e;
+        } finally {
+            System.setErr(err);
+        }
+        assertEquals(expected, result);
+        assertTrue("The error file does not exist.", dest.exists());
+        assertTrue(dest.delete());
     }
     
     /**
