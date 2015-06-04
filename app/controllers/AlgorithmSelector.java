@@ -11,8 +11,9 @@ public final class AlgorithmSelector {
 
 	public enum Mode { AUTO, INTENSITY, CONTENT, RANDOM } 
 	
-	private static Mode curMode; 
-    /**
+	private static Mode curMode = AlgorithmSelector.Mode.AUTO; 
+	
+	/**
      * Determine the start of the snippet for the track.
      *
      * @param track The track
