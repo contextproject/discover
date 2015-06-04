@@ -132,7 +132,31 @@ public class Application extends Controller {
             return badRequest("Expecting Json data");
         } else {
             int trackID = json.get("track").get("id").asInt();
-            MixSplitter splitter = new MixSplitter(json.get("waveform"), trackID);
+            MixSplitter splitter = new MixSplitter(json.get("waveform"),
+                    trackID);
+            List<Integer> list = splitter.split();
+            Map<String, List<Integer>> map = new TreeMap<String, List<Integer>>();
+            map.put("response", list);
+            JsonNode response = mapper.valueToTree(map);
+            return ok(response);
+        }
+    }
+
+    /**
+     * TO DO. This function is just to keep the build working
+     * 
+     * @param n
+     *            amount of splits.
+     * @return ok response with the start times for the mix.
+     */
+    public static Result nSplitWaveform(final String n) {
+        JsonNode json = request().body().asJson();
+        if (json == null) {
+            return badRequest("Expecting Json data");
+        } else {
+            int trackID = json.get("track").get("id").asInt();
+            MixSplitter splitter = new MixSplitter(json.get("waveform"),
+                    trackID);
             List<Integer> list = splitter.split();
             Map<String, List<Integer>> map = new TreeMap<String, List<Integer>>();
             map.put("response", list);
@@ -153,7 +177,8 @@ public class Application extends Controller {
             return badRequest("Expecting Json data");
         } else {
             ObjectNode objNode = mapper.createObjectNode();
-            JsonNode response = objNode.put("message", "File was transvered successfully");
+            JsonNode response = objNode.put("message",
+                    "File was transvered successfully");
             return ok(response);
         }
     }
@@ -162,7 +187,8 @@ public class Application extends Controller {
      * Retrieves a start-time calculated by the CommentIntensitySeeker for the
      * given track id.
      *
-     * @param trackId The id of the track.
+     * @param trackId
+     *            The id of the track.
      * @return the start-time of the snippet.
      */
     public static int getStartTime(final int trackId) {
@@ -175,7 +201,8 @@ public class Application extends Controller {
     /**
      * Get the start time calculated by the AlgorithmSelector.
      *
-     * @param track The track
+     * @param track
+     *            The track
      * @return The start time of the snippet.
      */
     public static int getStartTime(final Track track) {
@@ -185,7 +212,8 @@ public class Application extends Controller {
     /**
      * Setter for the ObjectMapper object.
      *
-     * @param om the new ObjectMapper object.
+     * @param om
+     *            the new ObjectMapper object.
      */
     public static void setObjectMapper(final ObjectMapper om) {
         mapper = om;
@@ -203,7 +231,8 @@ public class Application extends Controller {
     /**
      * Setter for the DatabaseConnector object.
      *
-     * @param dbc the new DatabaseConnector object.
+     * @param dbc
+     *            the new DatabaseConnector object.
      */
     public static void setDatabaseConnector(final DatabaseConnector dbc) {
         databaseConnector = dbc;
