@@ -32,12 +32,12 @@ import org.xml.sax.SAXException;
  * 
  * <p>
  * This class is now a Singleton because that makes life so much easier and is
- * easier on memory. See the {@link #createParser()} method for the method of creating a
- * XMLScoreParser.
+ * easier on memory. See the {@link #createParser()} method for the method of
+ * creating a XMLScoreParser.
  * </p>
  * 
  * @since 01-06-2015
- * @version 02-06-2015
+ * @version 04-06-2015
  * 
  * @see Document
  * @see DocumentBuilderFactory
@@ -46,7 +46,7 @@ import org.xml.sax.SAXException;
  *
  */
 public final class XMLScoreParser implements ScoreParser {
-    
+
     /**
      * The parser to be used.
      */
@@ -55,23 +55,23 @@ public final class XMLScoreParser implements ScoreParser {
     /**
      * The score nodes tagname.
      */
-    private final String scorenode = "score";
+    private static final String SCORENODE = "score";
 
     /**
      * The tagname of the text.
      */
-    private final String string = "string";
+    private static final String STRING = "string";
 
     /**
      * The tagname of the points belonging to the text.
      */
-    private final String points = "value";
-    
+    private static final String POINTS = "value";
+
     /**
      * Creates an XMLScoreParser.
      */
     private XMLScoreParser() {
-        
+
     }
 
     @Override
@@ -95,7 +95,7 @@ public final class XMLScoreParser implements ScoreParser {
         DocumentBuilder builder = factory.newDocumentBuilder();
         Document doc = builder.parse(uri.toString());
         doc.getDocumentElement().normalize();
-        return getScores(doc.getElementsByTagName(scorenode));
+        return getScores(doc.getElementsByTagName(SCORENODE));
     }
 
     /**
@@ -108,7 +108,7 @@ public final class XMLScoreParser implements ScoreParser {
      *             If the XML file is not formatted well.
      */
     protected Map<String, Integer> getScores(final NodeList nodelist)
-            throws InvalidXMLFormatException {
+                throws InvalidXMLFormatException {
         final int nodesnum = nodelist.getLength();
         Map<String, Integer> scores = new HashMap<String, Integer>();
         for (int i = 0; i < nodesnum; i++) {
@@ -117,9 +117,9 @@ public final class XMLScoreParser implements ScoreParser {
             // Is always true but we check to be certain.
             if (node.getNodeType() == Node.ELEMENT_NODE) {
                 Element scorenode = (Element) node;
-                final NodeList text = scorenode.getElementsByTagName(string);
+                final NodeList text = scorenode.getElementsByTagName(STRING);
                 final NodeList pointsNode = scorenode
-                        .getElementsByTagName(points);
+                        .getElementsByTagName(POINTS);
                 if (text.getLength() == 0) {
                     throw new InvalidXMLFormatException(
                             "There was a score with no strings.");
@@ -176,10 +176,11 @@ public final class XMLScoreParser implements ScoreParser {
      *             If the XML is not correctly formatted.
      */
     protected Map<String, Integer> addScores(final NodeList texts, final int pts)
-            throws InvalidXMLFormatException {
+                throws InvalidXMLFormatException {
         final Map<String, Integer> scores = new HashMap<String, Integer>();
         for (int k = 0; k < texts.getLength(); k++) {
-            final String t = texts.item(k).getTextContent().trim().toLowerCase();
+            final String t = texts.item(k).getTextContent().trim()
+                    .toLowerCase();
             final Integer oldpoints = scores.put(t, pts);
             if (oldpoints != null) {
                 throw new InvalidXMLFormatException("Duplicate string " + t
@@ -188,12 +189,14 @@ public final class XMLScoreParser implements ScoreParser {
         }
         return scores;
     }
-    
+
     /**
      * Creates a XMLScoreParser. If one already exists it returns that one
-     * instead of creating a new one. This enforces the Singleton design pattern.
-     * Due to the fact that all the XMLScoreParsers are equivalent and equal this method
-     * of creation has no backfires but saves a lot of memory if a lot of parsers are created.
+     * instead of creating a new one. This enforces the Singleton design
+     * pattern. Due to the fact that all the XMLScoreParsers are equivalent and
+     * equal this method of creation has no backfires but saves a lot of memory
+     * if a lot of parsers are created.
+     * 
      * @return An XMLScoreParser you can use.
      */
     public static XMLScoreParser createParser() {

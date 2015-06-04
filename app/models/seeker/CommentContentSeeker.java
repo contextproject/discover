@@ -5,7 +5,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -13,10 +12,10 @@ import java.util.TreeSet;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.xml.sax.SAXException;
-
 import models.score.ScoreParser;
 import models.score.XMLScoreParser;
+
+import org.xml.sax.SAXException;
 
 /**
  * Filters the content of a comment.
@@ -29,11 +28,16 @@ public class CommentContentSeeker {
     private Map<String, Integer> scores;
     
     /**
-     * The sortedEntries in the scores map. Used to highly increase the
-     * speed of the {@link #contentFilter(String)} method since it now no
-     * longer needs to sort it for every comment fired at it.
+     * The comparator to use for most points first sorting.
      */
-    private Set<Entry<String, Integer>> sortedEntries; 
+    private static final Comparator<Entry<String, Integer>> COMPARE
+        = new Comparator<Entry<String, Integer>>() {
+            @Override
+            public int compare(final Entry<String, Integer> e1,
+                    final Entry<String, Integer> e2) {
+                return e2.getValue() - e1.getValue();
+            }
+        };
     
     /**
      * Creates a new CommentContentSeeker.
@@ -90,8 +94,6 @@ public class CommentContentSeeker {
      */
     public void setScores(final Map<String, Integer> scores) {
         this.scores = scores;
-        final Set<Entry<String, Integer>> entrySet = scores.entrySet();
-        sortedEntries = doTheSort(entrySet);
     }
     
     /**
@@ -129,20 +131,22 @@ public class CommentContentSeeker {
     }
     
     /**
+     * Returns the Comparator that sorts the strings highest points first.
+     * @return The Comparator.
+     */
+    protected Comparator<Entry<String, Integer>> getComparator() {
+        return COMPARE;
+    }
+    
+    /**
      * This method sorts the given Set to put the highest Integer first so
      * we can check the highest score first.
      * @param entries The Set to sort.
      * @return The sorted set.
      */
     protected TreeSet<Entry<String, Integer>> doTheSort(final Set<Entry<String, Integer>> entries) {
-        final Comparator<Entry<String, Integer>> comp = new Comparator<Entry<String, Integer>>() {
-            @Override
-            public int compare(final Entry<String, Integer> e1,
-                    final Entry<String, Integer> e2) {
-                return e2.getValue() - e1.getValue();
-            }
-        };
-        final TreeSet<Entry<String, Integer>> tree = new TreeSet<Entry<String, Integer>>(comp);
+        final TreeSet<Entry<String, Integer>> tree =
+                new TreeSet<Entry<String, Integer>>(getComparator());
         tree.addAll(entries);
         return tree;
     }

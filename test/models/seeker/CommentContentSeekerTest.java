@@ -2,6 +2,7 @@ package models.seeker;
 
 import java.net.URI;
 import java.net.URL;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,7 +21,7 @@ import static org.junit.Assert.assertNotNull;
  * is positive.
  * 
  * @since 27-06-2015
- * @version 02-06-2015
+ * @version 04-06-2015
  */
 public class CommentContentSeekerTest {
 
