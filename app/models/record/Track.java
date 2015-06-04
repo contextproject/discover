@@ -29,6 +29,13 @@ public class Track implements Record, Comparable<Track> {
      */
     private String genre;
 
+    
+    /**
+     * Basic constructor for the Track class.
+     */
+    public Track() {
+    }
+    
     /**
      * Constructor that accepts a ResultSet to build the track.
      *

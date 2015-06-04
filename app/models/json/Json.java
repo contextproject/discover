@@ -15,22 +15,28 @@ import models.utility.TrackList;
 public class Json {
 
     /**
-     * Convert the JsonNode object to a Track object
-     * @param jsonNode JsonNode object containing track 
+     * Convert the JsonNode object to a Track object.
+     * 
+     * @param jsonNode
+     *            JsonNode object containing track
      * @return A Track object
      */
     public static Track getTrack(final JsonNode jsonNode) {
         if (jsonNode != null) {
             int trackid = jsonNode.get("id").asInt();
             int duration = jsonNode.get("duration").asInt();
-            return new Track(trackid, duration);
+            int userid = jsonNode.get("user_id").asInt();
+            String genre = jsonNode.get("genre").asText();
+            return new Track(trackid, duration, userid, genre);
         }
         return null;
     }
 
     /**
-     * Convert the JsonNode object to a TrackList object
-     * @param jsonNode JsonNode object containing tracks 
+     * Convert the JsonNode object to a TrackList object.
+     * 
+     * @param jsonNode
+     *            JsonNode object containing tracks
      * @return A TrackList object
      */
     public static TrackList getTrackList(final JsonNode jsonNode) {
@@ -43,13 +49,21 @@ public class Json {
         }
         return null;
     }
-    
+
+    /**
+     * Receives a waveform JSON object and converts it into a List object of
+     * doubles.
+     * 
+     * @param json
+     *            The JSON object.
+     * @return A list containing the waveform as doubles
+     */
     public static List<Double> getWaveform(final JsonNode json) {
-		Iterator<JsonNode> it = json.elements();
-		List<Double> data = new ArrayList<Double>();
-		while (it.hasNext()) {
-			data.add(Math.round(it.next().asDouble() * 10000.00) / 10000.00);
-		}
-		return data;
-	}
+        Iterator<JsonNode> it = json.elements();
+        List<Double> data = new ArrayList<Double>();
+        while (it.hasNext()) {
+            data.add(Math.round(it.next().asDouble() * 10000.00) / 10000.00);
+        }
+        return data;
+    }
 }

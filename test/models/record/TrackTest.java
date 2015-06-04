@@ -52,7 +52,7 @@ public class TrackTest {
      */
     @Test
     public void testTrack3() {
-        Track track = new Track(1, 1);
+        Track track = new Track(1, 1, 1, "");
         assertNotNull(track);
         assertEquals(1, track.getTrackid());
         assertEquals(1, track.getDuration());
@@ -105,9 +105,9 @@ public class TrackTest {
      */
     @Test
     public void testEquals1() {
-        Track a = new Track(1, 1);
-        Track b = new Track(1, 1);
-
+        Track a = new Track(1, 1, 1, "");
+        Track b = new Track(1, 1, 1, "");
+        
         assertTrue(a.equals(b));
         assertTrue(b.equals(a));
     }
@@ -117,8 +117,8 @@ public class TrackTest {
      */
     @Test
     public void testEquals2() {
-        Track a = new Track(1, 1);
-        Track b = new Track(2, 1);
+        Track a = new Track(1, 1, 1, "");
+        Track b = new Track(2, 1, 1, "");
 
         assertFalse(a.equals(b));
         assertFalse(b.equals(a));
@@ -129,11 +129,11 @@ public class TrackTest {
      */
     @Test
     public void testEquals3() {
-        Track a = new Track(1, 1);
-        Track b = new Track(1, 2);
+        Track a = new Track(1, 1, 2, "");
+        Track b = new Track(1, 2, 1, "");
 
-        assertFalse(a.equals(b));
-        assertFalse(b.equals(a));
+        assertTrue(a.equals(b));
+        assertTrue(b.equals(a));
     }
 
     /**
@@ -141,7 +141,7 @@ public class TrackTest {
      */
     @Test
     public void testEquals4() {
-        assertFalse(new Track(1, 1).equals(2));
+        assertFalse(new Track(1, 1, 1, "").equals(2));
     }
 
     /**
@@ -149,7 +149,7 @@ public class TrackTest {
      */
     @Test
     public void testHashCode() {
-        Track a = new Track(1, 1);
+        Track a = new Track(1, 1, 1, "");
         assertEquals(32, a.hashCode());
     }
 
@@ -158,8 +158,8 @@ public class TrackTest {
      */
     @Test
     public void testCompareTo() {
-        Track a = new Track(1, 1);
-        Track b = new Track(2, 2);
+        Track a = new Track(1, 1, 1, "");
+        Track b = new Track(2, 2, 1, "");
         assertEquals(-2, a.compareTo(b));
     }
 }
