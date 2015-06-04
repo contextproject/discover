@@ -19,6 +19,7 @@
 
         <script>
             $.getScript("/assets/javascripts/controls.js");
+            $.getScript("/assets/javascripts/tracks.js");
         </script>
 
         <script>
@@ -78,6 +79,20 @@
                             <button class="control" id="connect">Connect</button> <br>
                             <button class="control" id="waveform">Waveform</button> <br>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="tracklist" class="main style1">
+            <div class="container">
+                <div class="row 150%">
+                    <div class="8u 12u$(medium)">
+                        <ul id="tracks"></ul>
+                    </div>
+
+                    <div class="4u$ 12u$(medium) important(medium)">
+                        <button class="control" id="gettracks">Tracks!</button>
                     </div>
                 </div>
             </div>

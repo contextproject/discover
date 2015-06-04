@@ -45,7 +45,7 @@ public class TrackTest {
     public void testTrack2() {
         Track track = new Track(databaseConnector.executeQuery("SELECT * FROM tracks LIMIT 1"));
         assertNotNull(track);
-        assertEquals(100005416, track.getTrackid());
+        assertEquals(100005416, track.getId());
         assertEquals(963825, track.getDuration());
     }
 
@@ -56,7 +56,7 @@ public class TrackTest {
     public void testTrack3() {
         Track track = new Track(1, 1);
         assertNotNull(track);
-        assertEquals(1, track.getTrackid());
+        assertEquals(1, track.getId());
         assertEquals(1, track.getDuration());
     }
 
@@ -86,9 +86,9 @@ public class TrackTest {
     @Test
     public void testId() {
         Track track = new Track();
-        assertEquals(0, track.getTrackid());
-        track.setTrackid(1);
-        assertEquals(1, track.getTrackid());
+        assertEquals(0, track.getId());
+        track.setId(1);
+        assertEquals(1, track.getId());
     }
 
     /**
@@ -176,6 +176,6 @@ public class TrackTest {
         tracks.add(b);
         tracks.add(a);
         Collections.sort(tracks);
-        assertEquals(1, tracks.get(0).getTrackid());
+        assertEquals(1, tracks.get(0).getId());
     }
 }

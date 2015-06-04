@@ -1,6 +1,8 @@
 package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import models.json.Json;
 import models.profile.Profile;
 import models.record.Track;
@@ -19,6 +21,12 @@ public final class UserActionController {
      * The profile of this session.
      */
     private static Profile profile;
+
+    /**
+     * Constructor.
+     */
+    private UserActionController() {
+    }
 
     /**
      * Creates a new profile for this session.
@@ -63,4 +71,27 @@ public final class UserActionController {
         }
         return ok();
     }
+
+    /**
+     * Get tracks to display on the web page.
+     * For now it displays the likes from the profile.
+     *
+     * @return A HTTP ok response with the tracks to display
+     */
+    public static Result tracks() {
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode result = mapper.createObjectNode();
+        TrackList likes = profile.getLikes();
+        for (int i = 0; i < likes.size(); i++) {
+            Track track = likes.get(i);
+            ObjectNode jsontrack = mapper.createObjectNode();
+            jsontrack.put("id", track.getId());
+            jsontrack.put("artist", track.getArtist());
+            jsontrack.put("title", track.getTitle());
+            jsontrack.put("url", track.getUrl());
+            result.put(Integer.toString(i), jsontrack);
+        }
+        return ok(result);
+    }
+
 }
