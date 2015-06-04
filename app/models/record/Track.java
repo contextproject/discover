@@ -194,9 +194,7 @@ public class Track implements Record, Comparable<Track> {
      */
     @Override
     public boolean equals(final Object o) {
-        return o instanceof Track
-                && ((Track) o).id == this.id
-                && ((Track) o).duration == this.duration;
+        return o instanceof Track && ((Track) o).id == this.id;
     }
 
     /**
