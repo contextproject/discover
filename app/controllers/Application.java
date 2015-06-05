@@ -38,8 +38,9 @@ public class Application extends Controller {
      * @return an http ok response with the rendered page.
      */
     public static Result index() {
-        String url = "w.soundcloud.com/tracks/67016624";
-        return ok(index.render(url, getStartTime(67016624)));
+        String url = "w.soundcloud.com/tracks/56772597";
+        Track track = new Track(56772597, 5054685);
+        return ok(index.render(url, getStartTime(track)));
     }
 
     /**
@@ -55,11 +56,9 @@ public class Application extends Controller {
         } else if (json.get("track") == null) {
             return badRequest("Object does not contain a 'track' subset.");
         } else {
-            int trackID = json.get("track").get("id").asInt();
+            int id = json.get("track").get("id").asInt();
             int duration = json.get("track").get("duration").asInt();
-            Track track = new Track();
-            track.setTrackid(trackID);
-            track.setDuration(duration);
+            Track track = new Track(id, duration);
             int starttime2 = getStartTime(track);
             ObjectNode objNode = mapper.createObjectNode();
             JsonNode response = objNode.put("response", starttime2);
@@ -108,8 +107,7 @@ public class Application extends Controller {
      * @return an http ok response with a random track id.
      */
     public static Result getRandomSong() {
-        RandomSongSelector selector;
-        selector = RandomSongSelector.getRandomSongSelector();
+        RandomSongSelector selector = RandomSongSelector.getRandomSongSelector();
         int trackId = selector.getRandomSong();
         String widgetUrl = "w.soundcloud.com/tracks/" + trackId;
         int starttime = getStartTime(trackId);
