@@ -12,7 +12,8 @@ public final class Json {
     /**
      * Utility class.
      */
-    private Json() { }
+    private Json() {
+    }
 
     /**
      * Convert the JsonNode object to a Track object.
@@ -22,9 +23,12 @@ public final class Json {
      */
     public static Track getTrack(final JsonNode jsonNode) {
         if (jsonNode != null) {
-            int trackid = jsonNode.get("id").asInt();
+            int id = jsonNode.get("id").asInt();
             int duration = jsonNode.get("duration").asInt();
-            return new Track(trackid, duration);
+            String artist = jsonNode.get("user").get("username").asText();
+            String title = jsonNode.get("title").asText();
+            String url = jsonNode.get("permalink_url").asText();
+            return new Track(id, duration, artist, title, url);
         }
         return null;
     }

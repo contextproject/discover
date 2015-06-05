@@ -32,7 +32,7 @@ public class RandomSeekerTest extends BasicTest {
         super.setUp();
         Track track = new Track();
         track.setDuration(1000);
-        track.setTrackid(100214);
+        track.setId(100214);
         setSeeker(new RandomSeeker(track));
     }
     

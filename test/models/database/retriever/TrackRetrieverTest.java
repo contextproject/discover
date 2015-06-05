@@ -10,13 +10,13 @@ public class TrackRetrieverTest {
     @Test
     public void testRetrieve() throws Exception {
         Track track = new TrackRetriever(100005416).retrieve();
-        assertEquals(100005416, track.getTrackid());
+        assertEquals(100005416, track.getId());
     }
 
     @Test
     public void testGetAll() throws Exception {
         Track track = new TrackRetriever(100005416).getAll();
-        assertEquals(100005416, track.getTrackid());
+        assertEquals(100005416, track.getId());
     }
 
     @Test

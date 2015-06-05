@@ -75,7 +75,7 @@ public class CommentIntensitySeekerTest extends BasicTest {
     public void setUp() throws Exception {
         super.setUp();
         Track track = new Track();
-        track.setTrackid(32097940);
+        track.setId(32097940);
         track.setDuration(100000);
         list = new CommentList();
         setSeeker(new CommentIntensitySeeker(track));

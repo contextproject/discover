@@ -16,14 +16,14 @@ $("#current").click(function () {
 });
 
 // Prepare all the data to be sent when the widget is ready
-widget.bind(SC.Widget.Events.READY, function() {
-	waveform = new Waveform({
-		container : document.getElementById("sc-widget")
-	});
-	widget.getSounds(function(sounds) {
-		waveform.dataFromSoundCloudTrack(sounds[0]);
-	});
-	widget.unbind(SC.Widget.Events.READY);
+widget.bind(SC.Widget.Events.READY, function () {
+    waveform = new Waveform({
+        container: document.getElementById("sc-widget")
+    });
+    widget.getSounds(function (sounds) {
+        waveform.dataFromSoundCloudTrack(sounds[0]);
+    });
+    widget.unbind(SC.Widget.Events.READY);
 });
 
 $(window).load(function() {
@@ -60,7 +60,7 @@ $("#dislike").click(function () {
     if (SC.accessToken() != null) {
         widget.getCurrentSoundIndex(function (index) {
             widget.getSounds(function (sounds) {
-                sendData(sounds[index], "/userDislike", function () {
+                sendData(sounds[index], "/dislike", function () {
                 });
                 SC.delete('/me/favorites/' + sounds[index].id);
             });
@@ -70,24 +70,25 @@ $("#dislike").click(function () {
 
 // event for liking a song
 $("#like").click(function () {
-    if (SC.accessToken() == null) {
-        console.log("null");
-        SC.connect(function () {
-            like();
-        });
-    } else {
-        console.log("not null");
-        like();
-    }
+    like();
+    //if (SC.accessToken() == null) {
+    //    console.log("null");
+    //    SC.connect(function () {
+    //        like();
+    //    });
+    //} else {
+    //    console.log("not null");
+    //    like();
+    //}
 });
 
 // like the current song
 function like() {
     widget.getCurrentSoundIndex(function (index) {
         widget.getSounds(function (sounds) {
-            sendData(sounds[index], "/userLike", function () {
+            sendData(sounds[index], "/like", function () {
             });
-            SC.put('/me/favorites/' + sounds[index].id);
+            //SC.put('/me/favorites/' + sounds[index].id);
         });
     });
 }
@@ -138,21 +139,27 @@ function setMixSplit(newSp) {
 
 // if the reload button is clicked on, call the reloadWidget function
 $("#reload").click(function () {
-    reloadWidget();
+    clearInputAndReloadWidget();
 });
 // if the url submit is entered, call the reloadWidget function
 $("#url").keypress(function (e) {
     if (e.which == 13) {
-        reloadWidget();
+        clearInputAndReloadWidget();
     }
 });
 
-// reload the widget with the url submitted in the input field
-function reloadWidget() {
-    mixSplits = null;
+function clearInputAndReloadWidget() {
     var url = $("#url");
+    var input = url.val();
+    url.html("");
+    reloadWidget(input);
+}
+
+// reload the widget with the url submitted in the input field
+function reloadWidget(url) {
+    mixSplits = null;
     // load the url in the widget
-    widget.load(url.val(), {
+    widget.load(url, {
         auto_play: false,
         likes: true
     });
@@ -172,9 +179,6 @@ function reloadWidget() {
             // window.location.href = "http://localhost:9000/tracks/" + sounds[pos].id;
         });
     });
-
-    // empty the input field
-    url.val("");
 }
 
 // change the volume of the widget

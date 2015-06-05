@@ -19,7 +19,7 @@ import java.util.TreeMap;
  * This class is used to control the model and the view parts of the MVC. It
  * renders the view with the values processed by the model classes.
  */
-public class Application extends Controller {
+public final class Application extends Controller {
 
     /**
      * The database object of the controller.
@@ -166,7 +166,7 @@ public class Application extends Controller {
     public static int getStartTime(final int trackId) {
         Track track = new Track();
         track.setDuration(-1);
-        track.setTrackid(trackId);
+        track.setId(trackId);
         return getStartTime(track);
     }
 
@@ -181,15 +181,6 @@ public class Application extends Controller {
     }
 
     /**
-     * Setter for the ObjectMapper object.
-     *
-     * @param om the new ObjectMapper object.
-     */
-    public static void setObjectMapper(final ObjectMapper om) {
-        mapper = om;
-    }
-
-    /**
      * Getter for the ObjectMapper Object of the controller.
      *
      * @return the ObjectMapper Object.
@@ -199,12 +190,12 @@ public class Application extends Controller {
     }
 
     /**
-     * Setter for the DatabaseConnector object.
+     * Setter for the ObjectMapper object.
      *
-     * @param dbc the new DatabaseConnector object.
+     * @param om the new ObjectMapper object.
      */
-    public static void setDatabaseConnector(final DatabaseConnector dbc) {
-        databaseConnector = dbc;
+    public static void setObjectMapper(final ObjectMapper om) {
+        mapper = om;
     }
 
     /**
@@ -214,6 +205,15 @@ public class Application extends Controller {
      */
     public static DatabaseConnector getDatabaseConnector() {
         return databaseConnector;
+    }
+
+    /**
+     * Setter for the DatabaseConnector object.
+     *
+     * @param dbc the new DatabaseConnector object.
+     */
+    public static void setDatabaseConnector(final DatabaseConnector dbc) {
+        databaseConnector = dbc;
     }
 
 }

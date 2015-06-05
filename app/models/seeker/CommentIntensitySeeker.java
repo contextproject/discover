@@ -72,7 +72,7 @@ public class CommentIntensitySeeker implements Seeker {
             final CommentContentSeeker filter) {
         setTrack(track);
         this.decorate = decorate;
-        setComments(new CommentRetriever(track.getTrackid()).getComments());
+        setComments(new CommentRetriever(track.getId()).getComments());
         this.filter = filter;
     }
 
@@ -131,6 +131,7 @@ public class CommentIntensitySeeker implements Seeker {
     }
 
     /**
+<<<<<<< HEAD
      * Checks if time is between bottom and bottom + window.
      *
      * @param time   The time to check.
@@ -153,6 +154,8 @@ public class CommentIntensitySeeker implements Seeker {
     }
 
     /**
+=======
+>>>>>>> origin/Tracks
      * Seeks the snippet to be used of a given song.
      *
      * @return A TimedSnippet object

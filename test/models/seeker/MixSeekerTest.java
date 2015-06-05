@@ -44,7 +44,7 @@ public class MixSeekerTest extends CommentIntensitySeekerTest {
         super.setUp();
         Track track = new Track();
         track.setDuration(100000);
-        track.setTrackid(1029204);
+        track.setId(1029204);
         setSeeker(new MixSeeker(asList(0), track));
     }
 
@@ -241,7 +241,7 @@ public class MixSeekerTest extends CommentIntensitySeekerTest {
     public void testGetSnippets() {
         Track track = new Track();
         track.setDuration(20);
-        track.setTrackid(1024425);
+        track.setId(1024425);
         MixSeeker mixseeker = new MixSeeker(asList(0, 30, 70), track) {
             @Override
             public ScoreStorage calculateScores(final int duration) {
@@ -275,7 +275,7 @@ public class MixSeekerTest extends CommentIntensitySeekerTest {
     public void testGetSnippetsDoubleValue() {
         Track track = new Track();
         track.setDuration(20);
-        track.setTrackid(1024425);
+        track.setId(1024425);
         MixSeeker mixseeker = new MixSeeker(asList(0, 30, 70), track) {
             @Override
             public ScoreStorage calculateScores(final int duration) {
@@ -352,7 +352,7 @@ public class MixSeekerTest extends CommentIntensitySeekerTest {
         Track track = new Track();
         track.setDuration(20);
         final int trackid = 1024425;
-        track.setTrackid(trackid);
+        track.setId(trackid);
         getSeeker().setStarttimes(asList(0, 1, 40000));
         MixSeeker mixseeker = getSeeker();
         final CommentList comments = new CommentList();

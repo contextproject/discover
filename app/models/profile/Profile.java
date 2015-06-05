@@ -1,33 +1,30 @@
 package models.profile;
 
 import models.record.Track;
-
-import java.util.ArrayList;
+import models.utility.TrackList;
 
 /**
  * A profile for the current user used by the recommendation system.
  * Collects some of the user interactions with the application during this session.
- *
- * @author Daan Schipper
  */
 public class Profile {
 
     /**
      * The tracks the user has liked during the session.
      */
-    private ArrayList<Track> likes;
+    private TrackList likes;
 
     /**
      * The tracks the user has disliked during the session.
      */
-    private ArrayList<Track> dislikes;
+    private TrackList dislikes;
 
     /**
      * Constructor.
      */
     public Profile() {
-        likes = new ArrayList<Track>();
-        dislikes = new ArrayList<Track>();
+        likes = new TrackList();
+        dislikes = new TrackList();
     }
 
     /**
@@ -53,7 +50,7 @@ public class Profile {
      *
      * @return The likes
      */
-    public ArrayList<Track> getLikes() {
+    public TrackList getLikes() {
         return likes;
     }
 
@@ -62,7 +59,7 @@ public class Profile {
      *
      * @return The dislikes
      */
-    public ArrayList<Track> getDislikes() {
+    public TrackList getDislikes() {
         return dislikes;
     }
 }

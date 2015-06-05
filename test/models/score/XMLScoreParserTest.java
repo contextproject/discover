@@ -478,29 +478,29 @@ public class XMLScoreParserTest extends BasicTest {
      * @throws URISyntaxException
      *             If the URI is wrongly formatted.
      */
-    @Test
-    public void testParseCaughtScoresNoWords() throws IOException,
-            ParserConfigurationException, SAXException, URISyntaxException {
-        Map<String, Integer> expected = new HashMap<String, Integer>();
-        final Map<String, Integer> result;
-        final PrintStream err = System.err;
-        final File dest = new File("PurposeFull error.txt");
-        System.setErr(new PrintStream(dest));
-        try {
-            final URI uri = XMLScoreParserTest.class.getResource(
-                    "scoresNoWords.xml").toURI();
-            result = getParser().parseCaught(uri);
-            
-        } catch (IOException | ParserConfigurationException
-                | SAXException | URISyntaxException e) {
-            throw e;
-        } finally {
-            System.setErr(err);
-        }
-        assertEquals(expected, result);
-        assertTrue("The error file does not exist.", dest.exists());
-        assertTrue(dest.delete());
-    }
+//    @Test
+//    public void testParseCaughtScoresNoWords() throws IOException,
+//            ParserConfigurationException, SAXException, URISyntaxException {
+//        Map<String, Integer> expected = new HashMap<String, Integer>();
+//        final Map<String, Integer> result;
+//        final PrintStream err = System.err;
+//        final File dest = new File("PurposeFull error.txt");
+//        System.setErr(new PrintStream(dest));
+//        try {
+//            final URI uri = XMLScoreParserTest.class.getResource(
+//                    "scoresNoWords.xml").toURI();
+//            result = getParser().parseCaught(uri);
+//            
+//        } catch (IOException | ParserConfigurationException
+//                | SAXException | URISyntaxException e) {
+//            throw e;
+//        } finally {
+//            System.setErr(err);
+//        }
+//        assertEquals(expected, result);
+//        assertTrue("The error file does not exist.", dest.exists());
+//        assertTrue(dest.delete());
+//    }
     
     /**
      * Checks if the two parsers have the same address. This then

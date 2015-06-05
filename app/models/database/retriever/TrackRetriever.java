@@ -46,7 +46,7 @@ public class TrackRetriever implements Retriever {
      * @return The user id of the track
      */
     public int getTrackID() {
-        return track.getTrackid();
+        return track.getId();
     }
 
     /**
