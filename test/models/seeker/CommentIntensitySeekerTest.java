@@ -1,21 +1,21 @@
 package models.seeker;
 
 import basic.BasicTest;
-
+import models.database.DatabaseConnector;
 import models.record.Comment;
 import models.record.Track;
-
 import models.snippet.TimedSnippet;
-
 import models.utility.CommentList;
 
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
+import controllers.Application;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -47,6 +47,29 @@ public class CommentIntensitySeekerTest extends BasicTest {
      * CommentList object.
      */
     private CommentList list;
+    
+    /**
+     * Does some set up before the class.
+     * @throws Exception If the set up fails.
+     */
+    @BeforeClass
+    public static void setUpBeforeClass() throws Exception {
+        DatabaseConnector databaseConnector = new DatabaseConnector();
+        databaseConnector.loadDrivers();
+        databaseConnector.makeConnection("jdbc:mysql://188.166.78.36/contextbase",
+                "context", "password");
+        Application.setDatabaseConnector(databaseConnector);
+    }
+
+    /**
+     * Does some clean up before the class.
+     * @throws Exception If the clean up fails.
+     */
+    @AfterClass
+    public static void tearDownAfterClass() throws Exception {
+        Application.getDatabaseConnector().closeConnection();
+        Application.setDatabaseConnector(null);
+    }
 
     @Override
     public void setUp() throws Exception {
