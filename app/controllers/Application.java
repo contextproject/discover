@@ -123,33 +123,10 @@ public class Application extends Controller {
     /**
      * Method used to pass a JsonNode object with track waveform on to the
      * MixSplitter class.
-     *
+     * 
      * @return ok response with the start times for the mix.
      */
     public static Result splitWaveform() {
-        JsonNode json = request().body().asJson();
-        if (json == null) {
-            return badRequest("Expecting Json data");
-        } else {
-            int trackID = json.get("track").get("id").asInt();
-            MixSplitter splitter = new MixSplitter(json.get("waveform"),
-                    trackID);
-            List<Integer> list = splitter.split();
-            Map<String, List<Integer>> map = new TreeMap<String, List<Integer>>();
-            map.put("response", list);
-            JsonNode response = mapper.valueToTree(map);
-            return ok(response);
-        }
-    }
-
-    /**
-     * TO DO. This function is just to keep the build working
-     * 
-     * @param n
-     *            amount of splits.
-     * @return ok response with the start times for the mix.
-     */
-    public static Result nSplitWaveform(final String n) {
         JsonNode json = request().body().asJson();
         if (json == null) {
             return badRequest("Expecting Json data");

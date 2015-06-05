@@ -125,14 +125,18 @@ $("#sendWave").click(function () {
     widget.getSounds(function (sounds) {
         var message = {
             "track": sounds[0],
-            "waveform": waveform.data
+            "waveform": waveform.data,
+            "splits" : -2
         };
         if($("#numsplit").val() == '' ) {
+            message["splits"] =  -1;
             sendData(message, "/splitWaveform", setMixSplit);
         }else if(parseInt($("#numsplit").val()) >= 0){
+            message["splits"] =  parseInt($("#numsplit").val());
             var x = parseInt($("#numsplit").val());
-            sendData(message, "/nSplitWaveform/"+x, setMixSplit);
+            sendData(message, "/splitWaveform", setMixSplit);
         }else{
+            message["splits"] =  -1;
             console.log("Number of splits must be greater or equal than zero");
             sendData(message, "/splitWaveform", setMixSplit);
         }
