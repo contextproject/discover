@@ -2,16 +2,19 @@ package models.recommender;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
+import models.database.retriever.GeneralTrackSelector;
 import models.profile.Profile;
 import models.record.Track;
+import models.utility.TrackList;
 
 public class LikesRecommender extends RecommendDecorator implements Recommender {
 
     private static HashMap<Object, Double> genreBoard;
 
-    private static HashMap<Object, Double> artistBoard;
+    //private static HashMap<Object, Double> artistBoard;
     
     private static double weight;
     
@@ -19,7 +22,7 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
 		super(smallFish);
 		weight = 1.5;
 		genreBoard = new HashMap<Object, Double>();
-		artistBoard = new HashMap<Object, Double>();
+//		/artistBoard = new HashMap<Object, Double>();
 	}
 
 	@Override
@@ -32,6 +35,26 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
 //			return suggest();
 //		}
 	}
+	
+    public TrackList suggest() {
+        this.generateBoards();
+        String query = "SELECT * FROM `tracks` WHERE ";
+        Iterator<Object> it = genreBoard.keySet().iterator();
+        while(it.hasNext()) {
+            System.out.println("ZUB");
+            query += ("genre = '" + it.next() + "'");
+            query += " OR ";
+        }
+        query = query.substring(0, query.length() - 3);
+        query += " ORDER BY RAND() LIMIT 5";
+        System.out.println("suggest: " + query);
+        GeneralTrackSelector selector = new GeneralTrackSelector(query);
+        TrackList list = selector.execute();
+        //probleem ligt ergens hier. De selector geeft alleen maar 1 record wanneer hij word ge-execute.
+        System.out.println("list size: " + list.size());
+        System.out.println(list.toString());
+        return list;
+    }
 
 	private List<RecTuple> evaluate() {
 		List<RecTuple> unweighted = recommender.recommend();
@@ -41,9 +64,9 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
 		    if(genreBoard.containsKey(key)) {
 		        rt.addScore(genreBoard.get(key));
 		    }
-		    if(artistBoard.containsKey(key)) {
-                rt.addScore(artistBoard.get(key));
-            }
+//		    if(artistBoard.containsKey(key)) {
+//                rt.addScore(artistBoard.get(key));
+//            }
 		}
 		return unweighted;
 	}
@@ -55,11 +78,11 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
 	        ArrayList<Track> dislikes = pro.getDislikes();
 	        for (Track track : likes) {
 	            updateBoardPositive(genreBoard, track);
-	            updateBoardPositive(artistBoard, track);
+	            //updateBoardPositive(artistBoard, track);
             }
 	        for (Track track : dislikes) {
 	            updateBoardNegative(genreBoard, track);
-	            updateBoardNegative(artistBoard, track);
+	            //updateBoardNegative(artistBoard, track);
             }
 	        
 	    }
@@ -86,11 +109,5 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
 	@Override
 	public Profile getUserProfile() {
 		return recommender.getUserProfile();
-	}
-	
-
-    private List<RecTuple> suggest() {
-        return null;
-    }
-    
+	}    
 }

@@ -5,6 +5,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.Collections;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -43,7 +45,7 @@ public class TrackTest {
     public void testTrack2() {
         Track track = new Track(databaseConnector.executeQuery("SELECT * FROM tracks LIMIT 1"));
         assertNotNull(track);
-        assertEquals(100005416, track.getTrackid());
+        assertEquals(100005416, track.getId());
         assertEquals(963825, track.getDuration());
     }
 
@@ -52,9 +54,9 @@ public class TrackTest {
      */
     @Test
     public void testTrack3() {
-        Track track = new Track(1, 1, 1, "");
+        Track track = new Track(1, 1);
         assertNotNull(track);
-        assertEquals(1, track.getTrackid());
+        assertEquals(1, track.getId());
         assertEquals(1, track.getDuration());
     }
 
@@ -84,9 +86,9 @@ public class TrackTest {
     @Test
     public void testId() {
         Track track = new Track();
-        assertEquals(0, track.getTrackid());
-        track.setTrackid(1);
-        assertEquals(1, track.getTrackid());
+        assertEquals(0, track.getId());
+        track.setId(1);
+        assertEquals(1, track.getId());
     }
 
     /**
@@ -105,8 +107,8 @@ public class TrackTest {
      */
     @Test
     public void testEquals1() {
-        Track a = new Track(1, 1, 1, "");
-        Track b = new Track(1, 1, 1, "");
+        Track a = new Track(1, 1);
+        Track b = new Track(1, 1);
         
         assertTrue(a.equals(b));
         assertTrue(b.equals(a));
@@ -117,8 +119,8 @@ public class TrackTest {
      */
     @Test
     public void testEquals2() {
-        Track a = new Track(1, 1, 1, "");
-        Track b = new Track(2, 1, 1, "");
+        Track a = new Track(1, 1);
+        Track b = new Track(2, 1);
 
         assertFalse(a.equals(b));
         assertFalse(b.equals(a));
@@ -128,20 +130,8 @@ public class TrackTest {
      * Test for the equals() method.
      */
     @Test
-    public void testEquals3() {
-        Track a = new Track(1, 1, 2, "");
-        Track b = new Track(1, 2, 1, "");
-
-        assertTrue(a.equals(b));
-        assertTrue(b.equals(a));
-    }
-
-    /**
-     * Test for the equals() method.
-     */
-    @Test
     public void testEquals4() {
-        assertFalse(new Track(1, 1, 1, "").equals(2));
+        assertFalse(new Track(1, 1).equals(2));
     }
 
     /**
@@ -149,7 +139,7 @@ public class TrackTest {
      */
     @Test
     public void testHashCode() {
-        Track a = new Track(1, 1, 1, "");
+        Track a = new Track(1, 1);
         assertEquals(32, a.hashCode());
     }
 
@@ -157,9 +147,23 @@ public class TrackTest {
      * Test for the compareTo() method.
      */
     @Test
-    public void testCompareTo() {
-        Track a = new Track(1, 1, 1, "");
-        Track b = new Track(2, 2, 1, "");
-        assertEquals(-2, a.compareTo(b));
+    public void testCompareTo1() {
+        Track a = new Track(1, 1);
+        Track b = new Track(2, 2);
+        assertEquals(-1, a.compareTo(b));
+    }
+
+    /**
+     * Test for the compareTo() method.
+     */
+    @Test
+    public void testCompareTo2() {
+        Track a = new Track(1, 1);
+        Track b = new Track(2, 2);
+        ArrayList<Track> tracks = new ArrayList<Track>();
+        tracks.add(b);
+        tracks.add(a);
+        Collections.sort(tracks);
+        assertEquals(1, tracks.get(0).getId());
     }
 }

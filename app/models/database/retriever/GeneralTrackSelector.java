@@ -29,6 +29,7 @@ public class GeneralTrackSelector {
 	
 	public List<RecTuple> asWeightedList(double weight) {
 		TrackList unweighted = this.execute();
+		System.out.println("Selector 1: " + unweighted.size());
 		ArrayList<RecTuple> weighted = new ArrayList<RecTuple>(unweighted.size());
 		for (int i = 0; i < unweighted.size(); i++) {
 			RecTuple rt = new RecTuple(unweighted.get(i), weight);

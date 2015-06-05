@@ -3,7 +3,6 @@ var widget = SC.Widget(document.getElementById("sc-widget"));
 var mixSplits, waveform;
 var snipWin = 5000.00;
 var splitPointer = -1;
-var waveform;
 
 $("#current").click(function () {
     $widget.bind(SC.Widget.Events.READY, function () {
@@ -17,14 +16,14 @@ $("#current").click(function () {
 });
 
 // Prepare all the data to be sent when the widget is ready
-widget.bind(SC.Widget.Events.READY, function() {
-	waveform = new Waveform({
-		container : document.getElementById("sc-widget")
-	});
-	widget.getSounds(function(sounds) {
-		waveform.dataFromSoundCloudTrack(sounds[0]);
-	});
-	widget.unbind(SC.Widget.Events.READY);
+widget.bind(SC.Widget.Events.READY, function () {
+    waveform = new Waveform({
+        container: document.getElementById("sc-widget")
+    });
+    widget.getSounds(function (sounds) {
+        waveform.dataFromSoundCloudTrack(sounds[0]);
+    });
+    widget.unbind(SC.Widget.Events.READY);
 });
 
 // The method is used to send Data to the server
@@ -51,7 +50,7 @@ $("#dislike").click(function () {
     if (SC.accessToken() != null) {
         widget.getCurrentSoundIndex(function (index) {
             widget.getSounds(function (sounds) {
-                sendData(sounds[index], "/userDislike", function () {
+                sendData(sounds[index], "/dislike", function () {
                 });
                 SC.delete('/me/favorites/' + sounds[index].id);
             });
@@ -61,24 +60,25 @@ $("#dislike").click(function () {
 
 // event for liking a song
 $("#like").click(function () {
-    if (SC.accessToken() == null) {
-        console.log("null");
-        SC.connect(function () {
-            like();
-        });
-    } else {
-        console.log("not null");
-        like();
-    }
+    like();
+    //if (SC.accessToken() == null) {
+    //    console.log("null");
+    //    SC.connect(function () {
+    //        like();
+    //    });
+    //} else {
+    //    console.log("not null");
+    //    like();
+    //}
 });
 
 // like the current song
 function like() {
     widget.getCurrentSoundIndex(function (index) {
         widget.getSounds(function (sounds) {
-            sendData(sounds[index], "/userLike", function () {
+            sendData(sounds[index], "/like", function () {
             });
-            SC.put('/me/favorites/' + sounds[index].id);
+            //SC.put('/me/favorites/' + sounds[index].id);
         });
     });
 }
@@ -129,21 +129,27 @@ function setMixSplit(newSp) {
 
 // if the reload button is clicked on, call the reloadWidget function
 $("#reload").click(function () {
-    reloadWidget();
+    clearInputAndReloadWidget();
 });
 // if the url submit is entered, call the reloadWidget function
 $("#url").keypress(function (e) {
     if (e.which == 13) {
-        reloadWidget();
+        clearInputAndReloadWidget();
     }
 });
 
+function clearInputAndReloadWidget() {
+    var url = $("#url");
+    var input = url.val();
+    url.html("");
+    reloadWidget(input);
+}
+
 // reload the widget with the url submitted in the input field
-function reloadWidget() {
+function reloadWidget(url) {
     mixSplits = null;
-    var url = $("url");
     // load the url in the widget
-    widget.load(url.val(), {
+    widget.load(url, {
         auto_play: false,
         likes: true
     });
@@ -163,16 +169,27 @@ function reloadWidget() {
             // window.location.href = "http://localhost:9000/tracks/" + sounds[pos].id;
         });
     });
-
-    // empty the input field
-    url.val("");
 }
 
 // change the volume of the widget
 $("#volume").on("input change", function () {
-    $widget.setVolume(parseInt($('#volume').val()));
+    widget.setVolume(parseInt($('#volume').val()));
 });
 
+
+//change the mode of the algorithm
+$("#algoMode").on("input change", function () {
+	var val = $("#algoMode").val();
+	if(val <= 25) {
+		console.log(25);
+	} else if(val > 25 & val <= 50) {
+		console.log(50);
+	} else if(val > 50 & val <= 75) { 
+		console.log(75);
+	} else {
+		console.log(100);
+	}
+});
 // play the snippet of the song
 var songStart = parseFloat(start) - (snipWin / 2);
 var songEnd = Math.abs(songStart) + snipWin;

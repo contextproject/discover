@@ -19,6 +19,7 @@
 
         <script>
             $.getScript("/assets/javascripts/controls.js");
+            $.getScript("/assets/javascripts/tracks.js");
         </script>
 
         <script>
@@ -68,16 +69,34 @@
                     </div>
                     <div class="4u$ 12u$(medium) important(medium)">
                         <div class="controls">
+                        	<label for="algorithm mode"></label>
+							<p>Mode</p>
+							<input type="range" class="control" id="algoMode" value="0">
                             <label for="volume"></label><input type="range" class="control" id="volume">
-
+							
                             <button class="control" id="preview">Preview</button> <br>
                             <button class="control" id="prev">Prev</button><button class="control" id="next">Next</button> <br>
                             <button class="control" id="like">Like</button><button class="control" id="dislike">Dislike</button><br>
                             <button class="control" id="rand">Random Song</button> <br>
+                            <button class="control" id="recommend">Recommend</button> <br>
                             <button class="control" id="sendWave">Mix Splitter</button> <br>
                             <button class="control" id="connect">Connect</button> <br>
                             <button class="control" id="waveform">Waveform</button> <br>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="tracklist" class="main style1">
+            <div class="container">
+                <div class="row 150%">
+                    <div class="8u 12u$(medium)">
+                        <ul id="tracks"></ul>
+                    </div>
+
+                    <div class="4u$ 12u$(medium) important(medium)">
+                        <button class="control" id="gettracks">Tracks!</button>
                     </div>
                 </div>
             </div>

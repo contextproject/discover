@@ -13,17 +13,18 @@ public class BasicRecommender implements Recommender {
 
     public BasicRecommender(Profile profile, int amount) {
         this.userProfile = profile;
-        this.query = "SELECT * FROM tracks ORDER BY RAND( )";
+        this.query = "SELECT * FROM tracks ORDER BY RAND()";
         if (amount != -1) {
             query += (" LIMIT " + amount);
         }
+        System.out.println("query: " + query);
     }
 
     @Override
     public List<RecTuple> recommend() {
         GeneralTrackSelector seeker = new GeneralTrackSelector(query);
         List<RecTuple> res = seeker.asWeightedList(0.0);
-        System.out.println(res.size());
+        System.out.println("basic size: " + res.size());
         return res;
     }
 

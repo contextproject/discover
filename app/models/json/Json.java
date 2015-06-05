@@ -12,31 +12,38 @@ import models.utility.TrackList;
 /**
  * Processes the json from the web application.
  */
-public class Json {
+public final class Json {
+
+    /**
+     * Utility class.
+     */
+    private Json() {
+    }
 
     /**
      * Convert the JsonNode object to a Track object.
-     * 
-     * @param jsonNode
-     *            JsonNode object containing track
+     *
+     * @param jsonNode The JsonNode object
      * @return A Track object
      */
     public static Track getTrack(final JsonNode jsonNode) {
         if (jsonNode != null) {
-            int trackid = jsonNode.get("id").asInt();
+            int id = jsonNode.get("id").asInt();
             int duration = jsonNode.get("duration").asInt();
-            int userid = jsonNode.get("user_id").asInt();
+            String artist = jsonNode.get("user").get("username").asText();
+            String title = jsonNode.get("title").asText();
             String genre = jsonNode.get("genre").asText();
-            return new Track(trackid, duration, userid, genre);
+            String url = jsonNode.get("permalink_url").asText();
+            new Track();
+            return new Track(id, duration, artist, title, genre, url);
         }
         return null;
     }
 
     /**
      * Convert the JsonNode object to a TrackList object.
-     * 
-     * @param jsonNode
-     *            JsonNode object containing tracks
+     *
+     * @param jsonNode The JsonNode object
      * @return A TrackList object
      */
     public static TrackList getTrackList(final JsonNode jsonNode) {

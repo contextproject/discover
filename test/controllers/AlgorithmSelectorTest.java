@@ -29,7 +29,7 @@ public class AlgorithmSelectorTest {
         Application.setDatabaseConnector(databaseConnector);
 
         track = new Track();
-        track.setTrackid(1);
+        track.setId(1);
         track.setDuration(50000);
     }
 

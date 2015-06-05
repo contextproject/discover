@@ -23,7 +23,7 @@ public class RecTuple implements Comparable<RecTuple> {
 	}
 	
 	public String toString() {
-	    return "[ id: " + track.getTrackid() + " score: " + score + " ]";
+	    return "[ id: " + track.getId() + " score: " + score + " ]";
 	}
 	
 	public Track getTrack() {

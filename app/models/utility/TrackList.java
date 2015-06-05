@@ -25,6 +25,7 @@ public class TrackList extends ArrayList<Track> {
     public TrackList(final ResultSet resultSet) {
         try {
             while (resultSet.next()) {
+                System.out.println("mitnaka");
                 add(new Track(resultSet));
             }
         } catch (SQLException e) {

@@ -43,11 +43,11 @@ public class SoundcloudProfileTest {
     @Test
     public void testAddLikes() {
         TrackList trackList = new TrackList();
-        trackList.add(new Track(1, 1, 1, ""));
+        trackList.add(new Track(1, 1));
 
         soundcloudProfile.addLikes(trackList);
 
-        assertEquals(1, soundcloudProfile.likes.size());
+        assertEquals(1, soundcloudProfile.getLikes().size());
     }
 
     /**

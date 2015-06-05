@@ -32,7 +32,31 @@ public class CommentIntensitySeeker implements Seeker {
      */
     public CommentIntensitySeeker(final Track track) {
         this.track = track;
-        this.comments = new CommentRetriever(track.getTrackid()).getComments();
+        this.comments = new CommentRetriever(track.getId()).getComments();
+    }
+
+    /**
+     * Checks if time is between bottom and bottom + window.
+     *
+     * @param time   The time to check.
+     * @param bottom The bottom of the range.
+     * @param window The size of the range.
+     * @return true iff it is in the range.
+     */
+    private static boolean isInRange(final int time, final int bottom, final int window) {
+        return time >= bottom && time <= (bottom + window);
+    }
+
+    /**
+     * Gets the weigth of the comment.
+     *
+     * @param comment The comment to gain the weight of.
+     * @return The weight of the comment.
+     */
+    private static int getWeight(final Comment comment) {
+        CommentContentSeeker filt = new CommentContentSeeker();
+        return 2 + filt.contentFilter(comment.getBody());
+
     }
 
     /**
@@ -63,30 +87,6 @@ public class CommentIntensitySeeker implements Seeker {
     }
 
     /**
-     * Checks if time is between bottom and bottom + window.
-     *
-     * @param time   The time to check.
-     * @param bottom The bottom of the range.
-     * @param window The size of the range.
-     * @return true iff it is in the range.
-     */
-    private static boolean isInRange(final int time, final int bottom, final int window) {
-        return time >= bottom && time <= (bottom + window);
-    }
-
-    /**
-     * Gets the weigth of the comment.
-     *
-     * @param comment The comment to gain the weight of.
-     * @return The weight of the comment.
-     */
-    private static int getWeight(final Comment comment) {
-        CommentContentSeeker filt = new CommentContentSeeker();
-        return 2 + filt.contentFilter(comment.getBody());
-
-    }
-
-    /**
      * Seeks the snippet to be used of a given song.
      *
      * @return A TimedSnippet object
@@ -97,7 +97,7 @@ public class CommentIntensitySeeker implements Seeker {
     }
 
     /**
-     * Getter of the track
+     * Getter of the track.
      *
      * @return The track
      */
@@ -106,7 +106,7 @@ public class CommentIntensitySeeker implements Seeker {
     }
 
     /**
-     * Setter of the track
+     * Setter of the track.
      *
      * @param track The track
      */
@@ -124,7 +124,7 @@ public class CommentIntensitySeeker implements Seeker {
     }
 
     /**
-     * Setter of the comments
+     * Setter of the comments.
      *
      * @param comments The comments
      */

@@ -12,7 +12,7 @@ public class Track implements Record, Comparable<Track> {
     /**
      * The id of the track.
      */
-    private int trackid;
+    private int id;
 
     /**
      * The duration of the track.
@@ -20,18 +20,27 @@ public class Track implements Record, Comparable<Track> {
     private int duration;
 
     /**
-     * The id of the user that uploaded the track.
-     */
-    private int userid;
-
-    /**
      * Genre of the track.
      */
     private String genre;
-
     
     /**
-     * Basic constructor for the Track class.
+     * The artist of the track.
+     */
+    private String artist;
+
+    /**
+     * The title of the track.
+     */
+    private String title;
+
+    /**
+     * The url of the track.
+     */
+    private String url;
+
+    /**
+     * Constructor.
      */
     public Track() {
     }
@@ -49,21 +58,30 @@ public class Track implements Record, Comparable<Track> {
     /**
      * Constructor.
      *
-     * @param trackid
-     *            The id of the track
-     * @param duration
-     *            The duration of the track
-     * @param userid
-     *            The user id of the track
-     * @param genre
-     *            The genre of the track
+     * @param id       The id of the track
+     * @param duration The duration of the track
      */
-    public Track(final int trackid, final int duration, final int userid,
-            final String genre) {
-        this.trackid = trackid;
+    public Track(final int id, final int duration) {
+        this(id, duration, null, null, null, null);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param id       The id of the track
+     * @param duration The duration of the track
+     * @param artist   The artist of the track
+     * @param title    The title of the track
+     * @param url      The SoundCloud url of the track
+     */
+    public Track(final int id, final int duration,
+                 final String artist, final String title, final String genre, final String url) {
+        this.id = id;
         this.duration = duration;
-        this.userid = userid;
+        this.artist = artist;
+        this.title = title;
         this.genre = genre;
+        this.url = url;
     }
 
     /**
@@ -76,10 +94,10 @@ public class Track implements Record, Comparable<Track> {
     protected boolean process(final ResultSet resultSet) {
         try {
             while (resultSet.next()) {
-                trackid = resultSet.getInt("track_id");
+                id = resultSet.getInt("track_id");
                 duration = resultSet.getInt("duration");
-                userid = resultSet.getInt("user_id");
                 genre = resultSet.getString("genre");
+                title = resultSet.getString("title");
             }
             return true;
         } catch (SQLException e) {
@@ -93,18 +111,17 @@ public class Track implements Record, Comparable<Track> {
      *
      * @return The id of the track
      */
-    public int getTrackid() {
-        return trackid;
+    public int getId() {
+        return id;
     }
 
     /**
      * Setter of the id of the track.
      *
-     * @param trackid
-     *            The id of the track
+     * @param id The id of the track
      */
-    public void setTrackid(final int trackid) {
-        this.trackid = trackid;
+    public void setId(final int id) {
+        this.id = id;
     }
 
     /**
@@ -127,25 +144,6 @@ public class Track implements Record, Comparable<Track> {
     }
 
     /**
-     * Getter for the user id of the track.
-     * 
-     * @return The user id of the track
-     */
-    public int getUserid() {
-        return userid;
-    }
-
-    /**
-     * Setter of the user id of the track.
-     *
-     * @param userid
-     *            The user id of the track.
-     */
-    public void setUserid(final int userid) {
-        this.userid = userid;
-    }
-
-    /**
      * Getter for the genre of the track.
      * 
      * @return The genre of the track
@@ -164,6 +162,60 @@ public class Track implements Record, Comparable<Track> {
         this.genre = genre;
     }
 
+     /**
+     * Getter of the artist of the track.
+     *
+     * @return The artist of the track
+     */
+    public String getArtist() {
+        return artist;
+    }
+
+    /**
+     * Setter of the artist of the track.
+     *
+     * @param artist The artist of the track
+     */
+    public void setArtist(final String artist) {
+        this.artist = artist;
+    }
+
+    /**
+     * Getter of the title of the track.
+     *
+     * @return The title of the track
+     */
+    public String getTitle() {
+        return title;
+    }
+
+    /**
+     * Setter of the title of the track.
+     *
+     * @param title The title of the track
+     */
+    public void setTitle(final String title) {
+        this.title = title;
+    }
+
+    /**
+     * Getter of the url of the track.
+     *
+     * @return The url of the track
+     */
+    public String getUrl() {
+        return url;
+    }
+
+    /**
+     * Setter of the url of the track.
+     *
+     * @param url The url of the track
+     */
+    public void setUrl(final String url) {
+        this.url = url;
+    }
+
     /**
      * Equals method.
      *
@@ -173,12 +225,7 @@ public class Track implements Record, Comparable<Track> {
      */
     @Override
     public boolean equals(final Object o) {
-        if (o instanceof Track) {
-            if (((Track) o).trackid == this.trackid) {
-                return true;
-            }
-        }
-        return false;
+        return o instanceof Track && ((Track) o).id == this.id;
     }
 
     /**
@@ -188,7 +235,7 @@ public class Track implements Record, Comparable<Track> {
      */
     @Override
     public int hashCode() {
-        int result = trackid;
+        int result = id;
         result = 31 * result + duration;
         return result;
     }
@@ -202,6 +249,14 @@ public class Track implements Record, Comparable<Track> {
      */
     @Override
     public int compareTo(@Nonnull final Track o) {
-        return (this.trackid - o.trackid) + (this.duration - o.duration);
+        int result = (this.id - o.id);
+        if (result == 0) {
+            result += (this.duration - o.duration);
+        }
+        return result;
+    }
+    
+    public String toString() {
+        return "id: " + id +" title: " + title;
     }
 }
