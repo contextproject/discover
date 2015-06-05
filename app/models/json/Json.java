@@ -34,7 +34,6 @@ public final class Json {
             String title = jsonNode.get("title").asText();
             String genre = jsonNode.get("genre").asText();
             String url = jsonNode.get("permalink_url").asText();
-            new Track();
             return new Track(id, duration, artist, title, genre, url);
         }
         return null;

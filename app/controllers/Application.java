@@ -133,6 +133,7 @@ public final class Application extends Controller {
             return badRequest("Expecting Json data");
         } else {
             int trackID = json.get("track").get("id").asInt();
+            System.out.println("MIX ID: " + trackID);
             MixSplitter splitter = new MixSplitter(json.get("waveform"), trackID);
             List<Integer> list = splitter.split();
             Map<String, List<Integer>> map = new TreeMap<String, List<Integer>>();

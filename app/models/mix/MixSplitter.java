@@ -3,9 +3,8 @@ package models.mix;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
-
-import models.json.Json;
 
 /**
  * The Class that is responsable for the splitting of the mix in several smaller
@@ -19,83 +18,84 @@ import models.json.Json;
  */
 public class MixSplitter {
 
-	/**
-	 * The data of the wave format of the mix.
-	 */
-	private List<Double> data;
+    /**
+     * The data of the wave format of the mix.
+     */
+    private List<Double> data;
 
-	/**
-	 * The id of the track to split.
-	 */
-	private int trackID;
+    /**
+     * The id of the track to split.
+     */
+    private int trackID;
 
-	/**
-	 * Creates a new mixsplitter which can then split the given mix into
-	 * different pieces.
-	 * 
-	 * @param data
-	 *            The data to split into pieces for.
-	 * @param trackID
-	 *            The id of the mix to split.
-	 */
-	public MixSplitter(final List<Double> data, final int trackID) {
-		this.setData(data);
-		this.setTrackID(trackID);
-	}
+    /**
+     * Creates a new mixsplitter which can then split the given mix into
+     * different pieces.
+     *
+     * @param data    The data to split into pieces for.
+     * @param trackID The id of the mix to split.
+     */
+    public MixSplitter(final List<Double> data, final int trackID) {
+        this.setData(data);
+        this.setTrackID(trackID);
+    }
 
-	/**
-	 * Creates a new MixSplitter which can split the given mix into different
-	 * pieces.
-	 * 
-	 * @param json The data to split in a JsonNode format.
-	 * @param trackID The id of the track to split.
-	 */
-	public MixSplitter(final JsonNode json, final int trackID) {
-		new MixSplitter(Json.getWaveform(json), trackID);
-	}
+    /**
+     * Creates a new MixSplitter which can split the given mix into different
+     * pieces.
+     *
+     * @param json    The data to split in a JsonNode format.
+     * @param trackID The id of the track to split.
+     */
+    public MixSplitter(final JsonNode json, final int trackID) {
+        Iterator<JsonNode> it = json.elements();
+        List<Double> data = new ArrayList<Double>();
+        while (it.hasNext()) {
+            data.add(Math.round(it.next().asDouble() * 10000.00) / 10000.00);
+        }
+        this.setData(data);
+        this.setTrackID(trackID);
+    }
 
-	/**
-	 * Splits the mix into different pieces.
-	 * 
-	 * @return The list of new starttimes, for which every starttime is the
-	 *         beginning of a new piece.
-	 */
-	public List<Integer> split() {
-		final double threshold = 0.85;
-		final int songtime = 300000;
-		return split(splitToShingles(), threshold, songtime);
-	}
+    /**
+     * Splits the mix into different pieces.
+     *
+     * @return The list of new starttimes, for which every starttime is the
+     * beginning of a new piece.
+     */
+    public List<Integer> split() {
+        final double threshold = 0.85;
+        final int songtime = 300000;
+        return split(splitToShingles(), threshold, songtime);
+    }
 
-	/**
-	 * Splits the mix into different pieces.
-	 * 
-	 * @param shingles
-	 *            The shingles that are to be compared.
-	 * @param threshold
-	 *            The threshold to check, when the threshold is passed the two
-	 *            Shingles belong to a different song in our assumption.
-	 * @param songtime
-	 *            The duration of the song you are splitting.
-	 * @return The list of new starttimes, for which every starttime is the
-	 *         beginning of a new piece.
-	 */
-	protected List<Integer> split(final List<Shingle> shingles,
-	        final double threshold, final int songtime) {
-		if (threshold < 0.0 || threshold > 1.0) {
-			throw new IllegalArgumentException("The threshold to split mix "
-					+ trackID + " was equal to " + threshold
-					+ " but must be between 0.0 and 1.0");
-		} else if (songtime <= 0) {
-			throw new IllegalArgumentException("The songtime of the mix "
-					+ trackID + " was equal to " + songtime
-					+ " but must be larger than 0.");
-		}
-		List<Integer> starttimes = new ArrayList<Integer>();
-		starttimes.add(0);
-		/*
-		 * Just in case someone enters a LinkedList or other list that
-		 * calculates it's size instead of remembering it.
-		 */
+    /**
+     * Splits the mix into different pieces.
+     *
+     * @param shingles  The shingles that are to be compared.
+     * @param threshold The threshold to check, when the threshold is passed the two
+     *                  Shingles belong to a different song in our assumption.
+     * @param songtime  The duration of the song you are splitting.
+     * @return The list of new starttimes, for which every starttime is the
+     * beginning of a new piece.
+     */
+    protected List<Integer> split(final List<Shingle> shingles,
+                                  final double threshold, final int songtime) {
+        if (threshold < 0.0 || threshold > 1.0) {
+            throw new IllegalArgumentException("The threshold to split mix "
+                    + trackID + " was equal to " + threshold
+                    + " but must be between 0.0 and 1.0");
+        } else if (songtime <= 0) {
+            throw new IllegalArgumentException("The songtime of the mix "
+                    + trackID + " was equal to " + songtime
+                    + " but must be larger than 0.");
+        }
+        List<Integer> starttimes = new ArrayList<Integer>();
+        starttimes.add(0);
+        /*
+         * Just in case someone enters a LinkedList or other list that
+         * calculates it's size instead of remembering it.
+         */
         final int amountOfShingles = shingles.size();
         // The - 1 is to not do this to the last one.
         for (int i = 0; i < amountOfShingles - 1; i++) {

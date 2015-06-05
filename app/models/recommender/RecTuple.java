@@ -2,43 +2,93 @@ package models.recommender;
 
 import models.record.Track;
 
+/**
+ * Class used to give track a score implements Comparable Interface.
+ */
 public class RecTuple implements Comparable<RecTuple> {
 
-	public Track track;
-	
-	public double score;
-	
-	public RecTuple(Track track, Double score) {
-		this.track = track;
-		this.score = score;
-	}
+    /** The track object. */
+    private Track track;
 
-	@Override
-	public int compareTo(RecTuple other) {
-		return (int) Math.round(this.getScore() - other.getScore());
-	}
+    /** The score of the Tuple. */
+    private double score;
 
-	public void addScore(double difference) {
-	    score += difference;
-	}
-	
-	public String toString() {
-	    return "[ id: " + track.getId() + " score: " + score + " ]";
-	}
-	
-	public Track getTrack() {
-		return track;
-	}
+    /**
+     * Constructor of the class.
+     * 
+     * @param track
+     *            The Track object.
+     * @param score
+     *            The score of the tuple.
+     */
+    public RecTuple(final Track track, final Double score) {
+        this.track = track;
+        this.score = score;
+    }
 
-	public void setTrack(Track track) {
-		this.track = track;
-	}
+    /**
+     * The compareTo method used with the Comparable Interface to be able to
+     * sort a list containing objects of this class.
+     */
+    @Override
+    public int compareTo(final RecTuple other) {
+        return (int) Math.round(this.getScore() - other.getScore());
+    }
 
-	public double getScore() {
-		return score;
-	}
+    /**
+     * Adds a score to the existing one.
+     * 
+     * @param difference
+     *            the amount that needs to be added.
+     */
+    public void addScore(final double difference) {
+        score += difference;
+    }
 
-	public void setScore(double score) {
-		this.score = score;
-	}
+    /**
+     * Creates a String representation of the object.
+     * 
+     * @return String representation of the object
+     */
+    public String toString() {
+        return "[ id: " + track.getId() + " score: " + score + " ]";
+    }
+
+    /**
+     * Getter for the Track object.
+     * 
+     * @return The Track object
+     */
+    public Track getTrack() {
+        return track;
+    }
+
+    /**
+     * Setter for the Track object.
+     * 
+     * @param track
+     *            The new Track object.
+     */
+    public void setTrack(final Track track) {
+        this.track = track;
+    }
+
+    /**
+     * Getter for the score of the object.
+     * 
+     * @return The score of the object.
+     */
+    public double getScore() {
+        return score;
+    }
+
+    /**
+     * Setter for the score of the Tuple.
+     * 
+     * @param score
+     *            The new score of the object.
+     */
+    public void setScore(final double score) {
+        this.score = score;
+    }
 }

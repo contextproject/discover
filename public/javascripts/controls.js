@@ -61,15 +61,9 @@ $("#dislike").click(function () {
 // event for liking a song
 $("#like").click(function () {
     like();
-    //if (SC.accessToken() == null) {
-    //    console.log("null");
-    //    SC.connect(function () {
-    //        like();
-    //    });
-    //} else {
-    //    console.log("not null");
-    //    like();
-    //}
+    if (SC.accessToken() != null) {
+        like();
+    }
 });
 
 // like the current song
