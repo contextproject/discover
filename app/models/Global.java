@@ -1,6 +1,7 @@
 package models;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import controllers.RecommenderController;
 import models.database.DatabaseConnector;
 import play.Application;
 import play.GlobalSettings;
@@ -38,7 +39,7 @@ public class Global extends GlobalSettings {
         controllers.Application.setDatabaseConnector(databaseConnector);
         controllers.Application.setObjectMapper(mapper);
 
-        controllers.UserActionController.initialize();
+        RecommenderController.initialize();
     }
 
     /**

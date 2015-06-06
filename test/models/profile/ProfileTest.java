@@ -1,6 +1,7 @@
 package models.profile;
 
 import models.record.Track;
+import models.record.Track2;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -38,7 +39,7 @@ public class ProfileTest {
     @Test
     public void testLike() throws Exception {
         assertEquals(0, profile.getLikes().size());
-        profile.addLike(new Track());
+        profile.addLike(new Track2());
         assertEquals(1, profile.getLikes().size());
     }
 
@@ -50,7 +51,7 @@ public class ProfileTest {
     @Test
     public void testDislike() throws Exception {
         assertEquals(0, profile.getDislikes().size());
-        profile.addDislike(new Track());
+        profile.addDislike(new Track2());
         assertEquals(1, profile.getDislikes().size());
     }
 }

@@ -1,6 +1,7 @@
 package models.recommender;
 
 import models.record.Track;
+import models.record.Track2;
 
 /**
  * Class used to give track a score implements Comparable Interface.
@@ -8,7 +9,7 @@ import models.record.Track;
 public class RecTuple implements Comparable<RecTuple> {
 
     /** The track object. */
-    private Track track;
+    private Track2 track;
 
     /** The score of the Tuple. */
     private double score;
@@ -21,7 +22,7 @@ public class RecTuple implements Comparable<RecTuple> {
      * @param score
      *            The score of the tuple.
      */
-    public RecTuple(final Track track, final Double score) {
+    public RecTuple(final Track2 track, final Double score) {
         this.track = track;
         this.score = score;
     }
@@ -51,7 +52,7 @@ public class RecTuple implements Comparable<RecTuple> {
      * @return String representation of the object
      */
     public String toString() {
-        return "[ id: " + track.getId() + " score: " + score + " ]";
+        return "[ id: " + track.get("id") + " score: " + score + " ]";
     }
 
     /**
@@ -59,7 +60,7 @@ public class RecTuple implements Comparable<RecTuple> {
      * 
      * @return The Track object
      */
-    public Track getTrack() {
+    public Track2 getTrack() {
         return track;
     }
 
@@ -69,7 +70,7 @@ public class RecTuple implements Comparable<RecTuple> {
      * @param track
      *            The new Track object.
      */
-    public void setTrack(final Track track) {
+    public void setTrack(final Track2 track) {
         this.track = track;
     }
 

@@ -1,6 +1,6 @@
 package models.profile;
 
-import models.record.Track;
+import models.record.Track2;
 import models.utility.TrackList;
 
 /**
@@ -32,7 +32,7 @@ public class Profile {
      *
      * @param track The track to like
      */
-    public void addLike(final Track track) {
+    public void addLike(final Track2 track) {
         likes.add(track);
     }
 
@@ -41,7 +41,7 @@ public class Profile {
      *
      * @param track The track to dislike
      */
-    public void addDislike(final Track track) {
+    public void addDislike(final Track2 track) {
         dislikes.add(track);
     }
 

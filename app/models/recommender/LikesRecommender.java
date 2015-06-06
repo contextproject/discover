@@ -8,6 +8,7 @@ import java.util.List;
 import models.database.retriever.GeneralTrackSelector;
 import models.profile.Profile;
 import models.record.Track;
+import models.record.Track2;
 import models.utility.TrackList;
 
 /**
@@ -94,7 +95,7 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
         List<RecTuple> unweighted = recommender.recommend();
         System.out.println("Size unweighted: " + unweighted.size());
         for (RecTuple rt : unweighted) {
-            Object key = rt.getTrack().getGenre();
+            Object key = rt.getTrack().get("genre");
             if (genreBoard.containsKey(key)) {
                 rt.addScore(genreBoard.get(key));
             }
@@ -112,13 +113,13 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
     private void generateBoards() {
         if (recommender != null) {
             Profile pro = this.getUserProfile();
-            ArrayList<Track> likes = pro.getLikes();
-            ArrayList<Track> dislikes = pro.getDislikes();
-            for (Track track : likes) {
+            ArrayList<Track2> likes = pro.getLikes();
+            ArrayList<Track2> dislikes = pro.getDislikes();
+            for (Track2 track : likes) {
                 updateBoardPositive(genreBoard, track);
                 // updateBoardPositive(artistBoard, track);
             }
-            for (Track track : dislikes) {
+            for (Track2 track : dislikes) {
                 updateBoardNegative(genreBoard, track);
                 // updateBoardNegative(artistBoard, track);
             }
@@ -136,8 +137,8 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
      *            Track object that is being added.
      */
     private static void updateBoardPositive(final HashMap<Object, Double> hm,
-            final Track track) {
-        Object key = track.getGenre();
+            final Track2 track) {
+        Object key = track.get("genre");
         if (hm.containsKey(key)) {
             hm.put(key, hm.get(key) + weight);
         } else {
@@ -160,8 +161,8 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
      */
     
     private static void updateBoardNegative(final HashMap<Object, Double> hm,
-            final Track track) {
-        Object key = track.getGenre();
+            final Track2 track) {
+        Object key = track.get("genre");
         if (hm.containsKey(key)) {
             hm.put(key, hm.get(key) - (weight * 2));
         } else {

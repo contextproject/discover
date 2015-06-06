@@ -1,6 +1,7 @@
 package models.profile;
 
 import models.record.Track;
+import models.record.Track2;
 import models.utility.TrackList;
 
 /**
@@ -32,7 +33,7 @@ public class SoundcloudProfile extends Profile {
      * @param tracks The tracks to add to the likes
      */
     public void addLikes(final TrackList tracks) {
-        for (Track track : tracks) {
+        for (Track2 track : tracks) {
             addLike(track);
         }
     }

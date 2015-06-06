@@ -1,6 +1,7 @@
 package models.profile;
 
 import models.record.Track;
+import models.record.Track2;
 import models.utility.TrackList;
 import org.junit.Before;
 import org.junit.Test;
@@ -43,7 +44,7 @@ public class SoundcloudProfileTest {
     @Test
     public void testAddLikes() {
         TrackList trackList = new TrackList();
-        trackList.add(new Track(1, 1));
+        trackList.add(new Track2());
 
         soundcloudProfile.addLikes(trackList);
 

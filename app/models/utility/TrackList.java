@@ -1,6 +1,6 @@
 package models.utility;
 
-import models.record.Track;
+import models.record.Track2;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -9,7 +9,7 @@ import java.util.ArrayList;
 /**
  * Class to represent a collection of tracks.
  */
-public class TrackList extends ArrayList<Track> {
+public class TrackList extends ArrayList<Track2> {
 
     /**
      * Constructor.
@@ -25,8 +25,12 @@ public class TrackList extends ArrayList<Track> {
     public TrackList(final ResultSet resultSet) {
         try {
             while (resultSet.next()) {
-                System.out.println("mitnaka");
-                add(new Track(resultSet));
+                Track2 track = new Track2();
+                track.put("id", resultSet.getInt("track_id"));
+                track.put("duration", resultSet.getString("duration"));
+                track.put("genre", resultSet.getString("genre"));
+                track.put("title", resultSet.getString("title"));
+                add(track);
             }
         } catch (SQLException e) {
             e.printStackTrace();

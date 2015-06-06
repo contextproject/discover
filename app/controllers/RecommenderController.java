@@ -1,29 +1,24 @@
 package controllers;
 
 
-import static play.mvc.Controller.request;
-import static play.mvc.Results.ok;
-
-import java.util.List;
-
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import models.json.Json;
 import models.profile.Profile;
 import models.recommender.BasicRecommender;
 import models.recommender.LikesRecommender;
-import models.recommender.RecTuple;
-import models.recommender.Recommender;
-import models.record.Track;
+import models.record.Track2;
 import models.utility.TrackList;
 import play.mvc.Result;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import static play.mvc.Controller.request;
+import static play.mvc.Results.ok;
 
 /**
  * Controller for the recommendation system.
  */
-public final class UserActionController {
+public final class RecommenderController {
 
     /**
      * The profile of this session.
@@ -33,7 +28,7 @@ public final class UserActionController {
     /**
      * Constructor.
      */
-    private UserActionController() {
+    private RecommenderController() {
     }
 
     /**
@@ -49,7 +44,7 @@ public final class UserActionController {
      * @return A HTPP ok response
      */
     public static Result like() {
-        Track track = Json.getTrack(request().body().asJson());
+        Track2 track = Json.getTrack2(request().body().asJson());
         profile.addLike(track);
         return ok();
     }
@@ -60,7 +55,7 @@ public final class UserActionController {
      * @return A HTPP ok response
      */
     public static Result dislike() {
-        Track track = Json.getTrack(request().body().asJson());
+        Track2 track = Json.getTrack2(request().body().asJson());
         profile.addDislike(track);
         return ok();
     }
@@ -74,12 +69,12 @@ public final class UserActionController {
     public static Result collection() {
         JsonNode jsonNode = request().body().asJson();
         TrackList trackList = Json.getTrackList(jsonNode);
-        for (Track track : trackList) {
+        for (Track2 track : trackList) {
             profile.addLike(track);
         }
         return ok();
     }
-    
+
     public static Result recommend() {
         System.out.println();
         LikesRecommender rec = new LikesRecommender(new BasicRecommender(profile, 10));
@@ -107,18 +102,15 @@ public final class UserActionController {
         TrackList recs = rec.suggest();
         System.out.println(recs.size());
         for (int i = 0; i < recs.size(); i++) {
-            Track track = recs.get(i);
+            Track2 track = recs.get(i);
             ObjectNode jsontrack = mapper.createObjectNode();
-            jsontrack.put("id", track.getId());
-            System.out.println("id: " + track.getId());
-            jsontrack.put("artist", track.getArtist());
-            System.out.println("artist: " + track.getArtist());
-            jsontrack.put("title", track.getTitle());
-            System.out.println("title: " + track.getTitle());
-            jsontrack.put("url", track.getUrl());
-            System.out.println("url: " + track.getUrl());
-            jsontrack.put("genre", track.getGenre());
-            System.out.println("genre: " + track.getGenre());
+
+            jsontrack.put("id", (Integer) track.get("id"));
+            jsontrack.put("artist", (String) track.get("username"));
+            jsontrack.put("title", (String) track.get("title"));
+            jsontrack.put("url", (String) track.get("url"));
+            jsontrack.put("genre", (String) track.get("genre"));
+
             result.put(Integer.toString(i), jsontrack);
         }
         return ok(result);
