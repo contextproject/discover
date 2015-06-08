@@ -115,4 +115,8 @@ public final class RecommenderController {
         }
         return ok(result);
     }
+
+    public static Profile getProfile() {
+        return profile;
+    }
 }

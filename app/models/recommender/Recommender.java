@@ -24,4 +24,6 @@ public interface Recommender {
      * @return The profile of the user.
      */
     Profile getUserProfile();
+
+    int getAmount();
 }

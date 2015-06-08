@@ -24,4 +24,9 @@ public abstract class RecommendDecorator implements Recommender {
         return recommender.getUserProfile();
     }
 
+    @Override
+    public int getAmount() {
+        return recommender.getAmount();
+    }
+
 }

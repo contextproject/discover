@@ -1,6 +1,5 @@
 package models.recommender;
 
-import models.record.Track;
 import models.record.Track2;
 
 /**
@@ -8,19 +7,21 @@ import models.record.Track2;
  */
 public class RecTuple implements Comparable<RecTuple> {
 
-    /** The track object. */
+    /**
+     * The track object.
+     */
     private Track2 track;
 
-    /** The score of the Tuple. */
+    /**
+     * The score of the Tuple.
+     */
     private double score;
 
     /**
      * Constructor of the class.
-     * 
-     * @param track
-     *            The Track object.
-     * @param score
-     *            The score of the tuple.
+     *
+     * @param track The Track object.
+     * @param score The score of the tuple.
      */
     public RecTuple(final Track2 track, final Double score) {
         this.track = track;
@@ -38,9 +39,8 @@ public class RecTuple implements Comparable<RecTuple> {
 
     /**
      * Adds a score to the existing one.
-     * 
-     * @param difference
-     *            the amount that needs to be added.
+     *
+     * @param difference the amount that needs to be added.
      */
     public void addScore(final double difference) {
         score += difference;
@@ -48,7 +48,7 @@ public class RecTuple implements Comparable<RecTuple> {
 
     /**
      * Creates a String representation of the object.
-     * 
+     *
      * @return String representation of the object
      */
     public String toString() {
@@ -57,7 +57,7 @@ public class RecTuple implements Comparable<RecTuple> {
 
     /**
      * Getter for the Track object.
-     * 
+     *
      * @return The Track object
      */
     public Track2 getTrack() {
@@ -66,9 +66,8 @@ public class RecTuple implements Comparable<RecTuple> {
 
     /**
      * Setter for the Track object.
-     * 
-     * @param track
-     *            The new Track object.
+     *
+     * @param track The new Track object.
      */
     public void setTrack(final Track2 track) {
         this.track = track;
@@ -76,7 +75,7 @@ public class RecTuple implements Comparable<RecTuple> {
 
     /**
      * Getter for the score of the object.
-     * 
+     *
      * @return The score of the object.
      */
     public double getScore() {
@@ -85,9 +84,8 @@ public class RecTuple implements Comparable<RecTuple> {
 
     /**
      * Setter for the score of the Tuple.
-     * 
-     * @param score
-     *            The new score of the object.
+     *
+     * @param score The new score of the object.
      */
     public void setScore(final double score) {
         this.score = score;

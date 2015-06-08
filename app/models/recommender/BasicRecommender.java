@@ -4,6 +4,7 @@ import java.util.List;
 
 import models.database.retriever.GeneralTrackSelector;
 import models.profile.Profile;
+import models.record.Track2;
 
 /**
  * The BasicRecommender class is the most basic Recommender. It returns a list
@@ -18,6 +19,8 @@ public class BasicRecommender implements Recommender {
 
     /** The query used for selecting tracks from the database. */
     private String query;
+
+    private int amount;
 
     /**
      * Constructor for the BasicRecommender class.
@@ -34,6 +37,13 @@ public class BasicRecommender implements Recommender {
             query += (" LIMIT " + amount);
         }
         System.out.println("query: " + query);
+    }
+
+    public BasicRecommender(final Track2 track, final int amount) {
+        this(new Profile(), amount);
+        Profile profile = new Profile();
+        profile.addLike(track);
+        setUserProfile(profile);
     }
 
     /**
@@ -87,5 +97,14 @@ public class BasicRecommender implements Recommender {
      */
     public void setUserProfile(final Profile userProfile) {
         this.userProfile = userProfile;
+    }
+
+    @Override
+    public int getAmount() {
+        return amount;
+    }
+
+    public void setAmount(int amount) {
+        this.amount = amount;
     }
 }

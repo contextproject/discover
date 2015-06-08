@@ -6,6 +6,9 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import models.database.DatabaseConnector;
 import models.database.RandomSongSelector;
 import models.mix.MixSplitter;
+import models.recommender.BasicRecommender;
+import models.recommender.FeatureRecommender;
+import models.recommender.RecTuple;
 import models.record.Track;
 import models.utility.TrackList;
 import play.mvc.Controller;
@@ -40,8 +43,15 @@ public final class Application extends Controller {
      * @return an http ok response with the rendered page.
      */
     public static Result index() {
+        test();
         String url = "w.soundcloud.com/tracks/67016624";
         return ok(index.render(url, getStartTime(67016624)));
+    }
+
+    public static void test() {
+        FeatureRecommender fr = new FeatureRecommender(new BasicRecommender(RecommenderController.getProfile(), 5));
+        List<RecTuple> bla = fr.recommend();
+        System.out.println(bla);
     }
 
     /**
