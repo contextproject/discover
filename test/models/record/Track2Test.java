@@ -1,7 +1,10 @@
 package models.record;
 
+import models.utility.TrackList;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.Collections;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -109,5 +112,29 @@ public class Track2Test {
         track.put("key", "value");
         assertNull(track.remove("wrong key"));
         assertTrue(track.containsKey("key"));
+    }
+
+    @Test
+    public void testCompareTo1() {
+        Track2 a = new Track2();
+        a.put("score", 1.0);
+        Track2 b = new Track2();
+        b.put("score", 2.0);
+        assertTrue(a.compareTo(a) == 0);
+        assertTrue(a.compareTo(b) > 0);
+        assertTrue(b.compareTo(a) < 0);
+    }
+
+    @Test
+    public void testCompareTo2() {
+        TrackList trackList = new TrackList();
+        Track2 a = new Track2();
+        a.put("score", 1.0);
+        trackList.add(a);
+        Track2 b = new Track2();
+        b.put("score", 2.0);
+        trackList.add(b);
+        Collections.sort(trackList);
+        assertEquals(2.0, trackList.get(0).get("score"));
     }
 }
