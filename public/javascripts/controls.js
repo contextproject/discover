@@ -13,7 +13,19 @@ widget.bind(SC.Widget.Events.PLAY, function (){
                    if (sounds.length > 1){
                        widget.next();
                    } else{
-                       widget.play();
+                       $.ajax({
+                           type: "GET",
+                           dataType: "json",
+                           contentType: "application/json; charset=utf-8",
+                           url: "/random",
+                           success: function (data) {
+                               widget.load(data.url, {
+                                   auto_play: false,
+                                   likes: false
+                               });
+                               setStartTime(data.start)
+                           }
+                       });
                    }
                 });
             }
@@ -273,7 +285,7 @@ function widgetClearEvents() {
 }
 
 // load the widget with a random song
-$("#rand").click(function () {
+$("#rand").click(function randomSong() {
     $.ajax({
         type: "GET",
         dataType: "json",
