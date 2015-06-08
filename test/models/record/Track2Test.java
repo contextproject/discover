@@ -5,6 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Collections;
+import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -136,5 +137,46 @@ public class Track2Test {
         trackList.add(b);
         Collections.sort(trackList);
         assertEquals(2.0, trackList.get(0).get("score"));
+    }
+
+    @Test
+    public void testPutAll() throws Exception {
+        Track2 a = new Track2();
+        a.put("0", 0);
+        a.put("1", 1);
+        Track2 b = new Track2();
+        b.putAll(a);
+        assertEquals(2, b.size());
+        assertEquals(0, b.get("0"));
+        assertEquals(1, b.get("1"));
+    }
+
+    @Test
+    public void testClear() throws Exception {
+        track.put("0", 0);
+        assertEquals(1, track.size());
+        track.clear();
+        assertEquals(0, track.size());
+    }
+
+    @Test
+    public void testKeySet() throws Exception {
+        track.put("0", 0);
+        assertTrue(track.keySet().contains("0"));
+    }
+
+    @Test
+    public void testValues() throws Exception {
+        track.put("0", 0);
+        assertTrue(track.values().contains(0));
+    }
+
+    @Test
+    public void testEntrySet() throws Exception {
+        track.put("0", 0);
+        Set<TrackEntry> entries = track.entrySet();
+        assertEquals("0", entries.iterator().next().getKey());
+        assertEquals(0, entries.iterator().next().getValue());
+
     }
 }

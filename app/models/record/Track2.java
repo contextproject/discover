@@ -1,15 +1,17 @@
 package models.record;
 
-
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * Second attempt at the Track object class. This class should be easier to extend.
  */
-public class Track2 implements Comparable<Track2> {
+public class Track2 implements Map, Comparable<Track2> {
 
     /**
      * The entries of the Track.
@@ -41,7 +43,7 @@ public class Track2 implements Comparable<Track2> {
      * @param key The key of the entry
      * @return True if this Track object contains the entry
      */
-    public boolean containsKey(Object key) {
+    public boolean containsKey(final Object key) {
         for (TrackEntry<Object, Object> entry : entries) {
             if (entry.getKey().equals(key)) {
                 return true;
@@ -56,7 +58,7 @@ public class Track2 implements Comparable<Track2> {
      * @param value The value of the entry
      * @return True if this Track object contain the entry
      */
-    public boolean containsValue(Object value) {
+    public boolean containsValue(final Object value) {
         for (TrackEntry<Object, Object> entry : entries) {
             if (entry.getValue().equals(value)) {
                 return true;
@@ -71,7 +73,7 @@ public class Track2 implements Comparable<Track2> {
      * @param key The key of the entry
      * @return The value of the entry
      */
-    public Object get(Object key) {
+    public Object get(final Object key) {
         for (TrackEntry<Object, Object> entry : entries) {
             if (entry.getKey().equals(key)) {
                 return entry.getValue();
@@ -87,7 +89,7 @@ public class Track2 implements Comparable<Track2> {
      * @param value The value of the entry
      * @return The old value of the key
      */
-    public Object put(Object key, Object value) {
+    public Object put(final Object key, final Object value) {
         for (TrackEntry<Object, Object> entry : entries) {
             if (entry.getKey().equals(key)) {
                 if (entry.getValue().getClass().equals(value.getClass())) {
@@ -107,7 +109,7 @@ public class Track2 implements Comparable<Track2> {
      * @param key   The key of the entry
      * @param value The value of the entry
      */
-    private void add(Object key, Object value) {
+    private void add(final Object key, final Object value) {
         entries.add(new TrackEntry<Object, Object>(key, value));
     }
 
@@ -117,7 +119,7 @@ public class Track2 implements Comparable<Track2> {
      * @param key The key of the entry
      * @return The value of the entry
      */
-    public Object remove(Object key) {
+    public Object remove(final Object key) {
         for (TrackEntry<Object, Object> entry : entries) {
             if (entry.getKey().equals(key)) {
                 Object value = entry.getValue();
@@ -129,6 +131,18 @@ public class Track2 implements Comparable<Track2> {
     }
 
     /**
+     * Add all entries from the provided map to this Track.
+     *
+     * @param m The map with the entries to add
+     */
+    public void putAll(@Nonnull final Map m) {
+        Set<Entry> entries = m.entrySet();
+        for (Entry entry : entries) {
+            put(entry.getKey(), entry.getValue());
+        }
+    }
+
+    /**
      * Clear the entries of this Track object.
      */
     public void clear() {
@@ -136,8 +150,39 @@ public class Track2 implements Comparable<Track2> {
     }
 
     /**
-     * Get the entries
+     * Get the set of keys from this Track object.
+     *
+     * @return A set of keys
      */
+    @Nonnull
+    public Set keySet() {
+        Set<Object> result = new TreeSet<Object>();
+        for (TrackEntry<Object, Object> entry : entries) {
+            result.add(entry.getKey());
+        }
+        return result;
+    }
+
+    /**
+     * Get a collection of values from this Track object.
+     *
+     * @return A collection of values
+     */
+    @Nonnull
+    public Collection values() {
+        Collection<Object> result = new ArrayList<Object>();
+        for (TrackEntry<Object, Object> entry : entries) {
+            result.add(entry.getValue());
+        }
+        return result;
+    }
+
+    /**
+     * Get the entries of this Track.
+     *
+     * @return The entries
+     */
+    @Nonnull
     public Set<TrackEntry> entrySet() {
         Set<TrackEntry> result = new HashSet<TrackEntry>();
         for (TrackEntry entry : entries) {
@@ -156,7 +201,13 @@ public class Track2 implements Comparable<Track2> {
      * and a value greater less 0 if this score is numerically greater than the other score.
      */
     @Override
-    public int compareTo(@Nonnull Track2 o) {
-        return -1 * ((Double) this.get("score")).compareTo((Double) o.get("score"));
+    public int compareTo(@Nonnull final Track2 o) {
+        double compare = (Double) this.get("score") - (Double) o.get("score");
+        if(compare > 0) {
+            return -1;
+        } else if( compare < 0) {
+            return 1;
+        }
+        return 0;
     }
 }
