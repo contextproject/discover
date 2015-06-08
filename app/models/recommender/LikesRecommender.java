@@ -75,8 +75,8 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
         query = query.substring(0, query.length() - 3);
         query += " ORDER BY RAND() LIMIT 5";
         System.out.println("suggest: " + query);
-        GeneralTrackSelector selector = new GeneralTrackSelector(query);
-        TrackList list = selector.execute();
+        GeneralTrackSelector selector = GeneralTrackSelector.getInstance();
+        TrackList list = selector.execute(query);
         // probleem ligt ergens hier. De selector geeft alleen maar 1 record
         // wanneer hij geëxecute wordt.
         System.out.println("list size: " + list.size());

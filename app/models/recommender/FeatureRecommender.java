@@ -29,8 +29,8 @@ public class FeatureRecommender extends RecommendDecorator implements Recommende
                 + "FROM     `features`"
                 + "ORDER BY distance"
                 + "LIMIT " + getAmount();
-        GeneralTrackSelector selector = new GeneralTrackSelector(query);
-        TrackList list = selector.execute();
+        GeneralTrackSelector selector = GeneralTrackSelector.getInstance();
+        TrackList list = selector.execute(query);
 
         return null;
     }

@@ -55,8 +55,8 @@ public class BasicRecommender implements Recommender {
      */
     @Override
     public List<RecTuple> recommend() {
-        GeneralTrackSelector seeker = new GeneralTrackSelector(query);
-        List<RecTuple> res = seeker.asWeightedList(0.0);
+        GeneralTrackSelector seeker = GeneralTrackSelector.getInstance();
+        List<RecTuple> res = seeker.asWeightedList(query, 0.0);
         System.out.println("basic size: " + res.size());
         return res;
     }

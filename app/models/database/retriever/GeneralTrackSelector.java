@@ -13,16 +13,17 @@ public class GeneralTrackSelector {
     /** The DatabaseConnector object */
     private DatabaseConnector databaseConnector;
 
-    /** Query used for selecting from the database.*/
-    private String query;
+
+    private static GeneralTrackSelector instance = new GeneralTrackSelector();
 
     /**
      * Constructor of the class.
-     * @param query The query used for selecting from the database.
+     * 
+     * @param query
+     *            The query used for selecting from the database.
      */
-    public GeneralTrackSelector(final String query) {
+    private GeneralTrackSelector() {
         this.databaseConnector = Application.getDatabaseConnector();
-        this.query = query;
     }
 
     /**
@@ -30,19 +31,19 @@ public class GeneralTrackSelector {
      * 
      * @return TrackList with the results
      */
-    public TrackList execute() {
+    public TrackList execute(final String query) {
         return new TrackList(databaseConnector.executeQuery(query));
     }
 
     /**
-     *  Creates a list of weighted Track objects (RecTuple).
-     *  
-     * @param weight The weight that every track will receive when created.
+     * Creates a list of weighted Track objects (RecTuple).
+     * 
+     * @param weight
+     *            The weight that every track will receive when created.
      * @return List of RecTuples
      */
-    public List<RecTuple> asWeightedList(final double weight) {
-        TrackList unweighted = this.execute();
-        System.out.println("Selector 1: " + unweighted.size());
+    public List<RecTuple> asWeightedList(final String query, final double weight) {
+        TrackList unweighted = this.execute(query);
         ArrayList<RecTuple> weighted = new ArrayList<RecTuple>(
                 unweighted.size());
         for (int i = 0; i < unweighted.size(); i++) {
@@ -50,5 +51,14 @@ public class GeneralTrackSelector {
             weighted.add(rt);
         }
         return weighted;
+    }
+
+    /**
+     * Singleton method to get the instance of GeneralTrackSelector.
+     * 
+     * @return the GeneralTrackSelector object.
+     */
+    public static GeneralTrackSelector getInstance() {
+       return instance;
     }
 }
