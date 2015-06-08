@@ -190,6 +190,18 @@ public class Track2 implements Map, Comparable<Track2> {
         }
         return result;
     }
+    
+    /**
+     * Add an additional score to the objects existing score.
+     * @param addition The additional score that needs to be added.
+     */
+    public void addScoreToTrack(double addition) {
+        if(entries.contains("score")) {
+            this.put(entries, (Double) this.get("score") + addition);
+        } else {
+            throw new NullPointerException("The Track does not contain a entry called: \"score\"");
+        }
+    }
 
     /**
      * Compares two Track objects with each other.
