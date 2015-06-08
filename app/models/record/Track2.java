@@ -1,5 +1,7 @@
 package models.record;
 
+
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -7,7 +9,7 @@ import java.util.Set;
 /**
  * Second attempt at the Track object class. This class should be easier to extend.
  */
-public class Track2 {
+public class Track2 implements Comparable<Track2> {
 
     /**
      * The entries of the Track.
@@ -138,17 +140,35 @@ public class Track2 {
      */
     public Set<TrackEntry> entrySet() {
         Set<TrackEntry> result = new HashSet<TrackEntry>();
-        for(TrackEntry entry : entries) {
+        for (TrackEntry entry : entries) {
             result.add(entry);
         }
         return result;
     }
     
+    /**
+     * Add an additional score to the objects existing score.
+     * @param addition The additional score that needs to be added.
+     */
     public void addScoreToTrack(double addition) {
         if(entries.contains("score")) {
             this.put(entries, (Double) this.get("score") + addition);
         } else {
             throw new NullPointerException("The Track does not contain a entry called: \"score\"");
         }
+    }
+
+    /**
+     * Compares two Track objects with each other.
+     * The Track with the higher score get sorted before the other.
+     *
+     * @param o The other Track
+     * @return the value 0 if the scores are numerically equal;
+     * a value greater than 0 if this score is numerically less than the other score;
+     * and a value greater less 0 if this score is numerically greater than the other score.
+     */
+    @Override
+    public int compareTo(@Nonnull Track2 o) {
+        return -1 * ((Double) this.get("score")).compareTo((Double) o.get("score"));
     }
 }
