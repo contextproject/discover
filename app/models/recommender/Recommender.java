@@ -1,8 +1,7 @@
 package models.recommender;
 
-import java.util.List;
-
 import models.profile.Profile;
+import models.utility.TrackList;
 
 /**
  * The Recommender Interface implemented by Recommender classes used for
@@ -17,13 +16,13 @@ public interface Recommender {
      * 
      * @return List of RecTuple objects.
      */
-    List<RecTuple> recommend();
+    TrackList recommend();
 
     /**
      * Getter for the Profile of the user.
      * @return The profile of the user.
      */
     Profile getUserProfile();
-
+    
     int getAmount();
 }

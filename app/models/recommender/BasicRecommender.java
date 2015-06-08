@@ -1,10 +1,8 @@
 package models.recommender;
 
-import java.util.List;
-
-import models.database.retriever.GeneralTrackSelector;
 import models.profile.Profile;
 import models.record.Track2;
+import models.utility.TrackList;
 
 /**
  * The BasicRecommender class is the most basic Recommender. It returns a list
@@ -33,7 +31,7 @@ public class BasicRecommender implements Recommender {
     public BasicRecommender(final Profile profile, final int amount) {
         this.userProfile = profile;
         this.query = "SELECT * FROM tracks ORDER BY RAND()";
-        if (amount != -1) {
+        if (amount >= 0) {
             query += (" LIMIT " + amount);
         }
         System.out.println("query: " + query);
@@ -54,11 +52,8 @@ public class BasicRecommender implements Recommender {
      * @return List of RecTuple objects.
      */
     @Override
-    public List<RecTuple> recommend() {
-        GeneralTrackSelector seeker = GeneralTrackSelector.getInstance();
-        List<RecTuple> res = seeker.asWeightedList(query, 0.0);
-        System.out.println("basic size: " + res.size());
-        return res;
+    public TrackList recommend() {
+        return TrackList.get(query);
     }
 
     /**

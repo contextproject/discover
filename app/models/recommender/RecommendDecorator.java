@@ -1,6 +1,7 @@
 package models.recommender;
 
 import models.profile.Profile;
+import models.utility.TrackList;
 
 /**
  * The RecommendDecorator is extended by classes that decorate a BasicRecommender object.
@@ -17,7 +18,7 @@ public abstract class RecommendDecorator implements Recommender {
     /**
      * The weight the score should be changed with.
      */
-    protected double weight = 10;
+    protected final double weight = 10;
 
     /**
      * The constructor of the class.
@@ -37,5 +38,7 @@ public abstract class RecommendDecorator implements Recommender {
     public int getAmount() {
         return recommender.getAmount();
     }
+    
+    public abstract TrackList suggest();
 
 }

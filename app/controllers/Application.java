@@ -50,7 +50,7 @@ public final class Application extends Controller {
 
     public static void test() {
         FeatureRecommender fr = new FeatureRecommender(new BasicRecommender(RecommenderController.getProfile(), 5));
-        List<RecTuple> bla = fr.recommend();
+        TrackList bla = fr.recommend();
         System.out.println(bla);
     }
 

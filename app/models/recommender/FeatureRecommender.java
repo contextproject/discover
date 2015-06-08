@@ -33,11 +33,11 @@ public class FeatureRecommender extends RecommendDecorator implements Recommende
 
 
     @Override
-    public List<RecTuple> recommend() {
+    public TrackList recommend() {
         return evaluate();
     }
 
-    public List<RecTuple> evaluate() {
+    public TrackList evaluate() {
         return null;
     }
 

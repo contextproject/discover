@@ -143,4 +143,12 @@ public class Track2 {
         }
         return result;
     }
+    
+    public void addScoreToTrack(double addition) {
+        if(entries.contains("score")) {
+            this.put(entries, (Double) this.get("score") + addition);
+        } else {
+            throw new NullPointerException("The Track does not contain a entry called: \"score\"");
+        }
+    }
 }
