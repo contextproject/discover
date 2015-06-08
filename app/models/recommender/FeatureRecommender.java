@@ -1,6 +1,5 @@
 package models.recommender;
 
-import models.database.retriever.GeneralTrackSelector;
 import models.profile.Profile;
 import models.utility.TrackList;
 
@@ -22,26 +21,24 @@ public class FeatureRecommender extends RecommendDecorator implements Recommende
     }
 
 
-    public List<RecTuple> suggest() {
+    public TrackList suggest() {
         int danceability = 2;
-        String query = "SELECT danceability, "
+        String query = "SELECT track_id, danceability, "
                 + "abs(danceability - " + danceability + ") as distance"
                 + "FROM     `features`"
                 + "ORDER BY distance"
                 + "LIMIT " + getAmount();
-        GeneralTrackSelector selector = new GeneralTrackSelector(query);
-        TrackList list = selector.execute();
-
-        return null;
+        return TrackList.get(query);
     }
 
 
     @Override
     public List<RecTuple> recommend() {
-        List<RecTuple> unweighted = recommender.recommend();
+        return evaluate();
+    }
 
-
-        return unweighted;
+    public List<RecTuple> evaluate() {
+        return null;
     }
 
     public int getAmount(){

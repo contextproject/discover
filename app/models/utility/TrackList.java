@@ -1,5 +1,6 @@
 package models.utility;
 
+import controllers.Application;
 import models.record.Track2;
 
 import java.sql.ResultSet;
@@ -30,10 +31,15 @@ public class TrackList extends ArrayList<Track2> {
                 track.put("duration", resultSet.getString("duration"));
                 track.put("genre", resultSet.getString("genre"));
                 track.put("title", resultSet.getString("title"));
+                track.put("score", 0.0);
                 add(track);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public static TrackList get(String query) {
+        return new TrackList(Application.getDatabaseConnector().executeQuery(query));
     }
 }
