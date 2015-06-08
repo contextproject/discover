@@ -1,6 +1,8 @@
 package models.utility;
 
 import models.database.DatabaseConnector;
+
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -25,12 +27,22 @@ public class TrackListTest {
 
     /**
      * Set up.
+     * @throws Exception If the Exception fails.
      */
     @Before
-    public void setUp() {
-        databaseConnector = new DatabaseConnector();
+    public void setUp() throws Exception {
+        databaseConnector = DatabaseConnector.getConnector();
         databaseConnector.loadDrivers();
         databaseConnector.makeConnection("jdbc:mysql://188.166.78.36/contextbase", "context", "password");
+    }
+    
+    /**
+     * Does some clean up.
+     * @throws Exception If the clean up fails.
+     */
+    @After
+    public void tearDown() {
+        databaseConnector.closeConnection();
     }
 
     /**

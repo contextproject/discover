@@ -21,9 +21,13 @@ public class DatabaseConnectorTest {
 
     private DatabaseConnector databaseConnector;
 
+    /**
+     * Does some set up.
+     * @throws Exception If the set up fails.
+     */
     @Before
-    public void setUp() {
-        databaseConnector = new DatabaseConnector();
+    public void setUp() throws Exception {
+        databaseConnector = DatabaseConnector.getConnector();
         databaseConnector.loadDrivers();
         databaseConnector.makeConnection("jdbc:mysql://188.166.78.36/contextbase", "context", "password");
     }
@@ -45,7 +49,7 @@ public class DatabaseConnectorTest {
 
     @Test
     public void executeUpdateTest() throws Exception {
-        DatabaseConnector mockedDBC = mock(DatabaseConnector.class);
+        DatabaseConnector mockedDBC = DatabaseConnector.getConnector();
         Statement mockedStatement = mock(Statement.class);
         mockedDBC.setStatement(mockedStatement);
         String query = "INSERT INTO table VALUES (1, 1, 1, '2015-01-01 12:00:00', 1, \"test\")";
@@ -67,9 +71,13 @@ public class DatabaseConnectorTest {
     public void executeQueryExceptionTest() throws Exception {
         assertNull(databaseConnector.executeQuery(""));
     }
-
+    
+    /**
+     * Does some clean up.
+     * @throws Exception If the clean up fails.
+     */
     @After
-    public void tearDown() throws SQLException {
+    public void tearDown() throws Exception {
         databaseConnector.closeConnection();
     }
 }

@@ -25,7 +25,7 @@ public class TrackTest {
      */
     @Before
     public void setUp() {
-        databaseConnector = new DatabaseConnector();
+        databaseConnector = DatabaseConnector.getConnector();
         databaseConnector.loadDrivers();
         databaseConnector.makeConnection("jdbc:mysql://188.166.78.36/contextbase", "context", "password");
     }

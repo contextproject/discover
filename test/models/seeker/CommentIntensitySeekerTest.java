@@ -23,7 +23,7 @@ import static org.mockito.Mockito.when;
  * Test for the CommentIntensitySeeker.
  * 
  * @since 08-05-2015
- * @version 03-06-2015
+ * @version 08-06-2015
  * 
  * @see CommentIntensitySeeker
  * 
@@ -54,11 +54,10 @@ public class CommentIntensitySeekerTest extends BasicTest {
      */
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
-        DatabaseConnector databaseConnector = new DatabaseConnector();
+        DatabaseConnector databaseConnector = DatabaseConnector.getConnector();
         databaseConnector.loadDrivers();
         databaseConnector.makeConnection("jdbc:mysql://188.166.78.36/contextbase",
                 "context", "password");
-        Application.setDatabaseConnector(databaseConnector);
     }
 
     /**
@@ -68,7 +67,6 @@ public class CommentIntensitySeekerTest extends BasicTest {
     @AfterClass
     public static void tearDownAfterClass() throws Exception {
         Application.getDatabaseConnector().closeConnection();
-        Application.setDatabaseConnector(null);
     }
 
     @Override

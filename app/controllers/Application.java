@@ -22,11 +22,6 @@ import java.util.TreeMap;
 public final class Application extends Controller {
 
     /**
-     * The database object of the controller.
-     */
-    private static DatabaseConnector databaseConnector;
-
-    /**
      * The ObjectMapper used to create JsonNode objects.
      */
     private static ObjectMapper mapper;
@@ -204,16 +199,7 @@ public final class Application extends Controller {
      * @return the DatabaseConnecter Object.
      */
     public static DatabaseConnector getDatabaseConnector() {
-        return databaseConnector;
-    }
-
-    /**
-     * Setter for the DatabaseConnector object.
-     *
-     * @param dbc the new DatabaseConnector object.
-     */
-    public static void setDatabaseConnector(final DatabaseConnector dbc) {
-        databaseConnector = dbc;
+        return DatabaseConnector.getConnector();
     }
 
 }
