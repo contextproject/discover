@@ -3,6 +3,23 @@ var widget = SC.Widget(document.getElementById("sc-widget"));
 var mixSplits, waveform;
 var snipWin = 5000.00;
 var splitPointer = -1;
+var autoplay = false;
+
+widget.bind(SC.Widget.Events.PLAY, function (){
+
+        widget.bind(SC.Widget.Events.FINISH, function () {
+            if(autoplay) {
+                widget.getSounds(function (sounds) {
+                   if (sounds.length > 1){
+                       widget.next();
+                   } else{
+                       widget.play();
+                   }
+                });
+            }
+        });
+
+});
 
 $("#current").click(function () {
     widget.bind(SC.Widget.Events.READY, function () {
@@ -13,6 +30,18 @@ $("#current").click(function () {
             console.log(id);
         });
     });
+});
+
+$('a.toggler.off').click(function(){
+    if (document.getElementById("switch").innerHTML == "on") {
+        document.getElementById("switch").innerHTML = "off";
+        autoplay = false;
+    } else {
+        document.getElementById("switch").innerHTML = "on";
+        autoplay = true;
+    }
+    $(this).toggleClass('off');
+
 });
 
 // Prepare all the data to be sent when the widget is ready
@@ -34,6 +63,12 @@ $(window).load(function() {
         expose:true
 
     });
+
+    if(!document.getElementById("switch").innerHTML == "on"){
+        widget.bind(SC.Widget.Events.FINISH, function () {
+          alert("hoi");
+        });
+    }
 });
 
 // The method is used to send Data to the server
