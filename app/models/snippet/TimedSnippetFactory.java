@@ -16,9 +16,7 @@ public final class TimedSnippetFactory {
     /**
      * Creates a new factory.
      */
-    private TimedSnippetFactory() {
-        
-    }
+    private TimedSnippetFactory() { }
 
     /**
      * Creates a new TimedSnippet with the given starttime and window.
