@@ -174,16 +174,21 @@ $("#volume").on("input change", function () {
 //change the mode of the algorithm
 $("#algoMode").on("input change", function () {
 	var val = $("#algoMode").val();
-	if(val <= 25) {
-		console.log(25);
-	} else if(val > 25 & val <= 50) {
-		console.log(50);
-	} else if(val > 50 & val <= 75) { 
-		console.log(75);
+	if (val <= 25) {
+		$("#modeLabel").text("AUTO");
+		sendData({ "mode": "auto" }, "/setPreviewMode", function () {});
+	} else if (val > 25 & val <= 50) {
+		$("#modeLabel").text("INTENSITY");
+		sendData({ "mode": "intensity" }, "/setPreviewMode", function () {});
+	} else if (val > 50 & val <= 75) { 
+		$("#modeLabel").text("CONTENT");
+		sendData({ "mode": "content" }, "/setPreviewMode", function () {});
 	} else {
-		console.log(100);
+		$("#modeLabel").text("RANDOM");
+		sendData({ "mode": "random" }, "/setPreviewMode", function () {});
 	}
 });
+
 // play the snippet of the song
 var songStart = parseFloat(start) - (snipWin / 2);
 var songEnd = Math.abs(songStart) + snipWin;
@@ -247,7 +252,7 @@ $("#rand").click(function () {
                 auto_play: false,
                 likes: false
             });
-            setStartTime(data.start)
+            setStartTime(data.start);
         }
     });
 });

@@ -6,13 +6,14 @@
 GET         /                     controllers.Application.index()
 POST        /request              controllers.Application.trackRequest()
 GET         /random               controllers.Application.getRandomSong()
-GET         /recommend            controllers.RecommenderController.recommend()
 POST        /trackMeta            controllers.Application.trackMetadata()
 POST        /splitWaveform        controllers.Application.splitWaveform()
+POST        /setPreviewMode       controllers.Application.setPreviewMode()
 POST        /collection           controllers.RecommenderController.collection()
 POST        /like                 controllers.RecommenderController.like()
 POST        /dislike              controllers.RecommenderController.dislike()
-GET        /tracks        controllers.RecommenderController.tracks()
+GET         /tracks        	      controllers.RecommenderController.tracks()
+GET         /recommend            controllers.RecommenderController.recommend()
 
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*file         controllers.Assets.at(path="/public", file)

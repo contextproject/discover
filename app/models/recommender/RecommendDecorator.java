@@ -18,7 +18,7 @@ public abstract class RecommendDecorator implements Recommender {
     /**
      * The weight the score should be changed with.
      */
-    protected final double weight = 10;
+    protected double weight = 10;
 
     /**
      * The constructor of the class.
@@ -40,5 +40,13 @@ public abstract class RecommendDecorator implements Recommender {
     }
     
     public abstract TrackList suggest();
+    
+    public double getWeight() {
+        return this.weight;
+    } 
+    
+    public void setWeight(double weight) {
+        this.weight = weight;
+    }
 
 }

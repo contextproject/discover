@@ -34,7 +34,6 @@ public class BasicRecommender implements Recommender {
         if (amount >= 0) {
             query += (" LIMIT " + amount);
         }
-        System.out.println("query: " + query);
     }
 
     public BasicRecommender(final Track2 track, final int amount) {
@@ -49,7 +48,7 @@ public class BasicRecommender implements Recommender {
      * containing a Track object and its score. The method in this class returns
      * a list of Tracks where every track in the list has the same score.
      * 
-     * @return List of RecTuple objects.
+     * @return TrackList.
      */
     @Override
     public TrackList recommend() {

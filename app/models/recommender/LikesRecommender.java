@@ -28,17 +28,22 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
      */
     private static HashMap<Object, Double> artistBoard;
 
+    private static double positiveModifier;
+
+    private static double negativeModifier;
+    
     private static double weight;
 
     /**
      * Constructor for the LikesRecommender class.
      * 
-     * @param smallFish
-     *            The recommender object that the class decorates.
+     * @param smallFish The recommender object that the class decorates.
      */
     public LikesRecommender(final Recommender smallFish) {
         super(smallFish);
-        weight = 1.5;
+        positiveModifier = 1;
+        negativeModifier = -1;
+        weight = super.getWeight();
         genreBoard = new HashMap<Object, Double>();
         artistBoard = new HashMap<Object, Double>();
     }
@@ -68,17 +73,17 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
      */
     @Override
     public TrackList suggest() {
-        this.generateBoards();
-        String query = "SELECT * FROM `tracks` WHERE ";
-        Iterator<Object> it = genreBoard.keySet().iterator();
-        while (it.hasNext()) {
-            query += ("genre = '" + it.next() + "'");
-            query += " OR ";
-        }
-        query = query.substring(0, query.length() - 3);
-        query += " ORDER BY RAND() LIMIT 5";
-        TrackList list = GeneralTrackSelector.getInstance().execute(query);
-        return list;
+//        this.generateBoards();
+//        String query = "SELECT * FROM `tracks` WHERE ";
+//        Iterator<Object> it = genreBoard.keySet().iterator();
+//        while (it.hasNext()) {
+//            query += ("genre = '" + it.next() + "'");
+//            query += " OR ";
+//        }
+//        query = query.substring(0, query.length() - 3);
+//        query += " ORDER BY RAND() LIMIT 5";
+//        TrackList list = GeneralTrackSelector.getInstance().execute(query);
+        return null;
     }
 
     /**
@@ -113,12 +118,12 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
             ArrayList<Track2> likes = pro.getLikes();
             ArrayList<Track2> dislikes = pro.getDislikes();
             for (Track2 track : likes) {
-                updateBoard(genreBoard, track, 1);
-                updateBoard(artistBoard, track, 1);
+                updateBoard(genreBoard, track, positiveModifier);
+                updateBoard(artistBoard, track, positiveModifier);
             }
             for (Track2 track : dislikes) {
-                updateBoard(genreBoard, track, -1);
-                updateBoard(artistBoard, track, -1);
+                updateBoard(genreBoard, track, negativeModifier);
+                updateBoard(artistBoard, track, negativeModifier);
             }
         }
     }
@@ -132,8 +137,7 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
      * @param track
      *            Track object that is being added.
      */
-    private static void updateBoard(final HashMap<Object, Double> hm,
-            final Track2 track, final double modifier) {
+    private static void updateBoard(final HashMap<Object, Double> hm, final Track2 track, final double modifier) {
         Object key = track.get("genre");
         if (hm.containsKey(key)) {
             hm.put(key, hm.get(key) + weight * modifier);
@@ -176,7 +180,7 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
      * 
      * @return The weight of the object.
      */
-    public static double getWeight() {
+    public double getWeight() {
         return weight;
     }
 
@@ -186,8 +190,8 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
      * @param weight
      *            The new weight of the object.
      */
-    public static void setWeight(final double weight) {
-        LikesRecommender.weight = weight;
+    public void setWeight(final double newWeight) {
+        weight = newWeight;
     }
 
 }

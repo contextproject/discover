@@ -42,7 +42,6 @@ public final class Application extends Controller {
      * @return an http ok response with the rendered page.
      */
     public static Result index() {
-        test();
         String url = "w.soundcloud.com/tracks/67016624";
         return ok(index.render(url, getStartTime(67016624)));
     }
@@ -74,41 +73,6 @@ public final class Application extends Controller {
             ObjectNode objNode = mapper.createObjectNode();
             JsonNode response = objNode.put("response", starttime2);
             return ok(response);
-        }
-    }
-
-    /**
-     * Receives a Json object containing information about a track that the user
-     * has liked. This information is passed to the recommender for processing.
-     *
-     * @return an http ok response.
-     */
-    public static Result userLike() {
-        JsonNode json = request().body().asJson();
-        if (json == null) {
-            return badRequest("Object is empty");
-        } else {
-            System.out
-                    .println("Information about a Liked song has been received.");
-            return ok("");
-        }
-    }
-
-    /**
-     * Receives a Json object containing information about a track that the user
-     * has disliked. This information is passed to the recommender for
-     * processing.
-     *
-     * @return an http ok response.
-     */
-    public static Result userDislike() {
-        JsonNode json = request().body().asJson();
-        if (json == null) {
-            return badRequest("Object is empty");
-        } else {
-            System.out
-                    .println("Information about a disliked song has been received.");
-            return ok("");
         }
     }
 
@@ -181,6 +145,18 @@ public final class Application extends Controller {
         track.setDuration(-1);
         track.setId(trackId);
         return getStartTime(track);
+    }
+    
+    public static Result setPreviewMode() {
+        JsonNode json = request().body().asJson();
+        if (json == null) {
+            return badRequest("Object is empty");
+        } else if (json.get("mode") == null) {
+            return badRequest("The expected message does not exist.");
+        } else {
+            AlgorithmSelector.setMode(json.get("mode").asText());
+            return ok("");
+        }
     }
 
     /**

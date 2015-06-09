@@ -45,10 +45,10 @@ public final class Json {
             Track2 track = new Track2();
             track.put("id", jsonNode.get("id").asInt());
             track.put("duration", jsonNode.get("duration").asInt());
-            track.put("username", jsonNode.get("username").asText());
+            track.put("username", jsonNode.get("user").get("username").asText());
             track.put("title", jsonNode.get("title").asText());
             track.put("genre", jsonNode.get("genre").asText());
-            track.put("url", jsonNode.get("url").asText());
+            track.put("url", jsonNode.get("uri").asText());
             return track;
         }
         return null;

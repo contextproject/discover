@@ -9,39 +9,44 @@ import models.seeker.RandomSeeker;
  */
 public final class AlgorithmSelector {
 
-	public enum Mode { AUTO, INTENSITY, CONTENT, RANDOM } 
-	
-	private static Mode curMode = AlgorithmSelector.Mode.AUTO; 
-	
-	/**
+    public enum Mode {
+        AUTO, INTENSITY, CONTENT, RANDOM
+    }
+
+    private static Mode curMode = AlgorithmSelector.Mode.AUTO;
+
+    /**
      * Determine the start of the snippet for the track.
      *
-     * @param track The track
+     * @param track
+     *            The track
      * @return The start of the snippet
      */
     public static int determineStart(final Track track) {
-        
-    	switch (curMode) {
-    		case INTENSITY:
-    			return commentIntensity(track);
-    		case RANDOM:
-    			return random(track);
-    		default: 
-		    	int start;
-		        start = commentIntensity(track);
-		
-		        // no comments for the track
-		        if (start == 0) {
-		            start = random(track);
-		        }
-		        return start;
-    	}
+
+        switch (curMode) {
+        case INTENSITY:
+            return commentIntensity(track);
+        case RANDOM:
+            return random(track);
+        default:
+            int start;
+            start = commentIntensity(track);
+
+            // no comments for the track
+            if (start == 0) {
+                start = random(track);
+            }
+            return start;
+        }
     }
 
     /**
-     * Determine the start of the snippet based on the intensity of the comments.
+     * Determine the start of the snippet based on the intensity of the
+     * comments.
      *
-     * @param track The track
+     * @param track
+     *            The track
      * @return The start of the snippet
      */
     private static int commentIntensity(final Track track) {
@@ -58,25 +63,23 @@ public final class AlgorithmSelector {
     }
 
     /**
-     * Determine the start of the snippet based on the feature essentia.
-     *
-     * @return The start of the snippet
-     */
-    private static int featureEssentia() {
-        return 0;
-    }
-
-    /**
      * Determine a random start of the snippet.
      *
-     * @param track The track
+     * @param track
+     *            The track
      * @return The start of the snippet
      */
     private static int random(final Track track) {
         return new RandomSeeker(track).seek().getStartTime();
     }
-    
-    public static void setMode(Mode mode) {
-    	curMode = mode;
+
+    public static void setMode(String mode) {
+        if (mode.equalsIgnoreCase("intensity")) {
+            curMode = Mode.INTENSITY;
+        } else if (mode.equalsIgnoreCase("random")) {
+            curMode = Mode.RANDOM;
+        } else {
+            curMode = Mode.AUTO;
+        }
     }
 }

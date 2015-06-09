@@ -76,9 +76,8 @@ public final class RecommenderController {
     }
 
     public static Result recommend() {
-        System.out.println();
         LikesRecommender rec = new LikesRecommender(new BasicRecommender(profile, 10));
-        TrackList recs = rec.suggest();
+        TrackList recs = rec.recommend();
         System.out.println(recs.size());
         System.out.println(recs.toString());
         return ok(recs.toString());
