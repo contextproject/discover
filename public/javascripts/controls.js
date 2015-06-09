@@ -5,33 +5,19 @@ var snipWin = 5000.00;
 var splitPointer = -1;
 var autoplay = false;
 
-widget.bind(SC.Widget.Events.PLAY, function (){
 
-        widget.bind(SC.Widget.Events.FINISH, function () {
-            if(autoplay) {
-                widget.getSounds(function (sounds) {
-                   if (sounds.length > 1){
-                       widget.next();
-                   } else{
-                       $.ajax({
-                           type: "GET",
-                           dataType: "json",
-                           contentType: "application/json; charset=utf-8",
-                           url: "/random",
-                           success: function (data) {
-                               widget.load(data.url, {
-                                   auto_play: false,
-                                   likes: false
-                               });
-                               setStartTime(data.start)
-                           }
-                       });
-                   }
-                });
-            }
+widget.bind(SC.Widget.Events.FINISH, function () {
+    if(autoplay) {
+        widget.getSounds(function (sounds) {
+           if (sounds.length > 1){
+               widget.next();
+           } else{
+              randomSong();
+           }
         });
-
+    }
 });
+
 
 $("#current").click(function () {
     widget.bind(SC.Widget.Events.READY, function () {
@@ -284,8 +270,8 @@ function widgetClearEvents() {
     widget.unbind(SC.Widget.Events.PLAY_PROGRESS);
 }
 
-// load the widget with a random song
-$("#rand").click(function randomSong() {
+function randomSong() {
+
     $.ajax({
         type: "GET",
         dataType: "json",
@@ -296,10 +282,13 @@ $("#rand").click(function randomSong() {
                 auto_play: false,
                 likes: false
             });
-            setStartTime(data.start)
+            setStartTime(data.start);
         }
     });
-});
+}
+
+// load the widget with a random song
+$("#rand").click(randomSong);
 
 //connect with Soundcloud
 $("#connect").click(function () {
