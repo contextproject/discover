@@ -4,7 +4,6 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -132,11 +131,10 @@ public class Track2 implements Comparable<Track2> {
     /**
      * Add all entries from the provided map to this Track.
      *
-     * @param m The map with the entries to add
+     * @param track The track with the entries to add
      */
-    public void putAll(@Nonnull final Map m) {
-        @SuppressWarnings("unchecked")
-        Set<TrackEntry> entries = m.entrySet();
+    public void putAll(final Track2 track) {
+        Set<TrackEntry> entries = track.entrySet();
         for (TrackEntry entry : entries) {
             put(entry.getKey(), entry.getValue());
         }
@@ -154,7 +152,6 @@ public class Track2 implements Comparable<Track2> {
      *
      * @return A set of keys
      */
-    @Nonnull
     public Set keySet() {
         Set<Object> result = new TreeSet<Object>();
         for (TrackEntry entry : entries) {
@@ -168,7 +165,6 @@ public class Track2 implements Comparable<Track2> {
      *
      * @return A collection of values
      */
-    @Nonnull
     public Collection values() {
         Collection<Object> result = new ArrayList<Object>();
         for (TrackEntry entry : entries) {
@@ -182,7 +178,6 @@ public class Track2 implements Comparable<Track2> {
      *
      * @return The entries
      */
-    @Nonnull
     public Set<TrackEntry> entrySet() {
         Set<TrackEntry> result = new HashSet<TrackEntry>();
         for (TrackEntry entry : entries) {
@@ -213,7 +208,6 @@ public class Track2 implements Comparable<Track2> {
      * a value greater than 0 if this score is numerically less than the other score;
      * and a value greater less 0 if this score is numerically greater than the other score.
      */
-    @Override
     public int compareTo(@Nonnull final Track2 o) {
         double compare = (Double) this.get("score") - (Double) o.get("score");
         if (compare > 0) {

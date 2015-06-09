@@ -31,7 +31,7 @@ public class Track2Test {
     @Test
     public void testSize2() {
         for (int i = 0; i < 100; i++) {
-            track.put(i, i);
+            track.put(Integer.toString(i), i);
         }
         assertEquals(100, track.size());
     }

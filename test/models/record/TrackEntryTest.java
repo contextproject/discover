@@ -3,17 +3,17 @@ package models.record;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class TrackEntryTest {
 
-    TrackEntry<String, String> trackEntryString;
-    TrackEntry<String, Integer> trackEntryInt;
+    TrackEntry trackEntryString;
+    TrackEntry trackEntryInt;
 
     @Before
     public void setUp() {
-        trackEntryString = new TrackEntry<String, String>("key", "value");
-        trackEntryInt = new TrackEntry<String, Integer>("key", 0);
+        trackEntryString = new TrackEntry("key", "value");
+        trackEntryInt = new TrackEntry("key", 0);
     }
 
     @Test
@@ -25,7 +25,7 @@ public class TrackEntryTest {
     @Test
     public void testGetValue() throws Exception {
         assertEquals("value", trackEntryString.getValue());
-        assertEquals(0, trackEntryInt.getValue().intValue());
+        assertEquals(0, trackEntryInt.getValue());
     }
 
     @Test
@@ -37,7 +37,7 @@ public class TrackEntryTest {
     @Test
     public void testSetValue2() throws Exception {
         trackEntryInt.setValue(1);
-        assertEquals(1, trackEntryInt.getValue().intValue());
+        assertEquals(1, trackEntryInt.getValue());
     }
 
     @Test
