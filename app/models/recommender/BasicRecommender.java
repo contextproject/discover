@@ -30,7 +30,7 @@ public class BasicRecommender implements Recommender {
      */
     public BasicRecommender(final Profile profile, final int amount) {
         this.userProfile = profile;
-        this.query = "SELECT * FROM tracks ORDER BY RAND()";
+        this.query = "SELECT * FROM tracks INNER JOIN features ON tracks.track_id = features.track_id ORDER BY RAND()";
         if (amount >= 0) {
             query += (" LIMIT " + amount);
         }

@@ -8,7 +8,6 @@ import models.database.RandomSongSelector;
 import models.mix.MixSplitter;
 import models.recommender.BasicRecommender;
 import models.recommender.FeatureRecommender;
-import models.recommender.RecTuple;
 import models.record.Track;
 import models.utility.TrackList;
 import play.mvc.Controller;
@@ -49,9 +48,8 @@ public final class Application extends Controller {
     }
 
     public static void test() {
-        FeatureRecommender fr = new FeatureRecommender(new BasicRecommender(RecommenderController.getProfile(), 5));
+        FeatureRecommender fr = new FeatureRecommender(new BasicRecommender(RecommenderController.getProfile(), 10));
         TrackList bla = fr.recommend();
-        System.out.println(bla);
     }
 
     /**

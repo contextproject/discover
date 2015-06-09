@@ -1,24 +1,19 @@
 package models.record;
 
-import java.util.Map.Entry;
-
 /**
- * An entry for the Track object.
- *
- * @param <K> The key of the entry
- * @param <V> The value of the entry
+ * An entry for a Track object.
  */
-public class TrackEntry<K, V> implements Entry<K, V> {
+public class TrackEntry {
 
     /**
      * The key of the entry.
      */
-    private final K key;
+    private final String key;
 
     /**
      * The value of the entry.
      */
-    private V value;
+    private Object value;
 
     /**
      * Constructor, generates an entry object for the Track.
@@ -26,7 +21,7 @@ public class TrackEntry<K, V> implements Entry<K, V> {
      * @param key   The key of the entry.
      * @param value The value of the entry.
      */
-    public TrackEntry(K key, V value) {
+    public TrackEntry(final String key, final Object value) {
         this.key = key;
         this.value = value;
     }
@@ -36,7 +31,7 @@ public class TrackEntry<K, V> implements Entry<K, V> {
      *
      * @return The key
      */
-    public K getKey() {
+    public String getKey() {
         return key;
     }
 
@@ -45,7 +40,7 @@ public class TrackEntry<K, V> implements Entry<K, V> {
      *
      * @return The value
      */
-    public V getValue() {
+    public Object getValue() {
         return value;
     }
 
@@ -55,8 +50,8 @@ public class TrackEntry<K, V> implements Entry<K, V> {
      * @param value The new value
      * @return The old value
      */
-    public V setValue(V value) {
-        V oldValue = this.value;
+    public Object setValue(final Object value) {
+        Object oldValue = this.value;
         this.value = value;
         return oldValue;
     }
