@@ -6,13 +6,15 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import models.record.Track;
+
 /**
  * The Class that is responsable for the splitting of the mix in several smaller
  * pieces.
  *
  * @author stefan boodt
  * @author arthur hovenesyan
- * @version 29-05-2015
+ * @version 09-06-2015
  * @see Shingle
  * @since 21-05-2015
  */
@@ -26,18 +28,18 @@ public class MixSplitter {
     /**
      * The id of the track to split.
      */
-    private int trackID;
+    private Track track;
 
     /**
      * Creates a new mixsplitter which can then split the given mix into
      * different pieces.
      *
      * @param data    The data to split into pieces for.
-     * @param trackID The id of the mix to split.
+     * @param track The id of the mix to split.
      */
-    public MixSplitter(final List<Double> data, final int trackID) {
+    public MixSplitter(final List<Double> data, final Track track) {
         this.setData(data);
-        this.setTrackID(trackID);
+        this.setTrack(track);
     }
 
     /**
@@ -45,16 +47,17 @@ public class MixSplitter {
      * pieces.
      *
      * @param json    The data to split in a JsonNode format.
-     * @param trackID The id of the track to split.
+     * @param track   The track to split.
      */
-    public MixSplitter(final JsonNode json, final int trackID) {
+    public MixSplitter(final JsonNode json, final Track track) {
         Iterator<JsonNode> it = json.elements();
         List<Double> data = new ArrayList<Double>();
         while (it.hasNext()) {
-            data.add(Math.round(it.next().asDouble() * 10000.00) / 10000.00);
+            final double number = 10000.00;
+            data.add(Math.round(it.next().asDouble() * number) / number);
         }
         this.setData(data);
-        this.setTrackID(trackID);
+        this.setTrack(track);
     }
 
     /**
@@ -65,7 +68,7 @@ public class MixSplitter {
      */
     public List<Integer> split() {
         final double threshold = 0.85;
-        final int songtime = 300000;
+        final int songtime = track.getDuration();
         return split(splitToShingles(), threshold, songtime);
     }
 
@@ -83,19 +86,19 @@ public class MixSplitter {
                                   final double threshold, final int songtime) {
         if (threshold < 0.0 || threshold > 1.0) {
             throw new IllegalArgumentException("The threshold to split mix "
-                    + trackID + " was equal to " + threshold
+                    + track.toString() + " was equal to " + threshold
                     + " but must be between 0.0 and 1.0");
         } else if (songtime <= 0) {
             throw new IllegalArgumentException("The songtime of the mix "
-                    + trackID + " was equal to " + songtime
+                    + track.toString() + " was equal to " + songtime
                     + " but must be larger than 0.");
         }
         List<Integer> starttimes = new ArrayList<Integer>();
         starttimes.add(0);
         /*
          * Just in case someone enters a LinkedList or other list that
-		 * calculates it's size instead of remembering it.
-		 */
+         * calculates it's size instead of remembering it.
+         */
         final int amountOfShingles = shingles.size();
         // The - 1 is to not do this to the last one.
         for (int i = 0; i < amountOfShingles - 1; i++) {
@@ -196,20 +199,20 @@ public class MixSplitter {
     }
 
     /**
-     * Returns the id of the mix.
+     * Returns the mix.
      *
      * @return The track id of the mix that is currently being split.
      */
-    public int getTrackID() {
-        return trackID;
+    public Track getTrack() {
+        return track;
     }
 
     /**
-     * Sets the trackid to the given value.
+     * Sets the track to the given value.
      *
-     * @param trackID The id of the track that is being played.
+     * @param track The id of the track that is being played.
      */
-    public void setTrackID(final int trackID) {
-        this.trackID = trackID;
+    public void setTrack(final Track track) {
+        this.track = track;
     }
 }

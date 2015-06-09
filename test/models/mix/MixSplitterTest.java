@@ -5,6 +5,8 @@ import basic.BasicTest;
 import java.util.ArrayList;
 import java.util.List;
 
+import models.record.Track;
+
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -16,7 +18,7 @@ import static org.junit.Assert.assertEquals;
  * @see BasicTest
  * 
  * @since 21-05-2015
- * @version 28-05-2015
+ * @version 09-06-2015
  * 
  * @author stefan boodt
  * @author arthur hovenesyan
@@ -24,17 +26,15 @@ import static org.junit.Assert.assertEquals;
  */
 public class MixSplitterTest extends BasicTest {
 
-    /*
-     * temporary turn CHECKSTYLE:OFF because of the default trackid that is
-     * initialized here.
-     */
-
     /**
      * Default trackid of the tested mixsplitter.
      */
-    protected static int DEFAULT_TRACKID;
-
-    // Turn the CHECKSTYLE:ON again for the rest of the file.
+    protected static final int DEFAULT_TRACKID = 2431002;
+    
+    /**
+     * The default duration of the track.
+     */
+    protected static final int DEFAULT_DURATION = 300000;
 
     /**
      * The splitter under test.
@@ -50,8 +50,8 @@ public class MixSplitterTest extends BasicTest {
     @Override
     public void setUp() throws Exception {
         super.setUp();
-        DEFAULT_TRACKID = 2431002;
-        setSplitter(new MixSplitter(asList(), DEFAULT_TRACKID));
+        setSplitter(new MixSplitter(asList(),
+                new Track(DEFAULT_TRACKID, DEFAULT_DURATION)));
     }
 
     /**
@@ -300,22 +300,24 @@ public class MixSplitterTest extends BasicTest {
     }
 
     /**
-     * Tests the {@link MixSplitter#getTrackID()} method.
+     * Tests the {@link MixSplitter#getTrack()} method.
      */
     @Test
-    public void testGetTrackID() {
-        assertEquals(DEFAULT_TRACKID, getSplitter().getTrackID());
+    public void testGetTrack() {
+        final Track expected = new Track(DEFAULT_TRACKID, DEFAULT_DURATION);
+        assertEquals(expected, getSplitter().getTrack());
     }
 
     /**
-     * Tests the {@link MixSplitter#getTrackID()} method.
+     * Tests the {@link MixSplitter#getTrack()} method.
      */
     @Test
-    public void testGetTrackIDAfterSetting() {
+    public void testGetTrackAfterSetting() {
         final int id = 2104921042;
+        final Track expected = new Track(id, DEFAULT_DURATION);
         final MixSplitter split = getSplitter();
-        split.setTrackID(id);
-        assertEquals(id, split.getTrackID());
+        split.setTrack(expected);
+        assertEquals(expected, split.getTrack());
     }
 
     /**
