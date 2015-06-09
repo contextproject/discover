@@ -130,7 +130,6 @@ $("#sendWave").click(function () {
         };
         if($("#numsplit").val() == '' ) {
             message["splits"] =  -1;
-
         }else if(parseInt($("#numsplit").val()) >= 0){
             message["splits"] =  parseInt($("#numsplit").val());
         }else{
