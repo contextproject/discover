@@ -71,6 +71,24 @@ public class MixSplitter {
         final int songtime = track.getDuration();
         return split(splitToShingles(), threshold, songtime);
     }
+    
+    /**
+     * Splits the song into numberOfSplits pieces.
+     * @param numberOfSplits The number of splits you want. Or {@code 0} for default.
+     * @return The list of starttimes that is numberOfSplits long.
+     */
+    public List<Integer> split(final int numberOfSplits) {
+        if (numberOfSplits < 0) {
+            throw new IllegalArgumentException("Invalid number of splits of " + numberOfSplits);
+        }
+        List<Integer> starttimes = split();
+        if (numberOfSplits == 0 || numberOfSplits == starttimes.size()) {
+            return starttimes;
+        } else if (numberOfSplits > starttimes.size()) {
+            return starttimes;
+        }
+        return starttimes.subList(0, numberOfSplits);
+    }
 
     /**
      * Splits the mix into different pieces.
