@@ -118,8 +118,8 @@ public class MixSplitterTest extends BasicTest {
     /**
      * Tests the {@link MixSplitter#split(int)} method on an empty dataset.
      */
-    @Test
-    public void testSplitWithSizeEmpty() {
+    @Test (expected = IllegalStateException.class)
+    public void testSplitWithSizeEmptyImpossibleToFulfill() {
         final List<Integer> expected = new ArrayList<Integer>();
         expected.add(0);
         getSplitter().setData(new ArrayList<Double>());
@@ -129,14 +129,36 @@ public class MixSplitterTest extends BasicTest {
     /**
      * Tests the {@link MixSplitter#split(int)} method on an empty dataset.
      */
+    @Test
+    public void testSplitWithSizeEmpty() {
+        final List<Integer> expected = new ArrayList<Integer>();
+        expected.add(0);
+        getSplitter().setData(new ArrayList<Double>());
+        assertEquals(expected, getSplitter().split(1));
+    }
+
+    /**
+     * Tests the {@link MixSplitter#split(int)} method on an empty dataset.
+     */
     @SuppressWarnings("checkstyle:magicnumber")
     @Test
     public void testSplitWithSize0() {
+        getSplitter().setData(asList(3.0, 1.0, 100.0, 2.0, 0.0, 13.0, 2014.0, 1.1, 3.9,
+                2.4, -1.2, 100.4, 532.9, 201.4, 734.2, -104.2, 0.3, 10.2, 192.2, 53.2, 921.6));
+        assertEquals(getSplitter().split(), getSplitter().split(0));
+    }
+
+    /**
+     * Tests the {@link MixSplitter#split(int)} method on an empty dataset.
+     */
+    @SuppressWarnings("checkstyle:magicnumber")
+    @Test
+    public void testSplitWithSize1() {
         final List<Integer> expected = new ArrayList<Integer>();
         expected.add(0);
         getSplitter().setData(asList(3.0, 1.0, 100.0, 2.0, 0.0, 13.0, 2014.0, 1.1, 3.9,
                 2.4, -1.2, 100.4, 532.9, 201.4, 734.2, -104.2, 0.3, 10.2, 192.2, 53.2, 921.6));
-        assertEquals(getSplitter().split(), getSplitter().split(0));
+        assertEquals(expected, getSplitter().split(1));
     }
 
     /**
@@ -587,5 +609,17 @@ public class MixSplitterTest extends BasicTest {
         expected.add(new Shingle(asList(2.0)));
         expected.add(new Shingle(asList(0.0)));
         assertEquals(expected, splitter.splitToShingles(1, 1));
+    }
+    
+    /**
+     * Tests the {@link MixSplitter#doTheSplit(int, List, double, List)} method.
+     */
+    @SuppressWarnings("checkstyle:magicnumber")
+    @Test
+    public void testDoTheSplitZeroSplits() {
+        getSplitter().setData(asList(3.0, 1.0, 100.0, 2.0, 0.0, 13.0, 2014.0, 1.1, 3.9,
+                2.4, -1.2, 100.4, 532.9, 201.4, 734.2, -104.2, 0.3, 10.2, 192.2, 53.2, 921.6));
+        final List<Shingle> shingles = getSplitter().splitToShingles();
+        assertEquals(asListInt(0), getSplitter().doTheSplit(0, shingles, 0.8, asListInt(0)));
     }
 }

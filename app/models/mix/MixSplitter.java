@@ -3,6 +3,7 @@ package models.mix;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -29,6 +30,11 @@ public class MixSplitter {
      * The id of the track to split.
      */
     private Track track;
+    
+    /**
+     * The default threshold for the splitting.
+     */
+    private final double threshold = 0.85;
 
     /**
      * Creates a new mixsplitter which can then split the given mix into
@@ -67,7 +73,6 @@ public class MixSplitter {
      * beginning of a new piece.
      */
     public List<Integer> split() {
-        final double threshold = 0.85;
         final int songtime = track.getDuration();
         return split(splitToShingles(), threshold, songtime);
     }
@@ -85,9 +90,55 @@ public class MixSplitter {
         if (numberOfSplits == 0 || numberOfSplits == starttimes.size()) {
             return starttimes;
         } else if (numberOfSplits > starttimes.size()) {
-            return starttimes;
+            return doTheSplit(numberOfSplits, splitToShingles(), threshold, starttimes);
         }
         return starttimes.subList(0, numberOfSplits);
+    }
+    
+    /**
+     * Splits the shingles into number of splits pieces.
+     * @param numberOfSplits The number of splits.
+     * @param shingles The shingles to define.
+     * @param threshold The threshold to work with.
+     * @param current The current starttimes.
+     * @return The starttimes of the pieces.
+     */
+    protected List<Integer> doTheSplit(final int numberOfSplits,
+            final List<Shingle> shingles, final double threshold, final List<Integer> current) {
+        if (numberOfSplits == 0) {
+            Collections.sort(current);
+            return current;
+        } else if (numberOfSplits > 0) {
+            if (shingles.size() < numberOfSplits - 1) {
+                throw new IllegalStateException("Can't instantiate " + numberOfSplits + " pieces"
+                        + " because there only were " + shingles.size() + " shingles.");
+            }
+            final double thresholddifference = 0.1;
+            final double newThreshold = threshold - thresholddifference;
+            return doTheSplit(numberOfSplits, shingles, newThreshold,
+                    getNewList(current, split(shingles, newThreshold, track.getDuration())));
+        } else {
+            return doTheSplit(numberOfSplits + 1, shingles, threshold,
+                    current.subList(0, current.size() - 1));
+        }
+    }
+
+    /**
+     * Builds a new list that contains current and then adds all the new values
+     * from the second list.
+     * @param current The current list to add to.
+     * @param newOnes The new ones to be added.
+     * @return The new List of starttimes.
+     */
+    private List<Integer> getNewList(final List<Integer> current,
+            final List<Integer> newOnes) {
+        final List<Integer> result = current;
+        for (Integer i : newOnes) {
+            if (!result.contains(i)) {
+                result.add(i);
+            }
+        }
+        return result;
     }
 
     /**
