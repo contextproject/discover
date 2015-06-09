@@ -58,7 +58,7 @@
     methods = {
 
       removeC : function(){
-        $.removeCookie(settings.cookieName, 'ridden', {
+        $.removeCookie(settings.cookieName, {
           expires: 365,
           domain: settings.cookieDomain,
           path: settings.cookiePath

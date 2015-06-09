@@ -26,7 +26,7 @@ widget.bind(SC.Widget.Events.READY, function () {
     widget.unbind(SC.Widget.Events.READY);
 });
 
-$(window).load(function() {
+function JoyRide(){
     $('#joyRideTipContent').joyride({
         autoStart : true,
         cookieMonster : true,
@@ -34,6 +34,16 @@ $(window).load(function() {
         expose:true
 
     });
+}
+
+
+$(window).load(function() {
+   JoyRide;
+});
+
+$("#help").click(function() {
+    $.removeCookie("joyride",{ expires: 365, domain: false, path: false });
+    JoyRide();
 });
 
 // The method is used to send Data to the server
