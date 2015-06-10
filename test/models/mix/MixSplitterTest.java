@@ -177,7 +177,8 @@ public class MixSplitterTest extends BasicTest {
     @Test
     public void testSplitWithSizeToSmall() {
         getSplitter().setData(asList(3.0, 1.0, 100.0, 2.0, 0.0, 13.0, 2014.0, 1.1, 3.9,
-                2.4, -1.2, 100.4, 532.9, 201.4, 734.2, -104.2, 0.3, 10.2, 192.2, 53.2, 921.6));
+                2.4, -1.2, 100.4, 532.9, 201.4, 734.2, -104.2, 0.3, 10.2, 192.2, 53.2, 921.6,
+                201.3, 21.5, 4.3, 92.563, 600.0, 2.7, 7.7, 54.8, 201.4, 642.15));
         final List<Integer> expected = asListInt(0);
         assertEquals(expected, getSplitter().split(1));
     }
