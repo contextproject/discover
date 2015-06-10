@@ -9,6 +9,7 @@ import models.mix.MixSplitter;
 import models.recommender.BasicRecommender;
 import models.recommender.FeatureRecommender;
 import models.record.Track;
+import models.record.Track2;
 import models.utility.TrackList;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -42,14 +43,8 @@ public final class Application extends Controller {
      * @return an http ok response with the rendered page.
      */
     public static Result index() {
-        test();
         String url = "w.soundcloud.com/tracks/67016624";
         return ok(index.render(url, getStartTime(67016624)));
-    }
-
-    public static void test() {
-        FeatureRecommender fr = new FeatureRecommender(new BasicRecommender(RecommenderController.getProfile(), 10));
-        TrackList bla = fr.recommend();
     }
 
     /**

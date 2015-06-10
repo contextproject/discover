@@ -173,16 +173,16 @@ $("#volume").on("input change", function () {
 
 //change the mode of the algorithm
 $("#algoMode").on("input change", function () {
-	var val = $("#algoMode").val();
-	if(val <= 25) {
-		console.log(25);
-	} else if(val > 25 & val <= 50) {
-		console.log(50);
-	} else if(val > 50 & val <= 75) { 
-		console.log(75);
-	} else {
-		console.log(100);
-	}
+    var val = $("#algoMode").val();
+    if (val <= 25) {
+        console.log(25);
+    } else if (val > 25 & val <= 50) {
+        console.log(50);
+    } else if (val > 50 & val <= 75) {
+        console.log(75);
+    } else {
+        console.log(100);
+    }
 });
 // play the snippet of the song
 var songStart = parseFloat(start) - (snipWin / 2);
@@ -252,20 +252,6 @@ $("#rand").click(function () {
     });
 });
 
-//connect with Soundcloud
-$("#connect").click(function () {
-    // initiate auth popup
-    if (SC.accessToken() == null) {
-        SC.connect(function () {
-            getFavorites();
-        });
-        $("#connect").html("Disconnect");
-    } else {
-        SC.accessToken(null);
-        $("#connect").html("Connect");
-    }
-});
-
 // when pressed the collection of the user is loaded in the widget
 $("#favorites").click(function () {
     if (SC.accessToken() != null) {
@@ -278,12 +264,50 @@ $("#favorites").click(function () {
     }
 });
 
+//connect with Soundcloud
+$("#connect").on('click', function () {
+    if ($(this).attr("class") == "connect") {
+        if (SC.accessToken() == null) {
+            SC.connect(function () {
+                getFavorites2(function (data) {
+                    console.log(data);
+                    sendData(data, "/favourites", function() {
+                        console.log("succes");
+                    });
+                    loadFavorites(data);
+                });
+            });
+            $(this).html("Disconnect");
+            $(this).attr("class", "disconnect");
+        }
+    } else {
+        if (SC.accessToken() != null) {
+            SC.accessToken(null);
+            $(this).html("Connect");
+            $(this).attr("class", "connect");
+        }
+    }
+});
+
 function getFavorites() {
     SC.get('/me', function (me) {
         widget.load("api.soundcloud.com/users/" + me.id + "/favorites", {
             auto_play: false,
             likes: false
         });
+    });
+}
+
+function getFavorites2(callback) {
+    SC.get('/me', function (me) {
+        callback(me);
+    });
+}
+
+function loadFavorites(me) {
+    widget.load("api.soundcloud.com/users/" + me.id + "/favorites", {
+        auto_play: false,
+        likes: false
     });
 }
 

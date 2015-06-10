@@ -10,6 +10,11 @@ import models.utility.TrackList;
 public class Profile {
 
     /**
+     * The user id.
+     */
+    private int userid;
+
+    /**
      * The tracks the user has liked during the session.
      */
     private TrackList likes;
@@ -20,20 +25,39 @@ public class Profile {
     private TrackList dislikes;
 
     /**
+     * The tracks the user has favourite, these tracks are retrieved
+     * from SoundCloud upon log in.
+     */
+    private TrackList favourites;
+
+    /**
      * Constructor.
      */
     public Profile() {
         likes = new TrackList();
         dislikes = new TrackList();
+        favourites = new TrackList();
+        userid = -1;
     }
 
     /**
-     * Add a track to the likes.
+     * Add a Track to the likes.
      *
      * @param track The track to like
      */
     public void addLike(final Track2 track) {
         likes.add(track);
+    }
+
+    /**
+     * Add a TrackList to the likes.
+     *
+     * @param tracks The tracks to add to the likes
+     */
+    public void addFavourites(final TrackList tracks) {
+        for (Track2 track : tracks) {
+            favourites.add(track);
+        }
     }
 
     /**
@@ -61,5 +85,32 @@ public class Profile {
      */
     public TrackList getDislikes() {
         return dislikes;
+    }
+
+    /**
+     * Getter of the favourites.
+     *
+     * @return The favourites
+     */
+    public TrackList getFavourites() {
+        return favourites;
+    }
+
+    /**
+     * Setter of the user id.
+     *
+     * @param userid The id of the user
+     */
+    public void setUserid(final int userid) {
+        this.userid = userid;
+    }
+
+    /**
+     * Getter of the user id.
+     *
+     * @return The user id
+     */
+    public int getUserid() {
+        return userid;
     }
 }

@@ -46,6 +46,7 @@ public final class RecommenderController {
     public static Result like() {
         Track2 track = Json.getTrack2(request().body().asJson());
         profile.addLike(track);
+        System.out.println("profile.getLikes().size() = " + profile.getLikes().size());
         return ok();
     }
 
@@ -66,11 +67,18 @@ public final class RecommenderController {
      *
      * @return A HTTP ok response
      */
-    public static Result collection() {
-        JsonNode jsonNode = request().body().asJson();
-        TrackList trackList = Json.getTrackList(jsonNode);
-        for (Track2 track : trackList) {
-            profile.addLike(track);
+    @SuppressWarnings("unused")
+    public static Result favourites() {
+        JsonNode json = request().body().asJson();
+        // something goes wrong here, json node is apparently null,
+        // but when logging it in javascript, is isn't null
+        if (json == null) {
+            System.out.println("json null");
+        } else {
+            int userid = json.get("id").asInt();
+            profile.setUserid(userid);
+            TrackList favourites = Json.getTrackList(json);
+            profile.addFavourites(favourites);
         }
         return ok();
     }

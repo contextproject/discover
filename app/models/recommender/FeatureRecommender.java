@@ -47,7 +47,6 @@ public class FeatureRecommender extends RecommendDecorator implements Recommende
                 + "ON tracks.track_id = features.track_id "
                 + "ORDER BY distance "
                 + "LIMIT 10";
-        System.out.println("query = " + query);
         TrackList result = TrackList.get(query);
         for (Track2 track : result) {
             track.put("score", weight);
@@ -57,10 +56,8 @@ public class FeatureRecommender extends RecommendDecorator implements Recommende
 
     @Override
     public TrackList recommend() {
-        TrackList result = evaluate();
-        if (result != null) {
-            result.addAll(suggest());
-        }
+        TrackList result = suggest();
+        result.addAll(evaluate());
         return result;
     }
 

@@ -1,7 +1,6 @@
 package models.recommender;
 
 import models.profile.Profile;
-import models.record.Track2;
 import models.utility.TrackList;
 
 /**
@@ -35,13 +34,6 @@ public class BasicRecommender implements Recommender {
             query += (" LIMIT " + amount);
         }
         System.out.println("query: " + query);
-    }
-
-    public BasicRecommender(final Track2 track, final int amount) {
-        this(new Profile(), amount);
-        Profile profile = new Profile();
-        profile.addLike(track);
-        setUserProfile(profile);
     }
 
     /**
