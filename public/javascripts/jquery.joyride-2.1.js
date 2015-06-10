@@ -57,14 +57,6 @@
 
     methods = {
 
-      removeC : function(){
-        $.removeCookie(settings.cookieName, {
-          expires: 365,
-          domain: settings.cookieDomain,
-          path: settings.cookiePath
-        });
-      },
-
       init : function (opts) {
         return this.each(function () {
 
@@ -423,7 +415,6 @@
 
         window_half = settings.$window.height() / 2;
         tipOffset = Math.ceil(settings.$target.offset().top - window_half + settings.$next_tip.outerHeight());
-
         $("html, body").stop().animate({
           scrollTop: tipOffset
         }, settings.scrollSpeed);
