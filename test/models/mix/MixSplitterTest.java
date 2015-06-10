@@ -643,7 +643,7 @@ public class MixSplitterTest extends BasicTest {
      */
     @SuppressWarnings("checkstyle:magicnumber")
     @Test
-    public void testDoTheSplitThreeSplitsAlreadyCurrent() {
+    public void testDoTheSplitTwoSplitsAlreadyCurrent() {
         getSplitter().setData(asList(3.0, 1.0, 100.0, 2.0, 0.0, 13.0, 2014.0, 1.1, 3.9,
                 2.4, -1.2, 100.4, 532.9, 201.4, 734.2, -104.2, 0.3, 10.2, 192.2, 53.2, 921.6));
         final List<Shingle> shingles = new ArrayList<Shingle>();
@@ -653,5 +653,74 @@ public class MixSplitterTest extends BasicTest {
         final int thirdOfSong = DEFAULT_DURATION / 3;
         assertEquals(asListInt(0, thirdOfSong, 2 * thirdOfSong, DEFAULT_DURATION),
                 getSplitter().doTheSplit(2, shingles, 0.8, asListInt(0, DEFAULT_DURATION)));
+    }
+    
+    /**
+     * Tests the {@link MixSplitter#doTheSplit(int, List, double, List)} method. This test case
+     * actually hacks the program by checking what happens if the number can be supplied but then
+     * breaks the methods usefulness. Since 10-06 this is an Illegal State. Before that time this
+     * was simply a Stack overflow.
+     */
+    @SuppressWarnings("checkstyle:magicnumber")
+    @Test (expected = IllegalStateException.class)
+    public void testDoTheSplitThreeSplitsHackedProgram() {
+        getSplitter().setData(asList(3.0, 1.0, 100.0, 2.0, 0.0, 13.0, 2014.0, 1.1, 3.9,
+                2.4, -1.2, 100.4, 532.9, 201.4, 734.2, -104.2, 0.3, 10.2, 192.2, 53.2, 921.6));
+        final List<Shingle> shingles = new ArrayList<Shingle>();
+        shingles.add(new Shingle(asList(3.0, 1.0, 100.0, 2.0, 0.0, 13.0, 2014.0)));
+        shingles.add(new Shingle(asList(1.1, 3.9, 2.4, -1.2, 100.4, 532.9, 201.4)));
+        shingles.add(new Shingle(asList(734.2, -104.2, 0.3, 10.2, 192.2, 53.2, 921.6)));
+        getSplitter().doTheSplit(3, shingles, 0.8, asListInt(0, DEFAULT_DURATION));
+    }
+    
+    /**
+     * Tests the {@link MixSplitter#doTheSplit(int, List, double, List)} method.
+     */
+    @SuppressWarnings("checkstyle:magicnumber")
+    @Test
+    public void testDoTheSplitThreeSplitsAlreadyCurrent() {
+        getSplitter().setData(asList(3.0, 1.0, 100.0, 2.0, 0.0, 13.0, 2014.0, 1.1, 3.9,
+                2.4, -1.2, 100.4, 532.9, 201.4, 734.2, -104.2, 0.3, 10.2, 192.2, 53.2, 921.6));
+        final List<Shingle> shingles = new ArrayList<Shingle>();
+        shingles.add(new Shingle(asList(3.0, 1.0, 100.0, 2.0, 0.0, 13.0, 2014.0)));
+        shingles.add(new Shingle(asList(1.1, 3.9, 2.4, -1.2, 100.4, 532.9, 201.4)));
+        shingles.add(new Shingle(asList(734.2, -104.2, 0.3, 10.2, 192.2, 53.2, 921.6)));
+        final int thirdOfSong = DEFAULT_DURATION / 3;
+        assertEquals(asListInt(0, thirdOfSong, 2 * thirdOfSong, DEFAULT_DURATION),
+                getSplitter().doTheSplit(3, shingles, 0.8, asListInt(DEFAULT_DURATION)));
+    }
+    
+    /**
+     * Tests the {@link MixSplitter#doTheSplit(int, List, double, List)} method.
+     */
+    @SuppressWarnings("checkstyle:magicnumber")
+    @Test (expected = IllegalStateException.class)
+    public void testDoTheSplitThreeSplitsFourRequested() {
+        getSplitter().setData(asList(3.0, 1.0, 100.0, 2.0, 0.0, 13.0, 2014.0, 1.1, 3.9,
+                2.4, -1.2, 100.4, 532.9, 201.4, 734.2, -104.2, 0.3, 10.2, 192.2, 53.2, 921.6));
+        final List<Shingle> shingles = new ArrayList<Shingle>();
+        shingles.add(new Shingle(asList(3.0, 1.0, 100.0, 2.0, 0.0, 13.0, 2014.0)));
+        shingles.add(new Shingle(asList(1.1, 3.9, 2.4, -1.2, 100.4, 532.9, 201.4)));
+        shingles.add(new Shingle(asList(734.2, -104.2, 0.3, 10.2, 192.2, 53.2, 921.6)));
+        getSplitter().doTheSplit(4, shingles, 0.8, asListInt(DEFAULT_DURATION));
+    }
+    
+    /**
+     * Tests the {@link MixSplitter#doTheSplit(int, List, double, List)} method. This test case
+     * actually models what happens when an infinite loop has been created. It throws an
+     * IllegalStateException that explains how you normally get it. Filling in a large negative
+     * value in the given method. The method should not learn to handle it since it is a behind
+     * the scenes method.
+     */
+    @SuppressWarnings("checkstyle:magicnumber")
+    @Test (expected = IllegalStateException.class)
+    public void testDoTheSplitNegativeThreshold() {
+        getSplitter().setData(asList(3.0, 1.0, 100.0, 2.0, 0.0, 13.0, 2014.0, 1.1, 3.9,
+                2.4, -1.2, 100.4, 532.9, 201.4, 734.2, -104.2, 0.3, 10.2, 192.2, 53.2, 921.6));
+        final List<Shingle> shingles = new ArrayList<Shingle>();
+        shingles.add(new Shingle(asList(3.0, 1.0, 100.0, 2.0, 0.0, 13.0, 2014.0)));
+        shingles.add(new Shingle(asList(1.1, 3.9, 2.4, -1.2, 100.4, 532.9, 201.4)));
+        shingles.add(new Shingle(asList(734.2, -104.2, 0.3, 10.2, 192.2, 53.2, 921.6)));
+        getSplitter().doTheSplit(3, shingles, Double.MIN_VALUE, asListInt(0, DEFAULT_DURATION));
     }
 }

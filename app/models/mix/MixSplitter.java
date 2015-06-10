@@ -133,7 +133,7 @@ public class MixSplitter {
             throw new IllegalStateException("Can't instantiate " + numberOfSplits + " pieces"
                     + " because there only were " + shingles.size() + " shingles.");
         }
-        final double thresholddifference = 0.01;
+        final double thresholddifference = 0.05;
         final double newThreshold = threshold - thresholddifference;
         final List<Integer> newList;
         if (threshold >= 0.0) {
@@ -143,7 +143,8 @@ public class MixSplitter {
             newList = getNewList(current, addAllShingles(shingles));
         }
         if (threshold < -thresholddifference * 2) {
-            throw new IllegalStateException("Infinite loop.");
+            throw new IllegalStateException("Infinite loop. Amount of snippets"
+                    + " can't be supplied when enough are present. Program hacked.");
         }
         final int newSplits = newList.size() - current.size();
         return doTheSplit(numberOfSplits - newSplits, shingles, newThreshold, newList);
