@@ -15,6 +15,16 @@ $("#current").click(function () {
     });
 });
 
+//the advanced slide menu
+$("#openMenu").click(function() {
+    var menu = $("#menu");
+    if ($(menu).is(":visible")) {
+        $(menu).animate({height: 0}, 500, function() {$(menu).hide();});
+    } else {
+        $(menu).show().animate({height: 100}, 500);
+    }
+});
+
 // Prepare all the data to be sent when the widget is ready
 widget.bind(SC.Widget.Events.READY, function () {
     waveform = new Waveform({

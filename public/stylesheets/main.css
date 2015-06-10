@@ -9,3 +9,24 @@
 #waveform {
     display: none;
 }
+
+#menu {
+    padding-top: 2px;
+    height: 0px;
+    width: 80%;
+    border-radius: 4px;
+    border: 0px none;
+    box-shadow: 0px 0px 0px 1px rgba(144, 144, 144, 0.5) inset;
+    display:none;
+
+
+}
+
+#openMenu {
+    cursor: pointer;
+
+}
+
+#menu label{
+    margin-left:10px;
+}
