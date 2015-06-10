@@ -46,6 +46,7 @@ public class Profile {
      * @param track The track to like
      */
     public void addLike(final Track2 track) {
+        dislikes.remove(track);
         likes.add(track);
     }
 
@@ -67,6 +68,7 @@ public class Profile {
      */
     public void addDislike(final Track2 track) {
         dislikes.add(track);
+        likes.remove(track);
     }
 
     /**

@@ -30,10 +30,10 @@ public class BasicRecommender implements Recommender {
     public BasicRecommender(final Profile profile, final int amount) {
         this.userProfile = profile;
         this.query = "SELECT * FROM tracks INNER JOIN features ON tracks.track_id = features.track_id ORDER BY RAND()";
+//      this.query = "SELECT * FROM tracks INNER JOIN features ON tracks.track_id = features.track_id WHERE genre = 'Rap' ORDER BY RAND()";
         if (amount >= 0) {
             query += (" LIMIT " + amount);
         }
-        System.out.println("query: " + query);
     }
 
     /**
@@ -41,7 +41,7 @@ public class BasicRecommender implements Recommender {
      * containing a Track object and its score. The method in this class returns
      * a list of Tracks where every track in the list has the same score.
      * 
-     * @return List of RecTuple objects.
+     * @return TrackList.
      */
     @Override
     public TrackList recommend() {

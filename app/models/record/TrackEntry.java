@@ -55,4 +55,11 @@ public class TrackEntry {
         this.value = value;
         return oldValue;
     }
+    
+    /**
+     * Generates a String representation of the entry.
+     */
+    public String toString() {
+        return key + ": " + value.toString() + " ";
+    }
 }

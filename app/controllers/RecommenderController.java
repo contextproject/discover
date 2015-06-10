@@ -83,14 +83,13 @@ public final class RecommenderController {
         return ok();
     }
 
-    public static Result recommend() {
-        System.out.println();
-        LikesRecommender rec = new LikesRecommender(new BasicRecommender(profile, 10));
-        TrackList recs = rec.suggest();
-        System.out.println(recs.size());
-        System.out.println(recs.toString());
-        return ok(recs.toString());
-    }
+//    public static Result recommend() {
+//        LikesRecommender rec = new LikesRecommender(new BasicRecommender(profile, 10));
+//        TrackList recs = rec.recommend();
+//        System.out.println(recs.size());
+//        System.out.println(recs.toString());
+//        return ok(recs.toString());
+//    }
 
     /**
      * Get tracks to display on the web page.
@@ -98,17 +97,15 @@ public final class RecommenderController {
      *
      * @return A HTTP ok response with the tracks to display
      */
-    public static Result tracks() {
+    public static Result recommend() {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode result = mapper.createObjectNode();
-        TrackList likes = profile.getLikes();
-//        Recommender rec = new LikesRecommender( new BasicRecommender(profile, 10));
-//        System.out.println(likes.size());
-//        List<RecTuple> rtl = rec.recommend();
-//        System.out.println(rtl.size());
+        
         LikesRecommender rec = new LikesRecommender(new BasicRecommender(profile, 10));
-        TrackList recs = rec.suggest();
+        TrackList recs = rec.recommend();
         System.out.println(recs.size());
+        System.out.println(recs.toString());
+        
         for (int i = 0; i < recs.size(); i++) {
             Track2 track = recs.get(i);
             ObjectNode jsontrack = mapper.createObjectNode();
@@ -118,6 +115,7 @@ public final class RecommenderController {
             jsontrack.put("title", (String) track.get("title"));
             jsontrack.put("url", (String) track.get("url"));
             jsontrack.put("genre", (String) track.get("genre"));
+            jsontrack.put("score", (Double) track.get("score"));
 
             result.put(Integer.toString(i), jsontrack);
         }

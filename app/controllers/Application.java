@@ -73,41 +73,6 @@ public final class Application extends Controller {
     }
 
     /**
-     * Receives a Json object containing information about a track that the user
-     * has liked. This information is passed to the recommender for processing.
-     *
-     * @return an http ok response.
-     */
-    public static Result userLike() {
-        JsonNode json = request().body().asJson();
-        if (json == null) {
-            return badRequest("Object is empty");
-        } else {
-            System.out
-                    .println("Information about a Liked song has been received.");
-            return ok("");
-        }
-    }
-
-    /**
-     * Receives a Json object containing information about a track that the user
-     * has disliked. This information is passed to the recommender for
-     * processing.
-     *
-     * @return an http ok response.
-     */
-    public static Result userDislike() {
-        JsonNode json = request().body().asJson();
-        if (json == null) {
-            return badRequest("Object is empty");
-        } else {
-            System.out
-                    .println("Information about a disliked song has been received.");
-            return ok("");
-        }
-    }
-
-    /**
      * Selects a random track from the database.
      *
      * @return an http ok response with a random track id.
@@ -176,6 +141,18 @@ public final class Application extends Controller {
         track.setDuration(-1);
         track.setId(trackId);
         return getStartTime(track);
+    }
+    
+    public static Result setPreviewMode() {
+        JsonNode json = request().body().asJson();
+        if (json == null) {
+            return badRequest("Object is empty");
+        } else if (json.get("mode") == null) {
+            return badRequest("The expected message does not exist.");
+        } else {
+            AlgorithmSelector.setMode(json.get("mode").asText());
+            return ok("");
+        }
     }
 
     /**

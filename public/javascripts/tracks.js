@@ -11,10 +11,10 @@ $("#gettracks").click(function () {
 
 $("#recommend").click(function () {
     widget.getSounds(function (data) {
-        $.getJSON("/tracks", function (data) {
+        $.getJSON("/recommend", function (data) {
             jQuery.each(data, function (i, val) {
                 $("#tracks").append("<li class='track' value='" + val.id + "'>"
-                    + val.artist + " - " + val.title + " - " + val.genre +"</li>");
+                    + val.score + " - " + val.title + " - " + val.genre  +"</li>");
             });
         });
     });

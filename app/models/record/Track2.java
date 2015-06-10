@@ -152,7 +152,7 @@ public class Track2 implements Comparable<Track2> {
      *
      * @return A set of keys
      */
-    public Set keySet() {
+    public Set<Object> keySet() {
         Set<Object> result = new TreeSet<Object>();
         for (TrackEntry entry : entries) {
             result.add(entry.getKey());
@@ -165,7 +165,7 @@ public class Track2 implements Comparable<Track2> {
      *
      * @return A collection of values
      */
-    public Collection values() {
+    public Collection<Object> values() {
         Collection<Object> result = new ArrayList<Object>();
         for (TrackEntry entry : entries) {
             result.add(entry.getValue());
@@ -216,5 +216,17 @@ public class Track2 implements Comparable<Track2> {
             return 1;
         }
         return 0;
+    }
+
+    /**
+     * The toString method generates a String representation of the Track object.
+     */
+    public String toString() {
+        String res = " [";
+        for (TrackEntry entry : entries) {
+            res += entry.toString();
+        }
+        res += "] \n";
+        return res;
     }
 }
