@@ -15,7 +15,7 @@ import models.record.Track;
  *
  * @author stefan boodt
  * @author arthur hovenesyan
- * @version 09-06-2015
+ * @version 10-06-2015
  * @see Shingle
  * @since 21-05-2015
  */
@@ -90,7 +90,9 @@ public class MixSplitter {
         if (numberOfSplits == 0 || numberOfSplits == starttimes.size()) {
             return starttimes;
         } else if (numberOfSplits > starttimes.size()) {
-            return doTheSplit(numberOfSplits, splitToShingles(), threshold, starttimes);
+            final int splitsLeft = numberOfSplits - starttimes.size();
+            return doTheSplit(splitsLeft, splitToShingles(),
+                    threshold, starttimes);
         }
         return starttimes.subList(0, numberOfSplits);
     }
@@ -109,18 +111,57 @@ public class MixSplitter {
             Collections.sort(current);
             return current;
         } else if (numberOfSplits > 0) {
-            if (shingles.size() < numberOfSplits - 1) {
-                throw new IllegalStateException("Can't instantiate " + numberOfSplits + " pieces"
-                        + " because there only were " + shingles.size() + " shingles.");
-            }
-            final double thresholddifference = 0.1;
-            final double newThreshold = threshold - thresholddifference;
-            return doTheSplit(numberOfSplits, shingles, newThreshold,
-                    getNewList(current, split(shingles, newThreshold, track.getDuration())));
+            return addPieces(numberOfSplits, shingles, threshold, current);
         } else {
             return doTheSplit(numberOfSplits + 1, shingles, threshold,
                     current.subList(0, current.size() - 1));
         }
+    }
+
+    /**
+     * Adds additional pieces to the song.
+     * @param numberOfSplits The number of splits still left.
+     * @param shingles The list of shingles.
+     * @param threshold The threshold to allow them for this step.
+     * @param current The current list of starttimes.
+     * @return The new list of starttimes.
+     */
+    public List<Integer> addPieces(final int numberOfSplits,
+            final List<Shingle> shingles, final double threshold,
+            final List<Integer> current) {
+        if (shingles.size() < numberOfSplits) {
+            throw new IllegalStateException("Can't instantiate " + numberOfSplits + " pieces"
+                    + " because there only were " + shingles.size() + " shingles.");
+        }
+        final double thresholddifference = 0.01;
+        final double newThreshold = threshold - thresholddifference;
+        final List<Integer> newList;
+        if (threshold >= 0.0) {
+            newList = getNewList(current, split(shingles, threshold,
+                    track.getDuration()));
+        } else {
+            newList = getNewList(current, addAllShingles(shingles));
+        }
+        if (threshold < -thresholddifference * 2) {
+            throw new IllegalStateException("Infinite loop.");
+        }
+        final int newSplits = newList.size() - current.size();
+        return doTheSplit(numberOfSplits - newSplits, shingles, newThreshold, newList);
+    }
+    
+    /**
+     * Adds all the shingles to the starttimes.
+     * @param shingles The shingles to add.
+     * @return The list of starttimes.
+     */
+    private List<Integer> addAllShingles(final List<Shingle> shingles) {
+        final int amountOfShingles = shingles.size();
+        final int songDuration = track.getDuration();
+        final List<Integer> starttimes = new ArrayList<Integer>(amountOfShingles);
+        for (int i = 0; i < amountOfShingles; i++) {
+            starttimes.add(getShingleStarttime(i, amountOfShingles, songDuration));
+        }
+        return starttimes;
     }
 
     /**
@@ -132,9 +173,9 @@ public class MixSplitter {
      */
     private List<Integer> getNewList(final List<Integer> current,
             final List<Integer> newOnes) {
-        final List<Integer> result = current;
+        final List<Integer> result = new ArrayList<Integer>(current);
         for (Integer i : newOnes) {
-            if (!result.contains(i)) {
+            if (!(result.contains(i))) {
                 result.add(i);
             }
         }
@@ -174,11 +215,23 @@ public class MixSplitter {
             final double distance = shingles.get(i).jaccardDistance(
                     shingles.get(i + 1));
             if (distance > threshold) {
-                final int integer = ((i + 1) * songtime) / amountOfShingles;
+                final int integer = getShingleStarttime(songtime, amountOfShingles, i);
                 starttimes.add(integer);
             }
         }
         return starttimes;
+    }
+
+    /**
+     * Returns the starttime of shingle i.
+     * @param songtime The duration of the song.
+     * @param amountOfShingles The number of shingles in the song.
+     * @param shingleIndex The index of the shingle.
+     * @return The starttime of the shingle.
+     */
+    public int getShingleStarttime(final int songtime,
+            final int amountOfShingles, final int shingleIndex) {
+        return ((shingleIndex + 1) * songtime) / amountOfShingles;
     }
 
     /**

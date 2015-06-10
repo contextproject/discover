@@ -18,7 +18,7 @@ import static org.junit.Assert.assertEquals;
  * @see BasicTest
  * 
  * @since 21-05-2015
- * @version 09-06-2015
+ * @version 10-06-2015
  * 
  * @author stefan boodt
  * @author arthur hovenesyan
@@ -120,10 +120,8 @@ public class MixSplitterTest extends BasicTest {
      */
     @Test (expected = IllegalStateException.class)
     public void testSplitWithSizeEmptyImpossibleToFulfill() {
-        final List<Integer> expected = new ArrayList<Integer>();
-        expected.add(0);
         getSplitter().setData(new ArrayList<Double>());
-        assertEquals(expected, getSplitter().split(3));
+        getSplitter().split(3);
     }
 
     /**
@@ -621,5 +619,39 @@ public class MixSplitterTest extends BasicTest {
                 2.4, -1.2, 100.4, 532.9, 201.4, 734.2, -104.2, 0.3, 10.2, 192.2, 53.2, 921.6));
         final List<Shingle> shingles = getSplitter().splitToShingles();
         assertEquals(asListInt(0), getSplitter().doTheSplit(0, shingles, 0.8, asListInt(0)));
+    }
+    
+    /**
+     * Tests the {@link MixSplitter#doTheSplit(int, List, double, List)} method.
+     */
+    @SuppressWarnings("checkstyle:magicnumber")
+    @Test
+    public void testDoTheSplitThreeSplits() {
+        getSplitter().setData(asList(3.0, 1.0, 100.0, 2.0, 0.0, 13.0, 2014.0, 1.1, 3.9,
+                2.4, -1.2, 100.4, 532.9, 201.4, 734.2, -104.2, 0.3, 10.2, 192.2, 53.2, 921.6));
+        final List<Shingle> shingles = new ArrayList<Shingle>();
+        shingles.add(new Shingle(asList(3.0, 1.0, 100.0, 2.0, 0.0, 13.0, 2014.0)));
+        shingles.add(new Shingle(asList(1.1, 3.9, 2.4, -1.2, 100.4, 532.9, 201.4)));
+        shingles.add(new Shingle(asList(734.2, -104.2, 0.3, 10.2, 192.2, 53.2, 921.6)));
+        final int thirdOfSong = DEFAULT_DURATION / 3;
+        assertEquals(asListInt(0, thirdOfSong, 2 * thirdOfSong),
+                getSplitter().doTheSplit(3, shingles, 0.8, asListInt()));
+    }
+    
+    /**
+     * Tests the {@link MixSplitter#doTheSplit(int, List, double, List)} method.
+     */
+    @SuppressWarnings("checkstyle:magicnumber")
+    @Test
+    public void testDoTheSplitThreeSplitsAlreadyCurrent() {
+        getSplitter().setData(asList(3.0, 1.0, 100.0, 2.0, 0.0, 13.0, 2014.0, 1.1, 3.9,
+                2.4, -1.2, 100.4, 532.9, 201.4, 734.2, -104.2, 0.3, 10.2, 192.2, 53.2, 921.6));
+        final List<Shingle> shingles = new ArrayList<Shingle>();
+        shingles.add(new Shingle(asList(3.0, 1.0, 100.0, 2.0, 0.0, 13.0, 2014.0)));
+        shingles.add(new Shingle(asList(1.1, 3.9, 2.4, -1.2, 100.4, 532.9, 201.4)));
+        shingles.add(new Shingle(asList(734.2, -104.2, 0.3, 10.2, 192.2, 53.2, 921.6)));
+        final int thirdOfSong = DEFAULT_DURATION / 3;
+        assertEquals(asListInt(0, thirdOfSong, 2 * thirdOfSong, DEFAULT_DURATION),
+                getSplitter().doTheSplit(2, shingles, 0.8, asListInt(0, DEFAULT_DURATION)));
     }
 }
