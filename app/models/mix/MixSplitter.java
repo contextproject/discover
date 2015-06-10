@@ -34,7 +34,7 @@ public class MixSplitter {
     /**
      * The default threshold for the splitting.
      */
-    private final double threshold = 0.85;
+    private static final double DEFAULT_THRESHOLD = 0.85;
 
     /**
      * Creates a new mixsplitter which can then split the given mix into
@@ -74,7 +74,7 @@ public class MixSplitter {
      */
     public List<Integer> split() {
         final int songtime = track.getDuration();
-        return split(splitToShingles(), threshold, songtime);
+        return split(splitToShingles(), DEFAULT_THRESHOLD, songtime);
     }
     
     /**
@@ -92,7 +92,7 @@ public class MixSplitter {
         } else if (numberOfSplits > starttimes.size()) {
             final int splitsLeft = numberOfSplits - starttimes.size();
             return doTheSplit(splitsLeft, splitToShingles(),
-                    threshold, starttimes);
+                    DEFAULT_THRESHOLD, starttimes);
         }
         return starttimes.subList(0, numberOfSplits);
     }
