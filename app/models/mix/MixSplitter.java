@@ -113,8 +113,8 @@ public class MixSplitter {
         } else if (numberOfSplits > 0) {
             return addPieces(numberOfSplits, shingles, threshold, current);
         } else {
-            return doTheSplit(numberOfSplits + 1, shingles, threshold,
-                    current.subList(0, current.size() - 1));
+            return doTheSplit(0, shingles, threshold,
+                    current.subList(0, current.size() + numberOfSplits));
         }
     }
 
@@ -134,7 +134,6 @@ public class MixSplitter {
                     + " because there only were " + shingles.size() + " shingles.");
         }
         final double thresholddifference = 0.05;
-        final double newThreshold = threshold - thresholddifference;
         final List<Integer> newList;
         if (threshold >= 0.0) {
             newList = getNewList(current, split(shingles, threshold,
@@ -147,7 +146,9 @@ public class MixSplitter {
                     + " can't be supplied when enough are present. Program hacked.");
         }
         final int newSplits = newList.size() - current.size();
-        return doTheSplit(numberOfSplits - newSplits, shingles, newThreshold, newList);
+        // For readability, a variable is created. Can be done without it.
+        return doTheSplit(numberOfSplits - newSplits, shingles,
+                threshold - thresholddifference, newList);
     }
     
     /**
@@ -156,6 +157,7 @@ public class MixSplitter {
      * @return The list of starttimes.
      */
     private List<Integer> addAllShingles(final List<Shingle> shingles) {
+        // Two variables are made for efficiency. Calculating them once saves time and energy.
         final int amountOfShingles = shingles.size();
         final int songDuration = track.getDuration();
         final List<Integer> starttimes = new ArrayList<Integer>(amountOfShingles);
@@ -195,6 +197,18 @@ public class MixSplitter {
      */
     protected List<Integer> split(final List<Shingle> shingles,
                                   final double threshold, final int songtime) {
+        checkValid(threshold, songtime);
+        return splitUnsafe(shingles, threshold, songtime);
+    }
+
+    /**
+     * Checks if the threshold and songtime are valid.
+     * IllegalArgumentExceptions are thrown when an invalid value has
+     * been found among them.
+     * @param threshold The threshold to seek at, must be between 0 and 1.
+     * @param songtime The duration of the song.
+     */
+    public void checkValid(final double threshold, final int songtime) {
         if (threshold < 0.0 || threshold > 1.0) {
             throw new IllegalArgumentException("The threshold to split mix "
                     + track.toString() + " was equal to " + threshold
@@ -204,6 +218,19 @@ public class MixSplitter {
                     + track.toString() + " was equal to " + songtime
                     + " but must be larger than 0.");
         }
+    }
+
+    /**
+     * Splits the song while not checking any values. You should avoid
+     * to call this method. Please call the {@link #split()} method
+     * instead. This one also checks if the values are a little sane.
+     * @param shingles The shingles that need to be compared.
+     * @param threshold The threshold to compare to.
+     * @param songtime The duration of the song.
+     * @return The list of starttimes.
+     */
+    public List<Integer> splitUnsafe(final List<Shingle> shingles,
+            final double threshold, final int songtime) {
         List<Integer> starttimes = new ArrayList<Integer>();
         starttimes.add(0);
         /*
@@ -211,7 +238,7 @@ public class MixSplitter {
          * calculates it's size instead of remembering it.
          */
         final int amountOfShingles = shingles.size();
-        // The - 1 is to not do this to the last one.
+        // The - 1 is to not do this to the last one, as it has no next one.
         for (int i = 0; i < amountOfShingles - 1; i++) {
             final double distance = shingles.get(i).jaccardDistance(
                     shingles.get(i + 1));

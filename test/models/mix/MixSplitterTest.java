@@ -136,7 +136,7 @@ public class MixSplitterTest extends BasicTest {
     }
 
     /**
-     * Tests the {@link MixSplitter#split(int)} method on an empty dataset.
+     * Tests the {@link MixSplitter#split(int)} method.
      */
     @SuppressWarnings("checkstyle:magicnumber")
     @Test
@@ -168,6 +168,18 @@ public class MixSplitterTest extends BasicTest {
         expected.add(0);
         getSplitter().setData(new ArrayList<Double>());
         getSplitter().split(-1);
+    }
+
+    /**
+     * Tests the {@link MixSplitter#split(int)} method on an empty dataset.
+     */
+    @SuppressWarnings("checkstyle:magicnumber")
+    @Test
+    public void testSplitWithSizeToSmall() {
+        getSplitter().setData(asList(3.0, 1.0, 100.0, 2.0, 0.0, 13.0, 2014.0, 1.1, 3.9,
+                2.4, -1.2, 100.4, 532.9, 201.4, 734.2, -104.2, 0.3, 10.2, 192.2, 53.2, 921.6));
+        final List<Integer> expected = asListInt(0);
+        assertEquals(expected, getSplitter().split(1));
     }
 
     /**
@@ -722,5 +734,25 @@ public class MixSplitterTest extends BasicTest {
         shingles.add(new Shingle(asList(1.1, 3.9, 2.4, -1.2, 100.4, 532.9, 201.4)));
         shingles.add(new Shingle(asList(734.2, -104.2, 0.3, 10.2, 192.2, 53.2, 921.6)));
         getSplitter().doTheSplit(3, shingles, Double.MIN_VALUE, asListInt(0, DEFAULT_DURATION));
+    }
+    
+    /**
+     * Tests the {@link MixSplitter#doTheSplit(int, List, double, List)} method. This test case
+     * tests the third path through the method that is when the number of splits becomes to large.
+     */
+    @SuppressWarnings("checkstyle:magicnumber")
+    @Test
+    public void testDoTheSplitNegativeSplitCount() {
+        getSplitter().setData(asList(3.0, 1.0, 100.0, 2.0, 0.0, 13.0, 2014.0, 1.1, 3.9,
+                2.4, -1.2, 100.4, 532.9, 201.4, 734.2, -104.2, 0.3, 10.2, 192.2, 53.2, 921.6));
+        final List<Shingle> shingles = new ArrayList<Shingle>();
+        shingles.add(new Shingle(asList(3.0, 1.0, 100.0, 2.0, 0.0, 13.0, 2014.0)));
+        shingles.add(new Shingle(asList(1.1, 3.9, 2.4, -1.2, 100.4, 532.9, 201.4)));
+        shingles.add(new Shingle(asList(734.2, -104.2, 0.3, 10.2, 192.2, 53.2, 921.6)));
+        final int quarterOfSong = DEFAULT_DURATION / 4;
+        List<Integer> result = getSplitter().doTheSplit(-2, shingles, 0.8, asListInt(0,
+                quarterOfSong, 2 * quarterOfSong, 3 * quarterOfSong, DEFAULT_DURATION));
+        final List<Integer> expected = asListInt(0, quarterOfSong, 2 * quarterOfSong);
+        assertEquals(expected, result);
     }
 }
