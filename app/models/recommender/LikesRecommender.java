@@ -55,12 +55,10 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
     @Override
     public TrackList recommend() {
         this.generateBoards();
-        return evaluate();
-        // if (recommender != null) {
-        // return evaluate();
-        // } else {
-        // return suggest();
-        // }
+        TrackList tracks = evaluate(recommender.recommend());
+        tracks.addAll(suggest());
+        //TO-DO: SORT tracks
+        return tracks;
     }
 
     /**
@@ -73,31 +71,35 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
      */
     @Override
     public TrackList suggest() {
-//        this.generateBoards();
-//        String query = "SELECT * FROM `tracks` WHERE ";
-//        Iterator<Object> it = genreBoard.keySet().iterator();
-//        while (it.hasNext()) {
-//            query += ("genre = '" + it.next() + "'");
-//            query += " OR ";
-//        }
-//        query = query.substring(0, query.length() - 3);
-//        query += " ORDER BY RAND() LIMIT 5";
-//        TrackList list = GeneralTrackSelector.getInstance().execute(query);
-        return null;
+        this.generateBoards();
+        String query = "SELECT * FROM `tracks` WHERE ";
+        Iterator<Object> it1 = genreBoard.keySet().iterator();
+        Iterator<Object> it2 = artistBoard.keySet().iterator();
+        while (it1.hasNext()) {
+            query += ("genre = '" + it1.next() + "'");
+            query += " OR ";
+        }
+        while (it2.hasNext()) {
+            query += ("user_id = '" + it2.next() + "'");
+            query += " OR ";
+        }
+        query = query.substring(0, query.length() - 3);
+        query += " ORDER BY RAND() LIMIT 3";
+        TrackList list = GeneralTrackSelector.getInstance().execute(query);
+        return evaluate(list);
     }
 
     /**
-     * Evaluates the unweighted list of RecTuple object received from the
+     * Evaluates the unweighed list of RecTuple object received from the
      * decorated recommender and adds additional score to the tracks using its
      * scoreboards.
      * 
      * @return A List of RecTuple object with added score.
      */
-    private TrackList evaluate() {
-        TrackList unweighted = recommender.recommend();
-        for (Track2 tup : unweighted) {
+    private TrackList evaluate(TrackList unweighed) {
+        for (Track2 tup : unweighed) {
             Object genre = tup.get("genre");
-            Object artist = tup.get("artist");
+            Object artist = tup.get("user_id");
             if (genreBoard.containsKey(genre)) {
                 tup.addScoreToTrack(genreBoard.get(genre));
             }
@@ -105,7 +107,7 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
                 tup.addScoreToTrack(artistBoard.get(artist));
             }
         }
-        return unweighted;
+        return unweighed;
     }
 
     /**
@@ -145,30 +147,6 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
             hm.put(key, weight * 2 * modifier);
         }
     }
-
-    /**
-     * Does the same thing as updateBoardPositive() but instead of adding it
-     * subtracts score. Making the method it seemed logical that subtracting
-     * should operate differently using its own method but is now amost the same
-     * as the updateBoardPositive() method. If the idea behind subtracting
-     * doesn't change this method will be removed and a more general one will be
-     * created.
-     * 
-     * @param hm
-     *            The HashMap object containing the keywords and their score.
-     * @param track
-     *            Track object that is being added.
-     */
-    //
-    // private static void updateBoardNegative(final HashMap<Object, Double> hm,
-    // final Track2 track) {
-    // Object key = track.get("genre");
-    // if (hm.containsKey(key)) {
-    // hm.put(key, hm.get(key) - (weight * 2));
-    // } else {
-    // hm.put(key, -(weight * 2));
-    // }
-    // }
 
     @Override
     public Profile getUserProfile() {
