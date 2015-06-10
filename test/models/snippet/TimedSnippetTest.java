@@ -13,7 +13,7 @@ import basic.BasicTest;
  * Tests the Timed Snippet class.
  *
  * @author stefan boodt
- * @version 30-05-2015
+ * @version 09-06-2015
  * @see TimedSnippet
  * @since 29-04-2015
  */
@@ -197,7 +197,7 @@ public class TimedSnippetTest extends BasicTest {
     public void testGetDurationNegative() {
         final int newtime = 0;
         final int duration = -1;
-        final TimedSnippet s = TimedSnippet.createSnippet(newtime, duration);
+        final TimedSnippet s = new TimedSnippet(newtime, duration);
         final int expected = TimedSnippet.getDefaultDuration();
         assertEquals(expected, s.getWindow());
     }

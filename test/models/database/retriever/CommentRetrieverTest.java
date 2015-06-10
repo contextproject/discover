@@ -1,6 +1,5 @@
 package models.database.retriever;
 
-import controllers.Application;
 import models.database.DatabaseConnector;
 import models.utility.CommentList;
 import org.junit.Before;
@@ -19,14 +18,13 @@ public class CommentRetrieverTest {
      */
     @Before
     public void setUp() {
-        DatabaseConnector databaseConnector = new DatabaseConnector();
+        DatabaseConnector databaseConnector = DatabaseConnector.getConnector();
         databaseConnector.loadDrivers();
         databaseConnector.makeConnection("jdbc:mysql://188.166.78.36/contextbase", "context", "password");
-        Application.setDatabaseConnector(databaseConnector);
     }
 
     /**
-     * Test for the constructor
+     * Test for the constructor.
      *
      * @throws Exception Exception
      */

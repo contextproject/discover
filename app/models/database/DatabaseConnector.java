@@ -11,7 +11,7 @@ import java.sql.Statement;
 /**
  * Connector to the database.
  */
-public class DatabaseConnector {
+public final class DatabaseConnector {
 
     /**
      * Connection object to the database.
@@ -22,11 +22,16 @@ public class DatabaseConnector {
      * Statement object of the connection.
      */
     private Statement statement;
+    
+    /**
+     * The database connector instance.
+     */
+    private static DatabaseConnector connector;
 
     /**
-     * Constructor.
+     * Constructs a new DatabaseConnector.
      */
-    public DatabaseConnector() {
+    private DatabaseConnector() {
     }
 
     /**
@@ -35,7 +40,7 @@ public class DatabaseConnector {
      * @param query The query to be executed
      * @return true if the update succeeds.
      */
-    public final boolean executeUpdate(final String query) {
+    public boolean executeUpdate(final String query) {
         try {
             statement.executeUpdate(query);
             return true;
@@ -50,7 +55,7 @@ public class DatabaseConnector {
      * @param query The query to be executed
      * @return The result of the query
      */
-    public final ResultSet executeQuery(final String query) {
+    public ResultSet executeQuery(final String query) {
         ResultSet result = null;
         try {
             result = statement.executeQuery(query);
@@ -64,7 +69,7 @@ public class DatabaseConnector {
     /**
      * Loading the drivers to connect to a MySQL database.
      */
-    public final void loadDrivers() {
+    public void loadDrivers() {
         try {
             Class.forName("com.mysql.jdbc.Driver");
         } catch (ClassNotFoundException e) {
@@ -79,7 +84,7 @@ public class DatabaseConnector {
      * @param username The username to connect with
      * @param password The password of the username
      */
-    public final void makeConnection(final String url, final String username,
+    public void makeConnection(final String url, final String username,
             final String password) {
         try {
             connection = DriverManager.getConnection(url, username, password);
@@ -93,7 +98,7 @@ public class DatabaseConnector {
     /**
      * Close the connection with the database.
      */
-    public final void closeConnection() {
+    public void closeConnection() {
         if (connection != null) {
             try {
                 connection.close();
@@ -108,7 +113,7 @@ public class DatabaseConnector {
      *
      * @return The statement object of the database connection
      */
-    public final Statement getStatement() {
+    public Statement getStatement() {
         return statement;
     }
 
@@ -117,7 +122,7 @@ public class DatabaseConnector {
      *
      * @param statement The statement object to set the statement of the database connection
      */
-    public final void setStatement(final Statement statement) {
+    public void setStatement(final Statement statement) {
         this.statement = statement;
     }
 
@@ -126,7 +131,18 @@ public class DatabaseConnector {
      *
      * @return The connection object to the database
      */
-    public final Connection getConnection() {
+    public Connection getConnection() {
         return connection;
+    }
+    
+    /**
+     * Retrieves a database connector to be used. 
+     * @return A database connector you can use.
+     */
+    public static DatabaseConnector getConnector() {
+        if (connector == null) {
+            connector = new DatabaseConnector();
+        }
+        return connector;
     }
 }

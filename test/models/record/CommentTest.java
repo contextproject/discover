@@ -64,7 +64,7 @@ public class CommentTest extends BasicTest {
      */
     @Override
     public void setUp() {
-        setDatabaseConnector(new DatabaseConnector());
+        setDatabaseConnector(DatabaseConnector.getConnector());
         databaseConnector.loadDrivers();
         databaseConnector.makeConnection("jdbc:mysql://188.166.78.36/contextbase",
                 "context", "password");

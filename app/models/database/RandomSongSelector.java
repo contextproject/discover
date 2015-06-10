@@ -10,7 +10,7 @@ import java.sql.SQLException;
  * this class uses the singleton pattern.
  *
  * @author stefan boodt
- * @version 19-05-2015
+ * @version 08-06-2015
  * @see DatabaseConnector
  * @since 13-05-2015
  */
