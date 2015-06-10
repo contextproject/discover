@@ -23,22 +23,22 @@ public final class AlgorithmSelector {
      * @return The start of the snippet
      */
     public static int determineStart(final Track track) {
-
+        int start;
         switch (curMode) {
         case INTENSITY:
-            return commentIntensity(track);
-        case RANDOM:
-            return random(track);
-        default:
-            int start;
             start = commentIntensity(track);
-
-            // no comments for the track
+            break;
+        case RANDOM:
+            start = random(track);
+            break;
+        default:
+            start = commentIntensity(track);
             if (start == 0) {
                 start = random(track);
             }
-            return start;
+            break;
         }
+        return start;
     }
 
     /**

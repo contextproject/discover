@@ -1,8 +1,9 @@
 // Soundcloud widget
 var widget = SC.Widget(document.getElementById("sc-widget"));
-var mixSplits, waveform;
+var mixSplits, waveform, songStart, songEnd;
 var snipWin = 5000.00;
 var splitPointer = -1;
+setStartTime(parseFloat(start));
 
 $("#current").click(function () {
     $widget.bind(SC.Widget.Events.READY, function () {
@@ -189,15 +190,15 @@ $("#algoMode").on("input change", function () {
 	}
 });
 
-// play the snippet of the song
-var songStart = parseFloat(start) - (snipWin / 2);
-var songEnd = Math.abs(songStart) + snipWin;
-
 //Set the new start time of the preview.
 function setStartTime(newStart) {
-    start = newStart;
-    songStart = parseFloat(start) - (snipWin / 2);
-    songEnd = Math.abs(songStart) + snipWin
+	if(newStart < 0 || newStart < (snipWin / 2)) {
+		songStart = 0;
+		songEnd = snipWin;
+	} else {
+	    songStart = parseFloat(newStart) - (snipWin / 2);
+	    songEnd = Math.abs(songStart) + snipWin
+	}
 }
 
 //During the event the current track is seeked to the set songStart and played.

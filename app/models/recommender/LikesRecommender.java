@@ -18,26 +18,37 @@ import models.utility.TrackList;
  */
 public class LikesRecommender extends RecommendDecorator implements Recommender {
 
-    /** 
-     * Map object used to create a scoreboard for liked genres. 
+    /**
+     * Map object used to create a scoreboard for liked genres.
      */
     private static HashMap<Object, Double> genreBoard;
 
-    /** 
-     * Map object used to create a scoreboard for liked artists. 
+    /**
+     * Map object used to create a scoreboard for liked artists.
      */
     private static HashMap<Object, Double> artistBoard;
 
+    /**
+     * The positive modifier used to give positive weight to the liked tracks.
+     */
     private static double positiveModifier;
 
+    /**
+     * The negative modifier used to give negative weight to the disliked
+     * tracks.
+     */
     private static double negativeModifier;
-    
+
+    /**
+     * The weight used to give weight to tracks.
+     */
     private static double weight;
 
     /**
      * Constructor for the LikesRecommender class.
      * 
-     * @param smallFish The recommender object that the class decorates.
+     * @param smallFish
+     *            The recommender object that the class decorates.
      */
     public LikesRecommender(final Recommender smallFish) {
         super(smallFish);
@@ -57,7 +68,7 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
         this.generateBoards();
         TrackList tracks = evaluate(recommender.recommend());
         tracks.addAll(suggest());
-        //TO-DO: SORT tracks
+        // TO-DO: SORT tracks
         return tracks;
     }
 
@@ -139,7 +150,8 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
      * @param track
      *            Track object that is being added.
      */
-    private static void updateBoard(final HashMap<Object, Double> hm, final Track2 track, final double modifier) {
+    private static void updateBoard(final HashMap<Object, Double> hm,
+            final Track2 track, final double modifier) {
         Object key = track.get("genre");
         if (hm.containsKey(key)) {
             hm.put(key, hm.get(key) + weight * modifier);
@@ -170,6 +182,44 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
      */
     public void setWeight(final double newWeight) {
         weight = newWeight;
+    }
+
+    /**
+     * Getter for the positive modifier of the object.
+     * 
+     * @return The modifier as a double.
+     */
+    public static double getPositiveModifier() {
+        return positiveModifier;
+    }
+
+    /**
+     * Setter for the positive modifier of the object.
+     * 
+     * @param positiveModifier
+     *            The new modifier of the object.
+     */
+    public static void setPositiveModifier(final double positiveModifier) {
+        LikesRecommender.positiveModifier = positiveModifier;
+    }
+
+    /**
+     * Getter for the negative modifier of the object.
+     * 
+     * @return The modifier as a double.
+     */
+    public static double getNegativeModifier() {
+        return negativeModifier;
+    }
+
+    /**
+     * Setter for the negative modifier of the object.
+     * 
+     * @param negativeModifier
+     *            The new modifier of the object.
+     */
+    public static void setNegativeModifier(final double negativeModifier) {
+        LikesRecommender.negativeModifier = negativeModifier;
     }
 
 }
