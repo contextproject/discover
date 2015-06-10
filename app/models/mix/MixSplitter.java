@@ -133,14 +133,8 @@ public class MixSplitter {
             throw new IllegalStateException("Can't instantiate " + numberOfSplits + " pieces"
                     + " because there only were " + shingles.size() + " shingles.");
         }
+        final List<Integer> newList = getNewList(shingles, threshold, current);
         final double thresholddifference = 0.05;
-        final List<Integer> newList;
-        if (threshold >= 0.0) {
-            newList = getNewList(current, split(shingles, threshold,
-                    track.getDuration()));
-        } else {
-            newList = getNewList(current, addAllShingles(shingles));
-        }
         if (threshold < -thresholddifference * 2) {
             throw new IllegalStateException("Infinite loop. Amount of snippets"
                     + " can't be supplied when enough are present. Program hacked.");
@@ -150,23 +144,24 @@ public class MixSplitter {
         return doTheSplit(numberOfSplits - newSplits, shingles,
                 threshold - thresholddifference, newList);
     }
-    
-    /**
-     * Adds all the shingles to the starttimes.
-     * @param shingles The shingles to add.
-     * @return The list of starttimes.
-     */
-    private List<Integer> addAllShingles(final List<Shingle> shingles) {
-        // Two variables are made for efficiency. Calculating them once saves time and energy.
-        final int amountOfShingles = shingles.size();
-        final int songDuration = track.getDuration();
-        final List<Integer> starttimes = new ArrayList<Integer>(amountOfShingles);
-        for (int i = 0; i < amountOfShingles; i++) {
-            starttimes.add(getShingleStarttime(i, amountOfShingles, songDuration));
-        }
-        return starttimes;
-    }
 
+    /**
+     * Returns the new List that is returned after this iteration.
+     * @param shingles The shingles of this song.
+     * @param threshold The threshold that is currently used.
+     * @param current The current list.
+     * @return The new list of starttimes.
+     */
+    private List<Integer> getNewList(final List<Shingle> shingles,
+            final double threshold, final List<Integer> current) {
+        if (threshold >= 0.0) {
+            return getNewList(current, split(shingles, threshold,
+                    track.getDuration()));
+        } else {
+            return getNewList(current, addAllShingles(shingles));
+        }
+    }
+    
     /**
      * Builds a new list that contains current and then adds all the new values
      * from the second list.
@@ -183,6 +178,22 @@ public class MixSplitter {
             }
         }
         return result;
+    }
+
+    /**
+     * Adds all the shingles to the starttimes.
+     * @param shingles The shingles to add.
+     * @return The list of starttimes.
+     */
+    private List<Integer> addAllShingles(final List<Shingle> shingles) {
+        // Two variables are made for efficiency. Calculating them once saves time and energy.
+        final int amountOfShingles = shingles.size();
+        final int songDuration = track.getDuration();
+        final List<Integer> starttimes = new ArrayList<Integer>(amountOfShingles);
+        for (int i = 0; i < amountOfShingles; i++) {
+            starttimes.add(getShingleStarttime(i, amountOfShingles, songDuration));
+        }
+        return starttimes;
     }
 
     /**
@@ -229,7 +240,7 @@ public class MixSplitter {
      * @param songtime The duration of the song.
      * @return The list of starttimes.
      */
-    public List<Integer> splitUnsafe(final List<Shingle> shingles,
+    private List<Integer> splitUnsafe(final List<Shingle> shingles,
             final double threshold, final int songtime) {
         List<Integer> starttimes = new ArrayList<Integer>();
         starttimes.add(0);
@@ -283,6 +294,17 @@ public class MixSplitter {
      * @return The list of Shingles that you can then compare.
      */
     public List<Shingle> splitToShingles(final int size, final int stepsize) {
+        checkValidSizes(size, stepsize);
+        return splitToShinglesUnsafe(size, stepsize);
+    }
+
+    /**
+     * Checks if the two integers are valid sizes and throws an
+     * IllegalArgumentException if they are not.
+     * @param size The size of the list of shingles to test.
+     * @param stepsize The number of data elements to skip when making a Shingle.
+     */
+    private void checkValidSizes(final int size, final int stepsize) {
         if (size <= 0) {
             throw new IllegalArgumentException(
                     "The size of the shingle should be positive but was "
@@ -292,6 +314,23 @@ public class MixSplitter {
                     "The stepsize of the shingle should be positive"
                             + "but was " + stepsize);
         }
+    }
+
+    /**
+     * Splits the shingles in an unsafe way. It being unsafe is a reference
+     * to the lack of validity tests in this method.
+     * 
+     * <p>
+     * Please refrain from calling this method and call the safe version instead.
+     * The safe version is {@link #splitToShingles(int, int)}.
+     * </p>
+     * 
+     * @param size The size of each shingle.
+     * @param stepsize The size of the steps between two shingles.
+     * @return The shingles found in the song with the given values.
+     */
+    private List<Shingle> splitToShinglesUnsafe(final int size,
+            final int stepsize) {
         List<Shingle> shingles = new ArrayList<Shingle>();
         final int datasize = data.size(); // Saves a lot of time on really large
         // collections.
