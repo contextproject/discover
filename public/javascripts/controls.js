@@ -32,7 +32,6 @@ $(window).load(function() {
         cookieMonster : true,
         modal:true,
         expose:true
-
     });
 });
 
@@ -94,32 +93,33 @@ function like() {
 }
 
 //select the next song if present
-$("#next").click(function () {
+$("#next").click(nextSnip);
+
+// select the previous song if present
+$("#prev").click(prevSnip);
+
+// Goes to the next snippet of the mix
+function nextSnip() {
     if (mixSplits != null && mixSplits != undefined) {
         splitPointer++;
         if ((splitPointer < mixSplits.length) && (splitPointer >= 0)) {
-            widgetClearEvents();
-            var sPartial = mixSplits[splitPointer];
-            preview(sPartial, sPartial + snipWin);
+        	preview(mixSplits[splitPointer], mixSplits[splitPointer] + snipWin, nextSnip);
         } else {
             splitPointer--;
         }
     }
-});
+}
 
-// select the previous song if present
-$("#prev").click(function () {
+function prevSnip() {
     if (mixSplits != null && mixSplits != undefined) {
         splitPointer--;
         if ((splitPointer < mixSplits.length) && (splitPointer >= 0)) {
-            widgetClearEvents();
-            var sPartial = mixSplits[splitPointer];
-            preview(sPartial, sPartial + snipWin);
+        	preview(mixSplits[splitPointer], mixSplits[splitPointer] + snipWin, function(){});
         } else {
             splitPointer++;
         }
     }
-});
+}
 
 // sends the waveform of the current track
 $("#sendWave").click(function () {
@@ -194,17 +194,16 @@ var songEnd = Math.abs(songStart) + snipWin;
 function setStartTime(newStart) {
     start = newStart;
     songStart = parseFloat(start) - (snipWin / 2);
-    songEnd = Math.abs(songStart) + snipWin
+    songEnd = Math.abs(songStart) + snipWin;
 }
 
 //During the event the current track is seeked to the set songStart and played.
 $("#preview").click(function () {
-    preview(songStart, songEnd);
+    preview(songStart, songEnd, donning);
 });
 
 // Preview a snippet on the current track.
-function preview(sStart, sEnd) {
-    widgetClearEvents();
+function preview(sStart, sEnd, callback) {
     widget.isPaused(function (paused) {
         if (paused) {
             widget.bind(SC.Widget.Events.READY, function () {
@@ -222,7 +221,8 @@ function preview(sStart, sEnd) {
         widget.getPosition(function (position) {
             if (position > sEnd) {
                 widget.pause();
-                widget.unbind(SC.Widget.Events.PLAY_PROGRESS);
+                callback();
+                widgetClearEvents;
             }
         });
     });

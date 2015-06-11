@@ -23,8 +23,11 @@
 
 
         <script>
-            $.getScript("/assets/javascripts/controls.js");
+	        $(document).ajaxError(function(e, xhr, settings, exception) {
+	            alert('error in: ' + settings.url + ' \n'+'error:\n' + exception );
+	        });
             $.getScript("/assets/javascripts/tracks.js");
+            $.getScript('/assets/javascripts/controls.js');
         </script>
 
         <script>
