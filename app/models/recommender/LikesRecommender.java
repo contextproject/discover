@@ -1,6 +1,7 @@
 package models.recommender;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -31,18 +32,23 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
     /**
      * The positive modifier used to give positive weight to the liked tracks.
      */
-    private static double positiveModifier;
+    private double positiveModifier;
 
     /**
      * The negative modifier used to give negative weight to the disliked
      * tracks.
      */
-    private static double negativeModifier;
+    private double negativeModifier;
 
     /**
      * The weight used to give weight to tracks.
      */
     private static double weight;
+
+    /**
+     * The selector object used to get different results from the database.
+     */
+    private GeneralTrackSelector selector;
 
     /**
      * Constructor for the LikesRecommender class.
@@ -57,6 +63,7 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
         weight = super.getWeight();
         genreBoard = new HashMap<Object, Double>();
         artistBoard = new HashMap<Object, Double>();
+        selector = GeneralTrackSelector.getInstance();
     }
 
     /**
@@ -68,7 +75,7 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
         this.generateBoards();
         TrackList tracks = evaluate(recommender.recommend());
         tracks.addAll(suggest());
-        // TO-DO: SORT tracks
+        Collections.sort(tracks);
         return tracks;
     }
 
@@ -96,7 +103,7 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
         }
         query = query.substring(0, query.length() - 3);
         query += " ORDER BY RAND() LIMIT 3";
-        TrackList list = GeneralTrackSelector.getInstance().execute(query);
+        TrackList list = selector.execute(query);
         return evaluate(list);
     }
 
@@ -189,7 +196,7 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
      * 
      * @return The modifier as a double.
      */
-    public static double getPositiveModifier() {
+    public double getPositiveModifier() {
         return positiveModifier;
     }
 
@@ -199,8 +206,8 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
      * @param positiveModifier
      *            The new modifier of the object.
      */
-    public static void setPositiveModifier(final double positiveModifier) {
-        LikesRecommender.positiveModifier = positiveModifier;
+    public void setPositiveModifier(final double positiveModifier) {
+        this.positiveModifier = positiveModifier;
     }
 
     /**
@@ -208,7 +215,7 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
      * 
      * @return The modifier as a double.
      */
-    public static double getNegativeModifier() {
+    public double getNegativeModifier() {
         return negativeModifier;
     }
 
@@ -218,8 +225,18 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
      * @param negativeModifier
      *            The new modifier of the object.
      */
-    public static void setNegativeModifier(final double negativeModifier) {
-        LikesRecommender.negativeModifier = negativeModifier;
+    public void setNegativeModifier(final double negativeModifier) {
+        this.negativeModifier = negativeModifier;
+    }
+
+    /**
+     * Setter for the database selector of the object.
+     * 
+     * @param selector
+     *            The GeneralTrackSelector of the object.
+     */
+    public void setSelector(GeneralTrackSelector selector) {
+        this.selector = selector;
     }
 
 }

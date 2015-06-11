@@ -1,5 +1,6 @@
 package models.recommender;
 
+import models.database.retriever.GeneralTrackSelector;
 import models.profile.Profile;
 import models.utility.TrackList;
 
@@ -11,13 +12,20 @@ import models.utility.TrackList;
  */
 public class BasicRecommender implements Recommender {
 
-    /** The Profile object used for extracting information about the user. */
+    /**
+     * The Profile object used for extracting information about the user.
+     */
     private Profile userProfile;
 
-    /** The query used for selecting tracks from the database. */
+    /**
+     * The query used for selecting tracks from the database.
+     */
     private String query;
-
-    private int amount;
+    
+    /**
+     * Selector used for retrieving rows from the database.
+     */
+    private GeneralTrackSelector selector;
 
     /**
      * Constructor for the BasicRecommender class.
@@ -28,13 +36,16 @@ public class BasicRecommender implements Recommender {
      *            The size of the list the recommender will return.
      */
     public BasicRecommender(final Profile profile, final int amount) {
+        this.selector = GeneralTrackSelector.getInstance();
         this.userProfile = profile;
         this.query = "SELECT * FROM tracks INNER JOIN features ON tracks.track_id = features.track_id ORDER BY RAND()";
-//      this.query = "SELECT * FROM tracks INNER JOIN features ON tracks.track_id = features.track_id WHERE genre = 'Rap' ORDER BY RAND()";
+        // this.query =
+        // "SELECT * FROM tracks INNER JOIN features ON tracks.track_id = features.track_id WHERE genre = 'Rap' ORDER BY RAND()";
         if (amount >= 0) {
             query += (" LIMIT " + amount);
         }
     }
+
 
     /**
      * The recommend method is used to return a list of weighted Object
@@ -45,7 +56,7 @@ public class BasicRecommender implements Recommender {
      */
     @Override
     public TrackList recommend() {
-        return TrackList.get(query);
+        return selector.execute(query);
     }
 
     /**
@@ -86,12 +97,11 @@ public class BasicRecommender implements Recommender {
         this.userProfile = userProfile;
     }
 
-    @Override
-    public int getAmount() {
-        return amount;
-    }
-
-    public void setAmount(int amount) {
-        this.amount = amount;
+    /**
+     * Set the selector of this recommender object.
+     * @param selector
+     */
+    public void setSelector(GeneralTrackSelector selector) {
+        this.selector = selector;
     }
 }

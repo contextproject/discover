@@ -141,13 +141,4 @@ public class FeatureRecommender extends RecommendDecorator implements Recommende
         }
         return 0.0;
     }
-
-    /**
-     * Returns the amount of recommendations to make.
-     *
-     * @return The amount of recommendations
-     */
-    public int getAmount() {
-        return super.getAmount();
-    }
 }
