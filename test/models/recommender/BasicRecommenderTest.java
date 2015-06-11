@@ -5,14 +5,15 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.any;
-import models.database.retriever.GeneralTrackSelector;
+import models.database.DatabaseConnector;
 import models.profile.Profile;
 import models.record.Track2;
-import models.utility.TrackList;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.openqa.selenium.html5.ResultSet;
+
+import controllers.Application;
 
 public class BasicRecommenderTest {
 
@@ -20,20 +21,22 @@ public class BasicRecommenderTest {
 
     private Profile pro1;
 
-    private GeneralTrackSelector selector;
+    private Track2 tr1, tr2;
     
-    TrackList list;
+    private DatabaseConnector dbc;
     
+    private ResultSet res;
+
     @Before
     public void setUp() throws Exception {
-        list = new TrackList();
-        list.add(new Track2());
         pro1 = new Profile();
         pro1.setUserid(69);
         rec1 = new BasicRecommender(pro1, 3);
         rec2 = new BasicRecommender(pro1, -1);
-        selector = mock(GeneralTrackSelector.class);
-        when(selector.execute("abc")).thenReturn(list);
+        dbc = mock(DatabaseConnector.class);
+        res =  new ResultSet(0, 0, null);
+        //
+        // when(com.getBody()).thenReturn(" ");
         // verify(pro, times(5)).getTime();
     }
 
@@ -74,9 +77,10 @@ public class BasicRecommenderTest {
     
 //    @Test
 //    public void testRecommend() {
+//        
+//        when(dbc.executeQuery("abc")).thenReturn(null);
+//        Application.setDatabaseConnector(dbc);
 //        rec1.setQuery("abc");
-//        rec1.recommend();
-//        verify(selector, times(5)).execute(any());
-////        assertEquals(list,rec1.recommend());
+//        assertEquals(dbc.executeQuery("abc"), rec1.recommend());
 //    }
 }
