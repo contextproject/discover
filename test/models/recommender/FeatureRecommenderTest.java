@@ -22,7 +22,7 @@ public class FeatureRecommenderTest {
         profile = new Profile();
         Track2 track = new Track2();
         track.put("id", 1);
-        track.put("danceability", 2);
+        track.put("danceability", 2.0);
         profile.addLike(track);
         track = new Track2();
         track.put("id", 2);
@@ -39,7 +39,7 @@ public class FeatureRecommenderTest {
     @Test
     public void testSuggest() throws Exception {
         TrackList trackList = featureRecommender.suggest();
-        assertEquals(5, trackList.size());
+        assertEquals(3, trackList.size());
     }
 
     @Test

@@ -58,19 +58,7 @@ public final class RandomSongSelector {
      * @return The track_id of a random song.
      */
     public int getRandomSong(final DatabaseConnector dbc) {
-        final ResultSet result = dbc.executeQuery(getQuery());
-        try {
-            if (!result.next()) {
-                throw new RuntimeException("Error the query " + query
-                        + " returned an empty result set.");
-            }
-            return result.getInt(trackid);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw new RuntimeException("Error when doing query "
-                    + query + " on the database. The returned result did not"
-                    + " have a column by the name of " + trackid + " of type int", e);
-        }
+        return DatabaseConnector.getSingleInt(query, "track_id");
     }
 
     /**

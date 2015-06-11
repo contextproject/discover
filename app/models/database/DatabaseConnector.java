@@ -62,7 +62,7 @@ public class DatabaseConnector {
     }
 
     /**
-     * Retrieve the String from the provided column from the provided query
+     * Retrieves the String from the provided column from the provided query.
      *
      * @param query The query to execute
      * @param column The column name
@@ -72,13 +72,36 @@ public class DatabaseConnector {
         ResultSet resultSet = executeQuery(query);
         try {
             if (resultSet.next()) {
-                return resultSet.getString("danceability");
+                return resultSet.getString(column);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Error when doing query "
+                    + query + " on the database.", e);
         }
         return null;
     }
+
+    /**
+     * Retrieves the Integer from the provided column from the provided query.
+     *
+     * @param query The query to execute
+     * @param column The column name
+     * @return The String from the column name
+     */
+    public static int getSingleInt(final String query, final String column) {
+        ResultSet resultSet = executeQuery(query);
+        try {
+            if (resultSet.next()) {
+                return resultSet.getInt(column);
+            }
+        } catch (SQLException e) {
+
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+
 
     /**
      * Loading the drivers to connect to a MySQL database.
