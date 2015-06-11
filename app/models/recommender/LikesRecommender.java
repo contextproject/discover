@@ -74,7 +74,6 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
     public TrackList recommend() {
         TrackList tracks = suggest();
         tracks.addAll(recommender.recommend());
-        Collections.sort(evaluate(tracks));
         return tracks;
     }
 

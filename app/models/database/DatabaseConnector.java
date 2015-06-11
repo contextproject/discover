@@ -21,7 +21,7 @@ public class DatabaseConnector {
     /**
      * Statement object of the connection.
      */
-    private Statement statement;
+    private static Statement statement;
 
     /**
      * Constructor.
@@ -50,7 +50,7 @@ public class DatabaseConnector {
      * @param query The query to be executed
      * @return The result of the query
      */
-    public final ResultSet executeQuery(final String query) {
+    public static ResultSet executeQuery(final String query) {
         ResultSet result = null;
         try {
             result = statement.executeQuery(query);
@@ -60,6 +60,48 @@ public class DatabaseConnector {
         }
         return result;
     }
+
+    /**
+     * Retrieves the String from the provided column from the provided query.
+     *
+     * @param query The query to execute
+     * @param column The column name
+     * @return The String from the column name
+     */
+    public static String getSingleString(final String query, final String column) {
+        ResultSet resultSet = executeQuery(query);
+        try {
+            if (resultSet.next()) {
+                return resultSet.getString(column);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error when doing query "
+                    + query + " on the database.", e);
+        }
+        return null;
+    }
+
+    /**
+     * Retrieves the Integer from the provided column from the provided query.
+     *
+     * @param query The query to execute
+     * @param column The column name
+     * @return The String from the column name
+     */
+    public static int getSingleInt(final String query, final String column) {
+        ResultSet resultSet = executeQuery(query);
+        try {
+            if (resultSet.next()) {
+                return resultSet.getInt(column);
+            }
+        } catch (SQLException e) {
+
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+
 
     /**
      * Loading the drivers to connect to a MySQL database.
@@ -118,7 +160,7 @@ public class DatabaseConnector {
      * @param statement The statement object to set the statement of the database connection
      */
     public final void setStatement(final Statement statement) {
-        this.statement = statement;
+        DatabaseConnector.statement = statement;
     }
 
     /**

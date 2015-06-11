@@ -35,7 +35,7 @@ public class TrackList extends ArrayList<Track2> {
                 track.put("user_id", resultSet.getInt("user_id"));
                 track.put("score", 0.0);
                 if (hasColumn(resultSet, "danceability")) {
-                    track.put("danceability", resultSet.getString("danceability"));
+                    track.put("danceability", resultSet.getDouble("danceability"));
                 }
                 add(track);
             }

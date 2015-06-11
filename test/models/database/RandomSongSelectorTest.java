@@ -190,24 +190,4 @@ public class RandomSongSelectorTest {
 	public void testGetQueryNotNull() {
 		assertNotNull("", sel.getQuery());
 	}
-	
-	/**
-	 * Checks the {@link RandomSongSelector#getRandomSong()} method in
-	 * case of an empty result.
-	 * @throws SQLException If the mocked statement has an SQL failure.
-	 */
-	@Test (expected = RuntimeException.class)
-	public void testGetEmptyResult() throws SQLException {
-		final DatabaseConnector dbc = new DatabaseConnector();
-		final Statement old = dbc.getStatement();
-		final Statement statement = mock(Statement.class);
-		final ResultSet set = mock(ResultSet.class);
-		doReturn(false).when(set).next();
-		doReturn(set).when(statement).executeQuery(sel.getQuery());
-		dbc.setStatement(statement);
-		sel.getRandomSong(dbc);
-		
-		// Reset the statement.
-		dbc.setStatement(old);
-	}
 }

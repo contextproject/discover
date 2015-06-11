@@ -1,5 +1,6 @@
 package models.recommender;
 
+import models.database.DatabaseConnector;
 import models.record.Track2;
 import models.utility.TrackList;
 
@@ -13,24 +14,12 @@ import models.utility.TrackList;
 public class FeatureRecommender extends RecommendDecorator implements Recommender {
 
     /**
-     * The mean danceability of the likes of the user.
-     */
-    private double mean = 1.2510925218177062;
-
-    /**
-     * The standard deviation of the danceability of the likes of the user.
-     */
-    private double deviation;
-
-    /**
      * The constructor of the class.
      *
      * @param recommender The decorated recommender object.
      */
     public FeatureRecommender(final Recommender recommender) {
         super(recommender);
-        mean();
-        deviation();
     }
 
     /**
@@ -40,18 +29,22 @@ public class FeatureRecommender extends RecommendDecorator implements Recommende
      */
     @Override
     public TrackList suggest() {
-        String query = "SELECT tracks.track_id, tracks.duration, tracks.genre, tracks.title "
-                + "features.danceability, abs(features.danceability - " + mean + ") as distance "
-                + "FROM features "
-                + "INNER JOIN tracks "
-                + "ON tracks.track_id = features.track_id "
-                + "ORDER BY distance "
-                + "LIMIT 10";
-        TrackList result = TrackList.get(query);
-        for (Track2 track : result) {
-            track.put("score", weight);
+        if (mean() != 0) {
+            String query = "SELECT tracks.track_id, tracks.duration, tracks.genre, "
+                    + "tracks.title, tracks.user_id, features.danceability, "
+                    + "abs(features.danceability - " + mean() + ") as distance "
+                    + "FROM features "
+                    + "INNER JOIN tracks "
+                    + "ON tracks.track_id = features.track_id "
+                    + "ORDER BY distance "
+                    + "LIMIT 3";
+            TrackList result = TrackList.get(query);
+            for (Track2 track : result) {
+                track.put("score", weight);
+            }
+            return result;
         }
-        return result;
+        return new TrackList();
     }
 
     @Override
@@ -69,75 +62,99 @@ public class FeatureRecommender extends RecommendDecorator implements Recommende
      */
     private TrackList evaluate() {
         TrackList unweighted = recommender.recommend();
+        updateTracks(unweighted);
+        double mean = mean();
+        double deviation = deviation();
         for (Track2 track : unweighted) {
-            score(track);
+            track.put("score", (Double) track.get("score") + score(track, mean, deviation));
         }
         return unweighted;
     }
 
     /**
-     * Determines the mean of the danceability of the likes of the user.
+     * Updates the Track with the danceability retrieved from the database.
+     *
+     * @param trackList The TrackList to update
+     * @return The updated track
      */
-    private void mean() {
-        TrackList likes = getUserProfile().getLikes();
+    private TrackList updateTracks(final TrackList trackList) {
+        for (Track2 track : trackList) {
+            String query = "SELECT * FROM features WHERE features.track_id = " + track.get("id");
+            String danceability = DatabaseConnector.getSingleString(query, "danceability");
+            if (danceability != null) {
+                track.put("danceability", Double.parseDouble(danceability));
+            }
+        }
+        return trackList;
+    }
+
+    /**
+     * Determines the mean of the danceability of the likes of the user.
+     *
+     * @return The mean of the danceability of the likes
+     */
+    private double mean() {
+        TrackList likes = updateTracks(getUserProfile().getLikes());
+        double mean = 0.0;
+        double count = 0.0;
         if (likes.size() != 0) {
             for (Track2 track : likes) {
-                mean += (Double) track.get("score");
+                if (track.containsKey("danceability")) {
+                    mean += (Double) track.get("danceability");
+                    count++;
+                }
             }
-            mean = mean / (double) likes.size();
+            mean = mean / count;
         }
+        return mean;
     }
 
     /**
      * Determines the standard deviation of the danceability of the likes of the user.
+     *
+     * @return The standard deviation of the danceability of the likes
      */
-    private void deviation() {
+    private double deviation() {
         TrackList likes = getUserProfile().getLikes();
+        double deviation = 0.0;
+        double mean = mean();
         if (likes.size() != 0) {
             double variance = 0.0;
             for (Track2 track : likes) {
-                variance += ((Double) track.get("score") - mean)
-                        * ((Double) track.get("score") - mean);
+                if (track.containsKey("danceability")) {
+                    variance += ((Double) track.get("danceability") - mean)
+                            * ((Double) track.get("danceability") - mean);
+                }
             }
             deviation = Math.sqrt(variance);
         }
-    }
-
-    /**
-     * Gets the required information and passes the updated track to the score(double) method.
-     *
-     * @param track The Track object
-     * @return The score received from the score(double) method
-     */
-    private double score(final Track2 track) {
-        String query = "SELECT * FROM features INNER JOIN tracks "
-                + "ON tracks.track_id = features.track_id "
-                + "WHERE features.track_id = " + track.get("id");
-        if (TrackList.get(query).size() != 0) {
-            return score((Double) TrackList.get(query).get(0).get("danceability"));
-        }
-        return 0.0;
+        return deviation;
     }
 
     /**
      * Gives a score to the track based on the danceability.
      *
-     * @param danceability The danceability of the track
+     * @param track     The track
+     * @param mean      The mean of the likes of the user
+     * @param deviation The standard deviation of the likes of the user
      * @return The score
      */
-    private double score(final double danceability) {
-        final double quarter = 0.25;
-        final double half = 0.5;
-        final double threequarters = 0.75;
-        if (((mean - (quarter * deviation)) <= danceability)
-                && ((mean + (quarter * deviation)) >= danceability)) {
-            return weight;
-        } else if (mean - threequarters * deviation <= danceability
-                && mean + threequarters * deviation >= danceability) {
-            return half * weight;
-        } else if (mean - deviation <= danceability
-                && mean + deviation >= danceability) {
-            return quarter * weight;
+    private double score(final Track2 track, final double mean, final double deviation) {
+        if (track.containsKey("danceability")) {
+            double danceability = (Double) track.get("danceability");
+            final double quarter = 0.25;
+            final double half = 0.5;
+            final double threequarter = 0.75;
+            if (((mean - (quarter * deviation)) <= danceability)
+                    && ((mean + (quarter * deviation)) >= danceability)) {
+                return weight;
+            } else if (mean - half * deviation <= danceability
+                    && mean + half * deviation >= danceability) {
+                return half * weight;
+            } else if (mean - deviation <= danceability
+                    && mean + deviation >= danceability) {
+                return threequarter * weight;
+            }
         }
         return 0.0;
     }
