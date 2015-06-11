@@ -3,7 +3,9 @@ package controllers;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+
 import models.database.DatabaseConnector;
+import models.database.DatabaseUpdater;
 import models.database.RandomSongSelector;
 import models.mix.MixSplitter;
 import models.record.Track;
@@ -51,6 +53,9 @@ public final class Application extends Controller {
         } else if (json.get("track") == null) {
             return badRequest("Object does not contain a 'track' subset.");
         } else {
+            //DatabaseUpdater
+            DatabaseUpdater du = DatabaseUpdater.getInstance();
+            System.out.println(du.buildQuery(json.get("track")));
             int id = json.get("track").get("id").asInt();
             int duration = json.get("track").get("duration").asInt();
             Track track = new Track(id, duration);
