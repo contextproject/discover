@@ -33,7 +33,7 @@ public final class Json {
             int duration = jsonNode.get("duration").asInt();
             String artist = jsonNode.get("user").get("username").asText();
             String title = jsonNode.get("title").asText();
-            String genre = jsonNode.get("genre").asText();
+            String genre = jsonNode.get("genre").asText().toLowerCase();
             String url = jsonNode.get("permalink_url").asText();
             return new Track(id, duration, artist, title, genre, url);
         }
@@ -47,7 +47,8 @@ public final class Json {
             track.put("duration", jsonNode.get("duration").asInt());
             track.put("username", jsonNode.get("user").get("username").asText());
             track.put("title", jsonNode.get("title").asText());
-            track.put("genre", jsonNode.get("genre").asText());
+            track.put("genre", jsonNode.get("genre").asText().toLowerCase());
+            track.put("user_id", jsonNode.get("user_id").asInt());
             track.put("url", jsonNode.get("uri").asText());
             return track;
         }

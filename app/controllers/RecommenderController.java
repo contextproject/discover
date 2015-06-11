@@ -47,6 +47,7 @@ public final class RecommenderController {
         Track2 track = Json.getTrack2(request().body().asJson());
         profile.addLike(track);
         System.out.println("profile.getLikes().size() = " + profile.getLikes().size());
+        System.out.println("likes: " + profile.getLikes().toString());
         return ok();
     }
 
@@ -67,7 +68,6 @@ public final class RecommenderController {
      *
      * @return A HTTP ok response
      */
-    @SuppressWarnings("unused")
     public static Result favourites() {
         JsonNode json = request().body().asJson();
         // something goes wrong here, json node is apparently null,
@@ -101,10 +101,11 @@ public final class RecommenderController {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode result = mapper.createObjectNode();
         
-        LikesRecommender rec = new LikesRecommender(new BasicRecommender(profile, 10));
+        LikesRecommender rec = new LikesRecommender(new BasicRecommender(profile, 5));
         TrackList recs = rec.recommend();
-        System.out.println(recs.size());
-        System.out.println(recs.toString());
+        System.out.println("Artists: " + rec.getArtistBoard().toString());
+        System.out.println("Genre: " + rec.getGenreBoard().toString());
+//        System.out.println(recs.toString());
         
         for (int i = 0; i < recs.size(); i++) {
             Track2 track = recs.get(i);

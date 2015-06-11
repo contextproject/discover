@@ -12,7 +12,6 @@ POST        /favourites           controllers.RecommenderController.favourites()
 POST        /setPreviewMode       controllers.Application.setPreviewMode()
 POST        /like                 controllers.RecommenderController.like()
 POST        /dislike              controllers.RecommenderController.dislike()
-GET         /tracks        	  controllers.RecommenderController.recommend()
 GET         /recommend            controllers.RecommenderController.recommend()
 
 # Map static resources from the /public folder to the /assets URL path
