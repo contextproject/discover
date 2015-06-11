@@ -278,10 +278,17 @@ function randomSong() {
         contentType: "application/json; charset=utf-8",
         url: "/random",
         success: function (data) {
-            widget.load(data.url, {
-                auto_play: false,
-                likes: false
-            });
+            if(autoplay){
+                widget.load(data.url, {
+                    auto_play: true,
+                    likes: false
+                });
+            }else {
+                widget.load(data.url, {
+                    auto_play: false,
+                    likes: false
+                });
+            }
             setStartTime(data.start);
         }
     });
