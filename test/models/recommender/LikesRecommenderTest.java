@@ -54,7 +54,7 @@ public class LikesRecommenderTest {
         rec2 = new LikesRecommender(basic2);
         
         selector = mock(GeneralTrackSelector.class);
-//        when(selector.execute(any())).thenReturn(result);
+        when(selector.execute(any())).thenReturn(result);
         //when(basic2.get).thenReturn(0);
         // when(com.getBody()).thenReturn(" ");
         // verify(pro, times(5)).getTime();
