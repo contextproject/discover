@@ -33,11 +33,6 @@ public abstract class RecommendDecorator implements Recommender {
     public Profile getUserProfile() {
         return recommender.getUserProfile();
     }
-
-    @Override
-    public int getAmount() {
-        return recommender.getAmount();
-    }
     
     public abstract TrackList suggest();
     
