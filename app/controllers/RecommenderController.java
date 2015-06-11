@@ -7,12 +7,16 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import models.json.Json;
 import models.profile.Profile;
 import models.recommender.BasicRecommender;
+import models.recommender.FeatureRecommender;
 import models.recommender.LikesRecommender;
 import models.record.Track2;
 import models.utility.TrackList;
 import play.mvc.Result;
 
+import java.util.Collections;
+
 import static play.mvc.Controller.request;
+import static play.mvc.Results.badRequest;
 import static play.mvc.Results.ok;
 
 /**
@@ -46,7 +50,6 @@ public final class RecommenderController {
     public static Result like() {
         Track2 track = Json.getTrack2(request().body().asJson());
         profile.addLike(track);
-        System.out.println("profile.getLikes().size() = " + profile.getLikes().size());
         return ok();
     }
 
@@ -55,6 +58,7 @@ public final class RecommenderController {
      *
      * @return A HTPP ok response
      */
+    @SuppressWarnings("unused")
     public static Result dislike() {
         Track2 track = Json.getTrack2(request().body().asJson());
         profile.addDislike(track);
@@ -74,12 +78,21 @@ public final class RecommenderController {
         // but when logging it in javascript, is isn't null
         if (json == null) {
             System.out.println("json null");
+            return badRequest("Json object is null.");
         } else {
-            int userid = json.get("id").asInt();
-            profile.setUserid(userid);
-            TrackList favourites = Json.getTrackList(json);
-            profile.addFavourites(favourites);
+            profile.addFavourites(Json.getTrackList(json));
+            return ok();
         }
+    }
+
+    /**
+     * Receives the id of the user from the web page and adds the id to the profile.
+     *
+     * @return A HTTP ok response
+     */
+    public static Result user() {
+        JsonNode jsonNode = request().body().asJson();
+        profile.setUserid(jsonNode.get("id").asInt());
         return ok();
     }
 
@@ -97,15 +110,15 @@ public final class RecommenderController {
      *
      * @return A HTTP ok response with the tracks to display
      */
+    @SuppressWarnings("unused")
     public static Result recommend() {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode result = mapper.createObjectNode();
-        
-        LikesRecommender rec = new LikesRecommender(new BasicRecommender(profile, 10));
+
+        FeatureRecommender rec = new FeatureRecommender(
+                new LikesRecommender(new BasicRecommender(profile, 10)));
         TrackList recs = rec.recommend();
-        System.out.println(recs.size());
-        System.out.println(recs.toString());
-        
+        Collections.sort(recs);
         for (int i = 0; i < recs.size(); i++) {
             Track2 track = recs.get(i);
             ObjectNode jsontrack = mapper.createObjectNode();
@@ -120,9 +133,5 @@ public final class RecommenderController {
             result.put(Integer.toString(i), jsontrack);
         }
         return ok(result);
-    }
-
-    public static Profile getProfile() {
-        return profile;
     }
 }

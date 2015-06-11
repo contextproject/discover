@@ -6,11 +6,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import models.database.DatabaseConnector;
 import models.database.RandomSongSelector;
 import models.mix.MixSplitter;
-import models.recommender.BasicRecommender;
-import models.recommender.FeatureRecommender;
 import models.record.Track;
-import models.record.Track2;
-import models.utility.TrackList;
 import play.mvc.Controller;
 import play.mvc.Result;
 import views.html.index;
@@ -142,7 +138,7 @@ public final class Application extends Controller {
         track.setId(trackId);
         return getStartTime(track);
     }
-    
+
     public static Result setPreviewMode() {
         JsonNode json = request().body().asJson();
         if (json == null) {

@@ -61,22 +61,13 @@ $("#dislike").click(function () {
 
 // event for liking a song
 $("#like").click(function () {
-    like();
-    if (SC.accessToken() != null) {
-        like();
-    }
-});
-
-// like the current song
-function like() {
     widget.getCurrentSoundIndex(function (index) {
         widget.getSounds(function (sounds) {
             sendData(sounds[index], "/like", function () {
             });
-            //SC.put('/me/favorites/' + sounds[index].id);
         });
     });
-}
+});
 
 //select the next song if present
 $("#next").click(function () {
@@ -276,9 +267,14 @@ $("#connect").on('click', function () {
         if (SC.accessToken() == null) {
             SC.connect(function () {
                 getFavorites2(function (data) {
-                    console.log(data);
-                    sendData(data, "/favourites", function() {
-                        console.log("succes");
+                    SC.get("http://api.soundcloud.com/users/" + data.id + "/favorites", function(favourites) {
+                        console.log(favourites);
+                        sendData(favourites, "/favourites", function() {
+
+                        });
+                    });
+                    sendData(data, "/user", function() {
+                        console.log("id send");
                     });
                     loadFavorites(data);
                 });
