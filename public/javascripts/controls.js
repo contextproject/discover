@@ -1,7 +1,7 @@
 // Soundcloud widget
 var widget = SC.Widget(document.getElementById("sc-widget"));
 var mixSplits, waveform;
-var snipWin = 5000.00;
+var snipWin = 2000.00;
 var splitPointer = -1;
 
 $("#current").click(function () {
@@ -26,7 +26,7 @@ widget.bind(SC.Widget.Events.READY, function () {
     widget.unbind(SC.Widget.Events.READY);
 });
 
-$(window).load(function() {
+$(window).load(function () {
     $('#joyRideTipContent').joyride({
         autoStart : true,
         cookieMonster : true,
@@ -54,13 +54,13 @@ function sendData(data, url, callback) {
     }
 }
 
-//event for disliking a song
+// event for disliking a song
 $("#dislike").click(function () {
+	
     if (SC.accessToken() != null) {
         widget.getCurrentSoundIndex(function (index) {
             widget.getSounds(function (sounds) {
-                sendData(sounds[index], "/dislike", function () {
-                });
+                sendData(sounds[index], "/dislike", function (){});
                 SC.delete('/me/favorites/' + sounds[index].id);
             });
         });
@@ -70,15 +70,15 @@ $("#dislike").click(function () {
 // event for liking a song
 $("#like").click(function () {
     like();
-    //if (SC.accessToken() == null) {
-    //    console.log("null");
-    //    SC.connect(function () {
-    //        like();
-    //    });
-    //} else {
-    //    console.log("not null");
-    //    like();
-    //}
+    // if (SC.accessToken() == null) {
+    // console.log("null");
+    // SC.connect(function () {
+    // like();
+    // });
+    // } else {
+    // console.log("not null");
+    // like();
+    // }
 });
 
 // like the current song
@@ -87,41 +87,49 @@ function like() {
         widget.getSounds(function (sounds) {
             sendData(sounds[index], "/like", function () {
             });
-            //SC.put('/me/favorites/' + sounds[index].id);
+            // SC.put('/me/favorites/' + sounds[index].id);
         });
     });
 }
 
-//select the next song if present
-$("#next").click(nextSnip);
+// select the next song if present
+$("#next").click(function() {
+	widgetClearEvents(); nextSnip(false);
+});
 
 // select the previous song if present
 $("#prev").click(prevSnip);
 
-// Goes to the next snippet of the mix
-function nextSnip() {
+// Goes to the next snippet of the mix.
+function nexter() { nextSnip(true) }
+function nextSnip(autoplay) {
     if (mixSplits != null && mixSplits != undefined) {
         splitPointer++;
         if ((splitPointer < mixSplits.length) && (splitPointer >= 0)) {
-        	preview(mixSplits[splitPointer], mixSplits[splitPointer] + snipWin, nextSnip);
+        	if(autoplay) {
+        		preview(mixSplits[splitPointer], mixSplits[splitPointer] + snipWin, nexter);
+        	} else {
+        		preview(mixSplits[splitPointer], mixSplits[splitPointer] + snipWin, function(){});
+        	}
         } else {
             splitPointer--;
         }
     }
 }
 
+// Goes to the previous snippet of a snippet mix.
 function prevSnip() {
     if (mixSplits != null && mixSplits != undefined) {
         splitPointer--;
         if ((splitPointer < mixSplits.length) && (splitPointer >= 0)) {
-        	preview(mixSplits[splitPointer], mixSplits[splitPointer] + snipWin, function(){});
+    		preview(mixSplits[splitPointer], mixSplits[splitPointer] + snipWin, function(){});
         } else {
             splitPointer++;
         }
     }
 }
 
-// sends the waveform of the current track
+// Sends the waveform of the current track
 $("#sendWave").click(function () {
     widget.getSounds(function (sounds) {
         var message = {
@@ -132,9 +140,11 @@ $("#sendWave").click(function () {
     });
 });
 
+// Sets up the list containing the list of snippets.
 function setMixSplit(newSp) {
     mixSplits = newSp;
-    console.log(newSp);
+    splitPointer = -1;
+    nexter();
 }
 
 // if the reload button is clicked on, call the reloadWidget function
@@ -148,6 +158,7 @@ $("#url").keypress(function (e) {
     }
 });
 
+// Clears the url bar and Reloads the widget with the new url.
 function clearInputAndReloadWidget() {
     var url = $("#url");
     var input = url.val();
@@ -176,7 +187,8 @@ function reloadWidget(url) {
             };
             sendData(message, "/request", setStartTime);
             // use the following line if you want to re-render the page.
-            // window.location.href = "http://localhost:9000/tracks/" + sounds[pos].id;
+            // window.location.href = "http://localhost:9000/tracks/" +
+			// sounds[pos].id;
         });
     });
 }
@@ -190,20 +202,21 @@ $("#volume").on("input change", function () {
 var songStart = parseFloat(start) - (snipWin / 2);
 var songEnd = Math.abs(songStart) + snipWin;
 
-//Set the new start time of the preview.
+// Set the new start time of the preview.
 function setStartTime(newStart) {
     start = newStart;
     songStart = parseFloat(start) - (snipWin / 2);
     songEnd = Math.abs(songStart) + snipWin;
 }
 
-//During the event the current track is seeked to the set songStart and played.
+// During the event the current track is seeked to the set songStart and played.
 $("#preview").click(function () {
-    preview(songStart, songEnd, donning);
+    preview(songStart, songEnd, function(){});
 });
 
 // Preview a snippet on the current track.
 function preview(sStart, sEnd, callback) {
+	widgetClearEvents();
     widget.isPaused(function (paused) {
         if (paused) {
             widget.bind(SC.Widget.Events.READY, function () {
@@ -222,7 +235,6 @@ function preview(sStart, sEnd, callback) {
             if (position > sEnd) {
                 widget.pause();
                 callback();
-                widgetClearEvents;
             }
         });
     });
@@ -254,7 +266,7 @@ $("#rand").click(function () {
     });
 });
 
-//connect with Soundcloud
+// connect with Soundcloud
 $("#connect").click(function () {
     // initiate auth popup
     if (SC.accessToken() == null) {
@@ -289,7 +301,7 @@ function getFavorites() {
     });
 }
 
-//initialize client with app credentials
+// initialize client with app credentials
 SC.initialize({
     client_id: '70a5f42778b461b7fbae504a5e436c06',
     redirect_uri: 'http://localhost:9000/assets/html/callback.html'
