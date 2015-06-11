@@ -126,14 +126,14 @@ $("#sendWave").click(function () {
         var message = {
             "track": sounds[0],
             "waveform": waveform.data,
-            "splits" : -2
+            "splits" : 0
         };
         if($("#numsplit").val() == '' ) {
-            message["splits"] =  -1;
-        }else if(parseInt($("#numsplit").val()) >= 0){
+            message["splits"] =  0;
+        }else if(parseInt($("#numsplit").val()) > 0){
             message["splits"] =  parseInt($("#numsplit").val());
         }else{
-            message["splits"] =  -1;
+            message["splits"] = 0;
             console.log("Number of splits must be greater or equal than zero");
         }
         sendData(message, "/splitWaveform", setMixSplit);
