@@ -20,6 +20,8 @@ public abstract class RecommendDecorator implements Recommender {
      */
     protected double weight = 10;
 
+    protected int amount = 3;
+    
     /**
      * The constructor of the class.
      *
@@ -42,6 +44,10 @@ public abstract class RecommendDecorator implements Recommender {
     
     public void setWeight(double weight) {
         this.weight = weight;
+    }
+    
+    public void setAmount(int amount) {
+        this.amount = amount;
     }
 
 }

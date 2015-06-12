@@ -72,10 +72,8 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
      */
     @Override
     public TrackList recommend() {
-        this.generateBoards();
-        TrackList tracks = evaluate(recommender.recommend());
-        tracks.addAll(suggest());
-        Collections.sort(tracks);
+        TrackList tracks = suggest();
+        tracks.addAll(recommender.recommend());
         return tracks;
     }
 
@@ -94,17 +92,23 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
         Iterator<Object> it1 = genreBoard.keySet().iterator();
         Iterator<Object> it2 = artistBoard.keySet().iterator();
         while (it1.hasNext()) {
-            query += ("genre = '" + it1.next() + "'");
-            query += " OR ";
+            Object i = it1.next();
+            if(i != null) {
+                query += ("genre = '" + i + "'");
+                query += " OR ";
+            }
         }
         while (it2.hasNext()) {
-            query += ("user_id = '" + it2.next() + "'");
-            query += " OR ";
+            Object j = it2.next();
+            if(j != null) {
+                query += ("user_id = '" + j + "'");
+                query += " OR ";
+            }
         }
         query = query.substring(0, query.length() - 3);
-        query += " ORDER BY RAND() LIMIT 3";
+        query += " ORDER BY RAND() LIMIT " + amount;
         TrackList list = selector.execute(query);
-        return evaluate(list);
+        return list;
     }
 
     /**
@@ -114,16 +118,18 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
      * 
      * @return A List of RecTuple object with added score.
      */
-    private TrackList evaluate(TrackList unweighed) {
+    public TrackList evaluate(TrackList unweighed) {
         for (Track2 tup : unweighed) {
             Object genre = tup.get("genre");
             Object artist = tup.get("user_id");
+            double score = (Double) tup.get("score");
             if (genreBoard.containsKey(genre)) {
-                tup.addScoreToTrack(genreBoard.get(genre));
+                score += genreBoard.get(genre);
             }
             if (artistBoard.containsKey(artist)) {
-                tup.addScoreToTrack(artistBoard.get(artist));
+                score += artistBoard.get(artist);
             }
+            tup.put("score", score);
         }
         return unweighed;
     }
@@ -138,12 +144,12 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
             ArrayList<Track2> likes = pro.getLikes();
             ArrayList<Track2> dislikes = pro.getDislikes();
             for (Track2 track : likes) {
-                updateBoard(genreBoard, track, positiveModifier);
-                updateBoard(artistBoard, track, positiveModifier);
+                updateBoard(genreBoard, track.get("genre"), positiveModifier, likes.size());
+                updateBoard(artistBoard, track.get("user_id"), positiveModifier, likes.size());
             }
             for (Track2 track : dislikes) {
-                updateBoard(genreBoard, track, negativeModifier);
-                updateBoard(artistBoard, track, negativeModifier);
+                updateBoard(genreBoard, track.get("genre"), negativeModifier, dislikes.size());
+                updateBoard(artistBoard, track.get("user_id"), negativeModifier, dislikes.size());
             }
         }
     }
@@ -157,14 +163,28 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
      * @param track
      *            Track object that is being added.
      */
-    private static void updateBoard(final HashMap<Object, Double> hm,
-            final Track2 track, final double modifier) {
-        Object key = track.get("genre");
-        if (hm.containsKey(key)) {
-            hm.put(key, hm.get(key) + weight * modifier);
+    private static void updateBoard(HashMap<Object, Double> hm, Object key, double modifier, int sourceSize) {
+        double value;
+        if(key instanceof String) {
+            value = 0.7;
         } else {
-            hm.put(key, weight * 2 * modifier);
+            value = 0.3;
         }
+        if (hm.containsKey(key)) {
+            hm.put(key, hm.get(key) + value * weight * (modifier/sourceSize));
+        } else {
+            hm.put(key, value * weight * (modifier/sourceSize));
+        }
+    }
+
+    
+    
+    public HashMap<Object, Double> getGenreBoard() {
+        return genreBoard;
+    }
+
+    public HashMap<Object, Double> getArtistBoard() {
+        return artistBoard;
     }
 
     @Override

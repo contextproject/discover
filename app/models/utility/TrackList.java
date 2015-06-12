@@ -30,7 +30,7 @@ public class TrackList extends ArrayList<Track2> {
                 Track2 track = new Track2();
                 track.put("id", resultSet.getInt("track_id"));
                 track.put("duration", resultSet.getString("duration"));
-                track.put("genre", resultSet.getString("genre"));
+                track.put("genre", resultSet.getString("genre").toLowerCase());
                 track.put("title", resultSet.getString("title"));
                 track.put("user_id", resultSet.getInt("user_id"));
                 track.put("score", 0.0);

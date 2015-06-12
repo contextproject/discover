@@ -195,7 +195,7 @@ public class Track2 implements Comparable<Track2> {
         if (containsKey("score")) {
             this.put("score", (Double) this.get("score") + addition);
         } else {
-            throw new NullPointerException("The Track does not contain a entry called: \"score\"");
+            this.put("score", (Double) addition);
         }
     }
 

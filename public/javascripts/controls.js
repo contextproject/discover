@@ -269,7 +269,7 @@ $("#connect").on('click', function () {
                 getFavorites2(function (data) {
                     SC.get("http://api.soundcloud.com/users/" + data.id + "/favorites", function(favourites) {
                         console.log(favourites);
-                        sendData(favourites, "/favourites", function() {
+                        sendData(favourites, "/favorites", function() {
 
                         });
                     });

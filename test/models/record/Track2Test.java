@@ -179,4 +179,12 @@ public class Track2Test {
         assertEquals(0, entries.iterator().next().getValue());
 
     }
+    
+//    @Test
+//    public void testAddScore() throws Exception {
+//        track.put("score", 0);
+//        assertEquals(0, track.get("score"));
+//        track.addScoreToTrack(0.8);
+//        assertEquals(0.8, track.get("score"));
+//    }
 }

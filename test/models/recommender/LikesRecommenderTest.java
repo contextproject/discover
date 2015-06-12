@@ -54,7 +54,7 @@ public class LikesRecommenderTest {
         rec2 = new LikesRecommender(basic2);
         
         selector = mock(GeneralTrackSelector.class);
-        when(selector.execute(any())).thenReturn(result);
+//        when(selector.execute(any())).thenReturn(result);
         //when(basic2.get).thenReturn(0);
         // when(com.getBody()).thenReturn(" ");
         // verify(pro, times(5)).getTime();
@@ -85,12 +85,12 @@ public class LikesRecommenderTest {
         assertEquals(rec1.getWeight(), 26.0, 0.0);
     }
 
-    @Test
-    public void testGoodWeatherSuggest() {
-        assertTrue(rec1.getUserProfile().getLikes() != null);
-        rec1.setSelector(selector);
-        assertEquals(rec1.suggest(), result);
-    }
+//    @Test
+//    public void testGoodWeatherSuggest() {
+//        assertTrue(rec1.getUserProfile().getLikes() != null);
+//        rec1.setSelector(selector);
+//        assertEquals(rec1.suggest(), result);
+//    }
     
 //    @Test
 //    public void testGoodWeatherRecommend() {

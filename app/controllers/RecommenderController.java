@@ -1,14 +1,15 @@
 package controllers;
 
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+
 import models.json.Json;
 import models.profile.Profile;
 import models.recommender.BasicRecommender;
 import models.recommender.FeatureRecommender;
 import models.recommender.LikesRecommender;
+import models.recommender.Recommender;
 import models.record.Track2;
 import models.utility.TrackList;
 import play.mvc.Result;
@@ -58,7 +59,6 @@ public final class RecommenderController {
      *
      * @return A HTPP ok response
      */
-    @SuppressWarnings("unused")
     public static Result dislike() {
         Track2 track = Json.getTrack2(request().body().asJson());
         profile.addDislike(track);
@@ -71,8 +71,7 @@ public final class RecommenderController {
      *
      * @return A HTTP ok response
      */
-    @SuppressWarnings("unused")
-    public static Result favourites() {
+    public static Result favorites() {
         JsonNode json = request().body().asJson();
         // something goes wrong here, json node is apparently null,
         // but when logging it in javascript, is isn't null
@@ -110,13 +109,10 @@ public final class RecommenderController {
      *
      * @return A HTTP ok response with the tracks to display
      */
-    @SuppressWarnings("unused")
     public static Result recommend() {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode result = mapper.createObjectNode();
-
-        FeatureRecommender rec = new FeatureRecommender(
-                new LikesRecommender(new BasicRecommender(profile, 10)));
+        Recommender rec = new FeatureRecommender(new LikesRecommender(new BasicRecommender(profile, 5)));
         TrackList recs = rec.recommend();
         Collections.sort(recs);
         for (int i = 0; i < recs.size(); i++) {
