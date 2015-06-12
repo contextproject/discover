@@ -51,14 +51,12 @@ public class DatabaseConnector {
      * @return The result of the query
      */
     public static ResultSet executeQuery(final String query) {
-        ResultSet result = null;
         try {
-            result = statement.executeQuery(query);
+            return statement.executeQuery(query);
         } catch (SQLException e) {
             System.err.println("Something went wrong with the following query! " + query);
-            return result;
+            return null;
         }
-        return result;
     }
 
     /**
@@ -71,7 +69,7 @@ public class DatabaseConnector {
     public static String getSingleString(final String query, final String column) {
         ResultSet resultSet = executeQuery(query);
         try {
-            if (resultSet.next()) {
+            if (resultSet != null && resultSet.next()) {
                 return resultSet.getString(column);
             }
         } catch (SQLException e) {
@@ -91,7 +89,7 @@ public class DatabaseConnector {
     public static int getSingleInt(final String query, final String column) {
         ResultSet resultSet = executeQuery(query);
         try {
-            if (resultSet.next()) {
+            if (resultSet != null && resultSet.next()) {
                 return resultSet.getInt(column);
             }
         } catch (SQLException e) {

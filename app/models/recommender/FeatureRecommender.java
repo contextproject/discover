@@ -97,13 +97,17 @@ public class FeatureRecommender extends RecommendDecorator implements Recommende
         TrackList likes = updateTracks(getUserProfile().getLikes());
         double mean = 0.0;
         double count = 0.0;
+        boolean calculate = false;
         if (likes.size() != 0) {
             for (Track2 track : likes) {
                 if (track.containsKey("danceability")) {
                     mean += (Double) track.get("danceability");
                     count++;
+                    calculate = true;
                 }
             }
+        }
+        if (calculate) {
             mean = mean / count;
         }
         return mean;
