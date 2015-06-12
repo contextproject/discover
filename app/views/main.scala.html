@@ -59,43 +59,33 @@
                 <div class="row 150%">
                     <div class="8u 12u$(medium)">
                         <div class="player">
-                        @player
+                            @player
                         </div>
-                        <a id="favorites">My Collection</a>
+                        <div>
+                            <table id="tracks" style="width:100%"></table>
+                        </div>
 
-                        <div class="example-waveform" id="example">
-                            <canvas width="728" height="59"></canvas>
-                        </div>
                     </div>
                     <div class="4u$ 12u$(medium) important(medium)">
                         <div class="controls">
-                            <p id="modeLabel">AUTO</p>
-                            <input type="range" class="control" id="algoMode" value="0" step="33">
                             <label for="volume"></label><input type="range" class="control" id="volume">
-
                             <button class="control" id="preview">Preview</button> <br>
+                            <button class="connect" id="connect">Connect</button> <br>
+                            <button class="connect" id="favorites">My Collection</button> <br>
+
                             <button class="control" id="prev">Prev</button><button class="control" id="next">Next</button> <br>
                             <button class="control" id="like">Like</button><button class="control" id="dislike">Dislike</button> <br>
-                            <button class="control" id="rand">Random Song</button> <br>
+
                             <button class="control" id="recommend">Recommend</button> <br>
+                            <button class="control" id="rand">Random Song</button> <br>
                             <button class="control" id="sendWave">Mix Splitter</button> <br>
-                            <button class="connect" id="connect">Connect</button> <br>
+
+                            <p id="modeLabel">AUTO</p>
+                            <input type="range" class="control" id="algoMode" value="0" step="33">
+
+
                             <button class="control" id="waveform">Waveform</button> <br>
                         </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="tracklist" class="main style1">
-            <div class="container">
-                <div class="row 150%">
-                    <div class="8u 12u$(medium)">
-                        <ul id="tracks"></ul>
-                    </div>
-
-                    <div class="4u$ 12u$(medium) important(medium)">
-                        <button class="control" id="gettracks">Tracks!</button>
                     </div>
                 </div>
             </div>

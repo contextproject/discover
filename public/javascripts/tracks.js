@@ -1,26 +1,20 @@
-$("#gettracks").click(function () {
-    widget.getSounds(function (data) {
-        $.getJSON("/tracks", function (data) {
-            jQuery.each(data, function (i, val) {
-                $("#tracks").append("<li class='track' value='" + val.id + "'>"
-                    + val.artist + " - " + val.title + " - " + val.genre +"</li>");
-            });
-        });
-    });
-});
-
 $("#recommend").click(function () {
     widget.getSounds(function (data) {
         $.getJSON("/recommend", function (data) {
+            $("#tracks").html("");
+            $("#tracks").append("<tr> <th>Title</th> <th>Genre</th> <th>Score</th> </tr>");
             jQuery.each(data, function (i, val) {
-                $("#tracks").append("<li class='track' value='" + val.id + "'>"
-                    + val.score + " - " + val.title + " - " + val.genre  +"</li>");
+                $("#tracks").append("<tr class=tracktable value= " + val.id + ">" +
+                    "<td>" + val.title + "</td> " +
+                    "<td>" + val.genre + "</td> " +
+                    "<td>" + val.score + "</td> " +
+                    "</tr>");
             });
         });
     });
 });
 
 
-$("#tracks").on('click', '.track', function () {
+$("#tracks").on('click', '.tracktable', function () {
     reloadWidget("w.soundcloud.com/tracks/" + $(this).attr("value"));
 });

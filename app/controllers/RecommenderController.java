@@ -112,7 +112,8 @@ public final class RecommenderController {
     public static Result recommend() {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode result = mapper.createObjectNode();
-        Recommender rec = new FeatureRecommender(new LikesRecommender(new BasicRecommender(profile, 5)));
+        Recommender rec = new FeatureRecommender(
+                new LikesRecommender(new BasicRecommender(profile, 5)));
         TrackList recs = rec.recommend();
         Collections.sort(recs);
         for (int i = 0; i < recs.size(); i++) {
