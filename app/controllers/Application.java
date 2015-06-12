@@ -3,14 +3,18 @@ package controllers;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+
 import models.database.DatabaseConnector;
 import models.database.RandomSongSelector;
 import models.mix.MixSplitter;
 import models.record.Track;
+import models.seeker.MixSeeker;
+import models.snippet.TimedSnippet;
 import play.mvc.Controller;
 import play.mvc.Result;
 import views.html.index;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -125,13 +129,42 @@ public final class Application extends Controller {
             return badRequest("Expecting Json data");
         } else {
             int trackID = json.get("track").get("id").asInt();
-            MixSplitter splitter = new MixSplitter(json.get("waveform"), trackID);
-            List<Integer> list = splitter.split();
+            int duration = json.get("track").get("duration").asInt();
+            final Track track = new Track(trackID, duration);
+            MixSplitter splitter = new MixSplitter(json.get("waveform"), track);
+            List<Integer> splits = splitter.split();
+            List<Integer> starttimes = getStartTimes(splits, track);
             Map<String, List<Integer>> map = new TreeMap<String, List<Integer>>();
-            map.put("response", list);
+            map.put("response", starttimes);
             JsonNode response = mapper.valueToTree(map);
             return ok(response);
         }
+    }
+    
+    /**
+     * Retrieves the starttimes of the pieces of the given song.
+     * @param splits The start of all the pieces.
+     * @param track The track to search.
+     * @return The starttimes of the snippets.
+     */
+    protected static List<Integer> getStartTimes(final List<Integer> splits, final Track track) {
+        MixSeeker ms = new MixSeeker(splits, track);
+        // Half of the timedsnippet default duration for mixsnippets.
+        final List<TimedSnippet> snippets = ms.getSnippets(TimedSnippet.getDefaultDuration() / 2);
+        return getStartTimes(snippets);
+    }
+
+    /**
+     * Lists the starttimes of all the snippets.
+     * @param snippets The snippets to list the starttimes of.
+     * @return The starttimes of all the snippets.
+     */
+    private static List<Integer> getStartTimes(final List<TimedSnippet> snippets) {
+        final List<Integer> starttimes = new ArrayList<Integer>(snippets.size());
+        for (TimedSnippet snippet : snippets) {
+            starttimes.add(snippet.getStartTime());
+        }
+        return starttimes;
     }
 
     /**
