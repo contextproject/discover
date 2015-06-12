@@ -271,24 +271,16 @@ function widgetClearEvents() {
 }
 
 function randomSong() {
-
     $.ajax({
         type: "GET",
         dataType: "json",
         contentType: "application/json; charset=utf-8",
         url: "/random",
         success: function (data) {
-            if(autoplay){
-                widget.load(data.url, {
-                    auto_play: true,
-                    likes: false
-                });
-            }else {
-                widget.load(data.url, {
-                    auto_play: false,
-                    likes: false
-                });
-            }
+            widget.load(data.url, {
+                auto_play: autoplay,
+                likes: false
+            });
             setStartTime(data.start);
         }
     });
