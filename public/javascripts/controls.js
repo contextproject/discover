@@ -3,6 +3,21 @@ var widget = SC.Widget(document.getElementById("sc-widget"));
 var mixSplits, waveform;
 var snipWin = 5000.00;
 var splitPointer = -1;
+var autoplay = false;
+
+
+widget.bind(SC.Widget.Events.FINISH, function () {
+    if(autoplay) {
+        widget.getSounds(function (sounds) {
+           if (sounds.length > 1){
+               widget.next();
+           } else{
+              randomSong();
+           }
+        });
+    }
+});
+
 
 $("#current").click(function () {
     widget.bind(SC.Widget.Events.READY, function () {
@@ -13,6 +28,18 @@ $("#current").click(function () {
             console.log(id);
         });
     });
+});
+
+$('a.toggler.off').click(function(){
+    if (document.getElementById("switch").innerHTML == "on") {
+        document.getElementById("switch").innerHTML = "off";
+        autoplay = false;
+    } else {
+        document.getElementById("switch").innerHTML = "on";
+        autoplay = true;
+    }
+    $(this).toggleClass('off');
+
 });
 
 // Prepare all the data to be sent when the widget is ready
@@ -46,6 +73,12 @@ $("#help").click(function() {
         cookieMonster : true,
         preRideCallback: $(this).joyride('destroy',false,1)
     });
+
+    if(!document.getElementById("switch").innerHTML == "on"){
+        widget.bind(SC.Widget.Events.FINISH, function () {
+          alert("hoi");
+        });
+    }
 });
 
 // The method is used to send Data to the server
@@ -249,8 +282,7 @@ function widgetClearEvents() {
     widget.unbind(SC.Widget.Events.PLAY_PROGRESS);
 }
 
-// load the widget with a random song
-$("#rand").click(function () {
+function randomSong() {
     $.ajax({
         type: "GET",
         dataType: "json",
@@ -258,13 +290,16 @@ $("#rand").click(function () {
         url: "/random",
         success: function (data) {
             widget.load(data.url, {
-                auto_play: false,
+                auto_play: autoplay,
                 likes: false
             });
-            setStartTime(data.start)
+            setStartTime(data.start);
         }
     });
-});
+}
+
+// load the widget with a random song
+$("#rand").click(randomSong);
 
 //connect with Soundcloud
 $("#connect").click(function () {
