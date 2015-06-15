@@ -132,7 +132,7 @@ public final class Application extends Controller {
             int duration = json.get("track").get("duration").asInt();
             final Track track = new Track(trackID, duration);
             MixSplitter splitter = new MixSplitter(json.get("waveform"), track);
-            List<Integer> splits = splitter.split();
+            List<Integer> splits = splitter.split(json.get("splits").asInt());
             List<Integer> starttimes = getStartTimes(splits, track);
             Map<String, List<Integer>> map = new TreeMap<String, List<Integer>>();
             map.put("response", starttimes);
