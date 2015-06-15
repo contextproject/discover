@@ -104,4 +104,8 @@ public class BasicRecommender implements Recommender {
     public void setSelector(GeneralTrackSelector selector) {
         this.selector = selector;
     }
+    
+    public int getDecoratorAmount() {
+        return 0;
+    }
 }

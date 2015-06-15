@@ -73,8 +73,6 @@ public final class RecommenderController {
      */
     public static Result favorites() {
         JsonNode json = request().body().asJson();
-        // something goes wrong here, json node is apparently null,
-        // but when logging it in javascript, is isn't null
         if (json == null) {
             System.out.println("json null");
             return badRequest("Json object is null.");
@@ -95,14 +93,6 @@ public final class RecommenderController {
         return ok();
     }
 
-//    public static Result recommend() {
-//        LikesRecommender rec = new LikesRecommender(new BasicRecommender(profile, 10));
-//        TrackList recs = rec.recommend();
-//        System.out.println(recs.size());
-//        System.out.println(recs.toString());
-//        return ok(recs.toString());
-//    }
-
     /**
      * Get tracks to display on the web page.
      * For now it displays the likes from the profile.
@@ -112,10 +102,10 @@ public final class RecommenderController {
     public static Result recommend() {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode result = mapper.createObjectNode();
-        Recommender rec = new FeatureRecommender(
-                new LikesRecommender(new BasicRecommender(profile, 5)));
+        Recommender rec = new LikesRecommender(new BasicRecommender(profile, 5));
         TrackList recs = rec.recommend();
         Collections.sort(recs);
+        System.out.println(recs);
         for (int i = 0; i < recs.size(); i++) {
             Track2 track = recs.get(i);
             ObjectNode jsontrack = mapper.createObjectNode();

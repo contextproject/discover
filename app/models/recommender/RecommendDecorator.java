@@ -49,5 +49,8 @@ public abstract class RecommendDecorator implements Recommender {
     public void setAmount(int amount) {
         this.amount = amount;
     }
-
+    
+    public int getDecoratorAmount() {
+        return 1 + recommender.getDecoratorAmount();
+    }
 }
