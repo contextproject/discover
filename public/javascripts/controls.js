@@ -183,8 +183,17 @@ $("#sendWave").click(function () {
     widget.getSounds(function (sounds) {
         var message = {
             "track": sounds[0],
-            "waveform": waveform.data
+            "waveform": waveform.data,
+            "splits" : 0
         };
+        if($("#numsplit").val() == '' ) {
+            message["splits"] =  0;
+        }else if(parseInt($("#numsplit").val()) > 0){
+            message["splits"] =  parseInt($("#numsplit").val());
+        }else{
+            message["splits"] = 0;
+            console.log("Number of splits must be greater or equal than zero");
+        }
         sendData(message, "/splitWaveform", setMixSplit);
     });
 });
