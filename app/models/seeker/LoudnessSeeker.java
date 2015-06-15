@@ -4,8 +4,6 @@ import java.util.List;
 
 import models.record.Track;
 import models.score.ScoreStorage;
-import models.snippet.TimedSnippet;
-import models.snippet.TimedSnippetFactory;
 
 /**
  * This class selects the loudest part of the song to be awarded the most points
@@ -15,13 +13,14 @@ import models.snippet.TimedSnippetFactory;
  * @since 15-06-2015
  * @version 15-06-2015
  * 
+ * @see AbstractSeeker
  * @see Seeker
  * @see ScoreStorage
  * 
  * @author stefan boodt
  *
  */
-public class LoudnessSeeker implements Seeker {
+public class LoudnessSeeker extends AbstractSeeker {
 
     /**
      * The track to seek the snippet for.
@@ -64,31 +63,11 @@ public class LoudnessSeeker implements Seeker {
         setWaveform(waveform);
         setDecorate(decorate);
     }
-    
-    @Override
-    public TimedSnippet seek() {
-        return seek(TimedSnippet.getDefaultDuration());
-    }
-
-    @Override
-    public TimedSnippet seek(final int duration) {
-        final int starttime = getStarttime(duration);
-        return TimedSnippetFactory.createSnippet(starttime, duration);
-    }
 
     @Override
     public ScoreStorage calculateScores(final int duration) {
         // TODO Auto-generated method stub
         return null;
-    }
-
-    /**
-     * Returns the starttime of the snippet.
-     * @param duration The duration of the snippet.
-     * @return The starttime of the snippet.
-     */
-    protected int getStarttime(final int duration) {
-        return calculateScores(duration).maxScoreStartTime();
     }
 
     /**

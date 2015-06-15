@@ -4,7 +4,6 @@ import models.database.retriever.CommentRetriever;
 import models.record.Comment;
 import models.record.Track;
 import models.score.ScoreStorage;
-import models.snippet.TimedSnippet;
 import models.utility.CommentList;
 
 import java.util.Collections;
@@ -14,12 +13,12 @@ import java.util.Collections;
  * intensity of the track.
  * 
  * @since 07-05-2015
- * @version 04-06-2015
+ * @version 15-06-2015
  * 
  * @author stefan boodt
  * @author tomas heinsohn huala
  */
-public class CommentIntensitySeeker implements Seeker {
+public class CommentIntensitySeeker extends AbstractSeeker {
 
     /**
      * The id of the track.
@@ -76,17 +75,6 @@ public class CommentIntensitySeeker implements Seeker {
         this.filter = filter;
     }
 
-    /**
-     * Generates a start time for a snippet.
-     * 
-     * @param duration The duration of the snippet.
-     *
-     * @return a start time
-     */
-    private int getStartTime(final int duration) {
-        return calculateScores(duration).maxScoreStartTime();
-    }
-
     @Override
     public ScoreStorage calculateScores(final int duration) {
         ScoreStorage storage = decorate.calculateScores(duration);
@@ -131,7 +119,6 @@ public class CommentIntensitySeeker implements Seeker {
     }
 
     /**
-<<<<<<< HEAD
      * Checks if time is between bottom and bottom + window.
      *
      * @param time   The time to check.
@@ -151,23 +138,6 @@ public class CommentIntensitySeeker implements Seeker {
      */
     protected int getWeight(final Comment comment) {
         return 2 + getFilter().contentFilter(comment.getBody());
-    }
-
-    /**
-=======
->>>>>>> origin/Tracks
-     * Seeks the snippet to be used of a given song.
-     *
-     * @return A TimedSnippet object
-     */
-    @Override
-    public TimedSnippet seek() {
-        return seek(TimedSnippet.getDefaultDuration());
-    }
-    
-    @Override
-    public TimedSnippet seek(final int duration) {
-        return new TimedSnippet(getStartTime(duration), duration);
     }
 
     /**

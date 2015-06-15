@@ -4,12 +4,10 @@ import models.record.Track;
 
 import models.score.ScoreStorage;
 
-import models.snippet.TimedSnippet;
-
 /**
  * Generates a random start time for the track.
  */
-public class RandomSeeker implements Seeker {
+public class RandomSeeker extends AbstractSeeker {
 
     /**
      * The track.
@@ -81,22 +79,6 @@ public class RandomSeeker implements Seeker {
      */
     private int getStartTime() {
         return (int) (Math.random() * track.getDuration());
-    }
-
-    /**
-     * Seeks the snippet to be used of a given song.
-     *
-     * @return A TimedSnippet object
-     */
-    @Override
-    public TimedSnippet seek() {
-        return seek(TimedSnippet.getDefaultDuration());
-    }
-    
-    @Override
-    public TimedSnippet seek(final int duration) {
-        ScoreStorage scores = calculateScores(duration);
-        return new TimedSnippet(scores.maxScoreStartTime(), duration);
     }
 
     @Override

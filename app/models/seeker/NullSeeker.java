@@ -6,12 +6,18 @@ import models.snippet.TimedSnippet;
 
 /**
  * This class is the default for all seekers to reference. It provides a
- * way to easily give 0 as score to all the times. 
+ * way to easily give 0 as score to all the times.
+ * 
+ * @since 03-06-2015
+ * @version 15-06-2015
+ * 
+ * @see AbstractSeeker
+ * @see ScoreStorage
  * 
  * @author stefanboodt
  *
  */
-public class NullSeeker implements Seeker {
+public class NullSeeker extends AbstractSeeker {
 
     /**
      * The storage that stores all the scores.
@@ -45,12 +51,6 @@ public class NullSeeker implements Seeker {
     @Override
     public TimedSnippet seek() {
         return seek(TimedSnippet.getDefaultDuration());
-    }
-
-    @Override
-    public TimedSnippet seek(final int duration) {
-        return new TimedSnippet(calculateScores(duration).maxScoreStartTime(),
-                duration);
     }
 
     @Override
