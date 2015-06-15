@@ -2,9 +2,6 @@ package models.database;
 
 import controllers.Application;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 /**
  * This class selects a random song from the database. The current version of
  * this class uses the singleton pattern.

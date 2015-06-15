@@ -1,14 +1,13 @@
 package models.recommender;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-
-import models.database.retriever.GeneralTrackSelector;
 import models.profile.Profile;
+import models.record.Key;
 import models.record.Track2;
 import models.utility.TrackList;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 
 /**
  * LikesRecommender is used to weigh a List of RecTuple object returned by the
@@ -46,24 +45,17 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
     private static double weight;
 
     /**
-     * The selector object used to get different results from the database.
-     */
-    private GeneralTrackSelector selector;
-
-    /**
      * Constructor for the LikesRecommender class.
-     * 
-     * @param smallFish
-     *            The recommender object that the class decorates.
+     *
+     * @param smallFish The recommender object that the class decorates.
      */
     public LikesRecommender(final Recommender smallFish) {
         super(smallFish);
         positiveModifier = 1;
         negativeModifier = -1;
         weight = super.getWeight();
-        genreBoard = new HashMap<Object, Double>();
-        artistBoard = new HashMap<Object, Double>();
-        selector = GeneralTrackSelector.getInstance();
+        genreBoard = new HashMap<>();
+        artistBoard = new HashMap<>();
     }
 
     /**
@@ -73,7 +65,7 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
     @Override
     public TrackList recommend() {
         TrackList tracks = suggest();
-        tracks.addAll(recommender.recommend());
+        tracks.addAll(getRecommender().recommend());
         return tracks;
     }
 
@@ -81,9 +73,9 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
      * The suggest() method finds a possible track the user might like based on
      * his profile. The method creates a query based on the genres and artists
      * from the profiles likes list.
-     * 
+     *
      * @return a TrackList containing tracks filtered on genre and artists from
-     *         the profiles likes list.
+     * the profiles likes list.
      */
     @Override
     public TrackList suggest() {
@@ -93,43 +85,43 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
         Iterator<Object> it2 = artistBoard.keySet().iterator();
         while (it1.hasNext()) {
             Object i = it1.next();
-            if(i != null) {
+            if (i != null) {
                 query += ("genre = '" + i + "'");
                 query += " OR ";
             }
         }
         while (it2.hasNext()) {
             Object j = it2.next();
-            if(j != null) {
+            if (j != null) {
                 query += ("user_id = '" + j + "'");
                 query += " OR ";
             }
         }
         query = query.substring(0, query.length() - 3);
-        query += " ORDER BY RAND() LIMIT " + amount;
-        TrackList list = selector.execute(query);
-        return list;
+        query += " ORDER BY RAND() LIMIT " + getAmount();
+        return TrackList.get(query);
     }
 
     /**
      * Evaluates the unweighed list of RecTuple object received from the
      * decorated recommender and adds additional score to the tracks using its
      * scoreboards.
-     * 
+     *
+     * @param unweighed The TrackList form the decorated recommender
      * @return A List of RecTuple object with added score.
      */
-    public TrackList evaluate(TrackList unweighed) {
-        for (Track2 tup : unweighed) {
-            Object genre = tup.get("genre");
-            Object artist = tup.get("user_id");
-            double score = (Double) tup.get("score");
+    public TrackList evaluate(final TrackList unweighed) {
+        for (Track2 track : unweighed) {
+            String genre = track.get(new Key<>("genre", String.class));
+            String artist = track.get(new Key<>("artist", String.class));
+            double score = track.get(new Key<>("score", Double.class));
             if (genreBoard.containsKey(genre)) {
                 score += genreBoard.get(genre);
             }
             if (artistBoard.containsKey(artist)) {
                 score += artistBoard.get(artist);
             }
-            tup.put("score", score);
+            track.put(new Key<>("score", Double.class), score);
         }
         return unweighed;
     }
@@ -139,17 +131,21 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
      * and dislikes.
      */
     private void generateBoards() {
-        if (recommender != null) {
+        if (getRecommender() != null) {
             Profile pro = this.getUserProfile();
             ArrayList<Track2> likes = pro.getLikes();
             ArrayList<Track2> dislikes = pro.getDislikes();
             for (Track2 track : likes) {
-                updateBoard(genreBoard, track.get("genre"), positiveModifier, likes.size());
-                updateBoard(artistBoard, track.get("user_id"), positiveModifier, likes.size());
+                updateBoard(genreBoard, track.get(new Key<>("genre", String.class)),
+                        positiveModifier, likes.size());
+                updateBoard(artistBoard, track.get(new Key<>("user_id", String.class)),
+                        positiveModifier, likes.size());
             }
             for (Track2 track : dislikes) {
-                updateBoard(genreBoard, track.get("genre"), negativeModifier, dislikes.size());
-                updateBoard(artistBoard, track.get("user_id"), negativeModifier, dislikes.size());
+                updateBoard(genreBoard, track.get(new Key<>("genre", String.class)),
+                        negativeModifier, dislikes.size());
+                updateBoard(artistBoard, track.get(new Key<>("user_id", String.class)),
+                        negativeModifier, dislikes.size());
             }
         }
     }
@@ -157,32 +153,42 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
     /**
      * Updates a scoreboard to using the profile. A score is added to the key if
      * it exists and additional score if this is the first time its found.
-     * 
-     * @param hm
-     *            The HashMap object containing the keywords and their score.
-     * @param track
-     *            Track object that is being added.
+     *
+     * @param hm         The HashMap object containing the keywords and their score.
+     * @param key        The key of the Track attribute
+     * @param modifier   The modifier
+     * @param sourceSize The size
      */
-    private static void updateBoard(HashMap<Object, Double> hm, Object key, double modifier, int sourceSize) {
+    private static void updateBoard(final HashMap<Object, Double> hm,
+                                    final Object key, final double modifier, final int sourceSize) {
         double value;
-        if(key instanceof String) {
+        if (key instanceof String) {
             value = 0.7;
         } else {
             value = 0.3;
         }
         if (hm.containsKey(key)) {
-            hm.put(key, hm.get(key) + value * weight * (modifier/sourceSize));
+            hm.put(key, hm.get(key) + value * weight * (modifier / sourceSize));
         } else {
-            hm.put(key, value * weight * (modifier/sourceSize));
+            hm.put(key, value * weight * (modifier / sourceSize));
         }
     }
 
-    
-    
+
+    /**
+     * Getter of the genre board.
+     *
+     * @return The genre board
+     */
     public HashMap<Object, Double> getGenreBoard() {
         return genreBoard;
     }
 
+    /**
+     * Getter of the artist board.
+     *
+     * @return The artist board
+     */
     public HashMap<Object, Double> getArtistBoard() {
         return artistBoard;
     }
@@ -194,7 +200,7 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
 
     /**
      * Getter for the weight of the object.
-     * 
+     *
      * @return The weight of the object.
      */
     public double getWeight() {
@@ -203,9 +209,8 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
 
     /**
      * Setter for the the weight of the object.
-     * 
-     * @param weight
-     *            The new weight of the object.
+     *
+     * @param newWeight The new weight of the object.
      */
     public void setWeight(final double newWeight) {
         weight = newWeight;
@@ -213,7 +218,7 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
 
     /**
      * Getter for the positive modifier of the object.
-     * 
+     *
      * @return The modifier as a double.
      */
     public double getPositiveModifier() {
@@ -222,9 +227,8 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
 
     /**
      * Setter for the positive modifier of the object.
-     * 
-     * @param positiveModifier
-     *            The new modifier of the object.
+     *
+     * @param positiveModifier The new modifier of the object.
      */
     public void setPositiveModifier(final double positiveModifier) {
         this.positiveModifier = positiveModifier;
@@ -232,7 +236,7 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
 
     /**
      * Getter for the negative modifier of the object.
-     * 
+     *
      * @return The modifier as a double.
      */
     public double getNegativeModifier() {
@@ -241,22 +245,11 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
 
     /**
      * Setter for the negative modifier of the object.
-     * 
-     * @param negativeModifier
-     *            The new modifier of the object.
+     *
+     * @param negativeModifier The new modifier of the object.
      */
     public void setNegativeModifier(final double negativeModifier) {
         this.negativeModifier = negativeModifier;
-    }
-
-    /**
-     * Setter for the database selector of the object.
-     * 
-     * @param selector
-     *            The GeneralTrackSelector of the object.
-     */
-    public void setSelector(GeneralTrackSelector selector) {
-        this.selector = selector;
     }
 
 }

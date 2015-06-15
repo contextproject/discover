@@ -1,6 +1,7 @@
 package models.recommender;
 
 import models.profile.Profile;
+import models.record.Key;
 import models.record.Track2;
 import models.utility.TrackList;
 import org.junit.Before;
@@ -14,39 +15,43 @@ import static org.junit.Assert.assertNotNull;
  */
 public class FeatureRecommenderTest {
 
-    Profile profile1, profile2, profile3;
-
     FeatureRecommender featureRecommender1, featureRecommender2, featureRecommender3;
+    Profile profile1, profile2, profile3;
+    Key key1, key2;
+
 
     @Before
     public void setUp() {
+        key1 = new Key<>("id", Integer.class);
+        key2 = new Key<>("danceability", Double.class);
+
         Track2 track;
         // Profile with 3 tracks, all of them have a tag danceability
         profile1 = new Profile();
         track = new Track2();
-        track.put("id", 1);
-        track.put("danceability", 2.0);
+        track.put(key1, 1);
+        track.put(key2, 2.0);
         profile1.addLike(track);
         for(int i = 2; i < 4; i++) {
             track = new Track2();
-            track.put("id", i);
-            track.put("danceability", 2.5);
+            track.put(key1, i);
+            track.put(key2, 2.5);
             profile1.addLike(track);
         }
         for(int i = 4; i < 8; i++) {
             track = new Track2();
-            track.put("id", i);
-            track.put("danceability", 1.75);
+            track.put(key1, i);
+            track.put(key2, 1.75);
             profile1.addLike(track);
         }
 
         track = new Track2();
-        track.put("id", 8);
-        track.put("danceability", 1.0);
+        track.put(key1, 8);
+        track.put(key2, 1.0);
         profile1.addLike(track);
         track = new Track2();
-        track.put("id", 9);
-        track.put("danceability", 3.0);
+        track.put(key1, 9);
+        track.put(key2, 3.0);
         profile1.addLike(track);
 
         track = new Track2();
@@ -60,7 +65,7 @@ public class FeatureRecommenderTest {
         // Profile with a track with no danceability tag
         profile3 = new Profile();
         track = new Track2();
-        track.put("id", 5);
+        track.put(key1, 5);
         profile3.addLike(track);
 
         featureRecommender1 = new FeatureRecommender(new BasicRecommender(profile1, 5));

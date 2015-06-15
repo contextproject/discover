@@ -1,11 +1,10 @@
 package models.record;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
 
 /**
  * Second attempt at the Track object class. This class should be easier to extend.
@@ -15,7 +14,7 @@ public class Track2 implements Comparable<Track2> {
     /**
      * The entries of the Track.
      */
-    private ArrayList<TrackEntry> entries = new ArrayList<TrackEntry>();
+    private final Map<Key<?>, Object> entries = new HashMap<>();
 
     /**
      * The amount of entries stored in this Track object.
@@ -39,15 +38,11 @@ public class Track2 implements Comparable<Track2> {
      * Determines if this Track object contains an entry with the provided key.
      *
      * @param key The key of the entry
+     * @param <T> The type of the value of the entry
      * @return True if this Track object contains the entry
      */
-    public boolean containsKey(final Object key) {
-        for (TrackEntry entry : entries) {
-            if (entry.getKey().equals(key)) {
-                return true;
-            }
-        }
-        return false;
+    public <T> boolean containsKey(final Key<T> key) {
+        return entries.containsKey(key);
     }
 
     /**
@@ -57,27 +52,18 @@ public class Track2 implements Comparable<Track2> {
      * @return True if this Track object contain the entry
      */
     public boolean containsValue(final Object value) {
-        for (TrackEntry entry : entries) {
-            if (entry.getValue().equals(value)) {
-                return true;
-            }
-        }
-        return false;
+        return entries.containsValue(value);
     }
 
     /**
      * Get the value of the entry of the provided key.
      *
      * @param key The key of the entry
+     * @param <T> The type of the value of the entry
      * @return The value of the entry
      */
-    public Object get(final Object key) {
-        for (TrackEntry entry : entries) {
-            if (entry.getKey().equals(key)) {
-                return entry.getValue();
-            }
-        }
-        return null;
+    public <T> T get(final Key<T> key) {
+        return key.getType().cast(entries.get(key));
     }
 
     /**
@@ -85,59 +71,21 @@ public class Track2 implements Comparable<Track2> {
      *
      * @param key   The key of the entry
      * @param value The value of the entry
-     * @return The old value of the key
+     * @param <T>   The class type of the value
      */
-    public Object put(final String key, final Object value) {
-        for (TrackEntry entry : entries) {
-            if (entry.getKey().equals(key)) {
-                if (entry.getValue().getClass().equals(value.getClass())) {
-                    return entry.setValue(value);
-                } else {
-                    return null;
-                }
-            }
-        }
-        add(key, value);
-        return null;
+    public <T> void put(final Key<T> key, final T value) {
+        entries.put(key, value);
     }
 
     /**
-     * Add a new entry to this Track object.
-     *
-     * @param key   The key of the entry
-     * @param value The value of the entry
-     */
-    private void add(final String key, final Object value) {
-        entries.add(new TrackEntry(key, value));
-    }
-
-    /**
-     * Remove an entry of this Track object.
+     * Removes an entry from the Track object and return the removed value.
      *
      * @param key The key of the entry
-     * @return The value of the entry
+     * @param <T> The class type of the value
+     * @return The value
      */
-    public Object remove(final Object key) {
-        for (TrackEntry entry : entries) {
-            if (entry.getKey().equals(key)) {
-                Object value = entry.getValue();
-                entries.remove(entry);
-                return value;
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Add all entries from the provided map to this Track.
-     *
-     * @param track The track with the entries to add
-     */
-    public void putAll(final Track2 track) {
-        Set<TrackEntry> entries = track.entrySet();
-        for (TrackEntry entry : entries) {
-            put(entry.getKey(), entry.getValue());
-        }
+    public <T> T remove(final Key<T> key) {
+        return key.getType().cast(entries.remove(key));
     }
 
     /**
@@ -148,68 +96,34 @@ public class Track2 implements Comparable<Track2> {
     }
 
     /**
-     * Get the set of keys from this Track object.
+     * Adds all entries from the provided Track to this Track.
      *
-     * @return A set of keys
+     * @param track The track
      */
-    public Set<Object> keySet() {
-        Set<Object> result = new TreeSet<Object>();
-        for (TrackEntry entry : entries) {
-            result.add(entry.getKey());
-        }
-        return result;
-    }
-
-    /**
-     * Get a collection of values from this Track object.
-     *
-     * @return A collection of values
-     */
-    public Collection<Object> values() {
-        Collection<Object> result = new ArrayList<Object>();
-        for (TrackEntry entry : entries) {
-            result.add(entry.getValue());
-        }
-        return result;
-    }
-
-    /**
-     * Get the entries of this Track.
-     *
-     * @return The entries
-     */
-    public Set<TrackEntry> entrySet() {
-        Set<TrackEntry> result = new HashSet<TrackEntry>();
-        for (TrackEntry entry : entries) {
-            result.add(entry);
-        }
-        return result;
-    }
-
-    /**
-     * Add an additional score to the objects existing score.
-     *
-     * @param addition The additional score that needs to be added.
-     */
-    public void addScoreToTrack(final double addition) {
-        if (containsKey("score")) {
-            this.put("score", (Double) this.get("score") + addition);
-        } else {
-            this.put("score", (Double) addition);
+    public void putAll(final Track2 track) {
+        Iterator<Map.Entry<Key<?>, Object>> it = track.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry<Key<?>, Object> entry = it.next();
+            Key key = entry.getKey();
+            Object value = entry.getValue();
+            put(key, value);
+            it.remove();
         }
     }
 
     /**
-     * Compares two Track objects with each other.
-     * The Track with the higher score get sorted before the other.
+     * Get all the entries from this Track.
      *
-     * @param o The other Track
-     * @return the value 0 if the scores are numerically equal;
-     * a value greater than 0 if this score is numerically less than the other score;
-     * and a value greater less 0 if this score is numerically greater than the other score.
+     * @return The set of entries
      */
-    public int compareTo(@Nonnull final Track2 o) {
-        double compare = (Double) this.get("score") - (Double) o.get("score");
+    public Set<Map.Entry<Key<?>, Object>> entrySet() {
+        return entries.entrySet();
+    }
+
+    @Override
+    public int compareTo(@Nonnull final Track2 other) {
+        double compare = this.get(new Key<>("score", Double.class))
+                - other.get(new Key<>("score", Double.class));
         if (compare > 0) {
             return -1;
         } else if (compare < 0) {
@@ -218,15 +132,53 @@ public class Track2 implements Comparable<Track2> {
         return 0;
     }
 
-    /**
-     * The toString method generates a String representation of the Track object.
-     */
-    public String toString() {
-        String res = " [";
-        for (TrackEntry entry : entries) {
-            res += entry.toString();
+    @Override
+    public boolean equals(final Object object) {
+        if (object instanceof Track2) {
+            Track2 other = (Track2) object;
+            boolean result = true;
+            Iterator it = this.entries.entrySet().iterator();
+            while (it.hasNext()) {
+                Map.Entry entry = (Map.Entry) it.next();
+                for (Object o : other.entries.entrySet()) {
+                    Map.Entry otherentry = (Map.Entry) o;
+                    if (entry.getKey().equals(otherentry.getKey())) {
+                        if (!entry.getValue().equals(otherentry.getValue())) {
+                            result = false;
+                            break;
+                        }
+                    }
+                }
+                it.remove();
+            }
+
+            return result;
         }
-        res += "] \n";
-        return res;
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = 0;
+        for (Map.Entry entry : entries.entrySet()) {
+            result += entry.getValue().hashCode();
+        }
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder result = new StringBuilder();
+        result.append("[");
+        Iterator it = entries.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry entry = (Map.Entry) it.next();
+            result.append(entry.getKey());
+            result.append(" = ");
+            result.append(entry.getValue());
+            it.remove();
+        }
+        result.append("]");
+        return result.toString();
     }
 }

@@ -1,6 +1,7 @@
 package models.utility;
 
-import controllers.Application;
+import models.database.DatabaseConnector;
+import models.record.Key;
 import models.record.Track2;
 
 import java.sql.ResultSet;
@@ -28,14 +29,14 @@ public class TrackList extends ArrayList<Track2> {
         try {
             while (resultSet.next()) {
                 Track2 track = new Track2();
-                track.put("id", resultSet.getInt("track_id"));
-                track.put("duration", resultSet.getString("duration"));
-                track.put("genre", resultSet.getString("genre").toLowerCase());
-                track.put("title", resultSet.getString("title"));
-                track.put("user_id", resultSet.getInt("user_id"));
-                track.put("score", 0.0);
+                track.put(new Key<>("int", Integer.class), resultSet.getInt("track_id"));
+                track.put(new Key<>("duration", String.class), resultSet.getString("duration"));
+                track.put(new Key<>("genre", String.class), resultSet.getString("genre").toLowerCase());
+                track.put(new Key<>("title", String.class), resultSet.getString("title"));
+                track.put(new Key<>("user_id", Integer.class), resultSet.getInt("user_id"));
+                track.put(new Key<>("score", Double.class), 0.0);
                 if (hasColumn(resultSet, "danceability")) {
-                    track.put("danceability", resultSet.getDouble("danceability"));
+                    track.put(new Key<>("danceability", Double.class), resultSet.getDouble("danceability"));
                 }
                 add(track);
             }
@@ -51,7 +52,7 @@ public class TrackList extends ArrayList<Track2> {
      * @return The TrackList
      */
     public static TrackList get(final String query) {
-        return new TrackList(Application.getDatabaseConnector().executeQuery(query));
+        return new TrackList(DatabaseConnector.executeQuery(query));
     }
 
     /**

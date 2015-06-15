@@ -9,6 +9,9 @@ import models.seeker.RandomSeeker;
  */
 public final class AlgorithmSelector {
 
+    /**
+     * Do you even javadoc.
+     */
     public enum Mode {
         AUTO, INTENSITY, CONTENT, RANDOM
     }
@@ -18,25 +21,24 @@ public final class AlgorithmSelector {
     /**
      * Determine the start of the snippet for the track.
      *
-     * @param track
-     *            The track
+     * @param track The track
      * @return The start of the snippet
      */
     public static int determineStart(final Track track) {
         int start;
         switch (curMode) {
-        case INTENSITY:
-            start = commentIntensity(track);
-            break;
-        case RANDOM:
-            start = random(track);
-            break;
-        default:
-            start = commentIntensity(track);
-            if (start == 0) {
+            case INTENSITY:
+                start = commentIntensity(track);
+                break;
+            case RANDOM:
                 start = random(track);
-            }
-            break;
+                break;
+            default:
+                start = commentIntensity(track);
+                if (start == 0) {
+                    start = random(track);
+                }
+                break;
         }
         return start;
     }
@@ -45,8 +47,7 @@ public final class AlgorithmSelector {
      * Determine the start of the snippet based on the intensity of the
      * comments.
      *
-     * @param track
-     *            The track
+     * @param track The track
      * @return The start of the snippet
      */
     private static int commentIntensity(final Track track) {
@@ -65,8 +66,7 @@ public final class AlgorithmSelector {
     /**
      * Determine a random start of the snippet.
      *
-     * @param track
-     *            The track
+     * @param track The track
      * @return The start of the snippet
      */
     private static int random(final Track track) {

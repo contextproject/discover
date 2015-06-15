@@ -10,6 +10,7 @@ import models.recommender.BasicRecommender;
 import models.recommender.FeatureRecommender;
 import models.recommender.LikesRecommender;
 import models.recommender.Recommender;
+import models.record.Key;
 import models.record.Track2;
 import models.utility.TrackList;
 import play.mvc.Result;
@@ -95,14 +96,6 @@ public final class RecommenderController {
         return ok();
     }
 
-//    public static Result recommend() {
-//        LikesRecommender rec = new LikesRecommender(new BasicRecommender(profile, 10));
-//        TrackList recs = rec.recommend();
-//        System.out.println(recs.size());
-//        System.out.println(recs.toString());
-//        return ok(recs.toString());
-//    }
-
     /**
      * Get tracks to display on the web page.
      * For now it displays the likes from the profile.
@@ -120,12 +113,12 @@ public final class RecommenderController {
             Track2 track = recs.get(i);
             ObjectNode jsontrack = mapper.createObjectNode();
 
-            jsontrack.put("id", (Integer) track.get("id"));
-            jsontrack.put("artist", (String) track.get("username"));
-            jsontrack.put("title", (String) track.get("title"));
-            jsontrack.put("url", (String) track.get("url"));
-            jsontrack.put("genre", (String) track.get("genre"));
-            jsontrack.put("score", (Double) track.get("score"));
+            jsontrack.put("id", track.get(new Key<>("id", Integer.class)));
+            jsontrack.put("artist", track.get(new Key<>("username", String.class)));
+            jsontrack.put("title", track.get(new Key<>("title", String.class)));
+            jsontrack.put("url", track.get(new Key<>("url", String.class)));
+            jsontrack.put("genre", track.get(new Key<>("genre", String.class)));
+            jsontrack.put("score", track.get(new Key<>("score", Double.class)));
 
             result.put(Integer.toString(i), jsontrack);
         }
