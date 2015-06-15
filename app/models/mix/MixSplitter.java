@@ -15,7 +15,7 @@ import models.record.Track;
  *
  * @author stefan boodt
  * @author arthur hovenesyan
- * @version 10-06-2015
+ * @version 15-06-2015
  * @see Shingle
  * @since 21-05-2015
  */
@@ -262,7 +262,7 @@ public class MixSplitter {
     }
 
     /**
-     * Returns the starttime of shingle i.
+     * Returns the starttime of shingle shingleIndex.
      * @param songtime The duration of the song.
      * @param amountOfShingles The number of shingles in the song.
      * @param shingleIndex The index of the shingle.
@@ -270,7 +270,19 @@ public class MixSplitter {
      */
     public int getShingleStarttime(final int songtime,
             final int amountOfShingles, final int shingleIndex) {
-        return ((shingleIndex + 1) * songtime) / amountOfShingles;
+        return getWaveformPart(songtime, amountOfShingles, shingleIndex);
+    }
+    
+    /**
+     * Returns the starttime of bar barIndex.
+     * @param songtime The duration of the song.
+     * @param amountOfBars The number of bars in the waveform of the song.
+     * @param barIndex The index of the bar.
+     * @return The starttime of the bar.
+     */
+    public static int getWaveformPart(final int songtime,
+            final int amountOfBars, final int barIndex) {
+        return ((barIndex + 1) * songtime) / amountOfBars;
     }
 
     /**
