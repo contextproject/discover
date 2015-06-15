@@ -14,3 +14,25 @@
     margin-left: 545px;
     cursor: pointer;
 }
+
+a.toggler {
+    background: green;
+    cursor: pointer;
+    border: 2px solid white;
+    border-right-width: 15px;
+    padding: 0 5px;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: all .5s ease;
+    margin-right: 10px;
+}
+
+a.toggler:hover{
+    border-bottom-color: white !important;
+}
+
+a.toggler.off {
+    background: red;
+    border-right-width: 2px;
+    border-left-width: 15px;
+}

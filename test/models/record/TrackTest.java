@@ -38,16 +38,16 @@ public class TrackTest {
         assertNotNull(new Track());
     }
 
-    /**
-     * Test for the constructor.
-     */
-    @Test
-    public void testTrack2() {
-        Track track = new Track(databaseConnector.executeQuery("SELECT * FROM tracks LIMIT 1"));
-        assertNotNull(track);
-        assertEquals(100005416, track.getId());
-        assertEquals(963825, track.getDuration());
-    }
+//    /**
+//     * Test for the constructor.
+//     */
+//    @Test
+//    public void testTrack2() {
+//        Track track = new Track(databaseConnector.executeQuery("SELECT * FROM tracks LIMIT 1"));
+//        assertNotNull(track);
+//        assertEquals(100005416, track.getId());
+//        assertEquals(963825, track.getDuration());
+//    }
 
     /**
      * Test for the constructor.
@@ -70,15 +70,15 @@ public class TrackTest {
         assertTrue(track.process(resultSet));
     }
 
-    /**
-     * Test for the process() method.
-     */
-    @Test
-    public void testProcess2() {
-        ResultSet resultSet = databaseConnector.executeQuery("SELECT * FROM comments LIMIT 1");
-        Track track = new Track();
-        assertFalse(track.process(resultSet));
-    }
+//    /**
+//     * Test for the process() method.
+//     */
+//    @Test
+//    public void testProcess2() {
+//        ResultSet resultSet = databaseConnector.executeQuery("SELECT * FROM comments LIMIT 1");
+//        Track track = new Track();
+//        assertFalse(track.process(resultSet));
+//    }
 
     /**
      * Test for the getter and setter of the id of the track.
