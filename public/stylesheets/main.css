@@ -46,6 +46,7 @@ a.toggler {
     text-decoration: none;
     transition: all .5s ease;
     margin-right: 10px;
+    margin-left: 10px;
 }
 
 a.toggler:hover{
