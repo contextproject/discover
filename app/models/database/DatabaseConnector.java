@@ -16,7 +16,7 @@ public class DatabaseConnector {
     /**
      * Connection object to the database.
      */
-    private Connection connection;
+    private static Connection connection;
 
     /**
      * Statement object of the connection.
@@ -62,7 +62,7 @@ public class DatabaseConnector {
     /**
      * Retrieves the String from the provided column from the provided query.
      *
-     * @param query The query to execute
+     * @param query  The query to execute
      * @param column The column name
      * @return The String from the column name
      */
@@ -82,7 +82,7 @@ public class DatabaseConnector {
     /**
      * Retrieves the Integer from the provided column from the provided query.
      *
-     * @param query The query to execute
+     * @param query  The query to execute
      * @param column The column name
      * @return The String from the column name
      */
@@ -102,7 +102,7 @@ public class DatabaseConnector {
     /**
      * Retrieves the Integer from the provided column from the provided query.
      *
-     * @param query The query to execute
+     * @param query  The query to execute
      * @param column The column name
      * @return The String from the column name
      */
@@ -118,7 +118,6 @@ public class DatabaseConnector {
         }
         return 0;
     }
-
 
 
     /**
@@ -139,8 +138,8 @@ public class DatabaseConnector {
      * @param username The username to connect with
      * @param password The password of the username
      */
-    public final void makeConnection(final String url, final String username,
-            final String password) {
+    public static void makeConnection(final String url,
+                                      final String username, final String password) {
         try {
             connection = DriverManager.getConnection(url, username, password);
             statement = connection.createStatement();
@@ -177,7 +176,7 @@ public class DatabaseConnector {
      *
      * @param statement The statement object to set the statement of the database connection
      */
-    public final void setStatement(final Statement statement) {
+    public static void setStatement(final Statement statement) {
         DatabaseConnector.statement = statement;
     }
 

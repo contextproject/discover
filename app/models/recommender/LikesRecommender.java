@@ -2,9 +2,10 @@ package models.recommender;
 
 import models.profile.Profile;
 import models.record.Key;
-import models.record.Track2;
+import models.record.Track;
 import models.utility.TrackList;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -21,12 +22,12 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
     /**
      * Map object used to create a scoreboard for liked genres.
      */
-    private static HashMap<Object, Double> genreBoard;
+    private HashMap<Object, Double> genreBoard;
 
     /**
      * Map object used to create a scoreboard for liked artists.
      */
-    private static HashMap<Object, Double> artistBoard;
+    private HashMap<Object, Double> artistBoard;
 
     /**
      * The positive modifier used to give positive weight to the liked tracks.
@@ -42,14 +43,14 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
     /**
      * The weight used to give weight to tracks.
      */
-    private static double weight;
+    private double weight;
 
     /**
      * Constructor for the LikesRecommender class.
      *
      * @param smallFish The recommender object that the class decorates.
      */
-    public LikesRecommender(final Recommender smallFish) {
+    public LikesRecommender(@Nonnull final Recommender smallFish) {
         super(smallFish);
         positiveModifier = 1;
         negativeModifier = -1;
@@ -80,26 +81,25 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
     @Override
     public TrackList suggest() {
         this.generateBoards();
-        String query = "SELECT * FROM `tracks` WHERE ";
+        StringBuilder query = new StringBuilder();
+        query.append("SELECT * FROM `tracks` WHERE ");
         Iterator<Object> it1 = genreBoard.keySet().iterator();
         Iterator<Object> it2 = artistBoard.keySet().iterator();
         while (it1.hasNext()) {
             Object i = it1.next();
             if (i != null) {
-                query += ("genre = '" + i + "'");
-                query += " OR ";
+                query.append("genre = '").append(i).append("' OR ");
             }
         }
         while (it2.hasNext()) {
             Object j = it2.next();
             if (j != null) {
-                query += ("user_id = '" + j + "'");
-                query += " OR ";
+                query.append("user_id = '").append(j).append("' OR ");
             }
         }
-        query = query.substring(0, query.length() - 3);
-        query += " ORDER BY RAND() LIMIT " + getAmount();
-        return TrackList.get(query);
+        query.delete(query.length() - 3, query.length());
+        query.append("ORDER BY RAND() LIMIT ").append(getAmount());
+        return TrackList.get(query.toString());
     }
 
     /**
@@ -111,7 +111,7 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
      * @return A List of RecTuple object with added score.
      */
     public TrackList evaluate(final TrackList unweighed) {
-        for (Track2 track : unweighed) {
+        for (Track track : unweighed) {
             String genre = track.get(new Key<>("genre", String.class));
             String artist = track.get(new Key<>("artist", String.class));
             double score = track.get(new Key<>("score", Double.class));
@@ -133,15 +133,15 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
     private void generateBoards() {
         if (getRecommender() != null) {
             Profile pro = this.getUserProfile();
-            ArrayList<Track2> likes = pro.getLikes();
-            ArrayList<Track2> dislikes = pro.getDislikes();
-            for (Track2 track : likes) {
+            ArrayList<Track> likes = pro.getLikes();
+            ArrayList<Track> dislikes = pro.getDislikes();
+            for (Track track : likes) {
                 updateBoard(genreBoard, track.get(new Key<>("genre", String.class)),
                         positiveModifier, likes.size());
                 updateBoard(artistBoard, track.get(new Key<>("user_id", String.class)),
                         positiveModifier, likes.size());
             }
-            for (Track2 track : dislikes) {
+            for (Track track : dislikes) {
                 updateBoard(genreBoard, track.get(new Key<>("genre", String.class)),
                         negativeModifier, dislikes.size());
                 updateBoard(artistBoard, track.get(new Key<>("user_id", String.class)),
@@ -159,7 +159,7 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
      * @param modifier   The modifier
      * @param sourceSize The size
      */
-    private static void updateBoard(final HashMap<Object, Double> hm,
+    private void updateBoard(final HashMap<Object, Double> hm,
                                     final Object key, final double modifier, final int sourceSize) {
         double value;
         if (key instanceof String) {
@@ -191,11 +191,6 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
      */
     public HashMap<Object, Double> getArtistBoard() {
         return artistBoard;
-    }
-
-    @Override
-    public Profile getUserProfile() {
-        return super.getUserProfile();
     }
 
     /**

@@ -37,7 +37,7 @@ public final class AlgorithmSelector {
     }
 
     /**
-     * 
+     *
      */
     private static Mode curMode = AlgorithmSelector.Mode.AUTO;
 
@@ -79,7 +79,7 @@ public final class AlgorithmSelector {
 
     /**
      * Determine the start of the snippet based on the content of the comments.
-     * 
+     *
      * @param track The track
      * @return The start of the snippet
      */
@@ -99,7 +99,7 @@ public final class AlgorithmSelector {
 
     /**
      * Sets the mode of the Algorithm Selector.
-     * 
+     *
      * @param mode String representation of the new Mode.
      */
     public static void setMode(final String mode) {

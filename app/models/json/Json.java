@@ -3,7 +3,6 @@ package models.json;
 import com.fasterxml.jackson.databind.JsonNode;
 import models.record.Key;
 import models.record.Track;
-import models.record.Track2;
 import models.utility.TrackList;
 
 import java.util.ArrayList;
@@ -29,20 +28,7 @@ public final class Json {
      */
     public static Track getTrack(final JsonNode jsonNode) {
         if (jsonNode != null) {
-            int id = jsonNode.get("id").asInt();
-            int duration = jsonNode.get("duration").asInt();
-            String artist = jsonNode.get("user").get("username").asText();
-            String title = jsonNode.get("title").asText();
-            String genre = jsonNode.get("genre").asText().toLowerCase();
-            String url = jsonNode.get("permalink_url").asText();
-            return new Track(id, duration, artist, title, genre, url);
-        }
-        return null;
-    }
-
-    public static Track2 getTrack2(final JsonNode jsonNode) {
-        if (jsonNode != null) {
-            Track2 track = new Track2();
+            Track track = new Track();
             track.put(new Key<>("id", Integer.class), jsonNode.get("id").asInt());
             track.put(new Key<>("duration", Integer.class), jsonNode.get("duration").asInt());
             track.put(new Key<>("username", String.class), jsonNode.get("user").get("username").asText());
@@ -65,7 +51,7 @@ public final class Json {
         if (jsonNode != null) {
             TrackList trackList = new TrackList();
             for (JsonNode track : jsonNode) {
-                trackList.add(getTrack2(track));
+                trackList.add(getTrack(track));
             }
             return trackList;
         }

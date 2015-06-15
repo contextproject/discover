@@ -2,8 +2,10 @@ package models.recommender;
 
 import models.database.DatabaseConnector;
 import models.record.Key;
-import models.record.Track2;
+import models.record.Track;
 import models.utility.TrackList;
+
+import javax.annotation.Nonnull;
 
 /**
  * FeatureRecommender is used to weigh a list of Track objects returned by the
@@ -19,7 +21,7 @@ public class FeatureRecommender extends RecommendDecorator implements Recommende
      *
      * @param recommender The decorated recommender object.
      */
-    public FeatureRecommender(final Recommender recommender) {
+    public FeatureRecommender(@Nonnull final Recommender recommender) {
         super(recommender);
     }
 
@@ -40,7 +42,7 @@ public class FeatureRecommender extends RecommendDecorator implements Recommende
                     + "ORDER BY distance "
                     + "LIMIT 3";
             TrackList result = TrackList.get(query);
-            for (Track2 track : result) {
+            for (Track track : result) {
                 track.put(new Key<>("score", Double.class), getWeight());
             }
             return result;
@@ -66,7 +68,7 @@ public class FeatureRecommender extends RecommendDecorator implements Recommende
         updateTracks(unweighted);
         double mean = mean();
         double deviation = deviation();
-        for (Track2 track : unweighted) {
+        for (Track track : unweighted) {
             Key key = new Key<>("score", Double.class);
             track.put(key, (double) track.get(key) + score(track, mean, deviation));
         }
@@ -80,7 +82,7 @@ public class FeatureRecommender extends RecommendDecorator implements Recommende
      * @return The updated track
      */
     private TrackList updateTracks(final TrackList trackList) {
-        for (Track2 track : trackList) {
+        for (Track track : trackList) {
             String query = "SELECT * FROM features WHERE features.track_id = "
                     + track.get(new Key<>("id", Integer.class));
             double danceability = DatabaseConnector.getSingleDouble(query, "danceability");
@@ -103,7 +105,7 @@ public class FeatureRecommender extends RecommendDecorator implements Recommende
         boolean calculate = false;
         if (likes.size() != 0) {
             Key<Double> key = new Key<>("danceability", Double.class);
-            for (Track2 track : likes) {
+            for (Track track : likes) {
                 if (track.containsKey(key)) {
                     mean += track.get(key);
                     count++;
@@ -129,7 +131,7 @@ public class FeatureRecommender extends RecommendDecorator implements Recommende
         if (likes.size() != 0) {
             double variance = 0.0;
             Key<Double> key = new Key<>("danceability", Double.class);
-            for (Track2 track : likes) {
+            for (Track track : likes) {
                 if (track.containsKey(key)) {
                     variance += (track.get(key) - mean)
                             * (track.get(key) - mean);
@@ -148,7 +150,7 @@ public class FeatureRecommender extends RecommendDecorator implements Recommende
      * @param deviation The standard deviation of the likes of the user
      * @return The score
      */
-    private double score(final Track2 track, final double mean, final double deviation) {
+    private double score(final Track track, final double mean, final double deviation) {
         Key<Double> key = new Key<>("danceability", Double.class);
         if (track.containsKey(key)) {
             double danceability = track.get(key);

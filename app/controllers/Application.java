@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import models.database.DatabaseConnector;
 import models.database.RandomSongSelector;
 import models.mix.MixSplitter;
+import models.record.Key;
 import models.record.Track;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -59,8 +60,8 @@ public final class Application extends Controller {
             int trackID = json.get("track").get("id").asInt();
             int duration = json.get("track").get("duration").asInt();
             Track track = new Track();
-            track.setId(trackID);
-            track.setDuration(duration);
+            track.put(new Key<>("id", Integer.class), trackID);
+            track.put(new Key<>("duration", Integer.class), duration);
             int starttime2 = getStartTime(track);
             ObjectNode objNode = mapper.createObjectNode();
             JsonNode response = objNode.put("response", starttime2);
@@ -134,8 +135,8 @@ public final class Application extends Controller {
      */
     public static int getStartTime(final int trackId) {
         Track track = new Track();
-        track.setDuration(-1);
-        track.setId(trackId);
+        track.put(new Key<>("id", Integer.class), trackId);
+        track.put(new Key<>("duration", Integer.class), -1);
         return getStartTime(track);
     }
 

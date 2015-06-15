@@ -2,7 +2,7 @@ package models.recommender;
 
 import models.profile.Profile;
 import models.record.Key;
-import models.record.Track2;
+import models.record.Track;
 import models.utility.TrackList;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,38 +25,38 @@ public class FeatureRecommenderTest {
         key1 = new Key<>("id", Integer.class);
         key2 = new Key<>("danceability", Double.class);
 
-        Track2 track;
+        Track track;
         // Profile with 3 tracks, all of them have a tag danceability
         profile1 = new Profile();
-        track = new Track2();
+        track = new Track();
         track.put(key1, 1);
         track.put(key2, 2.0);
         profile1.addLike(track);
         for(int i = 2; i < 4; i++) {
-            track = new Track2();
+            track = new Track();
             track.put(key1, i);
             track.put(key2, 2.5);
             profile1.addLike(track);
         }
         for(int i = 4; i < 8; i++) {
-            track = new Track2();
+            track = new Track();
             track.put(key1, i);
             track.put(key2, 1.75);
             profile1.addLike(track);
         }
 
-        track = new Track2();
+        track = new Track();
         track.put(key1, 8);
         track.put(key2, 1.0);
         profile1.addLike(track);
-        track = new Track2();
+        track = new Track();
         track.put(key1, 9);
         track.put(key2, 3.0);
         profile1.addLike(track);
 
-        track = new Track2();
+        track = new Track();
         profile1.addLike(track);
-        track = new Track2();
+        track = new Track();
         profile1.addLike(track);
 
         // Profile with no tracks
@@ -64,7 +64,7 @@ public class FeatureRecommenderTest {
 
         // Profile with a track with no danceability tag
         profile3 = new Profile();
-        track = new Track2();
+        track = new Track();
         track.put(key1, 5);
         profile3.addLike(track);
 

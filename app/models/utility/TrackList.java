@@ -2,7 +2,7 @@ package models.utility;
 
 import models.database.DatabaseConnector;
 import models.record.Key;
-import models.record.Track2;
+import models.record.Track;
 
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -12,7 +12,7 @@ import java.util.ArrayList;
 /**
  * Class to represent a collection of tracks.
  */
-public class TrackList extends ArrayList<Track2> {
+public class TrackList extends ArrayList<Track> {
 
     /**
      * Constructor.
@@ -28,7 +28,7 @@ public class TrackList extends ArrayList<Track2> {
     public TrackList(final ResultSet resultSet) {
         try {
             while (resultSet.next()) {
-                Track2 track = new Track2();
+                Track track = new Track();
                 track.put(new Key<>("int", Integer.class), resultSet.getInt("track_id"));
                 track.put(new Key<>("duration", String.class), resultSet.getString("duration"));
                 track.put(new Key<>("genre", String.class), resultSet.getString("genre").toLowerCase());

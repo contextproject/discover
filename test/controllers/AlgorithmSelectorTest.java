@@ -1,6 +1,7 @@
 package controllers;
 
 import models.database.DatabaseConnector;
+import models.record.Key;
 import models.record.Track;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,8 +30,8 @@ public class AlgorithmSelectorTest {
         Application.setDatabaseConnector(databaseConnector);
 
         track = new Track();
-        track.setId(1);
-        track.setDuration(50000);
+        track.put(new Key<>("id", Integer.class), 1);
+        track.put(new Key<>("duration", Integer.class), 50000);
     }
 
     /**
@@ -48,7 +49,7 @@ public class AlgorithmSelectorTest {
     public void testRandom() {
         int start = AlgorithmSelector.determineStart(track);
 
-        assertTrue(track.getDuration() >= start);
+        assertTrue(track.get(new Key<>("duration", Integer.class)) >= start);
         assertTrue(0 <= start);
     }
 }

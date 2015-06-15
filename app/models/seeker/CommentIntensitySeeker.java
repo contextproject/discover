@@ -2,6 +2,7 @@ package models.seeker;
 
 import models.database.retriever.CommentRetriever;
 import models.record.Comment;
+import models.record.Key;
 import models.record.Track;
 import models.snippet.TimedSnippet;
 import models.utility.CommentList;
@@ -32,7 +33,8 @@ public class CommentIntensitySeeker implements Seeker {
      */
     public CommentIntensitySeeker(final Track track) {
         this.track = track;
-        this.comments = new CommentRetriever(track.getId()).getComments();
+        this.comments = new CommentRetriever(track.get(
+                new Key<>("id", Integer.class))).getComments();
     }
 
     /**
@@ -56,7 +58,6 @@ public class CommentIntensitySeeker implements Seeker {
     private static int getWeight(final Comment comment) {
         CommentContentSeeker filt = new CommentContentSeeker();
         return 2 + filt.contentFilter(comment.getBody());
-
     }
 
     /**
@@ -67,7 +68,7 @@ public class CommentIntensitySeeker implements Seeker {
     private int getStartTime() {
         int start = 0;
         int maxcount = 0;
-        Set<Integer> passed = new TreeSet<Integer>();
+        Set<Integer> passed = new TreeSet<>();
         for (Comment c : comments) {
             int count = 0;
             if (!passed.contains(c.getTime())) {

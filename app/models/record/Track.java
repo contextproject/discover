@@ -1,262 +1,177 @@
 package models.record;
 
 import javax.annotation.Nonnull;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 /**
- * Class to represent a track.
+ * Second attempt at the Track object class. This class should be easier to extend.
  */
-public class Track implements Record, Comparable<Track> {
+public class Track implements Comparable<Track> {
 
     /**
-     * The id of the track.
+     * The entries of the Track.
      */
-    private int id;
+    private final Map<Key<?>, Object> entries = new HashMap<>();
 
     /**
-     * The duration of the track.
-     */
-    private int duration;
-
-    /**
-     * Genre of the track.
-     */
-    private String genre;
-    
-    /**
-     * The artist of the track.
-     */
-    private String artist;
-
-    /**
-     * The title of the track.
-     */
-    private String title;
-
-    /**
-     * The url of the track.
-     */
-    private String url;
-
-    /**
-     * Constructor.
-     */
-    public Track() {
-    }
-    
-    /**
-     * Constructor that accepts a ResultSet to build the track.
+     * The amount of entries stored in this Track object.
      *
-     * @param resultSet
-     *            The ResultSet of the track
+     * @return The amount of entries
      */
-    public Track(final ResultSet resultSet) {
-        process(resultSet);
+    public int size() {
+        return entries.size();
     }
 
     /**
-     * Constructor.
+     * Determines if this Track object contains any entries.
      *
-     * @param id       The id of the track
-     * @param duration The duration of the track
+     * @return True if this Track object contains zero entries.
      */
-    public Track(final int id, final int duration) {
-        this(id, duration, null, null, null, null);
+    public boolean isEmpty() {
+        return entries.isEmpty();
     }
 
     /**
-     * Constructor.
+     * Determines if this Track object contains an entry with the provided key.
      *
-     * @param id       The id of the track
-     * @param duration The duration of the track
-     * @param artist   The artist of the track
-     * @param title    The title of the track
-     * @param url      The SoundCloud url of the track
+     * @param key The key of the entry
+     * @param <T> The type of the value of the entry
+     * @return True if this Track object contains the entry
      */
-    public Track(final int id, final int duration,
-                 final String artist, final String title, final String genre, final String url) {
-        this.id = id;
-        this.duration = duration;
-        this.artist = artist;
-        this.title = title;
-        this.genre = genre;
-        this.url = url;
+    public <T> boolean containsKey(final Key<T> key) {
+        return entries.containsKey(key);
     }
 
     /**
-     * Processes the ResultSet of the track.
+     * Determines if this Track object contains an entry with the provided value.
      *
-     * @param resultSet
-     *            The ResultSet of the track
-     * @return True if succeeds
+     * @param value The value of the entry
+     * @return True if this Track object contain the entry
      */
-    protected boolean process(final ResultSet resultSet) {
-        try {
-            while (resultSet.next()) {
-                id = resultSet.getInt("track_id");
-                duration = resultSet.getInt("duration");
-                genre = resultSet.getString("genre");
-                title = resultSet.getString("title");
-            }
-            return true;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
+    public boolean containsValue(final Object value) {
+        return entries.containsValue(value);
+    }
+
+    /**
+     * Get the value of the entry of the provided key.
+     *
+     * @param key The key of the entry
+     * @param <T> The type of the value of the entry
+     * @return The value of the entry
+     */
+    public <T> T get(final Key<T> key) {
+        return key.getType().cast(entries.get(key));
+    }
+
+    /**
+     * Store the provided key and value as entry in this Track object.
+     *
+     * @param key   The key of the entry
+     * @param value The value of the entry
+     * @param <T>   The class type of the value
+     */
+    public <T> void put(final Key<T> key, final T value) {
+        entries.put(key, value);
+    }
+
+    /**
+     * Removes an entry from the Track object and return the removed value.
+     *
+     * @param key The key of the entry
+     * @param <T> The class type of the value
+     * @return The value
+     */
+    public <T> T remove(final Key<T> key) {
+        return key.getType().cast(entries.remove(key));
+    }
+
+    /**
+     * Clear the entries of this Track object.
+     */
+    public void clear() {
+        entries.clear();
+    }
+
+    /**
+     * Adds all entries from the provided Track to this Track.
+     *
+     * @param track The track
+     */
+    public void putAll(final Track track) {
+        Iterator<Map.Entry<Key<?>, Object>> it = track.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry<Key<?>, Object> entry = it.next();
+            Key key = entry.getKey();
+            Object value = entry.getValue();
+            put(key, value);
+            it.remove();
         }
     }
 
     /**
-     * Getter of the id of the track.
+     * Get all the entries from this Track.
      *
-     * @return The id of the track
+     * @return The set of entries
      */
-    public int getId() {
-        return id;
+    public Set<Map.Entry<Key<?>, Object>> entrySet() {
+        return entries.entrySet();
     }
 
-    /**
-     * Setter of the id of the track.
-     *
-     * @param id The id of the track
-     */
-    public void setId(final int id) {
-        this.id = id;
-    }
-
-    /**
-     * Getter of the duration of the track.
-     *
-     * @return The duration of the track
-     */
-    public int getDuration() {
-        return duration;
-    }
-
-    /**
-     * Setter of the duration of the track.
-     *
-     * @param duration
-     *            The duration of the track
-     */
-    public void setDuration(final int duration) {
-        this.duration = duration;
-    }
-
-    /**
-     * Getter for the genre of the track.
-     * 
-     * @return The genre of the track
-     */
-    public String getGenre() {
-        return genre;
-    }
-
-    /**
-     * Setter of the genre of the Track.
-     * 
-     * @param genre
-     *            The genre of the track.
-     */
-    public void setGenre(final String genre) {
-        this.genre = genre;
-    }
-
-     /**
-     * Getter of the artist of the track.
-     *
-     * @return The artist of the track
-     */
-    public String getArtist() {
-        return artist;
-    }
-
-    /**
-     * Setter of the artist of the track.
-     *
-     * @param artist The artist of the track
-     */
-    public void setArtist(final String artist) {
-        this.artist = artist;
-    }
-
-    /**
-     * Getter of the title of the track.
-     *
-     * @return The title of the track
-     */
-    public String getTitle() {
-        return title;
-    }
-
-    /**
-     * Setter of the title of the track.
-     *
-     * @param title The title of the track
-     */
-    public void setTitle(final String title) {
-        this.title = title;
-    }
-
-    /**
-     * Getter of the url of the track.
-     *
-     * @return The url of the track
-     */
-    public String getUrl() {
-        return url;
-    }
-
-    /**
-     * Setter of the url of the track.
-     *
-     * @param url The url of the track
-     */
-    public void setUrl(final String url) {
-        this.url = url;
-    }
-
-    /**
-     * Equals method.
-     *
-     * @param o
-     *            Other object
-     * @return True if objects are equals
-     */
     @Override
-    public boolean equals(final Object o) {
-        return o instanceof Track && ((Track) o).id == this.id;
+    public int compareTo(@Nonnull final Track other) {
+        return this.get(new Key<>("score", Double.class)).compareTo(
+                other.get(new Key<>("score", Double.class)));
     }
 
-    /**
-     * Hashcode() method.
-     *
-     * @return Hash of the object
-     */
+    @Override
+    public boolean equals(final Object object) {
+        if (object instanceof Track) {
+            Track other = (Track) object;
+            boolean result = true;
+            Iterator it = this.entries.entrySet().iterator();
+            while (it.hasNext()) {
+                Map.Entry entry = (Map.Entry) it.next();
+                for (Object o : other.entries.entrySet()) {
+                    Map.Entry otherentry = (Map.Entry) o;
+                    if (entry.getKey().equals(otherentry.getKey())
+                            && !entry.getValue().equals(otherentry.getValue())) {
+                        result = false;
+                        break;
+                    }
+                }
+                it.remove();
+            }
+
+            return result;
+        }
+        return false;
+    }
+
     @Override
     public int hashCode() {
-        int result = id;
-        result = 31 * result + duration;
-        return result;
-    }
-
-    /**
-     * Comparable of a Track object.
-     *
-     * @param o
-     *            The Track object to compare to
-     * @return True if Objects are the same
-     */
-    @Override
-    public int compareTo(@Nonnull final Track o) {
-        int result = (this.id - o.id);
-        if (result == 0) {
-            result += (this.duration - o.duration);
+        int result = 0;
+        for (Map.Entry entry : entries.entrySet()) {
+            result += entry.getValue().hashCode();
         }
         return result;
     }
-    
+
+    @Override
     public String toString() {
-        return "id: " + id +" title: " + title;
+        StringBuilder result = new StringBuilder();
+        result.append("[");
+        Iterator it = entries.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry entry = (Map.Entry) it.next();
+            result.append(entry.getKey());
+            result.append(" = ");
+            result.append(entry.getValue());
+            it.remove();
+        }
+        result.append("]");
+        return result.toString();
     }
 }

@@ -2,7 +2,7 @@ package models.recommender;
 
 import models.database.DatabaseConnector;
 import models.profile.Profile;
-import models.record.Track2;
+import models.record.Track;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.html5.ResultSet;
@@ -18,7 +18,7 @@ public class BasicRecommenderTest {
 
     private Profile pro1;
 
-    private Track2 tr1, tr2;
+    private Track tr1, tr2;
 
     private DatabaseConnector dbc;
 

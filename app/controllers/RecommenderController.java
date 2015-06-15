@@ -11,7 +11,7 @@ import models.recommender.FeatureRecommender;
 import models.recommender.LikesRecommender;
 import models.recommender.Recommender;
 import models.record.Key;
-import models.record.Track2;
+import models.record.Track;
 import models.utility.TrackList;
 import play.mvc.Result;
 
@@ -50,7 +50,7 @@ public final class RecommenderController {
      * @return A HTPP ok response
      */
     public static Result like() {
-        Track2 track = Json.getTrack2(request().body().asJson());
+        Track track = Json.getTrack(request().body().asJson());
         profile.addLike(track);
         return ok();
     }
@@ -61,7 +61,7 @@ public final class RecommenderController {
      * @return A HTPP ok response
      */
     public static Result dislike() {
-        Track2 track = Json.getTrack2(request().body().asJson());
+        Track track = Json.getTrack(request().body().asJson());
         profile.addDislike(track);
         return ok();
     }
@@ -110,7 +110,7 @@ public final class RecommenderController {
         TrackList recs = rec.recommend();
         Collections.sort(recs);
         for (int i = 0; i < recs.size(); i++) {
-            Track2 track = recs.get(i);
+            Track track = recs.get(i);
             ObjectNode jsontrack = mapper.createObjectNode();
 
             jsontrack.put("id", track.get(new Key<>("id", Integer.class)));

@@ -3,8 +3,8 @@ package models.seeker;
 import controllers.Application;
 import models.database.DatabaseConnector;
 import models.database.retriever.CommentRetriever;
-import models.database.retriever.TrackRetriever;
 import models.record.Comment;
+import models.record.Key;
 import models.record.Track;
 import models.snippet.TimedSnippet;
 import models.utility.CommentList;
@@ -46,8 +46,9 @@ public class CommentIntensitySeekerTest {
         databaseConnector.loadDrivers();
         databaseConnector.makeConnection("jdbc:mysql://188.166.78.36/contextbase", "context", "password");
         Application.setDatabaseConnector(databaseConnector);
-        TrackRetriever tr = new TrackRetriever(32097940);
-        Track track = tr.getAll();
+
+        Track track = new Track();
+        track.put(new Key<>("id", Integer.class), 32097940);
         CommentRetriever cr = new CommentRetriever(32097940);
         list = cr.getComments();
         commentIntensitySeeker = new CommentIntensitySeeker(track);
@@ -139,6 +140,5 @@ public class CommentIntensitySeekerTest {
         assertEquals(0, ts.getStartTime());
         assertEquals(30000, ts.getWindow());
         verify(com, times(5)).getTime();
-//        verify(com).hashCode();
     }
 }

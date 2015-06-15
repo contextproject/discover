@@ -16,14 +16,14 @@ import static org.junit.Assert.assertTrue;
 
 public class Track2Test {
 
-    private Track2 track;
+    private Track track;
     private Key<Integer> key1;
     private Key<Double> key2;
     private Key<String> key3;
 
     @Before
     public void setUp() {
-        track = new Track2();
+        track = new Track();
         key1 = new Key<>("id", Integer.class);
         key2 = new Key<>("score", Double.class);
         key3 = new Key<>("genre", String.class);
@@ -151,9 +151,9 @@ public class Track2Test {
     @Test
     public void testCompareTo1() {
         Key<Double> score = new Key<>("score", Double.class);
-        Track2 a = new Track2();
+        Track a = new Track();
         a.put(score, 1.0);
-        Track2 b = new Track2();
+        Track b = new Track();
         b.put(score, 2.0);
         assertTrue(a.compareTo(a) == 0);
         assertTrue(a.compareTo(b) > 0);
@@ -164,10 +164,10 @@ public class Track2Test {
     public void testCompareTo2() {
         Key score = new Key<>("score", Double.class);
         TrackList trackList = new TrackList();
-        Track2 a = new Track2();
+        Track a = new Track();
         a.put(score, 1.0);
         trackList.add(a);
-        Track2 b = new Track2();
+        Track b = new Track();
         b.put(score, 2.0);
         trackList.add(b);
         Collections.sort(trackList);
@@ -176,10 +176,10 @@ public class Track2Test {
 
     @Test
     public void testPutAll() throws Exception {
-        Track2 a = new Track2();
+        Track a = new Track();
         a.put(key1, 0);
         a.put(key2, 1.0);
-        Track2 b = new Track2();
+        Track b = new Track();
         b.putAll(a);
         assertEquals(2, b.size());
         assertEquals((Integer) 0, b.get(key1));

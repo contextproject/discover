@@ -5,7 +5,7 @@ import static org.mockito.Mockito.*;
 
 import models.profile.Profile;
 import models.record.Key;
-import models.record.Track2;
+import models.record.Track;
 import models.utility.TrackList;
 
 import org.junit.Before;
@@ -25,9 +25,9 @@ public class LikesRecommenderTest {
         Key key3 = new Key<>("score", double.class);
 
 
-        Track2 tr1 = new Track2();
-        Track2 tr2 = new Track2();
-        Track2 tr3 = new Track2();
+        Track tr1 = new Track();
+        Track tr2 = new Track();
+        Track tr3 = new Track();
         tr1.put(key1, 1);
         tr1.put(key2, "Rap");
         tr1.put(key3, 0.0);
