@@ -28,11 +28,23 @@ widget.bind(SC.Widget.Events.READY, function () {
 
 $(window).load(function() {
     $('#joyRideTipContent').joyride({
-        autoStart : true,
         cookieMonster : true,
+        autoStart : true,
+        postStepCallback : function (index, tip) {
+            if (index == 2) {
+                $(this).joyride('set_li', false, 1);
+            }
+        },
         modal:true,
         expose:true
+    });
+});
 
+$("#help").click(function() {
+    $.removeCookie("joyride",{ expires: 365, domain: false, path: false });
+    $('#joyRideTipContent').joyride({
+        cookieMonster : true,
+        preRideCallback: $(this).joyride('destroy',false,1)
     });
 });
 
