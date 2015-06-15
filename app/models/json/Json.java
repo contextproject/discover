@@ -1,14 +1,14 @@
 package models.json;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 import com.fasterxml.jackson.databind.JsonNode;
-
+import models.record.Key;
 import models.record.Track;
 import models.record.Track2;
 import models.utility.TrackList;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Processes the json from the web application.
@@ -41,15 +41,15 @@ public final class Json {
     }
 
     public static Track2 getTrack2(final JsonNode jsonNode) {
-        if(jsonNode != null) {
+        if (jsonNode != null) {
             Track2 track = new Track2();
-            track.put("id", jsonNode.get("id").asInt());
-            track.put("duration", jsonNode.get("duration").asInt());
-            track.put("username", jsonNode.get("user").get("username").asText());
-            track.put("title", jsonNode.get("title").asText());
-            track.put("genre", jsonNode.get("genre").asText().toLowerCase());
-            track.put("user_id", jsonNode.get("user_id").asInt());
-            track.put("url", jsonNode.get("uri").asText());
+            track.put(new Key<>("id", Integer.class), jsonNode.get("id").asInt());
+            track.put(new Key<>("duration", Integer.class), jsonNode.get("duration").asInt());
+            track.put(new Key<>("username", String.class), jsonNode.get("user").get("username").asText());
+            track.put(new Key<>("title", String.class), jsonNode.get("title").asText());
+            track.put(new Key<>("genre", String.class), jsonNode.get("genre").asText().toLowerCase());
+            track.put(new Key<>("user_id", Integer.class), jsonNode.get("user_id").asInt());
+            track.put(new Key<>("url", String.class), jsonNode.get("uri").asText());
             return track;
         }
         return null;
@@ -75,9 +75,8 @@ public final class Json {
     /**
      * Receives a waveform JSON object and converts it into a List object of
      * doubles.
-     * 
-     * @param json
-     *            The JSON object.
+     *
+     * @param json The JSON object.
      * @return A list containing the waveform as doubles
      */
     public static List<Double> getWaveform(final JsonNode json) {

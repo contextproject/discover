@@ -1,6 +1,5 @@
 package models.recommender;
 
-import models.database.retriever.GeneralTrackSelector;
 import models.profile.Profile;
 import models.utility.TrackList;
 
@@ -21,47 +20,38 @@ public class BasicRecommender implements Recommender {
      * The query used for selecting tracks from the database.
      */
     private String query;
-    
-    /**
-     * Selector used for retrieving rows from the database.
-     */
-    private GeneralTrackSelector selector;
+
 
     /**
      * Constructor for the BasicRecommender class.
-     * 
-     * @param profile
-     *            The profile object containing several data about the user.
-     * @param amount
-     *            The size of the list the recommender will return.
+     *
+     * @param profile The profile object containing several data about the user.
+     * @param amount  The size of the list the recommender will return.
      */
     public BasicRecommender(final Profile profile, final int amount) {
-        this.selector = GeneralTrackSelector.getInstance();
         this.userProfile = profile;
-        this.query = "SELECT * FROM tracks INNER JOIN features ON tracks.track_id = features.track_id ORDER BY RAND()";
-        // this.query =
-        // "SELECT * FROM tracks INNER JOIN features ON tracks.track_id = features.track_id WHERE genre = 'Rap' ORDER BY RAND()";
+        this.query = "SELECT * FROM tracks INNER JOIN features "
+                + "ON tracks.track_id = features.track_id ORDER BY RAND()";
         if (amount >= 0) {
             query += (" LIMIT " + amount);
         }
     }
 
-
     /**
      * The recommend method is used to return a list of weighted Object
      * containing a Track object and its score. The method in this class returns
      * a list of Tracks where every track in the list has the same score.
-     * 
+     *
      * @return TrackList.
      */
     @Override
     public TrackList recommend() {
-        return selector.execute(query);
+        return TrackList.get(query);
     }
 
     /**
      * Getter for the query of the object.
-     * 
+     *
      * @return query The query as a String.
      */
     public String getQuery() {
@@ -70,9 +60,8 @@ public class BasicRecommender implements Recommender {
 
     /**
      * Setter for the query of the object.
-     * 
-     * @param query
-     *            The query as a String.
+     *
+     * @param query The query as a String.
      */
     public void setQuery(final String query) {
         this.query = query;
@@ -80,7 +69,7 @@ public class BasicRecommender implements Recommender {
 
     /**
      * Getter for the profile of the object.
-     * 
+     *
      * @return The object's profile.
      */
     public Profile getUserProfile() {
@@ -89,20 +78,11 @@ public class BasicRecommender implements Recommender {
 
     /**
      * Getter for the profile of the object.
-     * 
-     * @param userProfile
-     *            The object's new profile.
+     *
+     * @param userProfile The object's new profile.
      */
     public void setUserProfile(final Profile userProfile) {
         this.userProfile = userProfile;
-    }
-
-    /**
-     * Set the selector of this recommender object.
-     * @param selector
-     */
-    public void setSelector(GeneralTrackSelector selector) {
-        this.selector = selector;
     }
     
     public int getDecoratorAmount() {

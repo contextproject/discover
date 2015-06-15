@@ -44,8 +44,7 @@ public final class AlgorithmSelector {
     /**
      * Determine the start of the snippet for the track.
      *
-     * @param track
-     *            The track
+     * @param track The track
      * @return The start of the snippet
      */
     public static int determineStart(final Track track) {
@@ -91,8 +90,7 @@ public final class AlgorithmSelector {
     /**
      * Determine a random start of the snippet.
      *
-     * @param track
-     *            The track
+     * @param track The track
      * @return The start of the snippet
      */
     private static int random(final Track track) {

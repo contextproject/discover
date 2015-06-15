@@ -13,14 +13,17 @@ public abstract class RecommendDecorator implements Recommender {
     /**
      * The recommender object of the object.
      */
-    protected Recommender recommender;
+    private Recommender recommender;
 
     /**
      * The weight the score should be changed with.
      */
-    protected double weight = 10;
+    private double weight = 10;
 
-    protected int amount = 3;
+    /**
+     * The amount of tracks to recommend.
+     */
+    private int amount = 3;
     
     /**
      * The constructor of the class.
@@ -31,22 +34,68 @@ public abstract class RecommendDecorator implements Recommender {
         this.recommender = recommender;
     }
 
+    /**
+     * Suggest songs only based on your recommender.
+     *
+     * @return The suggested songs
+     */
+    public abstract TrackList suggest();
+
     @Override
     public Profile getUserProfile() {
         return recommender.getUserProfile();
     }
-    
-    public abstract TrackList suggest();
-    
+
+    /**
+     * Getter of the recommender.
+     *
+     * @return The recommender
+     */
+    public Recommender getRecommender() {
+        return recommender;
+    }
+
+    /**
+     * Setter of the recommender.
+     *
+     * @param recommender The new recommender
+     */
+    public void setRecommender(final Recommender recommender) {
+        this.recommender = recommender;
+    }
+    /**
+     * Getter of the weight.
+     *
+     * @return The weight
+     */
     public double getWeight() {
         return this.weight;
-    } 
-    
-    public void setWeight(double weight) {
+    }
+
+    /**
+     * Setter of the weight.
+     *
+     * @param weight The new weight
+     */
+    public void setWeight(final double weight) {
         this.weight = weight;
     }
-    
-    public void setAmount(int amount) {
+
+    /**
+     * Getter of the amount.
+     *
+     * @return the amount
+     */
+    public int getAmount() {
+        return amount;
+    }
+
+    /**
+     * Setter of the amount.
+     *
+     * @param amount The new amount
+     */
+    public void setAmount(final int amount) {
         this.amount = amount;
     }
     

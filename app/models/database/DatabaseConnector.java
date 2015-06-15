@@ -99,6 +99,26 @@ public class DatabaseConnector {
         return 0;
     }
 
+    /**
+     * Retrieves the Integer from the provided column from the provided query.
+     *
+     * @param query The query to execute
+     * @param column The column name
+     * @return The String from the column name
+     */
+    public static double getSingleDouble(final String query, final String column) {
+        ResultSet resultSet = executeQuery(query);
+        try {
+            if (resultSet != null && resultSet.next()) {
+                return resultSet.getDouble(column);
+            }
+        } catch (SQLException e) {
+
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
 
 
     /**
