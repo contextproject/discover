@@ -84,4 +84,8 @@ public class BasicRecommender implements Recommender {
     public void setUserProfile(final Profile userProfile) {
         this.userProfile = userProfile;
     }
+    
+    public int getDecoratorAmount() {
+        return 0;
+    }
 }

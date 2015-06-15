@@ -23,4 +23,10 @@ public interface Recommender {
      * @return The profile of the user.
      */
     Profile getUserProfile();
+    
+    /**
+     * Returns the amount of decorators on this object.
+     * @return
+     */
+    int getDecoratorAmount();
 }

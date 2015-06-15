@@ -11,11 +11,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 /**
- * LikesRecommender is used to weigh a List of RecTuple object returned by the
+ * LikesRecommender is used to weigh a List of Track objects returned by the
  * recommender it holds. The class extends the RecommendDecorator abstract class
  * and follows the Decorator design pattern. LikesRecommender implements the
  * Recommender interface which makes sure it contains a recommend() method that
- * returns a List of RecTuple objects. s
+ * returns a List of Track objects. s
  */
 public class LikesRecommender extends RecommendDecorator implements Recommender {
 
@@ -67,7 +67,7 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
     public TrackList recommend() {
         TrackList tracks = suggest();
         tracks.addAll(getRecommender().recommend());
-        return tracks;
+        return evaluate(tracks);
     }
 
     /**
@@ -103,7 +103,7 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
     }
 
     /**
-     * Evaluates the unweighed list of RecTuple object received from the
+     * Evaluates the unweighed list of Track objects received from the
      * decorated recommender and adds additional score to the tracks using its
      * scoreboards.
      *
@@ -121,7 +121,7 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
             if (artistBoard.containsKey(artist)) {
                 score += artistBoard.get(artist);
             }
-            track.put(new Key<>("score", Double.class), score);
+            track.put(new Key<>("score", Double.class), score / this.getDecoratorAmount());
         }
         return unweighed;
     }
@@ -155,12 +155,12 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
      * it exists and additional score if this is the first time its found.
      *
      * @param hm         The HashMap object containing the keywords and their score.
-     * @param key        The key of the Track attribute
-     * @param modifier   The modifier
-     * @param sourceSize The size
+     * @param key        Track object that is being added.
+     * @param modifier   The modifier for the score as a double.
+     * @param sourceSize The size of the whole tracklist.
      */
     private void updateBoard(final HashMap<Object, Double> hm,
-                                    final Object key, final double modifier, final int sourceSize) {
+                             final Object key, final double modifier, final int sourceSize) {
         double value;
         if (key instanceof String) {
             value = 0.7;
@@ -174,20 +174,19 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
         }
     }
 
-
     /**
-     * Getter of the genre board.
+     * Getter for the genre scores of the object.
      *
-     * @return The genre board
+     * @return HashMap representation of genre scores.
      */
     public HashMap<Object, Double> getGenreBoard() {
         return genreBoard;
     }
 
     /**
-     * Getter of the artist board.
+     * Getter for the artist scores of the object.
      *
-     * @return The artist board
+     * @return HashMap representation of artist scores.
      */
     public HashMap<Object, Double> getArtistBoard() {
         return artistBoard;
@@ -246,5 +245,4 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
     public void setNegativeModifier(final double negativeModifier) {
         this.negativeModifier = negativeModifier;
     }
-
 }

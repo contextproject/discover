@@ -74,8 +74,6 @@ public final class RecommenderController {
      */
     public static Result favorites() {
         JsonNode json = request().body().asJson();
-        // something goes wrong here, json node is apparently null,
-        // but when logging it in javascript, is isn't null
         if (json == null) {
             System.out.println("json null");
             return badRequest("Json object is null.");
@@ -105,10 +103,10 @@ public final class RecommenderController {
     public static Result recommend() {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode result = mapper.createObjectNode();
-        Recommender rec = new FeatureRecommender(
-                new LikesRecommender(new BasicRecommender(profile, 5)));
+        Recommender rec = new LikesRecommender(new BasicRecommender(profile, 5));
         TrackList recs = rec.recommend();
         Collections.sort(recs);
+        System.out.println(recs);
         for (int i = 0; i < recs.size(); i++) {
             Track track = recs.get(i);
             ObjectNode jsontrack = mapper.createObjectNode();
