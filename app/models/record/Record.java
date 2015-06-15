@@ -12,4 +12,16 @@ public interface Record {
      * @return True if this object is the same as the other object
      */
     boolean equals(Object o);
+
+    /**
+     * Simple hash method based on user id and time stamp.
+     *
+     * @return hash of the user id and the timestamp
+     */
+    /**
+     * Creates a hash code of the object.
+     *
+     * @return Hash code of the object
+     */
+    int hashCode();
 }

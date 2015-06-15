@@ -251,7 +251,12 @@ public class TrackTest {
     }
 
     @Test
-    public void testToString() throws Exception {
+    public void testToString1() throws Exception {
+        assertEquals("[]", new Track().toString());
+    }
 
+    @Test
+    public void testToString2() throws Exception {
+        assertEquals("[id = 1]", a.toString());
     }
 }

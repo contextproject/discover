@@ -9,7 +9,7 @@ import java.util.Set;
 /**
  * Second attempt at the Track object class. This class should be easier to extend.
  */
-public class Track implements Comparable<Track> {
+public class Track implements Record, Comparable<Track> {
 
     /**
      * The entries of the Track.
@@ -112,15 +112,6 @@ public class Track implements Comparable<Track> {
     }
 
     /**
-     * Get all the keys from this Track.
-     *
-     * @return The keys of the entries
-     */
-    public Set<Key<?>> keySet() {
-        return entries.keySet();
-    }
-
-    /**
      * Get all the entries from this Track.
      *
      * @return The set of entries
@@ -160,10 +151,10 @@ public class Track implements Comparable<Track> {
     public String toString() {
         StringBuilder result = new StringBuilder();
         result.append("[");
-        Iterator it = entries.entrySet().iterator();
+        Iterator<Map.Entry<Key<?>, Object>> it = entries.entrySet().iterator();
         while (it.hasNext()) {
-            Map.Entry entry = (Map.Entry) it.next();
-            result.append(entry.getKey());
+            Map.Entry<Key<?>, Object> entry = it.next();
+            result.append(entry.getKey().getIdentifier());
             result.append(" = ");
             result.append(entry.getValue());
             it.remove();

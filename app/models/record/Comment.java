@@ -1,13 +1,12 @@
 package models.record;
 
-import javax.persistence.Entity;
+import javax.annotation.Nonnull;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
  * Class to represent a comment.
  */
-@Entity
 public class Comment implements Record, Comparable<Comment> {
 
     /**
@@ -53,8 +52,8 @@ public class Comment implements Record, Comparable<Comment> {
     /**
      * Constructor.
      *
-     * @param trackid The id of the track
-     * @param userid The user id of the comment
+     * @param trackid   The id of the track
+     * @param userid    The user id of the comment
      * @param timestamp The timestamp of the comment
      */
     public Comment(final int trackid, final int userid, final int timestamp) {
@@ -62,14 +61,14 @@ public class Comment implements Record, Comparable<Comment> {
         this.userid = userid;
         this.timestamp = timestamp;
     }
-    
+
     /**
      * Constructor.
      *
-     * @param trackid The id of the track
-     * @param userid The user id of the comment
+     * @param trackid   The id of the track
+     * @param userid    The user id of the comment
      * @param timestamp The timestamp of the comment
-     * @param body The content of the comment
+     * @param body      The content of the comment
      */
     public Comment(final int trackid, final int userid, final int timestamp, final String body) {
         this.trackid = trackid;
@@ -179,17 +178,13 @@ public class Comment implements Record, Comparable<Comment> {
         return false;
     }
 
-    /**
-     * Simple hash method based on user id and time stamp.
-     *
-     * @return hash of the user id and the timestamp
-     */
+    @Override
     public int hashCode() {
         return userid + timestamp;
     }
 
     @Override
-    public int compareTo(final Comment other) {
+    public int compareTo(@Nonnull final Comment other) {
         final int result;
         final int track = this.trackid - other.trackid;
         if (track == 0) {
