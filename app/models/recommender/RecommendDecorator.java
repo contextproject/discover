@@ -98,7 +98,8 @@ public abstract class RecommendDecorator implements Recommender {
     public void setAmount(final int amount) {
         this.amount = amount;
     }
-    
+
+    @Override
     public int getDecoratorAmount() {
         return 1 + recommender.getDecoratorAmount();
     }

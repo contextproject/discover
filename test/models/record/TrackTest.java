@@ -14,9 +14,9 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-public class Track2Test {
+public class TrackTest {
 
-    private Track track;
+    private Track track, a, b;
     private Key<Integer> key1;
     private Key<Double> key2;
     private Key<String> key3;
@@ -27,6 +27,11 @@ public class Track2Test {
         key1 = new Key<>("id", Integer.class);
         key2 = new Key<>("score", Double.class);
         key3 = new Key<>("genre", String.class);
+
+        a = new Track();
+        b = new Track();
+        a.put(key1, 1);
+        b.put(key1, 1);
     }
 
     @Test
@@ -200,6 +205,53 @@ public class Track2Test {
         Set<Map.Entry<Key<?>, Object>> entries = track.entrySet();
         assertEquals("id", entries.iterator().next().getKey().getIdentifier());
         assertEquals(0, entries.iterator().next().getValue());
+    }
+
+    @Test
+    public void testEquals1() throws Exception {
+        assertTrue(a.equals(a));
+    }
+
+    @Test
+    public void testEquals2() throws Exception {
+        assertTrue(a.equals(b));
+        assertTrue(b.equals(a));
+    }
+
+    @Test
+    public void testEquals3() throws Exception {
+        assertFalse(a.equals(new Track()));
+    }
+
+    @Test
+    public void testEquals4() throws Exception {
+        assertFalse(a.equals(1));
+    }
+
+    @Test
+    public void testEquals5() throws Exception {
+        b.put(key2, 2.0);
+        assertFalse(a.equals(b));
+    }
+
+    @Test
+    public void testEquals6() throws Exception {
+        b.put(key1, 2);
+        assertFalse(a.equals(b));
+    }
+
+    @Test
+    public void testHashcode1() throws Exception {
+        assertEquals(0, new Track().hashCode());
+    }
+
+    @Test
+    public void testHashcode2() throws Exception {
+        assertEquals(1, a.hashCode());
+    }
+
+    @Test
+    public void testToString() throws Exception {
 
     }
 }

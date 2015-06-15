@@ -140,6 +140,11 @@ public final class Application extends Controller {
         return getStartTime(track);
     }
 
+    /**
+     * Set the mode of the preview.
+     *
+     * @return A HTTP response
+     */
     public static Result setPreviewMode() {
         JsonNode json = request().body().asJson();
         if (json == null) {

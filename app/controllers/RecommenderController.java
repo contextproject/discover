@@ -3,11 +3,9 @@ package controllers;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-
 import models.json.Json;
 import models.profile.Profile;
 import models.recommender.BasicRecommender;
-import models.recommender.FeatureRecommender;
 import models.recommender.LikesRecommender;
 import models.recommender.Recommender;
 import models.record.Key;

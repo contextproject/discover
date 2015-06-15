@@ -60,8 +60,9 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
     }
 
     /**
-     * The recommend method either evaluates the decorated object or makes its
-     * own.
+     * The recommend method either evaluates the decorated object or makes its own.
+     *
+     * @return The recommended tracks
      */
     @Override
     public TrackList recommend() {
@@ -81,25 +82,26 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
     @Override
     public TrackList suggest() {
         this.generateBoards();
-        StringBuilder query = new StringBuilder();
-        query.append("SELECT * FROM `tracks` WHERE ");
+        StringBuilder queryBuilder = new StringBuilder();
+        queryBuilder.append("SELECT * FROM `tracks` WHERE ");
         Iterator<Object> it1 = genreBoard.keySet().iterator();
         Iterator<Object> it2 = artistBoard.keySet().iterator();
         while (it1.hasNext()) {
             Object i = it1.next();
             if (i != null) {
-                query.append("genre = '").append(i).append("' OR ");
+                queryBuilder.append("genre = '").append(i).append("' OR ");
             }
         }
         while (it2.hasNext()) {
             Object j = it2.next();
             if (j != null) {
-                query.append("user_id = '").append(j).append("' OR ");
+                queryBuilder.append("user_id = '").append(j).append("' OR ");
             }
         }
-        query.delete(query.length() - 3, query.length());
-        query.append("ORDER BY RAND() LIMIT ").append(getAmount());
-        return TrackList.get(query.toString());
+        queryBuilder.delete(queryBuilder.length() - 3, queryBuilder.length());
+        queryBuilder.append("ORDER BY RAND() LIMIT ").append(getAmount());
+        String query = queryBuilder.toString();
+        return TrackList.get(query);
     }
 
     /**
@@ -172,24 +174,6 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
         } else {
             hm.put(key, value * weight * (modifier / sourceSize));
         }
-    }
-
-    /**
-     * Getter for the genre scores of the object.
-     *
-     * @return HashMap representation of genre scores.
-     */
-    public HashMap<Object, Double> getGenreBoard() {
-        return genreBoard;
-    }
-
-    /**
-     * Getter for the artist scores of the object.
-     *
-     * @return HashMap representation of artist scores.
-     */
-    public HashMap<Object, Double> getArtistBoard() {
-        return artistBoard;
     }
 
     /**

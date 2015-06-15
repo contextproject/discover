@@ -25,11 +25,13 @@ public class FeatureRecommender extends RecommendDecorator implements Recommende
         super(recommender);
     }
 
-    /**
-     * Recommends a TrackList.
-     *
-     * @return The TrackList.
-     */
+    @Override
+    public TrackList recommend() {
+        TrackList result = suggest();
+        result.addAll(evaluate());
+        return result;
+    }
+
     @Override
     public TrackList suggest() {
         if (mean() != 0) {
@@ -48,13 +50,6 @@ public class FeatureRecommender extends RecommendDecorator implements Recommende
             return result;
         }
         return new TrackList();
-    }
-
-    @Override
-    public TrackList recommend() {
-        TrackList result = suggest();
-        result.addAll(evaluate());
-        return result;
     }
 
     /**
@@ -157,8 +152,8 @@ public class FeatureRecommender extends RecommendDecorator implements Recommende
             final double quarter = 0.25;
             final double half = 0.5;
             final double threequarter = 0.75;
-            if (((mean - (quarter * deviation)) <= danceability)
-                    && ((mean + (quarter * deviation)) >= danceability)) {
+            if (mean - quarter * deviation <= danceability
+                    && mean + quarter * deviation >= danceability) {
                 return getWeight();
             } else if (mean - half * deviation <= danceability
                     && mean + half * deviation >= danceability) {

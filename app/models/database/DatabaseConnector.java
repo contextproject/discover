@@ -167,7 +167,7 @@ public class DatabaseConnector {
      *
      * @return The statement object of the database connection
      */
-    public final Statement getStatement() {
+    public static Statement getStatement() {
         return statement;
     }
 
@@ -185,7 +185,7 @@ public class DatabaseConnector {
      *
      * @return The connection object to the database
      */
-    public final Connection getConnection() {
+    public static Connection getConnection() {
         return connection;
     }
 }

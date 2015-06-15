@@ -67,17 +67,6 @@ public final class AlgorithmSelector {
     }
 
     /**
-     * Determine the start of the snippet based on the intensity of the
-     * comments.
-     *
-     * @param track The track
-     * @return The start of the snippet
-     */
-    private static int commentIntensity(final Track track) {
-        return 0;
-    }
-
-    /**
      * Determine the start of the snippet based on the content of the comments.
      *
      * @param track The track

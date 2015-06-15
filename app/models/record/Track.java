@@ -112,6 +112,15 @@ public class Track implements Comparable<Track> {
     }
 
     /**
+     * Get all the keys from this Track.
+     *
+     * @return The keys of the entries
+     */
+    public Set<Key<?>> keySet() {
+        return entries.keySet();
+    }
+
+    /**
      * Get all the entries from this Track.
      *
      * @return The set of entries
@@ -122,30 +131,18 @@ public class Track implements Comparable<Track> {
 
     @Override
     public int compareTo(@Nonnull final Track other) {
-        return this.get(new Key<>("score", Double.class)).compareTo(
-                other.get(new Key<>("score", Double.class)));
+        return other.get(new Key<>("score", Double.class)).compareTo(
+                this.get(new Key<>("score", Double.class)));
     }
 
     @Override
     public boolean equals(final Object object) {
+        if (this == object) {
+            return true;
+        }
         if (object instanceof Track) {
             Track other = (Track) object;
-            boolean result = true;
-            Iterator it = this.entries.entrySet().iterator();
-            while (it.hasNext()) {
-                Map.Entry entry = (Map.Entry) it.next();
-                for (Object o : other.entries.entrySet()) {
-                    Map.Entry otherentry = (Map.Entry) o;
-                    if (entry.getKey().equals(otherentry.getKey())
-                            && !entry.getValue().equals(otherentry.getValue())) {
-                        result = false;
-                        break;
-                    }
-                }
-                it.remove();
-            }
-
-            return result;
+            return this.entries.equals(other.entries);
         }
         return false;
     }

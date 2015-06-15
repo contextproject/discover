@@ -33,7 +33,7 @@ public class BasicRecommender implements Recommender {
         this.query = "SELECT * FROM tracks INNER JOIN features "
                 + "ON tracks.track_id = features.track_id ORDER BY RAND()";
         if (amount >= 0) {
-            query += (" LIMIT " + amount);
+            query += " LIMIT " + amount;
         }
     }
 
@@ -67,11 +67,7 @@ public class BasicRecommender implements Recommender {
         this.query = query;
     }
 
-    /**
-     * Getter for the profile of the object.
-     *
-     * @return The object's profile.
-     */
+    @Override
     public Profile getUserProfile() {
         return userProfile;
     }
@@ -84,7 +80,8 @@ public class BasicRecommender implements Recommender {
     public void setUserProfile(final Profile userProfile) {
         this.userProfile = userProfile;
     }
-    
+
+    @Override
     public int getDecoratorAmount() {
         return 0;
     }
