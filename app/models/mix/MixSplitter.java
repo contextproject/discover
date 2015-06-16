@@ -15,7 +15,7 @@ import models.record.Track;
  *
  * @author stefan boodt
  * @author arthur hovenesyan
- * @version 15-06-2015
+ * @version 16-06-2015
  * @see Shingle
  * @since 21-05-2015
  */
@@ -254,7 +254,7 @@ public class MixSplitter {
             final double distance = shingles.get(i).jaccardDistance(
                     shingles.get(i + 1));
             if (distance > threshold) {
-                final int integer = getShingleStarttime(songtime, amountOfShingles, i);
+                final int integer = getShingleStarttime(songtime, amountOfShingles, i + 1);
                 starttimes.add(integer);
             }
         }
@@ -282,7 +282,7 @@ public class MixSplitter {
      */
     public static int getWaveformPart(final int songtime,
             final int amountOfBars, final int barIndex) {
-        return ((barIndex + 1) * songtime) / amountOfBars;
+        return (barIndex * songtime) / amountOfBars;
     }
 
     /**

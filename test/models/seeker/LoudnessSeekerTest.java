@@ -5,16 +5,18 @@ import java.util.List;
 
 import basic.BasicTest;
 import models.record.Track;
+import models.score.ScoreStorage;
+import models.score.ScoreMap;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * This class tests the LoudnessSeeker test.
  * 
  * @since 15-06-2015
- * @version 15-06-2015
+ * @version 16-06-2015
  * 
  * @see BasicTest
  * @see LoudnessSeekerTest
@@ -106,6 +108,37 @@ public class LoudnessSeekerTest extends BasicTest {
         final List<Double> expected = asList(2.0, 1.0, 0.0, 0.5, 1.0);
         getSeeker().setWaveform(expected);
         assertEquals(expected, getSeeker().getWaveform());
+    }
+    
+    /**
+     * Tests the {@link LoudnessSeeker#calculateScores(int)} method.
+     */
+    @Test
+    public void testSeekEmpty() {
+        final ScoreStorage expected = new ScoreMap();
+        assertEquals(expected, seeker.calculateScores(1000));
+    }
+    
+    /**
+     * Tests the {@link LoudnessSeeker#calculateScores(int)} method.
+     */
+    @SuppressWarnings("checkstyle:magicnumber")
+    @Test
+    public void testSeek() {
+        final ScoreStorage expected = new ScoreMap();
+        expected.add(0, 100);
+        expected.add(100, 1000);
+        expected.add(200, 0);
+        expected.add(300, 300);
+        expected.add(400, 10);
+        expected.add(500, 0);
+        expected.add(600, 0);
+        expected.add(700, 700);
+        expected.add(800, 250);
+        expected.add(900, 0);
+        seeker.setWaveform(asList(0.1, 1.0, 0.0, 0.3, 0.01, 0.0, 0.0,
+                0.7, 0.25, 0.0));
+        assertEquals(expected, seeker.calculateScores(100));
     }
     
 }

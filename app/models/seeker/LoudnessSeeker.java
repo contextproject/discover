@@ -2,6 +2,7 @@ package models.seeker;
 
 import java.util.List;
 
+import models.mix.MixSplitter;
 import models.record.Track;
 import models.score.ScoreStorage;
 
@@ -38,6 +39,12 @@ public class LoudnessSeeker extends AbstractSeeker {
     private List<Double> waveform;
     
     /**
+     * The default number of points awarded for the
+     * loudest part of the music.
+     */
+    protected static final int DEFAULT_POINTS = 1000;
+    
+    /**
      * Creates a LoudnessSeeker that seeks an optimal snippet for the
      * given track. It uses no Seeker that is going to be decorated and gives
      * a fresh start because the underlying decorated seeker results without
@@ -66,8 +73,25 @@ public class LoudnessSeeker extends AbstractSeeker {
 
     @Override
     public ScoreStorage calculateScores(final int duration) {
-        // TODO Auto-generated method stub
-        return null;
+        final ScoreStorage storage = decorate.calculateScores(duration);
+        final int amountOfBars = waveform.size();
+        for (int i = 0; i < amountOfBars; i++) {
+            final int time = getWaveformPart(amountOfBars, i);
+            final int points = (int) Math.round(DEFAULT_POINTS * waveform.get(i));
+            storage.add(time, points);
+        }
+        return storage;
+    }
+    
+    /**
+     * Returns the starttime of bar barIndex.
+     * @param amountOfBars The number of bars in the waveform of the song.
+     * @param barIndex The index of the bar.
+     * @return The starttime of the bar.
+     */
+    public int getWaveformPart(final int amountOfBars,
+            final int barIndex) {
+        return MixSplitter.getWaveformPart(track.getDuration(), amountOfBars, barIndex);
     }
 
     /**
