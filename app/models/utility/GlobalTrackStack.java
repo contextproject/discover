@@ -1,11 +1,11 @@
-package models.database;
+package models.utility;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Stack;
 
+import models.database.DatabaseConnector;
 import models.record.Track;
-import models.utility.TrackList;
 
 public class GlobalTrackStack {
 
@@ -17,11 +17,14 @@ public class GlobalTrackStack {
 
     private boolean autofill;
 
-    public GlobalTrackStack(String query, boolean bool) {
+    public GlobalTrackStack(int limit, boolean bool) {
         this.dbconnector = DatabaseConnector.getConnector();
         this.stack = new Stack<Track>();
         this.autofill = bool;
-        this.query = query;
+        this.query = "SELECT DISTINCT *" 
+                + " FROM tracks"
+                + " ORDER BY RAND()"
+                + " LIMIT " + limit;
         this.push(dbconnector.executeQuery(this.query));
     }
 
@@ -32,14 +35,12 @@ public class GlobalTrackStack {
             if (autofill) {
                 this.push(dbconnector.executeQuery(this.query));
                 if (this.isEmpty()) {
-                    throw new NullPointerException(
-                            "The Stack is out of Tracks and cannot be refilled.");
+                    throw new NullPointerException("The Stack is out of Tracks and cannot be refilled.");
                 }
                 return stack.pop();
             } else {
                 throw new NullPointerException(
-                        "The Stack is out of Tracks and will not be refilled because the autofill is set to "
-                                + autofill + ".");
+                        "The Stack is out of Tracks and will not be refilled because the autofill is set to " + autofill + ".");
             }
         }
 
