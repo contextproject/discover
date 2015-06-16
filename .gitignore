@@ -18,3 +18,4 @@ dist
 /target
 /.target/
 discover UML.ucls
+/bin/
