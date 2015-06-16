@@ -39,8 +39,8 @@
 a.toggler {
     background: green;
     cursor: pointer;
-    border: 2px solid white;
-    border-right-width: 15px;
+    border: 0px none;
+    box-shadow: 0px 0px 0px 1px rgba(144, 144, 144, 0.5);
     padding: 0 5px;
     border-radius: 5px;
     text-decoration: none;

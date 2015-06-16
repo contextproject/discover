@@ -4,6 +4,7 @@ var mixSplits, waveform;
 var snipWin = 5000.00;
 var splitPointer = -1;
 var autoplay = false;
+var open = false;
 
 
 widget.bind(SC.Widget.Events.FINISH, function () {
@@ -30,15 +31,17 @@ $("#current").click(function () {
     });
 });
 
-//the advanced slide menu
-$("#openMenu").click(function() {
+function openMenu() {
     var menu = $("#menu");
-    if ($(menu).is(":visible")) {
+    if ($(menu).is(":visible") && !open) {
         $(menu).animate({height: 0}, 500, function() {$(menu).hide();});
     } else {
         $(menu).show().animate({height: 100}, 500);
     }
-});
+}
+
+//the advanced slide menu
+$("#openMenu").click(openMenu);
 
 $('a.toggler.off').click(function(){
     if (document.getElementById("switch").innerHTML == "on") {
@@ -66,6 +69,7 @@ widget.bind(SC.Widget.Events.READY, function () {
 });
 
 $(window).load(function() {
+
     $('#joyRideTipContent').joyride({
         cookieMonster : true,
         autoStart : true,
@@ -74,23 +78,21 @@ $(window).load(function() {
                 $(this).joyride('set_li', false, 1);
             }
         },
+        preRideCallback: openMenu,
         modal:true,
         expose:true
     });
 });
 
 $("#help").click(function() {
+    open = true;
+    openMenu;
     $.removeCookie("joyride",{ expires: 365, domain: false, path: false });
     $('#joyRideTipContent').joyride({
         cookieMonster : true,
         preRideCallback: $(this).joyride('destroy',false,1)
     });
-
-    if(!document.getElementById("switch").innerHTML == "on"){
-        widget.bind(SC.Widget.Events.FINISH, function () {
-          alert("hoi");
-        });
-    }
+    open = false;
 });
 
 // The method is used to send Data to the server
