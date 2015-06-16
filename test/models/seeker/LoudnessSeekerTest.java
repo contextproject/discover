@@ -126,15 +126,16 @@ public class LoudnessSeekerTest extends BasicTest {
     @Test
     public void testSeek() {
         final ScoreStorage expected = new ScoreMap();
-        expected.add(0, 100);
-        expected.add(100, 1000);
+        final int max = LoudnessSeeker.DEFAULT_POINTS;
+        expected.add(0, (int) Math.round(0.1 * max));
+        expected.add(100, max);
         expected.add(200, 0);
-        expected.add(300, 300);
-        expected.add(400, 10);
+        expected.add(300, (int) Math.round(0.3 * max));
+        expected.add(400, (int) Math.round(0.01 * max));
         expected.add(500, 0);
         expected.add(600, 0);
-        expected.add(700, 700);
-        expected.add(800, 250);
+        expected.add(700, (int) Math.round(0.7 * max));
+        expected.add(800, (int) Math.round(0.250 * max));
         expected.add(900, 0);
         seeker.setWaveform(asList(0.1, 1.0, 0.0, 0.3, 0.01, 0.0, 0.0,
                 0.7, 0.25, 0.0));
