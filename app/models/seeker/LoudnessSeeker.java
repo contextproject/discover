@@ -22,16 +22,6 @@ import models.score.ScoreStorage;
  *
  */
 public class LoudnessSeeker extends AbstractSeeker {
-
-    /**
-     * The track to seek the snippet for.
-     */
-    private Track track;
-    
-    /**
-     * The seeker that is being decorated.
-     */
-    private Seeker decorate;
     
     /**
      * The waveform to operate on.
@@ -66,14 +56,13 @@ public class LoudnessSeeker extends AbstractSeeker {
      */
     public LoudnessSeeker(final Track track, final List<Double> waveform,
             final Seeker decorate) {
-        setTrack(track);
+        super(track, decorate);
         setWaveform(waveform);
-        setDecorate(decorate);
     }
 
     @Override
     public ScoreStorage calculateScores(final int duration) {
-        final ScoreStorage storage = decorate.calculateScores(duration);
+        final ScoreStorage storage = getDecorate().calculateScores(duration);
         final int amountOfBars = waveform.size();
         for (int i = 0; i < amountOfBars; i++) {
             final int time = getWaveformPart(amountOfBars, i);
@@ -91,34 +80,7 @@ public class LoudnessSeeker extends AbstractSeeker {
      */
     public int getWaveformPart(final int amountOfBars,
             final int barIndex) {
-        return MixSplitter.getWaveformPart(track.getDuration(), amountOfBars, barIndex);
-    }
-
-    /**
-     * Sets the track that is being searched.
-     * @param track The track to search.
-     */
-    public void setTrack(final Track track) {
-        this.track = track;
-    }
-    
-    /**
-     * Retrieves the track that is searched for.
-     * @return The track that is currently searched for a snippet.
-     */
-    public Track getTrack() {
-        return track;
-    }
-    
-    /**
-     * Sets the seeker that is being decorated by this one. It changes
-     * the decorated seeker to the given value and hence can alter the
-     * outcome of the {@link #seek()} and {@link #seek(int)} methods
-     * before and after the setting. 
-     * @param newSeeker The new seeker to be used as a basis.
-     */
-    public void setDecorate(final Seeker newSeeker) {
-        decorate = newSeeker;
+        return MixSplitter.getWaveformPart(getTrack().getDuration(), amountOfBars, barIndex);
     }
     
     /**

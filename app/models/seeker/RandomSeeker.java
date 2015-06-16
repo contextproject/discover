@@ -8,16 +8,6 @@ import models.score.ScoreStorage;
  * Generates a random start time for the track.
  */
 public class RandomSeeker extends AbstractSeeker {
-
-    /**
-     * The track.
-     */
-    private Track track;
-    
-    /**
-     * The Seeker to decorate.
-     */
-    private Seeker decorate;
     
     /**
      * The number of points to award.
@@ -59,8 +49,7 @@ public class RandomSeeker extends AbstractSeeker {
      * @param points The number of points to award for being selected by random seeker.
      */
     public RandomSeeker(final Track track, final Seeker decorate, final int points) {
-        this.track = track;
-        this.decorate = decorate;
+        super(track, decorate);
         this.points = points;
     }
     
@@ -78,12 +67,12 @@ public class RandomSeeker extends AbstractSeeker {
      * @return The start time
      */
     private int getStartTime() {
-        return (int) (Math.random() * track.getDuration());
+        return (int) (Math.random() * getTrack().getDuration());
     }
 
     @Override
     public ScoreStorage calculateScores(final int duration) {
-        ScoreStorage storage = decorate.calculateScores(duration);
+        ScoreStorage storage = getDecorate().calculateScores(duration);
         storage.add(getStartTime(), points);
         return storage;
     }
