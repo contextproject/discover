@@ -48,21 +48,19 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
     /**
      * Constructor for the LikesRecommender class.
      *
-     * @param smallFish
-     *            The recommender object that the class decorates.
+     * @param smallFish The recommender object that the class decorates.
      */
     public LikesRecommender(@Nonnull final Recommender smallFish) {
         super(smallFish);
-        setPositiveModifier(1);
-        setNegativeModifier(-1);
+        positiveModifier = 1;
+        negativeModifier = -1;
         weight = super.getWeight();
         genreBoard = new HashMap<>();
         artistBoard = new HashMap<>();
     }
 
     /**
-     * The recommend method either evaluates the decorated object or makes its
-     * own.
+     * The recommend method either evaluates the decorated object or makes its own.
      *
      * @return The recommended tracks
      */
@@ -79,42 +77,43 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
      * from the profiles likes list.
      *
      * @return a TrackList containing tracks filtered on genre and artists from
-     *         the profiles likes list.
+     * the profiles likes list.
      */
     @Override
     public TrackList suggest() {
         this.generateBoards();
         StringBuilder queryBuilder = new StringBuilder();
-        queryBuilder.append("SELECT * FROM `tracks` ");
-        if (!genreBoard.isEmpty() || !artistBoard.isEmpty()) {
-            queryBuilder.append("WHERE ");
-            Iterator<Object> it1 = genreBoard.keySet().iterator();
-            Iterator<Object> it2 = artistBoard.keySet().iterator();
-            while (it1.hasNext()) {
-                Object i = it1.next();
-                if (i != null) {
-                    queryBuilder.append("genre = '").append(i).append("' OR ");
-                }
+        queryBuilder.append("SELECT * FROM `tracks` WHERE ");
+        Iterator<Object> it1 = genreBoard.keySet().iterator();
+        Iterator<Object> it2 = artistBoard.keySet().iterator();
+        while (it1.hasNext()) {
+            Object i = it1.next();
+            if (i != null) {
+                queryBuilder.append("genre = '").append(i).append("' OR ");
             }
-            while (it2.hasNext()) {
-                Object j = it2.next();
-                if (j != null) {
-                    queryBuilder.append("user_id = '").append(j).append("' OR ");
-                }
+        }
+        while (it2.hasNext()) {
+            Object j = it2.next();
+            if (j != null) {
+                queryBuilder.append("user_id = '").append(j).append("' OR ");
             }
+        }
+        if (queryBuilder.length() != 29) {
             queryBuilder.delete(queryBuilder.length() - 3, queryBuilder.length());
+        } else {
+            queryBuilder.delete(queryBuilder.length() - 6, queryBuilder.length());
         }
         queryBuilder.append("ORDER BY RAND() LIMIT ").append(getAmount());
-        return TrackList.get(queryBuilder.toString());
+        String query = queryBuilder.toString();
+        return TrackList.get(query);
     }
 
     /**
-     * Evaluates the unweighed list of Track objects received from the decorated
-     * recommender and adds additional score to the tracks using its
+     * Evaluates the unweighed list of Track objects received from the
+     * decorated recommender and adds additional score to the tracks using its
      * scoreboards.
      *
-     * @param unweighed
-     *            The TrackList form the decorated recommender
+     * @param unweighed The TrackList form the decorated recommender
      * @return A List of RecTuple object with added score.
      */
     public TrackList evaluate(final TrackList unweighed) {
@@ -138,6 +137,7 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
      * and dislikes.
      */
     private void generateBoards() {
+        if (getRecommender() != null) {
             Profile pro = this.getUserProfile();
             ArrayList<Track> likes = pro.getLikes();
             ArrayList<Track> dislikes = pro.getDislikes();
@@ -149,6 +149,7 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
                 updateBoard(genreBoard, track.get(new Key<>("genre", String.class)), negativeModifier);
                 updateBoard(artistBoard, track.get(new Key<>("user_id", Integer.class)), negativeModifier);
             }
+        }
     }
 
     /**
@@ -169,6 +170,24 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
     }
 
     /**
+     * Getter for the weight of the object.
+     *
+     * @return The weight of the object.
+     */
+    public double getWeight() {
+        return weight;
+    }
+
+    /**
+     * Setter for the the weight of the object.
+     *
+     * @param newWeight The new weight of the object.
+     */
+    public void setWeight(final double newWeight) {
+        weight = newWeight;
+    }
+
+    /**
      * Getter for the positive modifier of the object.
      *
      * @return The modifier as a double.
@@ -180,8 +199,7 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
     /**
      * Setter for the positive modifier of the object.
      *
-     * @param positiveModifier
-     *            The new modifier of the object.
+     * @param positiveModifier The new modifier of the object.
      */
     public void setPositiveModifier(final double positiveModifier) {
         this.positiveModifier = positiveModifier;
