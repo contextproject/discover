@@ -4,7 +4,6 @@ import models.database.retriever.CommentRetriever;
 import models.record.Comment;
 import models.record.Track;
 import models.score.ScoreStorage;
-import models.snippet.TimedSnippet;
 import models.utility.CommentList;
 
 import java.util.Collections;
@@ -14,27 +13,17 @@ import java.util.Collections;
  * intensity of the track.
  * 
  * @since 07-05-2015
- * @version 04-06-2015
+ * @version 16-06-2015
  * 
  * @author stefan boodt
  * @author tomas heinsohn huala
  */
-public class CommentIntensitySeeker implements Seeker {
-
-    /**
-     * The id of the track.
-     */
-    private Track track;
+public class CommentIntensitySeeker extends AbstractSeeker {
 
     /**
      * The set of comments of the track.
      */
     private CommentList comments;
-    
-    /**
-     * The Seeker that is decorated by this one.
-     */
-    private final Seeker decorate;
     
     /**
      * The filter to get the scores out of.
@@ -70,26 +59,14 @@ public class CommentIntensitySeeker implements Seeker {
      */
     public CommentIntensitySeeker(final Track track, final Seeker decorate,
             final CommentContentSeeker filter) {
-        setTrack(track);
-        this.decorate = decorate;
+        super(track, decorate);
         setComments(new CommentRetriever(track.getId()).getComments());
         this.filter = filter;
     }
 
-    /**
-     * Generates a start time for a snippet.
-     * 
-     * @param duration The duration of the snippet.
-     *
-     * @return a start time
-     */
-    private int getStartTime(final int duration) {
-        return calculateScores(duration).maxScoreStartTime();
-    }
-
     @Override
     public ScoreStorage calculateScores(final int duration) {
-        ScoreStorage storage = decorate.calculateScores(duration);
+        ScoreStorage storage = getDecorate().calculateScores(duration);
         return updateStorage(duration, storage);
     }
     
@@ -102,7 +79,7 @@ public class CommentIntensitySeeker implements Seeker {
     private ScoreStorage updateStorage(final int duration, final ScoreStorage storage) {
         Collections.sort(comments);
         final int commentsize = comments.size(); // Done here for efficientcy.
-        final int tracklength = track.getDuration();
+        final int tracklength = getTrack().getDuration();
         final int stepsize = Comment.getPeriod();
         for (int time = 0; time < tracklength; time += stepsize) {
             int count = 0;
@@ -131,7 +108,6 @@ public class CommentIntensitySeeker implements Seeker {
     }
 
     /**
-<<<<<<< HEAD
      * Checks if time is between bottom and bottom + window.
      *
      * @param time   The time to check.
@@ -151,41 +127,6 @@ public class CommentIntensitySeeker implements Seeker {
      */
     protected int getWeight(final Comment comment) {
         return 2 + getFilter().contentFilter(comment.getBody());
-    }
-
-    /**
-=======
->>>>>>> origin/Tracks
-     * Seeks the snippet to be used of a given song.
-     *
-     * @return A TimedSnippet object
-     */
-    @Override
-    public TimedSnippet seek() {
-        return seek(TimedSnippet.getDefaultDuration());
-    }
-    
-    @Override
-    public TimedSnippet seek(final int duration) {
-        return new TimedSnippet(getStartTime(duration), duration);
-    }
-
-    /**
-     * Getter of the track.
-     *
-     * @return The track
-     */
-    public Track getTrack() {
-        return track;
-    }
-
-    /**
-     * Setter of the track.
-     *
-     * @param track The track
-     */
-    public void setTrack(final Track track) {
-        this.track = track;
     }
 
     /**

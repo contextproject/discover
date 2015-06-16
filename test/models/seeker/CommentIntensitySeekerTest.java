@@ -1,6 +1,5 @@
 package models.seeker;
 
-import basic.BasicTest;
 import models.database.DatabaseConnector;
 import models.record.Comment;
 import models.record.Track;
@@ -12,10 +11,12 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import controllers.Application;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -23,7 +24,7 @@ import static org.mockito.Mockito.when;
  * Test for the CommentIntensitySeeker.
  * 
  * @since 08-05-2015
- * @version 08-06-2015
+ * @version 16-06-2015
  * 
  * @see CommentIntensitySeeker
  * 
@@ -31,7 +32,7 @@ import static org.mockito.Mockito.when;
  * @author stefan boodt
  * 
  */
-public class CommentIntensitySeekerTest extends BasicTest {
+public class CommentIntensitySeekerTest extends AbstractSeekerTest {
 
     /**
      * CommentIntensitySeeker object.
@@ -92,8 +93,8 @@ public class CommentIntensitySeekerTest extends BasicTest {
      * @param seeker The new seeker under test.
      */
     public void setSeeker(final CommentIntensitySeeker seeker) {
+        super.setSeeker(seeker);
         commentIntensitySeeker = seeker;
-        setObjectUnderTest(seeker);
     }
     
     /**
@@ -224,5 +225,13 @@ public class CommentIntensitySeekerTest extends BasicTest {
     @Test
     public void testGetFilter() {
         assertNotNull(getSeeker().getFilter());
+    }
+
+    /**
+     * Tests the {@link CommentIntensitySeeker#getTrack()} method.
+     */
+    @Test
+    public void testGetTrack() {
+        assertNotNull(getSeeker().getTrack());
     }
 }
