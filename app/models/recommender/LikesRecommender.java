@@ -98,7 +98,7 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
                 queryBuilder.append("user_id = '").append(j).append("' OR ");
             }
         }
-        if(queryBuilder.length() != 29) {
+        if (queryBuilder.length() != 29) {
             queryBuilder.delete(queryBuilder.length() - 3, queryBuilder.length());
         } else {
             queryBuilder.delete(queryBuilder.length() - 6, queryBuilder.length());
@@ -119,7 +119,7 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
     public TrackList evaluate(final TrackList unweighed) {
         for (Track track : unweighed) {
             String genre = track.get(new Key<>("genre", String.class));
-            String artist = track.get(new Key<>("artist", String.class));
+            int artist = track.get(new Key<>("user_id", Integer.class));
             double score = track.get(new Key<>("score", Double.class));
             if (genreBoard.containsKey(genre)) {
                 score += genreBoard.get(genre);
@@ -142,16 +142,12 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
             ArrayList<Track> likes = pro.getLikes();
             ArrayList<Track> dislikes = pro.getDislikes();
             for (Track track : likes) {
-                updateBoard(genreBoard, track.get(new Key<>("genre", String.class)),
-                        positiveModifier, likes.size());
-                updateBoard(artistBoard, track.get(new Key<>("user_id", String.class)),
-                        positiveModifier, likes.size());
+                updateBoard(genreBoard, track.get(new Key<>("genre", String.class)), positiveModifier);
+                updateBoard(artistBoard, track.get(new Key<>("user_id", Integer.class)), positiveModifier);
             }
             for (Track track : dislikes) {
-                updateBoard(genreBoard, track.get(new Key<>("genre", String.class)),
-                        negativeModifier, dislikes.size());
-                updateBoard(artistBoard, track.get(new Key<>("user_id", String.class)),
-                        negativeModifier, dislikes.size());
+                updateBoard(genreBoard, track.get(new Key<>("genre", String.class)), negativeModifier);
+                updateBoard(artistBoard, track.get(new Key<>("user_id", Integer.class)), negativeModifier);
             }
         }
     }
@@ -163,20 +159,13 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
      * @param hm         The HashMap object containing the keywords and their score.
      * @param key        Track object that is being added.
      * @param modifier   The modifier for the score as a double.
-     * @param sourceSize The size of the whole tracklist.
      */
-    private void updateBoard(final HashMap<Object, Double> hm,
-                             final Object key, final double modifier, final int sourceSize) {
-        double value;
-        if (key instanceof String) {
-            value = 0.7;
-        } else {
-            value = 0.3;
-        }
+    private void updateBoard(final HashMap<Object, Double> hm, final Object key, final double modifier) {
+        double value = ((key instanceof String) ? 0.7 :  0.3);
         if (hm.containsKey(key)) {
-            hm.put(key, hm.get(key) + value * weight * (modifier / sourceSize));
+            hm.put(key, hm.get(key) + value * weight * (modifier));
         } else {
-            hm.put(key, value * weight * (modifier / sourceSize));
+            hm.put(key, value * weight * (modifier));
         }
     }
 
