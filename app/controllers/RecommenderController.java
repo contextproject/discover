@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import models.json.Json;
 import models.profile.Profile;
 import models.recommender.BasicRecommender;
+import models.recommender.FeatureRecommender;
 import models.recommender.LikesRecommender;
 import models.recommender.Recommender;
 import models.record.Key;
@@ -101,10 +102,9 @@ public final class RecommenderController {
     public static Result recommend() {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode result = mapper.createObjectNode();
-        Recommender rec = new LikesRecommender(new BasicRecommender(profile, 5));
+        Recommender rec = new FeatureRecommender(new LikesRecommender(new BasicRecommender(profile, 5)));
         TrackList recs = rec.recommend();
         Collections.sort(recs);
-        System.out.println(recs);
         for (int i = 0; i < recs.size(); i++) {
             Track track = recs.get(i);
             ObjectNode jsontrack = mapper.createObjectNode();

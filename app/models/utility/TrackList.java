@@ -29,7 +29,7 @@ public class TrackList extends ArrayList<Track> {
         try {
             while (resultSet.next()) {
                 Track track = new Track();
-                track.put(new Key<>("int", Integer.class), resultSet.getInt("track_id"));
+                track.put(new Key<>("id", Integer.class), resultSet.getInt("track_id"));
                 track.put(new Key<>("duration", String.class), resultSet.getString("duration"));
                 track.put(new Key<>("genre", String.class), resultSet.getString("genre").toLowerCase());
                 track.put(new Key<>("title", String.class), resultSet.getString("title"));
@@ -72,5 +72,56 @@ public class TrackList extends ArrayList<Track> {
             }
         }
         return false;
+    }
+
+    /**
+     * Distinct add the all the tracks from the provided tracklist to this tracklist.
+     *
+     * @param trackList The tracklist to add
+     */
+    public void addDistinctAll(final TrackList trackList) {
+        for(Track track : trackList) {
+            addDistinct(track);
+        }
+    }
+
+    /**
+     * Distinct add the track to this tracklist.
+     *
+     * @param otherTrack The track to add
+     */
+    private void addDistinct(final Track otherTrack) {
+        if(!this.contains(otherTrack)) {
+            add(otherTrack);
+        } else {
+            //update score entry
+            Key<Double> score = new Key<>("score", Double.class);
+            if(otherTrack.containsKey(score)){
+                Track thisTrack = getSame(otherTrack);
+                if(thisTrack != null) {
+                    if(thisTrack.containsKey(score)) {
+                        thisTrack.put(score, otherTrack.get(score) + thisTrack.get(score));
+                    } else {
+                        thisTrack.put(score, otherTrack.get(score));
+                    }
+
+                }
+            }
+        }
+    }
+
+    /**
+     * Get the same track from this track list as the provided track
+     *
+     * @param other The track to compare with
+     * @return The same track form this track list
+     */
+    private Track getSame(final Track other) {
+        for(Track track : this) {
+            if(track.equals(other)) {
+                return track;
+            }
+        }
+        return null;
     }
 }

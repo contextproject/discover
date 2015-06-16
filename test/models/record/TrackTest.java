@@ -230,12 +230,6 @@ public class TrackTest {
 
     @Test
     public void testEquals5() throws Exception {
-        b.put(key2, 2.0);
-        assertFalse(a.equals(b));
-    }
-
-    @Test
-    public void testEquals6() throws Exception {
         b.put(key1, 2);
         assertFalse(a.equals(b));
     }

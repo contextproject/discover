@@ -28,7 +28,7 @@ public class FeatureRecommender extends RecommendDecorator implements Recommende
     @Override
     public TrackList recommend() {
         TrackList result = suggest();
-        result.addAll(evaluate());
+        result.addDistinctAll(evaluate());
         return result;
     }
 

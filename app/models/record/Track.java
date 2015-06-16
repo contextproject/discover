@@ -4,6 +4,7 @@ import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -133,7 +134,11 @@ public class Track implements Record, Comparable<Track> {
         }
         if (object instanceof Track) {
             Track other = (Track) object;
-            return this.entries.equals(other.entries);
+            Key key = new Key<>("id", Integer.class);
+            if(this.containsKey(key) && other.containsKey(key)) {
+                return Objects.equals(this.get(new Key<>("id", Integer.class)),
+                        other.get(new Key<>("id", Integer.class)));
+            }
         }
         return false;
     }
@@ -151,13 +156,12 @@ public class Track implements Record, Comparable<Track> {
     public String toString() {
         StringBuilder result = new StringBuilder();
         result.append("[");
-        Iterator<Map.Entry<Key<?>, Object>> it = entries.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry<Key<?>, Object> entry = it.next();
-            result.append(entry.getKey().getIdentifier());
-            result.append(" = ");
-            result.append(entry.getValue());
-            it.remove();
+        for (Map.Entry<Key<?>, Object> entry : entries.entrySet()) {
+            result.append(entry.getKey().getIdentifier()).append(" = ");
+            result.append(entry.getValue()).append(", ");
+        }
+        if(result.length() != 1) {
+            result.delete(result.length() - 2, result.length());
         }
         result.append("]");
         return result.toString();

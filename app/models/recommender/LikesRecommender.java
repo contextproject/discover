@@ -98,7 +98,11 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
                 queryBuilder.append("user_id = '").append(j).append("' OR ");
             }
         }
-        queryBuilder.delete(queryBuilder.length() - 3, queryBuilder.length());
+        if(queryBuilder.length() != 29) {
+            queryBuilder.delete(queryBuilder.length() - 3, queryBuilder.length());
+        } else {
+            queryBuilder.delete(queryBuilder.length() - 6, queryBuilder.length());
+        }
         queryBuilder.append("ORDER BY RAND() LIMIT ").append(getAmount());
         String query = queryBuilder.toString();
         return TrackList.get(query);
@@ -123,7 +127,7 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
             if (artistBoard.containsKey(artist)) {
                 score += artistBoard.get(artist);
             }
-            track.put(new Key<>("score", Double.class), score / this.getDecoratorAmount());
+            track.put(new Key<>("score", Double.class), score);
         }
         return unweighed;
     }
