@@ -1,7 +1,5 @@
 package models.seeker;
 
-import basic.BasicTest;
-import models.record.Track;
 import models.score.ScoreStorage;
 
 import org.junit.Test;
@@ -12,7 +10,7 @@ import static org.junit.Assert.assertEquals;
  * Tests the Random Seeker class.
  * 
  * @since 03-06-2015
- * @version 03-06-2015
+ * @version 16-06-2015
  * 
  * @see RandomSeeker
  * @see BasicTest
@@ -20,7 +18,7 @@ import static org.junit.Assert.assertEquals;
  * @author stefan boodt
  *
  */
-public class RandomSeekerTest extends BasicTest {
+public class RandomSeekerTest extends AbstractSeekerTest {
     
     /**
      * Seeker under test.
@@ -30,10 +28,7 @@ public class RandomSeekerTest extends BasicTest {
     @Override
     public void setUp() throws Exception {
         super.setUp();
-        Track track = new Track();
-        track.setDuration(1000);
-        track.setId(100214);
-        setSeeker(new RandomSeeker(track));
+        setSeeker(new RandomSeeker(DEFAULT_TRACK));
     }
     
     /**
@@ -41,7 +36,7 @@ public class RandomSeekerTest extends BasicTest {
      * @param seeker The seeker under test.
      */
     public void setSeeker(final RandomSeeker seeker) {
-        setObjectUnderTest(seeker);
+        super.setSeeker(seeker);
         this.seeker = seeker;
     }
     
