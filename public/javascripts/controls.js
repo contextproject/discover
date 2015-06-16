@@ -7,13 +7,13 @@ var autoplay = false;
 
 
 widget.bind(SC.Widget.Events.FINISH, function () {
-    if(autoplay) {
+    if (autoplay) {
         widget.getSounds(function (sounds) {
-           if (sounds.length > 1){
-               widget.next();
-           } else{
-              randomSong();
-           }
+            if (sounds.length > 1) {
+                widget.next();
+            } else {
+                randomSong();
+            }
         });
     }
 });
@@ -30,7 +30,7 @@ $("#current").click(function () {
     });
 });
 
-$('a.toggler.off').click(function(){
+$('a.toggler.off').click(function () {
     if (document.getElementById("switch").innerHTML == "on") {
         document.getElementById("switch").innerHTML = "off";
         autoplay = false;
@@ -53,30 +53,30 @@ widget.bind(SC.Widget.Events.READY, function () {
     widget.unbind(SC.Widget.Events.READY);
 });
 
-$(window).load(function() {
+$(window).load(function () {
     $('#joyRideTipContent').joyride({
-        cookieMonster : true,
-        autoStart : true,
-        postStepCallback : function (index, tip) {
+        cookieMonster: true,
+        autoStart: true,
+        postStepCallback: function (index, tip) {
             if (index == 2) {
                 $(this).joyride('set_li', false, 1);
             }
         },
-        modal:true,
-        expose:true
+        modal: true,
+        expose: true
     });
 });
 
-$("#help").click(function() {
-    $.removeCookie("joyride",{ expires: 365, domain: false, path: false });
+$("#help").click(function () {
+    $.removeCookie("joyride", {expires: 365, domain: false, path: false});
     $('#joyRideTipContent').joyride({
-        cookieMonster : true,
-        preRideCallback: $(this).joyride('destroy',false,1)
+        cookieMonster: true,
+        preRideCallback: $(this).joyride('destroy', false, 1)
     });
 
-    if(!document.getElementById("switch").innerHTML == "on"){
+    if (!document.getElementById("switch").innerHTML == "on") {
         widget.bind(SC.Widget.Events.FINISH, function () {
-          alert("hoi");
+            alert("hoi");
         });
     }
 });
@@ -197,7 +197,31 @@ function clearInputAndReloadWidget() {
     var url = $("#url");
     var input = url.val();
     url.html("");
-    reloadWidget(input);
+
+    SC.get('/tracks', {q : input, limit : 5}, function (tracks) {
+        $("#searchList").html("");
+        jQuery.each(tracks, function (i, val) {
+            var coverArt = val.artwork_url;
+            $("#searchList").append(
+                "<li class='searchList_item'>" +
+                    "<div class='row 150%'>" +
+                        "<div 2u 12u>" +
+                            "<span class='image fit'>" +
+                                "<img src=" + coverArt +
+                            "</span> " +
+                        "</div>" +
+                        "<div 10u 12u>" +
+                            "<div class='user'><h6>" + val.user.username + "</h6></div>" +
+                            "<div class='title'><h5>" + val.title + "</h5></div>" +
+                        "</div>" +
+                    "</div>" +
+                "</li>"
+            );
+        });
+    });
+
+
+    //reloadWidget(input);
 }
 
 // reload the widget with the url submitted in the input field
