@@ -46,7 +46,7 @@ a.toggler {
     text-decoration: none;
     transition: all .5s ease;
     margin-right: 10px;
-    margin-left: 10px;
+    margin-left: 10%;
 }
 
 a.toggler:hover{
@@ -63,6 +63,6 @@ a.toggler.off {
     border-radius: 4px;
     border: 0px none;
     box-shadow: 0px 0px 0px 1px rgba(144, 144, 144, 0.5) inset;
-    margin-right: 10%;
+    margin-left: 10%;
     margin-top: 10px;
 }

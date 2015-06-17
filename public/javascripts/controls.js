@@ -6,7 +6,7 @@ var splitPointer = -1;
 var autoplay = false;
 var open = false;
 
-
+//Function for the autoplay button only works if autoplay is on
 widget.bind(SC.Widget.Events.FINISH, function () {
     if(autoplay) {
         widget.getSounds(function (sounds) {
@@ -52,7 +52,6 @@ $('a.toggler.off').click(function(){
         autoplay = true;
     }
     $(this).toggleClass('off');
-
 });
 
 
@@ -69,7 +68,6 @@ widget.bind(SC.Widget.Events.READY, function () {
 });
 
 $(window).load(function() {
-
     $('#joyRideTipContent').joyride({
         cookieMonster : true,
         autoStart : true,
