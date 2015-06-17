@@ -12,6 +12,7 @@ import models.mix.MixSplitter;
 import models.record.Track;
 import models.seeker.MixSeeker;
 import models.snippet.TimedSnippet;
+import models.utility.RandomTrackStack;
 import models.utility.TrackList;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -29,6 +30,11 @@ import java.util.TreeMap;
 
 public final class Application extends Controller {
 
+    /**
+     * The RandomTrackStack object used for returning random tracks.
+     */
+    private static RandomTrackStack gts = new RandomTrackStack(100, true);
+    
     /**
      * The index method is called when the application is started and no other
      * messages have been passed.
@@ -57,8 +63,7 @@ public final class Application extends Controller {
      * @return A HTTP ok response with a random track id.
      */
     public static Result getRandomSong() {
-        Track track = TrackList.get("SELECT DISTINCT * FROM tracks ORDER BY RAND() LIMIT 1").get(0);
-        return Json.response(track);
+        return Json.response(gts.pop());
     }
 
     /**
