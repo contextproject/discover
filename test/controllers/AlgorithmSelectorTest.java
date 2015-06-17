@@ -66,19 +66,6 @@ public class AlgorithmSelectorTest {
         assertNotNull(AlgorithmSelector.determineStart(ntrack));
     }
     
-    
-    /**
-     * Test of the determineStart() method.
-     */
-    @Test
-    public void testDetermineStartAUTO_Negative() {
-        AlgorithmSelector.setMode("auto");
-        Track tr = new Track();
-        tr.put(new Key<>("duration", Integer.class), -6);
-        assertNotNull(AlgorithmSelector.determineStart(tr));
-    }
-    
-    
     /**
      * Test of the determineStart() method.
      */
