@@ -22,7 +22,6 @@ $("#tracks").on('click', '.tracktable', function () {
 function recommendAuto() {
         $.getJSON("/recommend", function (data) {
             var first = data[0];
-            console.log(data[0]);
             reloadWidget("w.soundcloud.com/tracks/" + first["id"]);
         })
 };
