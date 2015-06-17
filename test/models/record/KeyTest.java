@@ -14,8 +14,8 @@ public class KeyTest {
 
     @Before
     public void setUp() {
-        a = new Key<>("ID", Integer.class);
-        b = new Key<>("ID", Integer.class);
+        a = new Key<>("id", Integer.class);
+        b = new Key<>("id", Integer.class);
         c = new Key<>("something else", Integer.class);
         d = new Key<>("something else", String.class);
     }
@@ -36,12 +36,12 @@ public class KeyTest {
 
     @Test
     public void testHashCode() throws Exception {
-        assertEquals(2331, a.hashCode());
+        assertEquals(3355, a.hashCode());
     }
 
     @Test
     public void testGetIdentifier() throws Exception {
-        assertEquals("ID", a.getIdentifier());
+        assertEquals("id", a.getIdentifier());
     }
 
     @Test

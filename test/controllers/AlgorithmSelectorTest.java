@@ -32,8 +32,8 @@ public class AlgorithmSelectorTest {
         databaseConnector.makeConnection("jdbc:mysql://188.166.78.36/contextbase", "context", "password");
 
         track = new Track();
-        track.put(new Key<>("ID", Integer.class), 1);
-        track.put(new Key<>("DURATION", Integer.class), 50000);
+        track.put(new Key<>("id", Integer.class), 1);
+        track.put(new Key<>("duration", Integer.class), 50000);
     }
     
     /**
@@ -60,7 +60,7 @@ public class AlgorithmSelectorTest {
     public void testRandom() {
         int start = AlgorithmSelector.determineStart(track).getStartTime();
 
-        assertTrue(track.get(new Key<>("DURATION", Integer.class)) >= start);
+        assertTrue(track.get(new Key<>("duration", Integer.class)) >= start);
         assertTrue(0 <= start);
     }
 }

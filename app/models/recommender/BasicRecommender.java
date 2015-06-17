@@ -39,8 +39,8 @@ public class BasicRecommender implements Recommender {
 
     /**
      * The recommend method is used to return a list of weighted Object
-     * containing a Track object and its SCORE. The method in this class returns
-     * a list of Tracks where every track in the list has the same SCORE.
+     * containing a Track object and its score. The method in this class returns
+     * a list of Tracks where every track in the list has the same score.
      *
      * @return TrackList.
      */

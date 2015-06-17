@@ -82,7 +82,7 @@ public class TimedSnippetTest extends BasicTest {
     }
 
     /**
-     * Tests if the a snippet without DURATION has the default DURATION.
+     * Tests if the a snippet without duration has the default duration.
      */
     @Test
     public void testGetDuration() {
@@ -90,7 +90,7 @@ public class TimedSnippetTest extends BasicTest {
     }
 
     /**
-     * Tests if the a snippet with DURATION has the default DURATION.
+     * Tests if the a snippet with duration has the default duration.
      */
     @Test
     public void testGetDurationAgain() {
@@ -136,7 +136,7 @@ public class TimedSnippetTest extends BasicTest {
     }
 
     /**
-     * Tests if the a snippet without DURATION has the default DURATION.
+     * Tests if the a snippet without duration has the default duration.
      */
     @Test
     public void testCreateSnippet() {

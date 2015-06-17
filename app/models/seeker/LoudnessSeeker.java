@@ -9,7 +9,7 @@ import models.score.ScoreStorage;
 /**
  * This class selects the loudest part of the song to be awarded the most points
  * so so it is likely to be selected to be used by the snippets. It then can
- * selects the snippet with the highest SCORE.
+ * selects the snippet with the highest score.
  * 
  * @since 15-06-2015
  * @version 15-06-2015

@@ -82,13 +82,13 @@ public final class RecommenderController {
     }
 
     /**
-     * Receives the ID of the user from the web page and adds the ID to the profile.
+     * Receives the id of the user from the web page and adds the id to the profile.
      *
      * @return A HTTP ok response
      */
     public static Result user() {
         JsonNode jsonNode = request().body().asJson();
-        profile.setUserid(jsonNode.get("ID").asInt());
+        profile.setUserid(jsonNode.get("id").asInt());
         return ok();
     }
 
@@ -108,12 +108,12 @@ public final class RecommenderController {
             Track track = recs.get(i);
             ObjectNode jsontrack = mapper.createObjectNode();
 
-            jsontrack.put("ID", track.get(Track.ID));
+            jsontrack.put("id", track.get(Track.ID));
             jsontrack.put("artist", track.get(Track.USERNAME));
-            jsontrack.put("TITLE", track.get(Track.TITLE));
+            jsontrack.put("title", track.get(Track.TITLE));
             jsontrack.put("url", track.get(Track.URL));
-            jsontrack.put("GENRE", track.get(Track.GENRE));
-            jsontrack.put("SCORE", track.get(Track.SCORE));
+            jsontrack.put("genre", track.get(Track.GENRE));
+            jsontrack.put("score", track.get(Track.SCORE));
 
             result.put(Integer.toString(i), jsontrack);
         }

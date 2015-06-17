@@ -11,7 +11,7 @@ public interface Recommender {
 
     /**
      * The recommender method is used to evaluate a List of RecTuple objects.
-     * The objects contain a track and its SCORE. This SCORE can then be used to
+     * The objects contain a track and its score. This score can then be used to
      * choose most fitting tracks.
      *
      * @return List of RecTuple objects.

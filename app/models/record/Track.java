@@ -20,27 +20,27 @@ public class Track implements Record, Comparable<Track> {
     /**
      * The standard key for the id of a track.
      */
-    public static final Key<Integer> ID = new Key<>("ID", Integer.class);
+    public static final Key<Integer> ID = new Key<>("id", Integer.class);
 
     /**
      * The standard key for the duration of a track.
      */
-    public static final  Key<Integer> DURATION = new Key<>("DURATION", Integer.class);
+    public static final  Key<Integer> DURATION = new Key<>("duration", Integer.class);
 
     /**
      * The standard key for the username of the user of a track.
      */
-    public static final Key<String> USERNAME = new Key<>("USERNAME", String.class);
+    public static final Key<String> USERNAME = new Key<>("username", String.class);
 
     /**
      * The standard key for the title of a track.
      */
-    public static final Key<String> TITLE = new Key<>("TITLE", String.class);
+    public static final Key<String> TITLE = new Key<>("title", String.class);
 
     /**
      * The standard key for the genre of a track.
      */
-    public static final Key<String> GENRE = new Key<>("GENRE", String.class);
+    public static final Key<String> GENRE = new Key<>("genre", String.class);
 
     /**
      * The standard key for the user id of the user of a track.
@@ -55,12 +55,12 @@ public class Track implements Record, Comparable<Track> {
     /**
      * The standard key for the score of a track.
      */
-    public static final Key<Double> SCORE = new Key<>("SCORE", Double.class);
+    public static final Key<Double> SCORE = new Key<>("score", Double.class);
 
     /**
      * The standard key for the danceability of a track.
      */
-    public static final Key<Double> DANCEABILITY = new Key<>("DANCEABILITY", Double.class);
+    public static final Key<Double> DANCEABILITY = new Key<>("danceability", Double.class);
 
     /**
      * The amount of entries stored in this Track object.
@@ -168,8 +168,7 @@ public class Track implements Record, Comparable<Track> {
 
     @Override
     public int compareTo(@Nonnull final Track other) {
-        return other.get(new Key<>("SCORE", Double.class)).compareTo(
-                this.get(new Key<>("SCORE", Double.class)));
+        return other.get(SCORE).compareTo(this.get(SCORE));
     }
 
     @Override
@@ -179,10 +178,9 @@ public class Track implements Record, Comparable<Track> {
         }
         if (object instanceof Track) {
             Track other = (Track) object;
-            Key key = new Key<>("ID", Integer.class);
-            if (this.containsKey(key) && other.containsKey(key)) {
-                return Objects.equals(this.get(new Key<>("ID", Integer.class)),
-                        other.get(new Key<>("ID", Integer.class)));
+            if (this.containsKey(ID) && other.containsKey(ID)) {
+                return Objects.equals(this.get(new Key<>("id", Integer.class)),
+                        other.get(new Key<>("id", Integer.class)));
             }
         }
         return false;

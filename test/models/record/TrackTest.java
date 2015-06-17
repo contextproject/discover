@@ -24,9 +24,9 @@ public class TrackTest {
     @Before
     public void setUp() {
         track = new Track();
-        key1 = new Key<>("ID", Integer.class);
-        key2 = new Key<>("SCORE", Double.class);
-        key3 = new Key<>("GENRE", String.class);
+        key1 = new Key<>("id", Integer.class);
+        key2 = new Key<>("score", Double.class);
+        key3 = new Key<>("genre", String.class);
 
         a = new Track();
         b = new Track();
@@ -97,7 +97,7 @@ public class TrackTest {
     @Test
     public void testGet2b() {
         track.put(key3, "value");
-        Key<String> key = new Key<>("GENRE", String.class);
+        Key<String> key = new Key<>("genre", String.class);
         assertNotNull(track.get(key));
         assertEquals("value", track.get(key));
     }
@@ -112,7 +112,7 @@ public class TrackTest {
     @Test
     public void testGet3b() {
         track.put(key2, 1.0);
-        Key<Double> key = new Key<>("SCORE", Double.class);
+        Key<Double> key = new Key<>("score", Double.class);
         assertNotNull(track.get(key));
         assertEquals(1.0, track.get(key), 0.0);
     }
@@ -121,13 +121,13 @@ public class TrackTest {
     public void testGet4a() {
         track.put(key1, 1);
         assertNotNull(track.get(key1));
-        assertEquals(new Integer(1), track.get(new Key<>("ID", Integer.class)));
+        assertEquals(new Integer(1), track.get(new Key<>("id", Integer.class)));
     }
 
     @Test
     public void testGet4b() {
         track.put(key1, 1);
-        Key<Integer> key = new Key<>("ID", Integer.class);
+        Key<Integer> key = new Key<>("id", Integer.class);
         assertNotNull(track.get(key));
         assertEquals(new Integer(1), track.get(key));
     }
@@ -155,7 +155,7 @@ public class TrackTest {
 
     @Test
     public void testCompareTo1() {
-        Key<Double> score = new Key<>("SCORE", Double.class);
+        Key<Double> score = new Key<>("score", Double.class);
         Track a = new Track();
         a.put(score, 1.0);
         Track b = new Track();
@@ -167,7 +167,7 @@ public class TrackTest {
 
     @Test
     public void testCompareTo2() {
-        Key score = new Key<>("SCORE", Double.class);
+        Key score = new Key<>("score", Double.class);
         TrackList trackList = new TrackList();
         Track a = new Track();
         a.put(score, 1.0);
@@ -203,7 +203,7 @@ public class TrackTest {
     public void testEntrySet() throws Exception {
         track.put(key1, 0);
         Set<Map.Entry<Key<?>, Object>> entries = track.entrySet();
-        assertEquals("ID", entries.iterator().next().getKey().getIdentifier());
+        assertEquals("id", entries.iterator().next().getKey().getIdentifier());
         assertEquals(0, entries.iterator().next().getValue());
     }
 
@@ -251,6 +251,6 @@ public class TrackTest {
 
     @Test
     public void testToString2() throws Exception {
-        assertEquals("[ID = 1]", a.toString());
+        assertEquals("[id = 1]", a.toString());
     }
 }

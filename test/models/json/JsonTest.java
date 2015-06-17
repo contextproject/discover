@@ -32,11 +32,11 @@ public class JsonTest {
         jsonlist = new ObjectMapper().createObjectNode();
 
         ObjectNode user = new ObjectMapper().createObjectNode();
-        json1.put("ID", 1);
-        json1.put("DURATION", 420);
-        json1.put("user", user.put("USERNAME", "Bob"));
-        json1.put("TITLE", "TITLE");
-        json1.put("GENRE", "Rap");
+        json1.put("id", 1);
+        json1.put("duration", 420);
+        json1.put("user", user.put("username", "Bob"));
+        json1.put("title", "title");
+        json1.put("genre", "Rap");
         json1.put("user_id", 123);
         json1.put("uri", "uri");
 

@@ -35,7 +35,7 @@ public class ScoreMapTest extends ScoreStorageTest {
     
     /**
      * Sets the storage under test.
-     * @param map The SCORE map under test.
+     * @param map The score map under test.
      */
     public void setStorage(final ScoreMap map) {
         super.setStorage(map);

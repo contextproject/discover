@@ -53,7 +53,7 @@ public abstract class AbstractSeeker implements Seeker {
 
     /**
      * Returns the starttime of the snippet.
-     * @param duration The DURATION of the snippet.
+     * @param duration The duration of the snippet.
      * @return The starttime of the snippet.
      */
     protected int getStarttime(final int duration) {

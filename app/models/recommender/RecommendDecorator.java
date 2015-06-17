@@ -16,7 +16,7 @@ public abstract class RecommendDecorator implements Recommender {
     private Recommender recommender;
 
     /**
-     * The weight the SCORE should be changed with.
+     * The weight the score should be changed with.
      */
     private double weight = 10;
 

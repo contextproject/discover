@@ -10,7 +10,7 @@ import models.utility.TrackList;
 public class Profile {
 
     /**
-     * The user ID.
+     * The user id.
      */
     private int userid;
 
@@ -99,18 +99,18 @@ public class Profile {
     }
 
     /**
-     * Setter of the user ID.
+     * Setter of the user id.
      *
-     * @param userid The ID of the user
+     * @param userid The id of the user
      */
     public void setUserid(final int userid) {
         this.userid = userid;
     }
 
     /**
-     * Getter of the user ID.
+     * Getter of the user id.
      *
-     * @return The user ID
+     * @return The user id
      */
     public int getUserid() {
         return userid;

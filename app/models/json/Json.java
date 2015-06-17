@@ -36,11 +36,11 @@ public final class Json {
     public static Track getTrack(final JsonNode jsonNode) {
         if (jsonNode != null) {
             Track track = new Track();
-            track.put(Track.ID, jsonNode.get("ID").asInt());
-            track.put(Track.DURATION, jsonNode.get("DURATION").asInt());
-            track.put(Track.USERNAME, jsonNode.get("user").get("USERNAME").asText());
-            track.put(Track.TITLE, jsonNode.get("TITLE").asText());
-            track.put(Track.GENRE, jsonNode.get("GENRE").asText().toLowerCase());
+            track.put(Track.ID, jsonNode.get("id").asInt());
+            track.put(Track.DURATION, jsonNode.get("duration").asInt());
+            track.put(Track.USERNAME, jsonNode.get("user").get("username").asText());
+            track.put(Track.TITLE, jsonNode.get("title").asText());
+            track.put(Track.GENRE, jsonNode.get("genre").asText().toLowerCase());
             track.put(Track.USER_ID, jsonNode.get("user_id").asInt());
             track.put(Track.URL, jsonNode.get("uri").asText());
             return track;

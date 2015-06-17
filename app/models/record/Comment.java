@@ -15,12 +15,12 @@ public class Comment implements Record, Comparable<Comment> {
     private static int period = 5000;
 
     /**
-     * The ID of the track.
+     * The id of the track.
      */
     private int trackid;
 
     /**
-     * The user ID of the comment.
+     * The user id of the comment.
      */
     private int userid;
 
@@ -52,8 +52,8 @@ public class Comment implements Record, Comparable<Comment> {
     /**
      * Constructor.
      *
-     * @param trackid   The ID of the track
-     * @param userid    The user ID of the comment
+     * @param trackid   The id of the track
+     * @param userid    The user id of the comment
      * @param timestamp The timestamp of the comment
      */
     public Comment(final int trackid, final int userid, final int timestamp) {
@@ -63,8 +63,8 @@ public class Comment implements Record, Comparable<Comment> {
     /**
      * Constructor.
      *
-     * @param trackid   The ID of the track
-     * @param userid    The user ID of the comment
+     * @param trackid   The id of the track
+     * @param userid    The user id of the comment
      * @param timestamp The timestamp of the comment
      * @param body      The content of the comment
      */
@@ -134,9 +134,9 @@ public class Comment implements Record, Comparable<Comment> {
     }
 
     /**
-     * Getter of the USER_ID of the comment.
+     * Getter of the user_id of the comment.
      *
-     * @return The USER_ID of the comment
+     * @return The user_id of the comment
      */
     public int getUserid() {
         return userid;

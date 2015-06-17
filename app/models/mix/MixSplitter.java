@@ -26,7 +26,7 @@ public class MixSplitter {
     private List<Double> data;
 
     /**
-     * The ID of the track to split.
+     * The id of the track to split.
      */
     private Track track;
 
@@ -40,7 +40,7 @@ public class MixSplitter {
      * different pieces.
      *
      * @param data  The data to split into pieces for.
-     * @param track The ID of the mix to split.
+     * @param track The id of the mix to split.
      */
     public MixSplitter(final List<Double> data, final Track track) {
         this.setData(data);
@@ -207,7 +207,7 @@ public class MixSplitter {
      * @param shingles  The shingles that are to be compared.
      * @param threshold The threshold to check, when the threshold is passed the two
      *                  Shingles belong to a different song in our assumption.
-     * @param songtime  The DURATION of the song you are splitting.
+     * @param songtime  The duration of the song you are splitting.
      * @return The list of new starttimes, for which every starttime is the
      * beginning of a new piece.
      */
@@ -223,7 +223,7 @@ public class MixSplitter {
      * been found among them.
      *
      * @param threshold The threshold to seek at, must be between 0 and 1.
-     * @param songtime  The DURATION of the song.
+     * @param songtime  The duration of the song.
      */
     public void checkValid(final double threshold, final int songtime) {
         if (threshold < 0.0 || threshold > 1.0) {
@@ -244,7 +244,7 @@ public class MixSplitter {
      *
      * @param shingles  The shingles that need to be compared.
      * @param threshold The threshold to compare to.
-     * @param songtime  The DURATION of the song.
+     * @param songtime  The duration of the song.
      * @return The list of starttimes.
      */
     private List<Integer> splitUnsafe(final List<Shingle> shingles,
@@ -271,7 +271,7 @@ public class MixSplitter {
     /**
      * Returns the starttime of shingle shingleIndex.
      *
-     * @param songtime         The DURATION of the song.
+     * @param songtime         The duration of the song.
      * @param amountOfShingles The number of shingles in the song.
      * @param shingleIndex     The index of the shingle.
      * @return The starttime of the shingle.
@@ -284,7 +284,7 @@ public class MixSplitter {
     /**
      * Returns the starttime of bar barIndex.
      *
-     * @param songtime     The DURATION of the song.
+     * @param songtime     The duration of the song.
      * @param amountOfBars The number of bars in the waveform of the song.
      * @param barIndex     The index of the bar.
      * @return The starttime of the bar.
@@ -412,7 +412,7 @@ public class MixSplitter {
     /**
      * Returns the mix.
      *
-     * @return The track ID of the mix that is currently being split.
+     * @return The track id of the mix that is currently being split.
      */
     public Track getTrack() {
         return track;
@@ -421,7 +421,7 @@ public class MixSplitter {
     /**
      * Sets the track to the given value.
      *
-     * @param track The ID of the track that is being played.
+     * @param track The id of the track that is being played.
      */
     public void setTrack(final Track track) {
         this.track = track;

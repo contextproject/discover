@@ -33,8 +33,8 @@ public class TrackListTest {
         track1 = new Track();
         track2 = new Track();
         track3 = new Track();
-        id = new Key<>("ID", Integer.class);
-        score = new Key<>("SCORE", Double.class);
+        id = new Key<>("id", Integer.class);
+        score = new Key<>("score", Double.class);
         track1.put(id, 1);
         track2.put(id, 1);
         track3.put(id, 1);

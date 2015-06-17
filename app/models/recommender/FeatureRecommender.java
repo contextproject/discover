@@ -34,9 +34,9 @@ public class FeatureRecommender extends RecommendDecorator implements Recommende
     @Override
     public TrackList suggest() {
         if (mean() != 0) {
-            String query = "SELECT tracks.track_id, tracks.DURATION, tracks.GENRE, "
-                    + "tracks.TITLE, tracks.user_id, features.DANCEABILITY, "
-                    + "abs(features.DANCEABILITY - " + mean() + ") as distance "
+            String query = "SELECT tracks.track_id, tracks.duration, tracks.genre, "
+                    + "tracks.title, tracks.user_id, features.danceability, "
+                    + "abs(features.danceability - " + mean() + ") as distance "
                     + "FROM features "
                     + "INNER JOIN tracks "
                     + "ON tracks.track_id = features.track_id "
@@ -53,9 +53,9 @@ public class FeatureRecommender extends RecommendDecorator implements Recommende
 
     /**
      * Evaluates the unweighted TrackList received from the decorated recommender
-     * and adds additional SCORE to the tracks.
+     * and adds additional score to the tracks.
      *
-     * @return A TrackList with the updated SCORE.
+     * @return A TrackList with the updated score.
      */
     private TrackList evaluate() {
         TrackList unweighted = getRecommender().recommend();
@@ -69,7 +69,7 @@ public class FeatureRecommender extends RecommendDecorator implements Recommende
     }
 
     /**
-     * Updates the Track with the DANCEABILITY retrieved from the database.
+     * Updates the Track with the danceability retrieved from the database.
      *
      * @param trackList The TrackList to update
      * @return The updated track
@@ -78,7 +78,7 @@ public class FeatureRecommender extends RecommendDecorator implements Recommende
         for (Track track : trackList) {
             String query = "SELECT * FROM features WHERE features.track_id = "
                     + track.get(Track.ID);
-            double danceability = DatabaseConnector.getConnector().getSingleDouble(query, "DANCEABILITY");
+            double danceability = DatabaseConnector.getConnector().getSingleDouble(query, "danceability");
             if (danceability != 0.0) {
                 track.put(Track.DANCEABILITY, danceability);
             }
@@ -87,9 +87,9 @@ public class FeatureRecommender extends RecommendDecorator implements Recommende
     }
 
     /**
-     * Determines the mean of the DANCEABILITY of the likes of the user.
+     * Determines the mean of the danceability of the likes of the user.
      *
-     * @return The mean of the DANCEABILITY of the likes
+     * @return The mean of the danceability of the likes
      */
     private double mean() {
         TrackList likes = updateTracks(getUserProfile().getLikes());
@@ -110,9 +110,9 @@ public class FeatureRecommender extends RecommendDecorator implements Recommende
     }
 
     /**
-     * Determines the standard deviation of the DANCEABILITY of the likes of the user.
+     * Determines the standard deviation of the danceability of the likes of the user.
      *
-     * @return The standard deviation of the DANCEABILITY of the likes
+     * @return The standard deviation of the danceability of the likes
      */
     private double deviation() {
         TrackList likes = getUserProfile().getLikes();
@@ -132,12 +132,12 @@ public class FeatureRecommender extends RecommendDecorator implements Recommende
     }
 
     /**
-     * Gives a SCORE to the track based on the DANCEABILITY.
+     * Gives a score to the track based on the danceability.
      *
      * @param track     The track
      * @param mean      The mean of the likes of the user
      * @param deviation The standard deviation of the likes of the user
-     * @return The SCORE
+     * @return The score
      */
     private double score(final Track track, final double mean, final double deviation) {
         if (track.containsKey(Track.DANCEABILITY)) {

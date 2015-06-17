@@ -29,13 +29,13 @@ public class TrackList extends ArrayList<Track> {
             while (resultSet.next()) {
                 Track track = new Track();
                 track.put(Track.ID, resultSet.getInt("track_id"));
-                track.put(Track.DURATION, resultSet.getInt("DURATION"));
-                track.put(Track.GENRE, resultSet.getString("GENRE").toLowerCase());
-                track.put(Track.TITLE, resultSet.getString("TITLE"));
+                track.put(Track.DURATION, resultSet.getInt("duration"));
+                track.put(Track.GENRE, resultSet.getString("genre").toLowerCase());
+                track.put(Track.TITLE, resultSet.getString("title"));
                 track.put(Track.USER_ID, resultSet.getInt("user_id"));
                 track.put(Track.SCORE, 0.0);
-                if (hasColumn(resultSet, "DANCEABILITY")) {
-                    track.put(Track.DANCEABILITY, resultSet.getDouble("DANCEABILITY"));
+                if (hasColumn(resultSet, "danceability")) {
+                    track.put(Track.DANCEABILITY, resultSet.getDouble("danceability"));
                 }
                 add(track);
             }
@@ -94,7 +94,7 @@ public class TrackList extends ArrayList<Track> {
         if (!this.contains(otherTrack)) {
             add(otherTrack);
         } else {
-            //update SCORE entry
+            //update score entry
             if (otherTrack.containsKey(Track.SCORE)) {
                 Track thisTrack = getSame(otherTrack);
                 if (thisTrack != null) {

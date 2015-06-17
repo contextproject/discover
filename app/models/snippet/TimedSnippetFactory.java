@@ -35,7 +35,7 @@ public final class TimedSnippetFactory {
     /**
      * Creates a TimedSnippet with the given starttime and window.
      * @param starttime The starttime in ms.
-     * @param duration The DURATION in ms.
+     * @param duration The duration in ms.
      * @return The generated TimedSnippet.
      */
     public static TimedSnippet createSnippet(final int starttime,

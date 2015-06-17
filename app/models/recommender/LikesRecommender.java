@@ -76,7 +76,7 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
      * his profile. The method creates a query based on the genres and artists
      * from the profiles likes list.
      *
-     * @return a TrackList containing tracks filtered on GENRE and artists from
+     * @return a TrackList containing tracks filtered on genre and artists from
      * the profiles likes list.
      */
     @Override
@@ -91,7 +91,7 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
             while (it1.hasNext()) {
                 Object i = it1.next();
                 if (i != null) {
-                    queryBuilder.append("GENRE = '").append(i).append("' OR ");
+                    queryBuilder.append("genre = '").append(i).append("' OR ");
                 }
             }
             while (it2.hasNext()) {
@@ -108,11 +108,11 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
 
     /**
      * Evaluates the unweighed list of Track objects received from the decorated
-     * recommender and adds additional SCORE to the tracks using its
+     * recommender and adds additional score to the tracks using its
      * scoreboards.
      *
      * @param unweighed The TrackList form the decorated recommender
-     * @return A List of RecTuple object with added SCORE.
+     * @return A List of RecTuple object with added score.
      */
     public TrackList evaluate(final TrackList unweighed) {
         for (Track track : unweighed) {
@@ -147,15 +147,15 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
     }
 
     /**
-     * Updates a scoreboard to using the profile. A SCORE is added to the key if
-     * it exists and additional SCORE if this is the first time its found.
+     * Updates a scoreboard to using the profile. A score is added to the key if
+     * it exists and additional score if this is the first time its found.
      *
-     * @param hm       The HashMap object containing the keywords and their SCORE.
+     * @param hm       The HashMap object containing the keywords and their score.
      * @param key      Track object that is being added.
-     * @param modifier The modifier for the SCORE as a double.
+     * @param modifier The modifier for the score as a double.
      */
     private void updateBoard(final HashMap<Object, Double> hm, final Object key, final double modifier) {
-        double value = (key instanceof String) ? 0.7 : 0.3;
+        double value = key instanceof String ? 0.7 : 0.3;
         if (hm.containsKey(key)) {
             hm.put(key, hm.get(key) + value * weight * (modifier));
         } else {

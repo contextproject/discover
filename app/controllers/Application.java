@@ -50,7 +50,7 @@ public final class Application extends Controller {
     /**
      * Selects a random track from the database.
      *
-     * @return A HTTP ok response with a random track ID.
+     * @return A HTTP ok response with a random track id.
      */
     public static Result getRandomSong() {
         Track track = TrackList.get("SELECT DISTINCT * FROM tracks ORDER BY RAND() LIMIT 1").get(0);
@@ -68,8 +68,8 @@ public final class Application extends Controller {
         if (json == null) {
             return badRequest("Expecting Json data");
         } else {
-            int trackID = json.get("track").get("ID").asInt();
-            int duration = json.get("track").get("DURATION").asInt();
+            int trackID = json.get("track").get("id").asInt();
+            int duration = json.get("track").get("duration").asInt();
             final Track track = new Track();
             track.put(Track.ID, trackID);
             track.put(Track.DURATION, duration);
@@ -92,7 +92,7 @@ public final class Application extends Controller {
      */
     protected static List<Integer> getStartTimes(final List<Integer> splits, final Track track) {
         MixSeeker ms = new MixSeeker(splits, track);
-        // Half of the timedsnippet default DURATION for mixsnippets.
+        // Half of the timedsnippet default duration for mixsnippets.
         final List<TimedSnippet> snippets = ms.getSnippets(TimedSnippet.getDefaultDuration() / 2);
         return getStartTimes(snippets);
     }

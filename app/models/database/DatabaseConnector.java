@@ -140,9 +140,9 @@ public final class DatabaseConnector {
     /**
      * Make a connection with the database.
      *
-     * @param url      The URL of the MySQL database
-     * @param username The USERNAME to connect with
-     * @param password The password of the USERNAME
+     * @param url      The url of the MySQL database
+     * @param username The username to connect with
+     * @param password The password of the username
      */
     public void makeConnection(final String url, final String username,
                                final String password) {

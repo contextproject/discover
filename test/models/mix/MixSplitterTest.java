@@ -32,7 +32,7 @@ public class MixSplitterTest extends BasicTest {
     protected static final int DEFAULT_TRACKID = 2431002;
     
     /**
-     * The default DURATION of the track.
+     * The default duration of the track.
      */
     protected static final int DEFAULT_DURATION = 300000;
 

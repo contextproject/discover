@@ -71,8 +71,8 @@ public class CommentIntensitySeeker extends AbstractSeeker {
     }
     
     /**
-     * Updates the storage storage by the SCORE from the comment intensity seeker.
-     * @param duration The DURATION of the snippet and thus the search window.
+     * Updates the storage storage by the score from the comment intensity seeker.
+     * @param duration The duration of the snippet and thus the search window.
      * @param storage The storage to update.
      * @return The updated storage.
      */

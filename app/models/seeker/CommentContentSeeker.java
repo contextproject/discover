@@ -144,7 +144,7 @@ public class CommentContentSeeker {
 
     /**
      * This method sorts the given Set to put the highest Integer first so
-     * we can check the highest SCORE first.
+     * we can check the highest score first.
      *
      * @param entries The Set to sort.
      * @return The sorted set.
