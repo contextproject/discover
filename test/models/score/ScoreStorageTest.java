@@ -9,7 +9,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Abstract test for all the score storages.
+ * Abstract test for all the SCORE storages.
  * 
  * @since 03-06-2015
  * @version 03-06-2015

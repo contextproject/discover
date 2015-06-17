@@ -32,7 +32,7 @@ public class MixSplitterTest extends BasicTest {
     protected static final int DEFAULT_TRACKID = 2431002;
     
     /**
-     * The default duration of the track.
+     * The default DURATION of the track.
      */
     protected static final int DEFAULT_DURATION = 300000;
 
@@ -53,8 +53,8 @@ public class MixSplitterTest extends BasicTest {
     public void setUp() throws Exception {
         super.setUp();
         track = new Track();
-        track.put(Track.id, DEFAULT_TRACKID);
-        track.put(Track.duration, DEFAULT_DURATION);
+        track.put(Track.ID, DEFAULT_TRACKID);
+        track.put(Track.DURATION, DEFAULT_DURATION);
         setSplitter(new MixSplitter(asList(), track));
     }
 
@@ -385,7 +385,7 @@ public class MixSplitterTest extends BasicTest {
     @Test
     public void testGetTrackAfterSetting() {
         final int id = 2104921042;
-        track.put(Track.id, id);
+        track.put(Track.ID, id);
         final MixSplitter split = getSplitter();
         split.setTrack(track);
         assertEquals(track, split.getTrack());

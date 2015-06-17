@@ -119,7 +119,7 @@ public class MixSeeker extends CommentIntensitySeeker {
     
     /**
      * Seeks one snippet between the given bounds.
-     * @param window The window of the search mechanism and the duration of the snippet.
+     * @param window The window of the search mechanism and the DURATION of the snippet.
      * @param lowerbound The lowerbound.
      * @param upperbound The upperbound.
      * @return The best snippet between the bounds.
@@ -150,7 +150,7 @@ public class MixSeeker extends CommentIntensitySeeker {
     
     /**
      * Seeks one snippet between the given bounds.
-     * @param window The window of the search mechanism and the duration of the snippet.
+     * @param window The window of the search mechanism and the DURATION of the snippet.
      * @param lowerbound The lowerbound.
      * @param upperbound The upperbound.
      * @param scores The scores to be considered.

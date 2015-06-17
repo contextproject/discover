@@ -22,11 +22,11 @@ public class FeatureRecommenderTest {
 
     @Before
     public void setUp() {
-        key1 = new Key<>("id", Integer.class);
-        key2 = new Key<>("danceability", Double.class);
+        key1 = new Key<>("ID", Integer.class);
+        key2 = new Key<>("DANCEABILITY", Double.class);
 
         Track track;
-        // Profile with 3 tracks, all of them have a tag danceability
+        // Profile with 3 tracks, all of them have a tag DANCEABILITY
         profile1 = new Profile();
         track = new Track();
         track.put(key1, 1);
@@ -62,7 +62,7 @@ public class FeatureRecommenderTest {
         // Profile with no tracks
         profile2 = new Profile();
 
-        // Profile with a track with no danceability tag
+        // Profile with a track with no DANCEABILITY tag
         profile3 = new Profile();
         track = new Track();
         track.put(key1, 5);

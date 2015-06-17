@@ -26,19 +26,14 @@ import java.util.TreeMap;
 public final class Application extends Controller {
 
     /**
-     * The ObjectMapper used to create JsonNode objects.
-     */
-    private static ObjectMapper mapper;
-
-    /**
      * The index method is called when the application is started and no other
      * messages have been passed.
      *
      * @return an http ok response with the rendered page.
      */
     public static Result index() {
-        int starttime = Json.getStartTime(TrackList.get("SELECT * FROM tracks WHERE track_id = 56772597").
-                get(0)).getStartTime();
+        int starttime = Json.getStartTime(TrackList.get(
+                "SELECT * FROM tracks WHERE track_id = 56772597").get(0)).getStartTime();
         return ok(index.render("w.soundcloud.com/tracks/56772597", starttime));
     }
 
@@ -49,22 +44,16 @@ public final class Application extends Controller {
      * @return An http ok response with the new rendered page.
      */
     public static Result trackRequest() {
-        JsonNode json = request().body().asJson();
-        System.out.println(json);
-        System.out.println("hee hallo");
-        JsonNode track = json.get("track");
-        return Json.response(Json.getTrack(track));
+        return Json.response(Json.getTrack(request().body().asJson().get("track")));
     }
 
     /**
      * Selects a random track from the database.
      *
-     * @return A HTTP ok response with a random track id.
+     * @return A HTTP ok response with a random track ID.
      */
     public static Result getRandomSong() {
-        System.out.println("hoi");
         Track track = TrackList.get("SELECT DISTINCT * FROM tracks ORDER BY RAND() LIMIT 1").get(0);
-        System.out.println("hee");
         return Json.response(track);
     }
 
@@ -79,17 +68,17 @@ public final class Application extends Controller {
         if (json == null) {
             return badRequest("Expecting Json data");
         } else {
-            int trackID = json.get("track").get("id").asInt();
-            int duration = json.get("track").get("duration").asInt();
+            int trackID = json.get("track").get("ID").asInt();
+            int duration = json.get("track").get("DURATION").asInt();
             final Track track = new Track();
-            track.put(Track.id, trackID);
-            track.put(Track.duration, duration);
+            track.put(Track.ID, trackID);
+            track.put(Track.DURATION, duration);
             MixSplitter splitter = new MixSplitter(json.get("waveform"), track);
             List<Integer> splits = splitter.split();
             List<Integer> starttimes = getStartTimes(splits, track);
             Map<String, List<Integer>> map = new TreeMap<String, List<Integer>>();
             map.put("response", starttimes);
-            JsonNode response = mapper.valueToTree(map);
+            JsonNode response = new ObjectMapper().valueToTree(map);
             return ok(response);
         }
     }
@@ -103,7 +92,7 @@ public final class Application extends Controller {
      */
     protected static List<Integer> getStartTimes(final List<Integer> splits, final Track track) {
         MixSeeker ms = new MixSeeker(splits, track);
-        // Half of the timedsnippet default duration for mixsnippets.
+        // Half of the timedsnippet default DURATION for mixsnippets.
         final List<TimedSnippet> snippets = ms.getSnippets(TimedSnippet.getDefaultDuration() / 2);
         return getStartTimes(snippets);
     }
@@ -133,7 +122,7 @@ public final class Application extends Controller {
         if (json == null) {
             return badRequest("Expecting Json data");
         } else {
-            ObjectNode objNode = mapper.createObjectNode();
+            ObjectNode objNode = new ObjectMapper().createObjectNode();
             JsonNode response = objNode.put("message", "File was transvered successfully");
             return ok(response);
         }
@@ -154,14 +143,5 @@ public final class Application extends Controller {
             AlgorithmSelector.setMode(json.get("mode").asText());
             return ok("");
         }
-    }
-
-    /**
-     * Setter for the ObjectMapper object.
-     *
-     * @param om the new ObjectMapper object.
-     */
-    public static void setObjectMapper(final ObjectMapper om) {
-        mapper = om;
     }
 }

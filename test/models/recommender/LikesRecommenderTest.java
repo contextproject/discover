@@ -25,8 +25,8 @@ public class LikesRecommenderTest {
         tl1 = new TrackList();
         
         Key key1 = new Key<>("user_id", int.class);
-        Key key2 = new Key<>("genre", String.class);
-        Key key3 = new Key<>("score", double.class);
+        Key key2 = new Key<>("GENRE", String.class);
+        Key key3 = new Key<>("SCORE", double.class);
 
 
         tr1 = new Track();

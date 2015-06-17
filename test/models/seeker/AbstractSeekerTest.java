@@ -37,8 +37,8 @@ public abstract class AbstractSeekerTest extends BasicTest {
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
         DEFAULT_TRACK = new Track();
-        DEFAULT_TRACK.put(Track.id, 10);
-        DEFAULT_TRACK.put(Track.duration, 1000);
+        DEFAULT_TRACK.put(Track.ID, 10);
+        DEFAULT_TRACK.put(Track.DURATION, 1000);
     }
 
     @Override
@@ -77,8 +77,8 @@ public abstract class AbstractSeekerTest extends BasicTest {
     @Test
     public void testGetTrackAfterSetting() {
         Track expected = new Track();
-        expected.put(Track.id, 11);
-        expected.put(Track.duration, -1);
+        expected.put(Track.ID, 11);
+        expected.put(Track.DURATION, -1);
         getSeeker().setTrack(expected);
         assertEquals(expected, getSeeker().getTrack());
     }

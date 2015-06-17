@@ -15,6 +15,10 @@
     cursor: pointer;
 }
 
+#tracks{
+    width:100%;
+}
+
 a.toggler {
     background: green;
     cursor: pointer;

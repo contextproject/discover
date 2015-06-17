@@ -17,7 +17,7 @@ public class CommentRetriever implements Record {
     /**
      * Constructor.
      *
-     * @param trackid The id of the track
+     * @param trackid The ID of the track
      */
     public CommentRetriever(final int trackid) {
         comments = new CommentList(DatabaseConnector.getConnector().executeQuery(

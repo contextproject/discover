@@ -7,7 +7,7 @@ import models.snippet.TimedSnippetFactory;
 
 /**
  * This class is the default for all seekers to reference. It provides a
- * way to easily give 0 as score to all the times.
+ * way to easily give 0 as SCORE to all the times.
  * 
  * <p>
  * This class does not extend AbstractSeeker as it is the bottom of the

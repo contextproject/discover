@@ -18,17 +18,49 @@ public class Track implements Record, Comparable<Track> {
     private final Map<Key<?>, Object> entries = new HashMap<>();
 
     /**
-     * The standard keys that a track could contain.
+     * The standard key for the id of a track.
      */
-    public final static Key<Integer> id = new Key<>("id", Integer.class);
-    public final static Key<Integer> duration = new Key<>("duration", Integer.class);
-    public final static Key<String> username = new Key<>("username", String.class);
-    public final static Key<String> title = new Key<>("title", String.class);
-    public final static Key<String> genre = new Key<>("genre", String.class);
-    public final static Key<Integer> userid = new Key<>("user_id", Integer.class);
-    public final static Key<String> url = new Key<>("url", String.class);
-    public final static Key<Double> score = new Key<>("score", Double.class);
-    public final static Key<Double> danceability = new Key<>("danceability", Double.class);
+    public static final Key<Integer> ID = new Key<>("ID", Integer.class);
+
+    /**
+     * The standard key for the duration of a track.
+     */
+    public static final  Key<Integer> DURATION = new Key<>("DURATION", Integer.class);
+
+    /**
+     * The standard key for the username of the user of a track.
+     */
+    public static final Key<String> USERNAME = new Key<>("USERNAME", String.class);
+
+    /**
+     * The standard key for the title of a track.
+     */
+    public static final Key<String> TITLE = new Key<>("TITLE", String.class);
+
+    /**
+     * The standard key for the genre of a track.
+     */
+    public static final Key<String> GENRE = new Key<>("GENRE", String.class);
+
+    /**
+     * The standard key for the user id of the user of a track.
+     */
+    public static final Key<Integer> USER_ID = new Key<>("user_id", Integer.class);
+
+    /**
+     * The standard key for the url of a track.
+     */
+    public static final Key<String> URL = new Key<>("url", String.class);
+
+    /**
+     * The standard key for the score of a track.
+     */
+    public static final Key<Double> SCORE = new Key<>("SCORE", Double.class);
+
+    /**
+     * The standard key for the danceability of a track.
+     */
+    public static final Key<Double> DANCEABILITY = new Key<>("DANCEABILITY", Double.class);
 
     /**
      * The amount of entries stored in this Track object.
@@ -136,8 +168,8 @@ public class Track implements Record, Comparable<Track> {
 
     @Override
     public int compareTo(@Nonnull final Track other) {
-        return other.get(new Key<>("score", Double.class)).compareTo(
-                this.get(new Key<>("score", Double.class)));
+        return other.get(new Key<>("SCORE", Double.class)).compareTo(
+                this.get(new Key<>("SCORE", Double.class)));
     }
 
     @Override
@@ -147,10 +179,10 @@ public class Track implements Record, Comparable<Track> {
         }
         if (object instanceof Track) {
             Track other = (Track) object;
-            Key key = new Key<>("id", Integer.class);
-            if(this.containsKey(key) && other.containsKey(key)) {
-                return Objects.equals(this.get(new Key<>("id", Integer.class)),
-                        other.get(new Key<>("id", Integer.class)));
+            Key key = new Key<>("ID", Integer.class);
+            if (this.containsKey(key) && other.containsKey(key)) {
+                return Objects.equals(this.get(new Key<>("ID", Integer.class)),
+                        other.get(new Key<>("ID", Integer.class)));
             }
         }
         return false;
@@ -173,7 +205,7 @@ public class Track implements Record, Comparable<Track> {
             result.append(entry.getKey().getIdentifier()).append(" = ");
             result.append(entry.getValue()).append(", ");
         }
-        if(result.length() != 1) {
+        if (result.length() != 1) {
             result.delete(result.length() - 2, result.length());
         }
         result.append("]");

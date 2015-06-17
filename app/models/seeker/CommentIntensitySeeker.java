@@ -60,7 +60,7 @@ public class CommentIntensitySeeker extends AbstractSeeker {
     public CommentIntensitySeeker(final Track track, final Seeker decorate,
             final CommentContentSeeker filter) {
         super(track, decorate);
-        setComments(new CommentRetriever(track.get(Track.id)).getComments());
+        setComments(new CommentRetriever(track.get(Track.ID)).getComments());
         this.filter = filter;
     }
 
@@ -71,15 +71,15 @@ public class CommentIntensitySeeker extends AbstractSeeker {
     }
     
     /**
-     * Updates the storage storage by the score from the comment intensity seeker.
-     * @param duration The duration of the snippet and thus the search window.
+     * Updates the storage storage by the SCORE from the comment intensity seeker.
+     * @param duration The DURATION of the snippet and thus the search window.
      * @param storage The storage to update.
      * @return The updated storage.
      */
     private ScoreStorage updateStorage(final int duration, final ScoreStorage storage) {
         Collections.sort(comments);
         final int commentsize = comments.size(); // Done here for efficientcy.
-        final int tracklength = getTrack().get(Track.duration);
+        final int tracklength = getTrack().get(Track.DURATION);
         final int stepsize = Comment.getPeriod();
         for (int time = 0; time < tracklength; time += stepsize) {
             int count = 0;

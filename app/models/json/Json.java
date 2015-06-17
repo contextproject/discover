@@ -36,13 +36,13 @@ public final class Json {
     public static Track getTrack(final JsonNode jsonNode) {
         if (jsonNode != null) {
             Track track = new Track();
-            track.put(Track.id, jsonNode.get("id").asInt());
-            track.put(Track.duration, jsonNode.get("duration").asInt());
-            track.put(Track.username, jsonNode.get("user").get("username").asText());
-            track.put(Track.title, jsonNode.get("title").asText());
-            track.put(Track.genre, jsonNode.get("genre").asText().toLowerCase());
-            track.put(Track.userid, jsonNode.get("user_id").asInt());
-            track.put(Track.url, jsonNode.get("uri").asText());
+            track.put(Track.ID, jsonNode.get("ID").asInt());
+            track.put(Track.DURATION, jsonNode.get("DURATION").asInt());
+            track.put(Track.USERNAME, jsonNode.get("user").get("USERNAME").asText());
+            track.put(Track.TITLE, jsonNode.get("TITLE").asText());
+            track.put(Track.GENRE, jsonNode.get("GENRE").asText().toLowerCase());
+            track.put(Track.USER_ID, jsonNode.get("user_id").asInt());
+            track.put(Track.URL, jsonNode.get("uri").asText());
             return track;
         }
         return null;
@@ -81,6 +81,12 @@ public final class Json {
         return data;
     }
 
+    /**
+     * Generates a Play Result based on the given track.
+     *
+     * @param track The track
+     * @return A Play Result
+     */
     public static Result response(final Track track) {
         if (track == null) {
             return badRequest("Object is empty.");
@@ -88,7 +94,7 @@ public final class Json {
             ObjectNode response = new ObjectMapper().createObjectNode();
             response.put("start", getStartTime(track).getStartTime());
             response.put("window", getStartTime(track).getWindow());
-            response.put("url", "w.soundcloud.com/tracks/" + track.get(Track.id));
+            response.put("url", "w.soundcloud.com/tracks/" + track.get(Track.ID));
             ObjectNode bla = new ObjectMapper().createObjectNode();
             bla.put("response", response);
             return ok(bla);

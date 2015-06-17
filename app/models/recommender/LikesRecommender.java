@@ -47,8 +47,7 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
     /**
      * Constructor for the LikesRecommender class.
      *
-     * @param smallFish
-     *            The recommender object that the class decorates.
+     * @param smallFish The recommender object that the class decorates.
      */
     public LikesRecommender(@Nonnull final Recommender smallFish) {
         super(smallFish);
@@ -77,8 +76,8 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
      * his profile. The method creates a query based on the genres and artists
      * from the profiles likes list.
      *
-     * @return a TrackList containing tracks filtered on genre and artists from
-     *         the profiles likes list.
+     * @return a TrackList containing tracks filtered on GENRE and artists from
+     * the profiles likes list.
      */
     @Override
     public TrackList suggest() {
@@ -92,7 +91,7 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
             while (it1.hasNext()) {
                 Object i = it1.next();
                 if (i != null) {
-                    queryBuilder.append("genre = '").append(i).append("' OR ");
+                    queryBuilder.append("GENRE = '").append(i).append("' OR ");
                 }
             }
             while (it2.hasNext()) {
@@ -109,23 +108,22 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
 
     /**
      * Evaluates the unweighed list of Track objects received from the decorated
-     * recommender and adds additional score to the tracks using its
+     * recommender and adds additional SCORE to the tracks using its
      * scoreboards.
      *
-     * @param unweighed
-     *            The TrackList form the decorated recommender
-     * @return A List of RecTuple object with added score.
+     * @param unweighed The TrackList form the decorated recommender
+     * @return A List of RecTuple object with added SCORE.
      */
     public TrackList evaluate(final TrackList unweighed) {
         for (Track track : unweighed) {
-            double score = track.get(Track.score);
-            if (genreBoard.containsKey(Track.genre)) {
-                score += genreBoard.get(Track.genre);
+            double score = track.get(Track.SCORE);
+            if (genreBoard.containsKey(Track.GENRE)) {
+                score += genreBoard.get(Track.GENRE);
             }
-            if (artistBoard.containsKey(Track.userid)) {
-                score += artistBoard.get(Track.userid);
+            if (artistBoard.containsKey(Track.USER_ID)) {
+                score += artistBoard.get(Track.USER_ID);
             }
-            track.put(Track.score, score);
+            track.put(Track.SCORE, score);
         }
         return unweighed;
     }
@@ -135,29 +133,29 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
      * and dislikes.
      */
     private void generateBoards() {
-            Profile pro = this.getUserProfile();
-            ArrayList<Track> likes = pro.getLikes();
-            ArrayList<Track> dislikes = pro.getDislikes();
-            for (Track track : likes) {
-                updateBoard(genreBoard, track.get(Track.genre), positiveModifier);
-                updateBoard(artistBoard, track.get(Track.userid), positiveModifier);
-            }
-            for (Track track : dislikes) {
-                updateBoard(genreBoard, track.get(Track.genre), negativeModifier);
-                updateBoard(artistBoard, track.get(Track.userid), negativeModifier);
-            }
+        Profile pro = this.getUserProfile();
+        ArrayList<Track> likes = pro.getLikes();
+        ArrayList<Track> dislikes = pro.getDislikes();
+        for (Track track : likes) {
+            updateBoard(genreBoard, track.get(Track.GENRE), positiveModifier);
+            updateBoard(artistBoard, track.get(Track.USER_ID), positiveModifier);
+        }
+        for (Track track : dislikes) {
+            updateBoard(genreBoard, track.get(Track.GENRE), negativeModifier);
+            updateBoard(artistBoard, track.get(Track.USER_ID), negativeModifier);
+        }
     }
 
     /**
-     * Updates a scoreboard to using the profile. A score is added to the key if
-     * it exists and additional score if this is the first time its found.
+     * Updates a scoreboard to using the profile. A SCORE is added to the key if
+     * it exists and additional SCORE if this is the first time its found.
      *
-     * @param hm       The HashMap object containing the keywords and their score.
+     * @param hm       The HashMap object containing the keywords and their SCORE.
      * @param key      Track object that is being added.
-     * @param modifier The modifier for the score as a double.
+     * @param modifier The modifier for the SCORE as a double.
      */
     private void updateBoard(final HashMap<Object, Double> hm, final Object key, final double modifier) {
-        double value = ((key instanceof String) ? 0.7 : 0.3);
+        double value = (key instanceof String) ? 0.7 : 0.3;
         if (hm.containsKey(key)) {
             hm.put(key, hm.get(key) + value * weight * (modifier));
         } else {
@@ -177,8 +175,7 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
     /**
      * Setter for the positive modifier of the object.
      *
-     * @param positiveModifier
-     *            The new modifier of the object.
+     * @param positiveModifier The new modifier of the object.
      */
     public void setPositiveModifier(final double positiveModifier) {
         this.positiveModifier = positiveModifier;

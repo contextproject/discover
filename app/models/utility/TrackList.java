@@ -28,14 +28,14 @@ public class TrackList extends ArrayList<Track> {
         try {
             while (resultSet.next()) {
                 Track track = new Track();
-                track.put(Track.id, resultSet.getInt("track_id"));
-                track.put(Track.duration, resultSet.getInt("duration"));
-                track.put(Track.genre, resultSet.getString("genre").toLowerCase());
-                track.put(Track.title, resultSet.getString("title"));
-                track.put(Track.userid, resultSet.getInt("user_id"));
-                track.put(Track.score, 0.0);
-                if (hasColumn(resultSet, "danceability")) {
-                    track.put(Track.danceability, resultSet.getDouble("danceability"));
+                track.put(Track.ID, resultSet.getInt("track_id"));
+                track.put(Track.DURATION, resultSet.getInt("DURATION"));
+                track.put(Track.GENRE, resultSet.getString("GENRE").toLowerCase());
+                track.put(Track.TITLE, resultSet.getString("TITLE"));
+                track.put(Track.USER_ID, resultSet.getInt("user_id"));
+                track.put(Track.SCORE, 0.0);
+                if (hasColumn(resultSet, "DANCEABILITY")) {
+                    track.put(Track.DANCEABILITY, resultSet.getDouble("DANCEABILITY"));
                 }
                 add(track);
             }
@@ -94,14 +94,14 @@ public class TrackList extends ArrayList<Track> {
         if (!this.contains(otherTrack)) {
             add(otherTrack);
         } else {
-            //update score entry
-            if (otherTrack.containsKey(Track.score)) {
+            //update SCORE entry
+            if (otherTrack.containsKey(Track.SCORE)) {
                 Track thisTrack = getSame(otherTrack);
                 if (thisTrack != null) {
-                    if (thisTrack.containsKey(Track.score)) {
-                        thisTrack.put(Track.score, otherTrack.get(Track.score) + thisTrack.get(Track.score));
+                    if (thisTrack.containsKey(Track.SCORE)) {
+                        thisTrack.put(Track.SCORE, otherTrack.get(Track.SCORE) + thisTrack.get(Track.SCORE));
                     } else {
-                        thisTrack.put(Track.score, otherTrack.get(Track.score));
+                        thisTrack.put(Track.SCORE, otherTrack.get(Track.SCORE));
                     }
                 }
             }
@@ -109,7 +109,7 @@ public class TrackList extends ArrayList<Track> {
     }
 
     /**
-     * Get the same track from this track list as the provided track
+     * Get the same track from this track list as the provided track.
      *
      * @param other The track to compare with
      * @return The same track form this track list

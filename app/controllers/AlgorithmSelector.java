@@ -32,7 +32,7 @@ public final class AlgorithmSelector {
 
         /**
          * Mode: RANDOM. The selector will choose a random time to start based
-         * on its duration.
+         * on its DURATION.
          */
         RANDOM
     }

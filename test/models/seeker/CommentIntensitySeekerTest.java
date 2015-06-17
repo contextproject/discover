@@ -71,8 +71,8 @@ public class CommentIntensitySeekerTest extends AbstractSeekerTest {
     public void setUp() throws Exception {
         super.setUp();
         Track track = new Track();
-        track.put(Track.id, 32097940);
-        track.put(Track.duration, 100000);
+        track.put(Track.ID, 32097940);
+        track.put(Track.DURATION, 100000);
         list = new CommentList();
         setSeeker(new CommentIntensitySeeker(track));
         c1 = new Comment(1, 1, 5000, "l ");
@@ -149,7 +149,7 @@ public class CommentIntensitySeekerTest extends AbstractSeekerTest {
         TimedSnippet ts = commentIntensitySeeker.seek();
         assertEquals(30000, TimedSnippet.getDefaultDuration());
         assertEquals(5000, Comment.getPeriod());
-        assertEquals(new Integer(100000), getSeeker().getTrack().get(Track.duration));
+        assertEquals(new Integer(100000), getSeeker().getTrack().get(Track.DURATION));
         final String message = "ScoreStorage returned was "
                 + commentIntensitySeeker.calculateScores(TimedSnippet.getDefaultDuration());
         assertEquals(message, 20000, ts.getStartTime());

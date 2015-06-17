@@ -9,7 +9,7 @@ import models.score.ScoreStorage;
 /**
  * This class selects the loudest part of the song to be awarded the most points
  * so so it is likely to be selected to be used by the snippets. It then can
- * selects the snippet with the highest score.
+ * selects the snippet with the highest SCORE.
  * 
  * @since 15-06-2015
  * @version 15-06-2015
@@ -80,7 +80,7 @@ public class LoudnessSeeker extends AbstractSeeker {
      */
     public int getWaveformPart(final int amountOfBars,
             final int barIndex) {
-        return MixSplitter.getWaveformPart(getTrack().get(Track.duration), amountOfBars, barIndex);
+        return MixSplitter.getWaveformPart(getTrack().get(Track.DURATION), amountOfBars, barIndex);
     }
     
     /**
