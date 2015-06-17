@@ -29,7 +29,6 @@ public final class AlgorithmSelector {
          * with the to calculate the preview.
          */
         CONTENT,
-
         /**
          * Mode: RANDOM. The selector will choose a random time to start based
          * on its duration.
