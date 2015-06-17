@@ -4,10 +4,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import models.database.DatabaseConnector;
-import models.database.RandomSongSelector;
+import models.json.Json;
 import models.mix.MixSplitter;
-import models.record.Key;
 import models.record.Track;
+import models.utility.TrackList;
 import play.mvc.Controller;
 import play.mvc.Result;
 import views.html.index;
@@ -41,7 +41,7 @@ public final class Application extends Controller {
      */
     public static Result index() {
         String url = "w.soundcloud.com/tracks/67016624";
-        return ok(index.render(url, getStartTime(67016624)));
+        return ok(index.render(url, 0));
     }
 
     /**
@@ -51,40 +51,17 @@ public final class Application extends Controller {
      * @return An http ok response with the new rendered page.
      */
     public static Result trackRequest() {
-        JsonNode json = request().body().asJson();
-        if (json == null) {
-            return badRequest("Object is empty");
-        } else if (json.get("track") == null) {
-            return badRequest("Object does not contain a 'track' subset.");
-        } else {
-            int trackID = json.get("track").get("id").asInt();
-            int duration = json.get("track").get("duration").asInt();
-            Track track = new Track();
-            track.put(new Key<>("id", Integer.class), trackID);
-            track.put(new Key<>("duration", Integer.class), duration);
-            int starttime2 = getStartTime(track);
-            ObjectNode objNode = mapper.createObjectNode();
-            JsonNode response = objNode.put("response", starttime2);
-            return ok(response);
-        }
+        return Json.response((Json.getTrack(request().body().asJson())));
     }
 
     /**
      * Selects a random track from the database.
      *
-     * @return an http ok response with a random track id.
+     * @return A HTTP ok response with a random track id.
      */
     public static Result getRandomSong() {
-        RandomSongSelector selector;
-        selector = RandomSongSelector.getRandomSongSelector();
-        int trackId = selector.getRandomSong();
-        String widgetUrl = "w.soundcloud.com/tracks/" + trackId;
-        int starttime = getStartTime(trackId);
-        Map<String, String> map = new TreeMap<String, String>();
-        map.put("url", widgetUrl);
-        map.put("start", Integer.toString(starttime));
-        JsonNode response = mapper.valueToTree(map);
-        return ok(response);
+        Track track = TrackList.get("SELECT DISTINCT track_id FROM tracks ORDER BY RAND() LIMIT 1").get(0);
+        return Json.response(track);
     }
 
     /**
@@ -127,20 +104,6 @@ public final class Application extends Controller {
     }
 
     /**
-     * Retrieves a start-time calculated by the CommentIntensitySeeker for the
-     * given track id.
-     *
-     * @param trackId The id of the track.
-     * @return the start-time of the snippet.
-     */
-    public static int getStartTime(final int trackId) {
-        Track track = new Track();
-        track.put(new Key<>("id", Integer.class), trackId);
-        track.put(new Key<>("duration", Integer.class), -1);
-        return getStartTime(track);
-    }
-
-    /**
      * Set the mode of the preview.
      *
      * @return A HTTP response
@@ -155,16 +118,6 @@ public final class Application extends Controller {
             AlgorithmSelector.setMode(json.get("mode").asText());
             return ok("");
         }
-    }
-
-    /**
-     * Get the start time calculated by the AlgorithmSelector.
-     *
-     * @param track The track
-     * @return The start time of the snippet.
-     */
-    public static int getStartTime(final Track track) {
-        return AlgorithmSelector.determineStart(track);
     }
 
     /**

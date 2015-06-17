@@ -1,6 +1,5 @@
 package models.seeker;
 
-import models.record.Key;
 import models.record.Track;
 import models.snippet.TimedSnippet;
 
@@ -29,7 +28,7 @@ public class RandomSeeker implements Seeker {
      * @return The start time
      */
     private int getStartTime() {
-        return (int) (Math.random() * track.get(new Key<>("duration", Integer.class)));
+        return (int) (Math.random() * track.get(Track.duration));
     }
 
     /**

@@ -19,11 +19,6 @@ public final class RandomSongSelector {
     private static RandomSongSelector selector;
 
     /**
-     * The name of the track_id field in the database.
-     */
-    private final String trackid;
-
-    /**
      * The query to be executed.
      */
     private final String query;
@@ -32,11 +27,7 @@ public final class RandomSongSelector {
      * Private constructor that construct new random song selectors.
      */
     private RandomSongSelector() {
-        trackid = "track_id";
-        query = "SELECT DISTINCT " + trackid
-                + " FROM tracks"
-                + " ORDER BY RAND()"
-                + " LIMIT 1";
+        query = "SELECT DISTINCT track_id FROM tracks ORDER BY RAND() LIMIT 1";
     }
 
     /**

@@ -1,7 +1,6 @@
 package models.recommender;
 
 import models.database.DatabaseConnector;
-import models.record.Key;
 import models.record.Track;
 import models.utility.TrackList;
 
@@ -45,7 +44,7 @@ public class FeatureRecommender extends RecommendDecorator implements Recommende
                     + "LIMIT 3";
             TrackList result = TrackList.get(query);
             for (Track track : result) {
-                track.put(new Key<>("score", Double.class), getWeight());
+                track.put(Track.score, getWeight());
             }
             return result;
         }
@@ -64,8 +63,7 @@ public class FeatureRecommender extends RecommendDecorator implements Recommende
         double mean = mean();
         double deviation = deviation();
         for (Track track : unweighted) {
-            Key key = new Key<>("score", Double.class);
-            track.put(key, (double) track.get(key) + score(track, mean, deviation));
+            track.put(Track.score, track.get(Track.score) + score(track, mean, deviation));
         }
         return unweighted;
     }
@@ -79,10 +77,10 @@ public class FeatureRecommender extends RecommendDecorator implements Recommende
     private TrackList updateTracks(final TrackList trackList) {
         for (Track track : trackList) {
             String query = "SELECT * FROM features WHERE features.track_id = "
-                    + track.get(new Key<>("id", Integer.class));
+                    + track.get(Track.id);
             double danceability = DatabaseConnector.getSingleDouble(query, "danceability");
             if (danceability != 0.0) {
-                track.put(new Key<>("danceability", Double.class), danceability);
+                track.put(Track.danceability, danceability);
             }
         }
         return trackList;
@@ -97,18 +95,15 @@ public class FeatureRecommender extends RecommendDecorator implements Recommende
         TrackList likes = updateTracks(getUserProfile().getLikes());
         double mean = 0.0;
         double count = 0.0;
-        boolean calculate = false;
         if (likes.size() != 0) {
-            Key<Double> key = new Key<>("danceability", Double.class);
             for (Track track : likes) {
-                if (track.containsKey(key)) {
-                    mean += track.get(key);
+                if (track.containsKey(Track.danceability)) {
+                    mean += track.get(Track.danceability);
                     count++;
-                    calculate = true;
                 }
             }
         }
-        if (calculate) {
+        if (count != 0) {
             mean = mean / count;
         }
         return mean;
@@ -125,11 +120,10 @@ public class FeatureRecommender extends RecommendDecorator implements Recommende
         double mean = mean();
         if (likes.size() != 0) {
             double variance = 0.0;
-            Key<Double> key = new Key<>("danceability", Double.class);
             for (Track track : likes) {
-                if (track.containsKey(key)) {
-                    variance += (track.get(key) - mean)
-                            * (track.get(key) - mean);
+                if (track.containsKey(Track.danceability)) {
+                    variance += (track.get(Track.danceability) - mean)
+                            * (track.get(Track.danceability) - mean);
                 }
             }
             deviation = Math.sqrt(variance);
@@ -146,21 +140,17 @@ public class FeatureRecommender extends RecommendDecorator implements Recommende
      * @return The score
      */
     private double score(final Track track, final double mean, final double deviation) {
-        Key<Double> key = new Key<>("danceability", Double.class);
-        if (track.containsKey(key)) {
-            double danceability = track.get(key);
-            final double quarter = 0.25;
-            final double half = 0.5;
-            final double threequarter = 0.75;
-            if (mean - quarter * deviation <= danceability
-                    && mean + quarter * deviation >= danceability) {
+        if (track.containsKey(Track.danceability)) {
+            double danceability = track.get(Track.danceability);
+            if (mean - 0.25 * deviation <= danceability
+                    && mean + 0.25 * deviation >= danceability) {
                 return getWeight();
-            } else if (mean - half * deviation <= danceability
-                    && mean + half * deviation >= danceability) {
-                return half * getWeight();
+            } else if (mean - 0.5 * deviation <= danceability
+                    && mean + 0.5 * deviation >= danceability) {
+                return 0.5 * getWeight();
             } else if (mean - deviation <= danceability
                     && mean + deviation >= danceability) {
-                return threequarter * getWeight();
+                return 0.75 * getWeight();
             }
         }
         return 0.0;

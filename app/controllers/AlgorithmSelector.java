@@ -3,6 +3,7 @@ package controllers;
 import models.record.Track;
 import models.seeker.CommentIntensitySeeker;
 import models.seeker.RandomSeeker;
+import models.snippet.TimedSnippet;
 
 /**
  * Selects which algorithm could be used best and also combines algorithms.
@@ -47,7 +48,7 @@ public final class AlgorithmSelector {
      * @param track The track
      * @return The start of the snippet
      */
-    public static int determineStart(final Track track) {
+    public static TimedSnippet determineStart(final Track track) {
         int start;
         switch (curMode) {
             case CONTENT:
@@ -63,7 +64,7 @@ public final class AlgorithmSelector {
                 }
                 break;
         }
-        return start;
+        return new TimedSnippet(start);
     }
 
     /**

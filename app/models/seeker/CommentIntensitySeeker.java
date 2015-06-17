@@ -2,7 +2,6 @@ package models.seeker;
 
 import models.database.retriever.CommentRetriever;
 import models.record.Comment;
-import models.record.Key;
 import models.record.Track;
 import models.snippet.TimedSnippet;
 import models.utility.CommentList;
@@ -33,8 +32,7 @@ public class CommentIntensitySeeker implements Seeker {
      */
     public CommentIntensitySeeker(final Track track) {
         this.track = track;
-        this.comments = new CommentRetriever(track.get(
-                new Key<>("id", Integer.class))).getComments();
+        this.comments = new CommentRetriever(track.get(Track.id)).getComments();
     }
 
     /**

@@ -18,6 +18,19 @@ public class Track implements Record, Comparable<Track> {
     private final Map<Key<?>, Object> entries = new HashMap<>();
 
     /**
+     * The standard keys that a track could contain.
+     */
+    public final static Key<Integer> id = new Key<>("id", Integer.class);
+    public final static Key<Integer> duration = new Key<>("duration", Integer.class);
+    public final static Key<String> username = new Key<>("username", String.class);
+    public final static Key<String> title = new Key<>("title", String.class);
+    public final static Key<String> genre = new Key<>("genre", String.class);
+    public final static Key<Integer> userid = new Key<>("user_id", Integer.class);
+    public final static Key<String> url = new Key<>("url", String.class);
+    public final static Key<Double> score = new Key<>("score", Double.class);
+    public final static Key<Double> danceability = new Key<>("danceability", Double.class);
+
+    /**
      * The amount of entries stored in this Track object.
      *
      * @return The amount of entries

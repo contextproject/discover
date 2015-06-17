@@ -1,7 +1,6 @@
 package models.utility;
 
 import models.database.DatabaseConnector;
-import models.record.Key;
 import models.record.Track;
 
 import java.sql.ResultSet;
@@ -29,14 +28,14 @@ public class TrackList extends ArrayList<Track> {
         try {
             while (resultSet.next()) {
                 Track track = new Track();
-                track.put(new Key<>("id", Integer.class), resultSet.getInt("track_id"));
-                track.put(new Key<>("duration", String.class), resultSet.getString("duration"));
-                track.put(new Key<>("genre", String.class), resultSet.getString("genre").toLowerCase());
-                track.put(new Key<>("title", String.class), resultSet.getString("title"));
-                track.put(new Key<>("user_id", Integer.class), resultSet.getInt("user_id"));
-                track.put(new Key<>("score", Double.class), 0.0);
+                track.put(Track.id, resultSet.getInt("track_id"));
+                track.put(Track.duration, resultSet.getInt("duration"));
+                track.put(Track.genre, resultSet.getString("genre").toLowerCase());
+                track.put(Track.title, resultSet.getString("title"));
+                track.put(Track.userid, resultSet.getInt("user_id"));
+                track.put(Track.score, 0.0);
                 if (hasColumn(resultSet, "danceability")) {
-                    track.put(new Key<>("danceability", Double.class), resultSet.getDouble("danceability"));
+                    track.put(Track.danceability, resultSet.getDouble("danceability"));
                 }
                 add(track);
             }
@@ -80,7 +79,7 @@ public class TrackList extends ArrayList<Track> {
      * @param trackList The tracklist to add
      */
     public void addDistinctAll(final TrackList trackList) {
-        for(Track track : trackList) {
+        for (Track track : trackList) {
             addDistinct(track);
         }
     }
@@ -91,20 +90,18 @@ public class TrackList extends ArrayList<Track> {
      * @param otherTrack The track to add
      */
     private void addDistinct(final Track otherTrack) {
-        if(!this.contains(otherTrack)) {
+        if (!this.contains(otherTrack)) {
             add(otherTrack);
         } else {
             //update score entry
-            Key<Double> score = new Key<>("score", Double.class);
-            if(otherTrack.containsKey(score)){
+            if (otherTrack.containsKey(Track.score)) {
                 Track thisTrack = getSame(otherTrack);
-                if(thisTrack != null) {
-                    if(thisTrack.containsKey(score)) {
-                        thisTrack.put(score, otherTrack.get(score) + thisTrack.get(score));
+                if (thisTrack != null) {
+                    if (thisTrack.containsKey(Track.score)) {
+                        thisTrack.put(Track.score, otherTrack.get(Track.score) + thisTrack.get(Track.score));
                     } else {
-                        thisTrack.put(score, otherTrack.get(score));
+                        thisTrack.put(Track.score, otherTrack.get(Track.score));
                     }
-
                 }
             }
         }
@@ -117,8 +114,8 @@ public class TrackList extends ArrayList<Track> {
      * @return The same track form this track list
      */
     private Track getSame(final Track other) {
-        for(Track track : this) {
-            if(track.equals(other)) {
+        for (Track track : this) {
+            if (track.equals(other)) {
                 return track;
             }
         }

@@ -9,7 +9,6 @@ import models.recommender.BasicRecommender;
 import models.recommender.FeatureRecommender;
 import models.recommender.LikesRecommender;
 import models.recommender.Recommender;
-import models.record.Key;
 import models.record.Track;
 import models.utility.TrackList;
 import play.mvc.Result;
@@ -109,12 +108,12 @@ public final class RecommenderController {
             Track track = recs.get(i);
             ObjectNode jsontrack = mapper.createObjectNode();
 
-            jsontrack.put("id", track.get(new Key<>("id", Integer.class)));
-            jsontrack.put("artist", track.get(new Key<>("username", String.class)));
-            jsontrack.put("title", track.get(new Key<>("title", String.class)));
-            jsontrack.put("url", track.get(new Key<>("url", String.class)));
-            jsontrack.put("genre", track.get(new Key<>("genre", String.class)));
-            jsontrack.put("score", track.get(new Key<>("score", Double.class)));
+            jsontrack.put("id", track.get(Track.id));
+            jsontrack.put("artist", track.get(Track.username));
+            jsontrack.put("title", track.get(Track.title));
+            jsontrack.put("url", track.get(Track.url));
+            jsontrack.put("genre", track.get(Track.genre));
+            jsontrack.put("score", track.get(Track.score));
 
             result.put(Integer.toString(i), jsontrack);
         }

@@ -1,7 +1,6 @@
 package models.recommender;
 
 import models.profile.Profile;
-import models.record.Key;
 import models.record.Track;
 import models.utility.TrackList;
 
@@ -118,16 +117,14 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
      */
     public TrackList evaluate(final TrackList unweighed) {
         for (Track track : unweighed) {
-            String genre = track.get(new Key<>("genre", String.class));
-            int artist = track.get(new Key<>("user_id", Integer.class));
-            double score = track.get(new Key<>("score", Double.class));
-            if (genreBoard.containsKey(genre)) {
-                score += genreBoard.get(genre);
+            double score = track.get(Track.score);
+            if (genreBoard.containsKey(Track.genre)) {
+                score += genreBoard.get(Track.genre);
             }
-            if (artistBoard.containsKey(artist)) {
-                score += artistBoard.get(artist);
+            if (artistBoard.containsKey(Track.userid)) {
+                score += artistBoard.get(Track.userid);
             }
-            track.put(new Key<>("score", Double.class), score);
+            track.put(Track.score, score);
         }
         return unweighed;
     }
@@ -142,12 +139,12 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
             ArrayList<Track> likes = pro.getLikes();
             ArrayList<Track> dislikes = pro.getDislikes();
             for (Track track : likes) {
-                updateBoard(genreBoard, track.get(new Key<>("genre", String.class)), positiveModifier);
-                updateBoard(artistBoard, track.get(new Key<>("user_id", Integer.class)), positiveModifier);
+                updateBoard(genreBoard, track.get(Track.genre), positiveModifier);
+                updateBoard(artistBoard, track.get(Track.userid), positiveModifier);
             }
             for (Track track : dislikes) {
-                updateBoard(genreBoard, track.get(new Key<>("genre", String.class)), negativeModifier);
-                updateBoard(artistBoard, track.get(new Key<>("user_id", Integer.class)), negativeModifier);
+                updateBoard(genreBoard, track.get(Track.genre), negativeModifier);
+                updateBoard(artistBoard, track.get(Track.userid), negativeModifier);
             }
         }
     }
@@ -156,12 +153,12 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
      * Updates a scoreboard to using the profile. A score is added to the key if
      * it exists and additional score if this is the first time its found.
      *
-     * @param hm         The HashMap object containing the keywords and their score.
-     * @param key        Track object that is being added.
-     * @param modifier   The modifier for the score as a double.
+     * @param hm       The HashMap object containing the keywords and their score.
+     * @param key      Track object that is being added.
+     * @param modifier The modifier for the score as a double.
      */
     private void updateBoard(final HashMap<Object, Double> hm, final Object key, final double modifier) {
-        double value = ((key instanceof String) ? 0.7 :  0.3);
+        double value = ((key instanceof String) ? 0.7 : 0.3);
         if (hm.containsKey(key)) {
             hm.put(key, hm.get(key) + value * weight * (modifier));
         } else {

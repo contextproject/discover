@@ -26,7 +26,7 @@ public class AlgorithmSelectorTest {
     public void setUp() {
         DatabaseConnector databaseConnector = new DatabaseConnector();
         databaseConnector.loadDrivers();
-        databaseConnector.makeConnection("jdbc:mysql://188.166.78.36/contextbase", "context", "password");
+        DatabaseConnector.makeConnection("jdbc:mysql://188.166.78.36/contextbase", "context", "password");
         Application.setDatabaseConnector(databaseConnector);
 
         track = new Track();
@@ -47,7 +47,7 @@ public class AlgorithmSelectorTest {
      */
     @Test
     public void testRandom() {
-        int start = AlgorithmSelector.determineStart(track);
+        int start = AlgorithmSelector.determineStart(track).getStartTime();
 
         assertTrue(track.get(new Key<>("duration", Integer.class)) >= start);
         assertTrue(0 <= start);
