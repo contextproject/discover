@@ -75,14 +75,20 @@
                     </div>
                     <div class="4u$ 12u$(medium) important(medium)">
                         <div class="controls">
-                            <a id="switch" class="toggler off">off</a>  Autoplay  <br>
-                            <label for="volume"></label><input type="range" class="control" id="volume">
 
+                            <label for="volume">Volume</label><input type="range" class="control" id="volume"> <br>
+
+                            <a id="openMenu">Advanced menu &#x25BE </a> <br>
+                            <div id="menu" class="control">
+                                <a id="switch" class="toggler off">off</a>  Autoplay  <br>
+                                <input type="number" placeholder="Number of splits (&#8805 0)" class="control" id="numsplit"> <br>
+                            </div>
                             <button class="control" id="preview">Preview</button> <br>
                             <button class="control" id="prev">Prev</button><button class="control" id="next">Next</button> <br>
                             <button class="control" id="like">Like</button><button class="control" id="dislike">Dislike</button><br>
                             <button class="control" id="rand">Random Song</button> <br>
                             <button class="control" id="sendWave">Mix Splitter</button> <br>
+
                             <button class="control" id="connect">Connect</button> <br>
                             <button class="control" id="waveform">Waveform</button> <br>
                         </div>
@@ -160,7 +166,20 @@
                 </li>
                 <li data-id="sendWave" data-button="Next" >
                     <h2>Split the Mix!</h2>
-                    <p>Splits a mix in different part to play separately.</p>
+                    <p>Splits a mix or a song in different parts to play separately.</p>
+                </li>
+                <li data-id="openMenu" data-button="Next" >
+                    <h2>Advanced</h2>
+                    <p>This menu will give you some extra feautures and options.</p>
+                </li>
+                <li data-id="switch" data-button="Next" >
+                    <h2>Autoplay</h2>
+                    <p>If you want to listen to music non-stop switch the button to 'on' and it will automaticly keep playing music.</p>
+                    <p>This can be the next track in the playlist or a recommended song based on your preferences.</p>
+                </li>
+                <li data-id="numsplit" data-button="Next" >
+                    <h2>How many splits do you want?</h2>
+                    <p>Fill in a number greater or equal than zero or keep it empty to search for the default amount of splits</p>
                 </li>
                 <li data-id="connect" data-button="Next" >
                     <h2>Account login</h2>

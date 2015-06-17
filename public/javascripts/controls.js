@@ -4,8 +4,9 @@ var mixSplits, waveform;
 var snipWin = 5000.00;
 var splitPointer = -1;
 var autoplay = false;
+var open = false;
 
-
+//Function for the autoplay button only works if autoplay is on
 widget.bind(SC.Widget.Events.FINISH, function () {
     if(autoplay) {
         widget.getSounds(function (sounds) {
@@ -30,6 +31,18 @@ $("#current").click(function () {
     });
 });
 
+function openMenu() {
+    var menu = $("#menu");
+    if ($(menu).is(":visible") && !open) {
+        $(menu).animate({height: 0}, 500, function() {$(menu).hide();});
+    } else {
+        $(menu).show().animate({height: 100}, 500);
+    }
+}
+
+//the advanced slide menu
+$("#openMenu").click(openMenu);
+
 $('a.toggler.off').click(function(){
     if (document.getElementById("switch").innerHTML == "on") {
         document.getElementById("switch").innerHTML = "off";
@@ -39,8 +52,9 @@ $('a.toggler.off').click(function(){
         autoplay = true;
     }
     $(this).toggleClass('off');
-
 });
+
+
 
 // Prepare all the data to be sent when the widget is ready
 widget.bind(SC.Widget.Events.READY, function () {
@@ -62,23 +76,21 @@ $(window).load(function() {
                 $(this).joyride('set_li', false, 1);
             }
         },
+        preRideCallback: openMenu,
         modal:true,
         expose:true
     });
 });
 
 $("#help").click(function() {
+    open = true;
+    openMenu;
     $.removeCookie("joyride",{ expires: 365, domain: false, path: false });
     $('#joyRideTipContent').joyride({
         cookieMonster : true,
         preRideCallback: $(this).joyride('destroy',false,1)
     });
-
-    if(!document.getElementById("switch").innerHTML == "on"){
-        widget.bind(SC.Widget.Events.FINISH, function () {
-          alert("hoi");
-        });
-    }
+    open = false;
 });
 
 // The method is used to send Data to the server
@@ -171,8 +183,17 @@ $("#sendWave").click(function () {
     widget.getSounds(function (sounds) {
         var message = {
             "track": sounds[0],
-            "waveform": waveform.data
+            "waveform": waveform.data,
+            "splits" : 0
         };
+        if($("#numsplit").val() == '' ) {
+            message["splits"] =  0;
+        }else if(parseInt($("#numsplit").val()) > 0){
+            message["splits"] =  parseInt($("#numsplit").val());
+        }else{
+            message["splits"] = 0;
+            console.log("Number of splits must be greater or equal than zero");
+        }
         sendData(message, "/splitWaveform", setMixSplit);
     });
 });
