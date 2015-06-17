@@ -1,0 +1,11 @@
+<scores>
+	<score>
+		<value>10</value>
+		<string>hi</string>
+		<string>good</string>
+	</score>
+	<score>
+		<value>20</value>
+		<string>yay!</string>
+	</score>
+</scores>

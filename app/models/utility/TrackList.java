@@ -51,7 +51,8 @@ public class TrackList extends ArrayList<Track> {
      * @return The TrackList
      */
     public static TrackList get(final String query) {
-        return new TrackList(DatabaseConnector.executeQuery(query));
+        return new TrackList(DatabaseConnector.getConnector()
+                .executeQuery(query));
     }
 
     /**

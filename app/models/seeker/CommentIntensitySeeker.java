@@ -3,36 +3,108 @@ package models.seeker;
 import models.database.retriever.CommentRetriever;
 import models.record.Comment;
 import models.record.Track;
-import models.snippet.TimedSnippet;
+import models.score.ScoreStorage;
 import models.utility.CommentList;
 
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.Collections;
 
 /**
  * This class returns the start time for a snippet, based on the comment
  * intensity of the track.
+ * 
+ * @since 07-05-2015
+ * @version 16-06-2015
+ * 
+ * @author stefan boodt
+ * @author tomas heinsohn huala
  */
-public class CommentIntensitySeeker implements Seeker {
-
-    /**
-     * The id of the track.
-     */
-    private Track track;
+public class CommentIntensitySeeker extends AbstractSeeker {
 
     /**
      * The set of comments of the track.
      */
     private CommentList comments;
+    
+    /**
+     * The filter to get the scores out of.
+     */
+    private final CommentContentSeeker filter;
 
     /**
-     * Constructor.
+     * Creates a new CommentIntensitySeeker that moves over the given track.
      *
      * @param track The track
      */
     public CommentIntensitySeeker(final Track track) {
-        this.track = track;
-        this.comments = new CommentRetriever(track.get(Track.id)).getComments();
+        this(track, new NullSeeker());
+    }
+    
+    /**
+     * Creates a new CommentIntensitySeeker that moves over the given track and
+     * decorates the given Seeker.
+     * @param track The track to search.
+     * @param decorate The Seeker to decorate.
+     */
+    public CommentIntensitySeeker(final Track track, final Seeker decorate) {
+        this(track, decorate, new CommentContentSeeker());
+    }
+
+    
+    /**
+     * Creates a new CommentIntensitySeeker that moves over the given track and
+     * decorates the given Seeker.
+     * @param track The track to search.
+     * @param decorate The Seeker to decorate.
+     * @param filter The comment content filter to use and the appropriate scores within it.
+     */
+    public CommentIntensitySeeker(final Track track, final Seeker decorate,
+            final CommentContentSeeker filter) {
+        super(track, decorate);
+        setComments(new CommentRetriever(track.get(Track.id)).getComments());
+        this.filter = filter;
+    }
+
+    @Override
+    public ScoreStorage calculateScores(final int duration) {
+        ScoreStorage storage = getDecorate().calculateScores(duration);
+        return updateStorage(duration, storage);
+    }
+    
+    /**
+     * Updates the storage storage by the score from the comment intensity seeker.
+     * @param duration The duration of the snippet and thus the search window.
+     * @param storage The storage to update.
+     * @return The updated storage.
+     */
+    private ScoreStorage updateStorage(final int duration, final ScoreStorage storage) {
+        Collections.sort(comments);
+        final int commentsize = comments.size(); // Done here for efficientcy.
+        final int tracklength = getTrack().get(Track.duration);
+        final int stepsize = Comment.getPeriod();
+        for (int time = 0; time < tracklength; time += stepsize) {
+            int count = 0;
+            boolean finished = false;
+            for (int i = 0; !finished && i < commentsize; i++) {
+                Comment c2 = comments.get(i);
+                if (isInRange(c2.getTime(), time, duration)) {
+                    count += getWeight(c2);
+                } else if (!isBefore(c2.getTime(), time + duration)) {
+                    finished = true;
+                }
+            }
+            storage.add(time, count);
+        }
+        return storage;
+    }
+    
+    /**
+     * Checks if time is less than or equal to upperbound.
+     * @param time The time.
+     * @param upperbound The time to check against.
+     * @return true iff time <= upperbound.
+     */
+    protected boolean isBefore(final int time, final int upperbound) {
+        return time <= upperbound;
     }
 
     /**
@@ -43,8 +115,8 @@ public class CommentIntensitySeeker implements Seeker {
      * @param window The size of the range.
      * @return true iff it is in the range.
      */
-    private static boolean isInRange(final int time, final int bottom, final int window) {
-        return time >= bottom && time <= (bottom + window);
+    protected boolean isInRange(final int time, final int bottom, final int window) {
+        return time >= bottom && isBefore(time, bottom + window);
     }
 
     /**
@@ -53,64 +125,8 @@ public class CommentIntensitySeeker implements Seeker {
      * @param comment The comment to gain the weight of.
      * @return The weight of the comment.
      */
-    private static int getWeight(final Comment comment) {
-        CommentContentSeeker filt = new CommentContentSeeker();
-        return 2 + filt.contentFilter(comment.getBody());
-    }
-
-    /**
-     * Generates a start time for a snippet.
-     *
-     * @return a start time
-     */
-    private int getStartTime() {
-        int start = 0;
-        int maxcount = 0;
-        Set<Integer> passed = new TreeSet<>();
-        for (Comment c : comments) {
-            int count = 0;
-            if (!passed.contains(c.getTime())) {
-                for (Comment c2 : comments) {
-                    if (isInRange(c2.getTime(), c.getTime(), TimedSnippet.getDefaultDuration())) {
-                        count += getWeight(c2);
-                    }
-                }
-                if (count > maxcount) {
-                    maxcount = count;
-                    start = c.getTime();
-                }
-                passed.add(c.getTime());
-            }
-        }
-        return start;
-    }
-
-    /**
-     * Seeks the snippet to be used of a given song.
-     *
-     * @return A TimedSnippet object
-     */
-    @Override
-    public TimedSnippet seek() {
-        return new TimedSnippet(getStartTime());
-    }
-
-    /**
-     * Getter of the track.
-     *
-     * @return The track
-     */
-    public Track getTrack() {
-        return track;
-    }
-
-    /**
-     * Setter of the track.
-     *
-     * @param track The track
-     */
-    public void setTrack(final Track track) {
-        this.track = track;
+    protected int getWeight(final Comment comment) {
+        return 2 + getFilter().contentFilter(comment.getBody());
     }
 
     /**
@@ -129,5 +145,13 @@ public class CommentIntensitySeeker implements Seeker {
      */
     public void setComments(final CommentList comments) {
         this.comments = comments;
+    }
+    
+    /**
+     * Returns the filter used by this instance to retrieve the scores.
+     * @return The Filter used.
+     */
+    public CommentContentSeeker getFilter() {
+        return filter;
     }
 }

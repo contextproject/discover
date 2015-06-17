@@ -4,16 +4,42 @@ var mixSplits, waveform, songStart, songEnd;
 var snipWin = 5000.00;
 var splitPointer = -1;
 setStartTime(parseFloat(start));
+var autoplay = false;
+
+
+widget.bind(SC.Widget.Events.FINISH, function () {
+    if(autoplay) {
+        widget.getSounds(function (sounds) {
+           if (sounds.length > 1){
+               widget.next();
+           } else{
+              randomSong();
+           }
+        });
+    }
+});
 
 $("#current").click(function () {
-    $widget.bind(SC.Widget.Events.READY, function () {
+    widget.bind(SC.Widget.Events.READY, function () {
         // get information about currently playing sound
-        $widget.getSounds(function (currentSound) {
+        widget.getSounds(function (currentSound) {
             console.log(currentSound[0]);
             var id = currentSound[0].id;
             console.log(id);
         });
     });
+});
+
+$('a.toggler.off').click(function(){
+    if (document.getElementById("switch").innerHTML == "on") {
+        document.getElementById("switch").innerHTML = "off";
+        autoplay = false;
+    } else {
+        document.getElementById("switch").innerHTML = "on";
+        autoplay = true;
+    }
+    $(this).toggleClass('off');
+
 });
 
 // Prepare all the data to be sent when the widget is ready
@@ -25,6 +51,34 @@ widget.bind(SC.Widget.Events.READY, function () {
         waveform.dataFromSoundCloudTrack(sounds[0]);
     });
     widget.unbind(SC.Widget.Events.READY);
+});
+
+$(window).load(function() {
+    $('#joyRideTipContent').joyride({
+        cookieMonster : true,
+        autoStart : true,
+        postStepCallback : function (index, tip) {
+            if (index == 2) {
+                $(this).joyride('set_li', false, 1);
+            }
+        },
+        modal:true,
+        expose:true
+    });
+});
+
+$("#help").click(function() {
+    $.removeCookie("joyride",{ expires: 365, domain: false, path: false });
+    $('#joyRideTipContent').joyride({
+        cookieMonster : true,
+        preRideCallback: $(this).joyride('destroy',false,1)
+    });
+
+    if(!document.getElementById("switch").innerHTML == "on"){
+        widget.bind(SC.Widget.Events.FINISH, function () {
+          alert("hoi");
+        });
+    }
 });
 
 // The method is used to send Data to the server
@@ -150,7 +204,7 @@ function reloadWidget(url) {
                 "track": sounds[pos],
                 "waveform": waveform.data
             };
-            sendData(message, "/request", setStartTime);
+            sendData(message, "/request", setStartTime2);
             // use the following line if you want to re-render the page.
             // window.location.href = "http://localhost:9000/tracks/" + sounds[pos].id;
         });
@@ -183,13 +237,18 @@ $("#algoMode").on("input change", function () {
 
 //Set the new start time of the preview.
 function setStartTime(newStart) {
-	if(newStart < 0 || newStart < (snipWin / 2)) {
+    if(newStart < 0 || newStart < (snipWin / 2)) {
 		songStart = 0;
 		songEnd = snipWin;
 	} else {
 	    songStart = parseFloat(newStart) - (snipWin / 2);
 	    songEnd = Math.abs(songStart) + snipWin
 	}
+}
+
+function setStartTime2(response) {
+    snipWin = response.window;
+    setStartTime(response.start);
 }
 
 //During the event the current track is seeked to the set songStart and played.
@@ -232,22 +291,26 @@ function widgetClearEvents() {
     widget.unbind(SC.Widget.Events.PLAY_PROGRESS);
 }
 
-// load the widget with a random song
-$("#rand").click(function () {
+function randomSong() {
     $.ajax({
         type: "GET",
         dataType: "json",
         contentType: "application/json; charset=utf-8",
         url: "/random",
         success: function (data) {
-            widget.load(data.url, {
-                auto_play: false,
+            console.log(data);
+            widget.load(data.response.url, {
+                auto_play: autoplay,
                 likes: false
             });
-            setStartTime(data.start);
+            console.log(data.response);
+            setStartTime2(data.response);
         }
     });
-});
+}
+
+// load the widget with a random song
+$("#rand").click(randomSong);
 
 // when pressed the collection of the user is loaded in the widget
 $("#favorites").click(function () {
@@ -321,9 +384,9 @@ SC.initialize({
 
 // waveform, not in use
 $("#waveform").click(function () {
-    $widget.bind(SC.Widget.Events.READY, function () {
+    widget.bind(SC.Widget.Events.READY, function () {
         // get information about currently playing sound
-        $widget.getSounds(function (currentSound) {
+        widget.getSounds(function (currentSound) {
             console.log("duration is " + currentSound.duration);
             SC.get("/tracks/" + currentSound[0].id, function (track) {
                 var waveform = new Waveform({

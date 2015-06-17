@@ -88,8 +88,10 @@ public final class Json {
             ObjectNode response = new ObjectMapper().createObjectNode();
             response.put("start", getStartTime(track).getStartTime());
             response.put("window", getStartTime(track).getWindow());
-            response.put("url", "w.soundcloud.com/tracks" + track.get(Track.id));
-            return ok(response);
+            response.put("url", "w.soundcloud.com/tracks/" + track.get(Track.id));
+            ObjectNode bla = new ObjectMapper().createObjectNode();
+            bla.put("response", response);
+            return ok(bla);
         }
     }
 

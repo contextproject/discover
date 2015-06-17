@@ -3,6 +3,7 @@ package models.utility;
 import models.database.DatabaseConnector;
 import models.record.Key;
 import models.record.Track;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -20,10 +21,13 @@ public class TrackListTest {
 
     /**
      * Set up.
+     *
+     * @throws Exception If the Exception fails.
      */
     @Before
     public void setUp() {
-        DatabaseConnector.makeConnection("jdbc:mysql://188.166.78.36/contextbase", "context", "password");
+        DatabaseConnector.getConnector().makeConnection(
+                "jdbc:mysql://188.166.78.36/contextbase", "context", "password");
         a = new TrackList();
         b = new TrackList();
         track1 = new Track();
@@ -36,6 +40,17 @@ public class TrackListTest {
         track3.put(id, 1);
         track2.put(score, 10.0);
         track3.put(score, 5.0);
+
+    }
+
+    /**
+     * Does some clean up.
+     *
+     * @throws Exception If the clean up fails.
+     */
+    @After
+    public void tearDown() {
+        DatabaseConnector.getConnector().closeConnection();
     }
 
     /**
@@ -51,7 +66,8 @@ public class TrackListTest {
      */
     @Test
     public void testTrackList2() {
-        TrackList trackList = new TrackList(DatabaseConnector.executeQuery("SELECT * FROM tracks LIMIT 1"));
+        TrackList trackList = new TrackList(DatabaseConnector.getConnector().
+                executeQuery("SELECT * FROM tracks LIMIT 1"));
         assertNotNull(trackList);
         assertEquals(1, trackList.size());
     }

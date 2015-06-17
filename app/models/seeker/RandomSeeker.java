@@ -1,25 +1,64 @@
 package models.seeker;
 
 import models.record.Track;
-import models.snippet.TimedSnippet;
+
+import models.score.ScoreStorage;
 
 /**
  * Generates a random start time for the track.
  */
-public class RandomSeeker implements Seeker {
+public class RandomSeeker extends AbstractSeeker {
+    
+    /**
+     * The number of points to award.
+     */
+    private int points;
+    
+    /**
+     * The default points to be awarded by RandomSeeker.
+     */
+    private static final int DEFAULT_POINTS = 100;
 
     /**
-     * The track.
+     * Creates a new random seeker with the default underlying seeker and the
+     * default points.
+     *
+     * @param track The track
      */
-    private Track track;
+    public RandomSeeker(final Track track) {
+        this(track, new NullSeeker());
+    }
 
     /**
      * Constructor.
      *
      * @param track The track
+     * @param decorate The Seeker to use under this one as this one decorates
+     * the seeker by the name of decorate.
      */
-    public RandomSeeker(final Track track) {
-        this.track = track;
+    public RandomSeeker(final Track track, final Seeker decorate) {
+        this(track, decorate, getDefaultPoints());
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param track The track
+     * @param decorate The Seeker to use under this one as this one decorates
+     * the seeker by the name of decorate.
+     * @param points The number of points to award for being selected by random seeker.
+     */
+    public RandomSeeker(final Track track, final Seeker decorate, final int points) {
+        super(track, decorate);
+        this.points = points;
+    }
+    
+    /**
+     * Returns the default points to be awarded by the random seeker.
+     * @return The default points.
+     */
+    public static int getDefaultPoints() {
+        return DEFAULT_POINTS;
     }
 
     /**
@@ -28,16 +67,13 @@ public class RandomSeeker implements Seeker {
      * @return The start time
      */
     private int getStartTime() {
-        return (int) (Math.random() * track.get(Track.duration));
+        return (int) (Math.random() * getTrack().get(Track.duration));
     }
 
-    /**
-     * Seeks the snippet to be used of a given song.
-     *
-     * @return A TimedSnippet object
-     */
     @Override
-    public TimedSnippet seek() {
-        return new TimedSnippet(getStartTime());
+    public ScoreStorage calculateScores(final int duration) {
+        ScoreStorage storage = getDecorate().calculateScores(duration);
+        storage.add(getStartTime(), points);
+        return storage;
     }
 }

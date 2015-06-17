@@ -3,6 +3,8 @@ package controllers;
 import models.database.DatabaseConnector;
 import models.record.Key;
 import models.record.Track;
+
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -15,23 +17,32 @@ import static org.junit.Assert.assertTrue;
 public class AlgorithmSelectorTest {
 
     /**
-     * A Track object
+     * A Track object.
      */
     private Track track;
 
     /**
      * Set up.
+     * @throws Exception If the set up fails.
      */
     @Before
-    public void setUp() {
-        DatabaseConnector databaseConnector = new DatabaseConnector();
+    public void setUp() throws Exception {
+        DatabaseConnector databaseConnector = DatabaseConnector.getConnector();
         databaseConnector.loadDrivers();
-        DatabaseConnector.makeConnection("jdbc:mysql://188.166.78.36/contextbase", "context", "password");
-        Application.setDatabaseConnector(databaseConnector);
+        databaseConnector.makeConnection("jdbc:mysql://188.166.78.36/contextbase", "context", "password");
 
         track = new Track();
         track.put(new Key<>("id", Integer.class), 1);
         track.put(new Key<>("duration", Integer.class), 50000);
+    }
+    
+    /**
+     * Does some clean up.
+     * @throws Exception If the clean up fails.
+     */
+    @After
+    public void tearDown() throws Exception {
+        DatabaseConnector.getConnector().closeConnection();
     }
 
     /**

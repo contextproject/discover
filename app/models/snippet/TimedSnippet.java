@@ -4,7 +4,7 @@ package models.snippet;
  * Snipped that has a window and ends when the given time is finished.
  *
  * @author stefanboodt
- * @version 30-05-2015
+ * @version 09-06-2015
  * @since 29-04-2015
  */
 public class TimedSnippet implements Comparable<TimedSnippet> {
@@ -104,20 +104,6 @@ public class TimedSnippet implements Comparable<TimedSnippet> {
         if (duration > 0) {
             defaultDURATION = duration;
         }
-    }
-
-    /**
-     * Creates a new TimedSnippet with the given starttime and window.
-     *
-     * @param starttime
-     *            The starttime in ms.
-     * @param durationInSeconds
-     *            The window of the snippet in seconds.
-     * @return The newly created snippet.
-     */
-    public static TimedSnippet createSnippet(final int starttime,
-            final int durationInSeconds) {
-        return new TimedSnippet(starttime, durationInSeconds * 1000);
     }
 
     /**

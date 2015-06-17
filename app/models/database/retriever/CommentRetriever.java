@@ -20,7 +20,7 @@ public class CommentRetriever implements Record {
      * @param trackid The id of the track
      */
     public CommentRetriever(final int trackid) {
-        comments = new CommentList(DatabaseConnector.executeQuery(
+        comments = new CommentList(DatabaseConnector.getConnector().executeQuery(
                 "SELECT * FROM comments WHERE track_id = " + trackid
         ));
     }

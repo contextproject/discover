@@ -1,13 +1,11 @@
 package models.database;
 
-import controllers.Application;
-
 /**
  * This class selects a random song from the database. The current version of
  * this class uses the singleton pattern.
  *
  * @author stefan boodt
- * @version 19-05-2015
+ * @version 08-06-2015
  * @see DatabaseConnector
  * @since 13-05-2015
  */
@@ -36,17 +34,7 @@ public final class RandomSongSelector {
      * @return The track_id of a random song.
      */
     public int getRandomSong() {
-        return getRandomSong(Application.getDatabaseConnector());
-    }
-
-    /**
-     * Method that returns the track_id of a random song in the database.
-     *
-     * @param dbc The database connector to use.
-     * @return The track_id of a random song.
-     */
-    public int getRandomSong(final DatabaseConnector dbc) {
-        return DatabaseConnector.getSingleInt(query, "track_id");
+        return DatabaseConnector.getConnector().getSingleInt(query, "track_id");
     }
 
     /**

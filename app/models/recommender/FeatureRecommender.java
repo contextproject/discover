@@ -78,7 +78,7 @@ public class FeatureRecommender extends RecommendDecorator implements Recommende
         for (Track track : trackList) {
             String query = "SELECT * FROM features WHERE features.track_id = "
                     + track.get(Track.id);
-            double danceability = DatabaseConnector.getSingleDouble(query, "danceability");
+            double danceability = DatabaseConnector.getConnector().getSingleDouble(query, "danceability");
             if (danceability != 0.0) {
                 track.put(Track.danceability, danceability);
             }

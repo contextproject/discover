@@ -44,9 +44,9 @@ public class CommentTest extends BasicTest {
      */
     @Override
     public void setUp() {
-        setDatabaseConnector(new DatabaseConnector());
+        setDatabaseConnector(DatabaseConnector.getConnector());
         databaseConnector.loadDrivers();
-        DatabaseConnector.makeConnection("jdbc:mysql://188.166.78.36/contextbase",
+        DatabaseConnector.getConnector().makeConnection("jdbc:mysql://188.166.78.36/contextbase",
                 "context", "password");
 
         c1 = new Comment(1, 1, 5000);
@@ -68,7 +68,7 @@ public class CommentTest extends BasicTest {
      */
     @Test
     public void testProcess1() {
-        ResultSet resultSet = DatabaseConnector.executeQuery("SELECT * FROM comments LIMIT 1");
+        ResultSet resultSet = DatabaseConnector.getConnector().executeQuery("SELECT * FROM comments LIMIT 1");
         Comment comment = new Comment();
         assertTrue(comment.process(resultSet));
     }
@@ -78,7 +78,7 @@ public class CommentTest extends BasicTest {
      */
     @Test
     public void testProcess2() {
-        ResultSet resultSet = DatabaseConnector.executeQuery("SELECT * FROM tracks LIMIT 1");
+        ResultSet resultSet = DatabaseConnector.getConnector().executeQuery("SELECT * FROM tracks LIMIT 1");
         Comment comment = new Comment();
         assertFalse(comment.process(resultSet));
     }

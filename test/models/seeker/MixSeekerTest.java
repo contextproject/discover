@@ -3,7 +3,13 @@ package models.seeker;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.After;
+import models.record.Comment;
+import models.record.Track;
+import models.score.ScoreMap;
+import models.score.ScoreStorage;
+import models.snippet.TimedSnippet;
+import models.utility.CommentList;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -13,7 +19,7 @@ import static org.junit.Assert.assertEquals;
  * Tests the MixSeeker class.
  * 
  * @since 27-05-2015
- * @version 29-05-2015
+ * @version 04-06-2015
  * 
  * @see MixSeeker
  * @see CommentIntensitySeekerTest
@@ -22,7 +28,7 @@ import static org.junit.Assert.assertEquals;
  * @author arthur hovenesyan
  *
  */
-public class MixSeekerTest /* extends CommentIntensitySeekerTest */ {
+public class MixSeekerTest extends CommentIntensitySeekerTest {
 
     /**
      * The mixseeker under test.
@@ -35,17 +41,11 @@ public class MixSeekerTest /* extends CommentIntensitySeekerTest */ {
      */
     @Before
     public void setUp() throws Exception {
-        //super.makeComments();
-        setSeeker(new MixSeeker(asList(2, 1)));
-    }
-
-    /**
-     * Does some clean up for the class.
-     * @throws Exception If the clean up fails.
-     */
-    @After
-    public void tearDown() throws Exception {
-        // For this class this is only a hook method.
+        super.setUp();
+        Track track = new Track();
+        track.put(Track.duration, 100000);
+        track.put(Track.id, 1029204);
+        setSeeker(new MixSeeker(asList(0), track));
     }
 
     /**
@@ -56,7 +56,7 @@ public class MixSeekerTest /* extends CommentIntensitySeekerTest */ {
      * @return The list containing the given numbers.
      */
     protected static List<Integer> asList(final int... numbers) {
-        List<Integer> ints = new ArrayList<Integer>(numbers.length);
+        List<Integer> ints = new ArrayList<>(numbers.length);
         for (int f : numbers) {
             ints.add(f);
         }
@@ -68,6 +68,7 @@ public class MixSeekerTest /* extends CommentIntensitySeekerTest */ {
      * @param seeker The seeker under test.
      */
     public void setSeeker(final MixSeeker seeker) {
+        super.setSeeker(seeker);
         this.mixseeker = seeker;
     }
     
@@ -75,6 +76,7 @@ public class MixSeekerTest /* extends CommentIntensitySeekerTest */ {
      * Gets the seeker under test.
      * @return The seeker under test.
      */
+    @Override
     public MixSeeker getSeeker() {
         return mixseeker;
     }
@@ -102,7 +104,7 @@ public class MixSeekerTest /* extends CommentIntensitySeekerTest */ {
     }
 
     /**
-     * Tests the {@link MixSeeker#setStarttimes()} method.
+     * Tests the setStarttimes method.
      */
     @Test (expected = IllegalArgumentException.class)
     public void testSetStartTimesEmpty() {
@@ -197,5 +199,175 @@ public class MixSeekerTest /* extends CommentIntensitySeekerTest */ {
         mixseeker.setStarttimes(starttimes);
         final int expected = MixSeeker.getEndOfSong();
         assertEquals(expected, mixseeker.getNextPieceStarttime(100));
+    }
+    
+    /**
+     * Tests the {@link MixSeeker#isInRange(int, int, int)} method.
+     */
+    @Test
+    public void testIsInRangeWhenInOtherPart() {
+        MixSeeker ms = getSeeker();
+        ms.setStarttimes(asList(9, 20, 40));
+        assertEquals("expected was false but got true.", false, ms.isInRange(23, 10, 30));
+    }
+    
+    /**
+     * Tests the {@link MixSeeker#getSnippet(int, int, int, models.score.ScoreStorage)}
+     * method.
+     */
+    @Test
+    public void testGetSnippet() {
+        ScoreStorage scores = new ScoreMap();
+        scores.add(10, 20);
+        scores.add(20, 10);
+        scores.add(30, 28);
+        scores.add(40, 200);
+        scores.add(50, 102);
+        scores.add(60, -40);
+        scores.add(70, 20);
+        scores.add(80, 201);
+        scores.add(90, 157);
+        scores.add(100, 92);
+        final TimedSnippet selected = mixseeker.getSnippet(10, 20, 100, scores);
+        final TimedSnippet expected = new TimedSnippet(80, 10);
+        assertEquals(expected, selected);
+    }
+    
+    /**
+     * Tests the {@link MixSeeker#getSnippets(int)}
+     * method.
+     */
+    @Test
+    public void testGetSnippets() {
+        Track track = new Track();
+        track.put(Track.duration, 20);
+        track.put(Track.id, 1024425);
+        MixSeeker mixseeker = new MixSeeker(asList(0, 30, 70), track) {
+            @Override
+            public ScoreStorage calculateScores(final int duration) {
+                final ScoreStorage scores = new ScoreMap();
+                scores.add(10, 20);
+                scores.add(20, 10);
+                scores.add(30, 28);
+                scores.add(40, 200);
+                scores.add(50, 102);
+                scores.add(60, -40);
+                scores.add(70, 20);
+                scores.add(80, 201);
+                scores.add(90, 157);
+                scores.add(100, 92);
+                return scores;
+            }
+        };
+        final List<TimedSnippet> selected = mixseeker.getSnippets(10);
+        final List<TimedSnippet> expected = new ArrayList<TimedSnippet>();
+        expected.add(new TimedSnippet(30, 10));
+        expected.add(new TimedSnippet(40, 10));
+        expected.add(new TimedSnippet(80, 10));
+        assertEquals(expected, selected);
+    }
+    
+    /**
+     * Tests the {@link MixSeeker#getSnippets(int)}
+     * method.
+     */
+    @Test
+    public void testGetSnippetsDoubleValue() {
+        Track track = new Track();
+        track.put(Track.duration, 20);
+        track.put(Track.id, 1024425);
+        MixSeeker mixseeker = new MixSeeker(asList(0, 30, 70), track) {
+            @Override
+            public ScoreStorage calculateScores(final int duration) {
+                final ScoreStorage scores = new ScoreMap();
+                scores.add(10, 20);
+                scores.add(20, 10);
+                scores.add(30, 280);
+                scores.add(40, 200);
+                scores.add(50, 102);
+                scores.add(60, -40);
+                scores.add(70, 20);
+                scores.add(80, 201);
+                scores.add(90, 157);
+                scores.add(100, 92);
+                return scores;
+            }
+        };
+        final List<TimedSnippet> selected = mixseeker.getSnippets(10);
+        final List<TimedSnippet> expected = new ArrayList<TimedSnippet>();
+        expected.add(new TimedSnippet(30, 10));
+        expected.add(new TimedSnippet(30, 10));
+        expected.add(new TimedSnippet(80, 10));
+        assertEquals(expected, selected);
+    }
+    
+    /**
+     * Tests the {@link MixSeeker#getSnippet(int, int, int, models.score.ScoreStorage)}
+     * method.
+     */
+    @Test (expected = IllegalStateException.class)
+    public void testGetSnippetNoValues() {
+        mixseeker.getSnippet(10, 26, 25, new ScoreMap());
+    }
+    
+    /**
+     * Tests the {@link MixSeeker#getSnippet(int, int, int, models.score.ScoreStorage)}
+     * method.
+     */
+    @Test
+    public void testGetSnippetWhole() {
+        final TimedSnippet selected = mixseeker.getSnippet(10, 20, 30, new ScoreMap());
+        final TimedSnippet expected = new TimedSnippet(20, 10);
+        assertEquals(expected, selected);
+    }
+    
+    /**
+     * Tests the {@link MixSeeker#getSnippet(int, int, int, models.score.ScoreStorage)}
+     * method.
+     */
+    @Test
+    public void testGetSnippetWholeOverkill() {
+        final TimedSnippet selected = mixseeker.getSnippet(10, 20, 21, new ScoreMap());
+        final TimedSnippet expected = new TimedSnippet(20, 1);
+        assertEquals(expected, selected);
+    }
+    
+    /**
+     * Tests the {@link MixSeeker#getSnippet(int, int, int, models.score.ScoreStorage)}
+     * method.
+     */
+    @Test
+    public void testGetSnippetWholeEqualBounds() {
+        final TimedSnippet selected = mixseeker.getSnippet(10, 20, 20, new ScoreMap());
+        final TimedSnippet expected = new TimedSnippet(20, 0);
+        assertEquals(expected, selected);
+    }
+    
+    /**
+     * Tests the {@link MixSeeker#getSnippets(int)} and {@link MixSeeker#seek(int, int, int)}
+     * methods.
+     */
+    @Test
+    public void testGetSnippetsAndSeek() {
+        Track track = new Track();
+        track.put(Track.duration, 20);
+        final int trackid = 1024425;
+        track.put(Track.id, trackid);
+        getSeeker().setStarttimes(asList(0, 1, 40000));
+        MixSeeker mixseeker = getSeeker();
+        final CommentList comments = new CommentList();
+        comments.add(new Comment(trackid, 1, 0));
+        comments.add(new Comment(trackid, 2, 30010));
+        comments.add(new Comment(trackid, 1, 36000));
+        comments.add(new Comment(trackid, 1, 41000));
+        comments.add(new Comment(trackid, 2, 40000));
+        mixseeker.setComments(comments);
+        final int duration = TimedSnippet.getDefaultDuration();
+        final List<TimedSnippet> selected = mixseeker.getSnippets(duration);
+        final List<TimedSnippet> expected = new ArrayList<TimedSnippet>();
+        expected.add(new TimedSnippet(0, 1));
+        expected.add(new TimedSnippet(10000, duration));
+        expected.add(new TimedSnippet(40000, duration));
+        assertEquals(expected, selected);
     }
 }

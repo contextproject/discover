@@ -57,9 +57,7 @@ public class Comment implements Record, Comparable<Comment> {
      * @param timestamp The timestamp of the comment
      */
     public Comment(final int trackid, final int userid, final int timestamp) {
-        this.trackid = trackid;
-        this.userid = userid;
-        this.timestamp = timestamp;
+        this(trackid, userid, timestamp, "");
     }
 
     /**

@@ -3,15 +3,17 @@ package controllers;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import models.database.DatabaseConnector;
 import models.json.Json;
 import models.mix.MixSplitter;
 import models.record.Track;
+import models.seeker.MixSeeker;
+import models.snippet.TimedSnippet;
 import models.utility.TrackList;
 import play.mvc.Controller;
 import play.mvc.Result;
 import views.html.index;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -22,11 +24,6 @@ import java.util.TreeMap;
  */
 
 public final class Application extends Controller {
-
-    /**
-     * The database object of the controller.
-     */
-    private static DatabaseConnector databaseConnector;
 
     /**
      * The ObjectMapper used to create JsonNode objects.
@@ -40,8 +37,9 @@ public final class Application extends Controller {
      * @return an http ok response with the rendered page.
      */
     public static Result index() {
-        String url = "w.soundcloud.com/tracks/67016624";
-        return ok(index.render(url, 0));
+        int starttime = Json.getStartTime(TrackList.get("SELECT * FROM tracks WHERE track_id = 56772597").
+                get(0)).getStartTime();
+        return ok(index.render("w.soundcloud.com/tracks/56772597", starttime));
     }
 
     /**
@@ -51,7 +49,11 @@ public final class Application extends Controller {
      * @return An http ok response with the new rendered page.
      */
     public static Result trackRequest() {
-        return Json.response((Json.getTrack(request().body().asJson())));
+        JsonNode json = request().body().asJson();
+        System.out.println(json);
+        System.out.println("hee hallo");
+        JsonNode track = json.get("track");
+        return Json.response(Json.getTrack(track));
     }
 
     /**
@@ -60,7 +62,9 @@ public final class Application extends Controller {
      * @return A HTTP ok response with a random track id.
      */
     public static Result getRandomSong() {
-        Track track = TrackList.get("SELECT DISTINCT track_id FROM tracks ORDER BY RAND() LIMIT 1").get(0);
+        System.out.println("hoi");
+        Track track = TrackList.get("SELECT DISTINCT * FROM tracks ORDER BY RAND() LIMIT 1").get(0);
+        System.out.println("hee");
         return Json.response(track);
     }
 
@@ -76,14 +80,46 @@ public final class Application extends Controller {
             return badRequest("Expecting Json data");
         } else {
             int trackID = json.get("track").get("id").asInt();
-            System.out.println("MIX ID: " + trackID);
-            MixSplitter splitter = new MixSplitter(json.get("waveform"), trackID);
-            List<Integer> list = splitter.split();
+            int duration = json.get("track").get("duration").asInt();
+            final Track track = new Track();
+            track.put(Track.id, trackID);
+            track.put(Track.duration, duration);
+            MixSplitter splitter = new MixSplitter(json.get("waveform"), track);
+            List<Integer> splits = splitter.split();
+            List<Integer> starttimes = getStartTimes(splits, track);
             Map<String, List<Integer>> map = new TreeMap<String, List<Integer>>();
-            map.put("response", list);
+            map.put("response", starttimes);
             JsonNode response = mapper.valueToTree(map);
             return ok(response);
         }
+    }
+
+    /**
+     * Retrieves the starttimes of the pieces of the given song.
+     *
+     * @param splits The start of all the pieces.
+     * @param track  The track to search.
+     * @return The starttimes of the snippets.
+     */
+    protected static List<Integer> getStartTimes(final List<Integer> splits, final Track track) {
+        MixSeeker ms = new MixSeeker(splits, track);
+        // Half of the timedsnippet default duration for mixsnippets.
+        final List<TimedSnippet> snippets = ms.getSnippets(TimedSnippet.getDefaultDuration() / 2);
+        return getStartTimes(snippets);
+    }
+
+    /**
+     * Lists the starttimes of all the snippets.
+     *
+     * @param snippets The snippets to list the starttimes of.
+     * @return The starttimes of all the snippets.
+     */
+    private static List<Integer> getStartTimes(final List<TimedSnippet> snippets) {
+        final List<Integer> starttimes = new ArrayList<Integer>(snippets.size());
+        for (TimedSnippet snippet : snippets) {
+            starttimes.add(snippet.getStartTime());
+        }
+        return starttimes;
     }
 
     /**
@@ -121,38 +157,11 @@ public final class Application extends Controller {
     }
 
     /**
-     * Getter for the ObjectMapper Object of the controller.
-     *
-     * @return the ObjectMapper Object.
-     */
-    public static ObjectMapper getObjectMapper() {
-        return mapper;
-    }
-
-    /**
      * Setter for the ObjectMapper object.
      *
      * @param om the new ObjectMapper object.
      */
     public static void setObjectMapper(final ObjectMapper om) {
         mapper = om;
-    }
-
-    /**
-     * Getter for the DatabaseConnecter Object of the controller.
-     *
-     * @return the DatabaseConnecter Object.
-     */
-    public static DatabaseConnector getDatabaseConnector() {
-        return databaseConnector;
-    }
-
-    /**
-     * Setter for the DatabaseConnector object.
-     *
-     * @param dbc the new DatabaseConnector object.
-     */
-    public static void setDatabaseConnector(final DatabaseConnector dbc) {
-        databaseConnector = dbc;
     }
 }

@@ -1,0 +1,34 @@
+<scores>
+	<score>
+	 	<value>1</value>
+	 	<string>great</string>
+	 	<string>brilliant</string>
+	 	<string>beautiful</string>
+        <string>awesome</string>
+        <string>amazing</string>
+        <string>perfect</string>
+        <string>good</string>
+        <string>like</string>
+        <string>love</string>
+        <string>best</string>
+        <string>nice</string>
+        <string>super</string>
+        <string>cool</string>
+        <string>massive</string>
+        <string>wicked</string>
+        <string>sick</string>
+        <string>wonderfull</string>
+	</score>
+	<score>
+		<value>-1</value>
+		<string>hate</string>
+		<string>n't</string>
+		<string>nt</string>
+		<string>not</string>
+		<string>bad</string>
+        <string>terrible</string>
+        <string>worst</string>
+        <string>suck</string>
+        <string>sucks</string>
+	</score>
+</scores>
