@@ -2,7 +2,7 @@
     width: 40%
 }
 
-.control {
+.control, .connect {
     width: 80%;
 }
 
@@ -13,6 +13,10 @@
 #help{
     margin-left: 545px;
     cursor: pointer;
+}
+
+#tracks{
+    width:100%;
 }
 
 a.toggler {

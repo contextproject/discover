@@ -37,11 +37,8 @@
         <section id="header">
             <div class="inner">
                     <!-- <span class="icon major fa-cloud"></span> -->
-                <h1><strong>Discover</strong></h1>
+                <h1 id="disc"><strong>Discover</strong></h1>
                 <p> Find the music you love</p>
-                <ul class="actions">
-                    <li id="disc"><a href="#one" class="button scrolly">Discover</a></li>
-                </ul>
             </div>
         </section>
 
@@ -50,7 +47,7 @@
             <div class="container">
                 <div class="row 150%">
                     <div class="8u 12u$(medium)">
-                        <input type="text" id="url" placeholder="Enter Soundcloud URL of the track.">
+                        <input type="text" id="url" placeholder="Enter Soundcloud url of the track.">
                     </div>
                     <div class="4u$ 12u$(medium)">
                         <button class="control" type="submit" id="reload">Reload</button>
@@ -69,37 +66,34 @@
                         <a id="favorites">My Collection</a>
                         <a id="help">Help Tour</a>
 
+                        <div>
+                            <table id="tracks"></table>
+                        </div>
+
                         <div class="example-waveform" id="example">
                             <canvas width="728" height="59"></canvas>
                         </div>
+
                     </div>
                     <div class="4u$ 12u$(medium) important(medium)">
                         <div class="controls">
                             <a id="switch" class="toggler off">off</a>  Autoplay  <br>
                             <label for="volume"></label><input type="range" class="control" id="volume">
-
                             <button class="control" id="preview">Preview</button> <br>
+                            <button class="connect" id="connect">Connect</button> <br>
                             <button class="control" id="prev">Prev</button><button class="control" id="next">Next</button> <br>
-                            <button class="control" id="like">Like</button><button class="control" id="dislike">Dislike</button><br>
+                            <button class="control" id="like">Like</button><button class="control" id="dislike">Dislike</button> <br>
+
+                            <button class="control" id="recommend">Recommend</button> <br>
                             <button class="control" id="rand">Random Song</button> <br>
                             <button class="control" id="sendWave">Mix Splitter</button> <br>
-                            <button class="control" id="connect">Connect</button> <br>
+
+                            <p id="modeLabel">AUTO</p>
+                            <input type="range" class="control" id="algoMode" value="0" step="33">
+
+
                             <button class="control" id="waveform">Waveform</button> <br>
                         </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="tracklist" class="main style1">
-            <div class="container">
-                <div class="row 150%">
-                    <div class="8u 12u$(medium)">
-                        <ul id="tracks"></ul>
-                    </div>
-
-                    <div class="4u$ 12u$(medium) important(medium)">
-                        <button class="control" id="gettracks">Tracks!</button>
                     </div>
                 </div>
             </div>
@@ -128,7 +122,7 @@
                 </li>
                 <li data-id="url" data-button="Next" >
                     <h2>Search bar</h2>
-                    <p>Here you can put the URL of the song you want to listen to.</p>
+                    <p>Here you can put the url of the song you want to listen to.</p>
                 </li>
                 <li data-id="reload" data-button="Next" >
                     <h2>Reload!!</h2>

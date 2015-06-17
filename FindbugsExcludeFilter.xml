@@ -1,0 +1,51 @@
+<FindBugsFilter>
+
+    <Match>
+        <Class name="Routes$$anonfun$documentation$1"/>
+        <Bug pattern="BC_VACUOUS_INSTANCEOF" />
+    </Match>
+
+    <Match>
+        <Class name="Routes$$anonfun$setPrefix$1"/>
+        <Bug pattern="NP_LOAD_OF_KNOWN_NULL_VALUE" />
+
+    </Match>
+
+    <Match>
+        <Class name="controllers.routes"/>
+        <Bug pattern="NM_CLASS_NAMING_CONVENTION" />
+
+    </Match>
+
+    <Match>
+        <Class name="controllers.routes$javascript"/>
+        <Bug pattern="NM_CLASS_NAMING_CONVENTION"/>
+    </Match>
+
+    <Match>
+        <Class name="controllers.routes$ref"/>
+        <Bug pattern="NM_CLASS_NAMING_CONVENTION" />
+    </Match>
+
+    <Match>
+        <Class name="views.html.index"/>
+        <Bug pattern="NM_CLASS_NAMING_CONVENTION" />
+    </Match>
+
+    <Match>
+        <Class name="views.html.index$"/>
+        <Bug pattern="NM_CLASS_NAMING_CONVENTION" />
+    </Match>
+
+    <Match>
+        <Class name="views.html.main"/>
+        <Bug pattern="NM_CLASS_NAMING_CONVENTION" />
+    </Match>
+
+    <Match>
+        <Class name="views.html.main$"/>
+        <Bug pattern="NM_CLASS_NAMING_CONVENTION" />
+    </Match>
+
+
+</FindBugsFilter>

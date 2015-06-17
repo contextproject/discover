@@ -4,6 +4,7 @@ import basic.BasicTest;
 
 import models.record.Track;
 
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -31,7 +32,14 @@ public abstract class AbstractSeekerTest extends BasicTest {
     /**
      * Default track used by the tests.
      */
-    protected static final Track DEFAULT_TRACK = new Track(10, 1000);
+    protected static Track DEFAULT_TRACK;
+
+    @BeforeClass
+    public static void setUpBeforeClass() throws Exception {
+        DEFAULT_TRACK = new Track();
+        DEFAULT_TRACK.put(Track.ID, 10);
+        DEFAULT_TRACK.put(Track.DURATION, 1000);
+    }
 
     @Override
     public void setUp() throws Exception {
@@ -68,7 +76,9 @@ public abstract class AbstractSeekerTest extends BasicTest {
      */
     @Test
     public void testGetTrackAfterSetting() {
-        final Track expected = new Track(11, -1);
+        Track expected = new Track();
+        expected.put(Track.ID, 11);
+        expected.put(Track.DURATION, -1);
         getSeeker().setTrack(expected);
         assertEquals(expected, getSeeker().getTrack());
     }

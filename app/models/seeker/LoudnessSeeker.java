@@ -80,7 +80,7 @@ public class LoudnessSeeker extends AbstractSeeker {
      */
     public int getWaveformPart(final int amountOfBars,
             final int barIndex) {
-        return MixSplitter.getWaveformPart(getTrack().getDuration(), amountOfBars, barIndex);
+        return MixSplitter.getWaveformPart(getTrack().get(Track.DURATION), amountOfBars, barIndex);
     }
     
     /**

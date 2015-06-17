@@ -43,8 +43,8 @@ public class MixSeekerTest extends CommentIntensitySeekerTest {
     public void setUp() throws Exception {
         super.setUp();
         Track track = new Track();
-        track.setDuration(100000);
-        track.setId(1029204);
+        track.put(Track.DURATION, 100000);
+        track.put(Track.ID, 1029204);
         setSeeker(new MixSeeker(asList(0), track));
     }
 
@@ -56,7 +56,7 @@ public class MixSeekerTest extends CommentIntensitySeekerTest {
      * @return The list containing the given numbers.
      */
     protected static List<Integer> asList(final int... numbers) {
-        List<Integer> ints = new ArrayList<Integer>(numbers.length);
+        List<Integer> ints = new ArrayList<>(numbers.length);
         for (int f : numbers) {
             ints.add(f);
         }
@@ -104,7 +104,7 @@ public class MixSeekerTest extends CommentIntensitySeekerTest {
     }
 
     /**
-     * Tests the {@link MixSeeker#setStarttimes()} method.
+     * Tests the setStarttimes method.
      */
     @Test (expected = IllegalArgumentException.class)
     public void testSetStartTimesEmpty() {
@@ -240,8 +240,8 @@ public class MixSeekerTest extends CommentIntensitySeekerTest {
     @Test
     public void testGetSnippets() {
         Track track = new Track();
-        track.setDuration(20);
-        track.setId(1024425);
+        track.put(Track.DURATION, 20);
+        track.put(Track.ID, 1024425);
         MixSeeker mixseeker = new MixSeeker(asList(0, 30, 70), track) {
             @Override
             public ScoreStorage calculateScores(final int duration) {
@@ -274,8 +274,8 @@ public class MixSeekerTest extends CommentIntensitySeekerTest {
     @Test
     public void testGetSnippetsDoubleValue() {
         Track track = new Track();
-        track.setDuration(20);
-        track.setId(1024425);
+        track.put(Track.DURATION, 20);
+        track.put(Track.ID, 1024425);
         MixSeeker mixseeker = new MixSeeker(asList(0, 30, 70), track) {
             @Override
             public ScoreStorage calculateScores(final int duration) {
@@ -350,9 +350,9 @@ public class MixSeekerTest extends CommentIntensitySeekerTest {
     @Test
     public void testGetSnippetsAndSeek() {
         Track track = new Track();
-        track.setDuration(20);
+        track.put(Track.DURATION, 20);
         final int trackid = 1024425;
-        track.setId(trackid);
+        track.put(Track.ID, trackid);
         getSeeker().setStarttimes(asList(0, 1, 40000));
         MixSeeker mixseeker = getSeeker();
         final CommentList comments = new CommentList();

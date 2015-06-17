@@ -1,9 +1,7 @@
 package models.record;
 
 import basic.BasicTest;
-
 import models.database.DatabaseConnector;
-
 import org.junit.Test;
 
 import java.sql.ResultSet;
@@ -15,44 +13,26 @@ import static org.junit.Assert.assertTrue;
 
 /**
  * This class tests the Comment class.
- * 
- * @since 10-04-2015
- * @version 31-05-2015
- * 
- * @see Comment
  *
+ * @version 31-05-2015
+ * @see Comment
+ * @since 10-04-2015
  */
 public class CommentTest extends BasicTest {
 
-
     /**
-     * Comment 1.
+     * The comments.
      */
-    private Comment c1;
-    /**
-     * Comment 2.
-     */
-    private Comment c2;
-    /**
-     * Comment 3.
-     */
-    private Comment c3;
+    private Comment c1, c2, c3;
 
     /**
      * The DatabaseConnector used to connect to the database.
      */
     private DatabaseConnector databaseConnector;
-    
-    /**
-     * Returns the DatabaseConnector that is being used.
-     * @return The database connector.
-     */
-    protected DatabaseConnector getDatabaseConnector() {
-        return databaseConnector;
-    }
-    
+
     /**
      * Sets the databaseConnector.
+     *
      * @param databaseConnector The new connector.
      */
     protected void setDatabaseConnector(final DatabaseConnector databaseConnector) {
@@ -66,7 +46,7 @@ public class CommentTest extends BasicTest {
     public void setUp() {
         setDatabaseConnector(DatabaseConnector.getConnector());
         databaseConnector.loadDrivers();
-        databaseConnector.makeConnection("jdbc:mysql://188.166.78.36/contextbase",
+        DatabaseConnector.getConnector().makeConnection("jdbc:mysql://188.166.78.36/contextbase",
                 "context", "password");
 
         c1 = new Comment(1, 1, 5000);
@@ -88,7 +68,7 @@ public class CommentTest extends BasicTest {
      */
     @Test
     public void testProcess1() {
-        ResultSet resultSet = databaseConnector.executeQuery("SELECT * FROM comments LIMIT 1");
+        ResultSet resultSet = DatabaseConnector.getConnector().executeQuery("SELECT * FROM comments LIMIT 1");
         Comment comment = new Comment();
         assertTrue(comment.process(resultSet));
     }
@@ -98,9 +78,15 @@ public class CommentTest extends BasicTest {
      */
     @Test
     public void testProcess2() {
-        ResultSet resultSet = databaseConnector.executeQuery("SELECT * FROM tracks LIMIT 1");
+        ResultSet resultSet = DatabaseConnector.getConnector().executeQuery("SELECT * FROM tracks LIMIT 1");
         Comment comment = new Comment();
         assertFalse(comment.process(resultSet));
+    }
+
+    @Test
+    public void testGetTimestamp() {
+        assertEquals(5000, c1.getTimestamp());
+        assertEquals(12321, c2.getTimestamp());
     }
 
     /**
@@ -120,7 +106,7 @@ public class CommentTest extends BasicTest {
         assertEquals(5000, c1.getTime());
         assertEquals(10000, c2.getTime());
     }
-    
+
     /**
      * Testing the setPeriod. The timestamp can change after setting a new period
      */
@@ -196,7 +182,7 @@ public class CommentTest extends BasicTest {
     public void testHash() {
         assertEquals(5001, c1.hashCode());
     }
-    
+
     /**
      * Tests the {@link Comment#compareTo(Comment)} method.
      */
@@ -204,7 +190,7 @@ public class CommentTest extends BasicTest {
     public void testCompare() {
         assertEquals(0, c1.compareTo(c1));
     }
-    
+
     /**
      * Tests the {@link Comment#compareTo(Comment)} method.
      */
@@ -214,7 +200,7 @@ public class CommentTest extends BasicTest {
                 c2.getTime() + Comment.getPeriod());
         assertTrue(c2.compareTo(other) < 0);
     }
-    
+
     /**
      * Tests the {@link Comment#compareTo(Comment)} method.
      * The comparing comment is smaller.
@@ -226,7 +212,7 @@ public class CommentTest extends BasicTest {
         final int compared = c2.compareTo(other);
         assertTrue(compared > 0);
     }
-    
+
     /**
      * Tests the {@link Comment#compareTo(Comment)} method.
      * The comparing comment is smaller by it's trackid.

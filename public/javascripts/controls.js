@@ -1,8 +1,9 @@
 // Soundcloud widget
 var widget = SC.Widget(document.getElementById("sc-widget"));
-var mixSplits, waveform;
+var mixSplits, waveform, songStart, songEnd;
 var snipWin = 5000.00;
 var splitPointer = -1;
+setStartTime(parseFloat(start));
 var autoplay = false;
 
 
@@ -17,7 +18,6 @@ widget.bind(SC.Widget.Events.FINISH, function () {
         });
     }
 });
-
 
 $("#current").click(function () {
     widget.bind(SC.Widget.Events.READY, function () {
@@ -115,28 +115,13 @@ $("#dislike").click(function () {
 
 // event for liking a song
 $("#like").click(function () {
-    like();
-    //if (SC.accessToken() == null) {
-    //    console.log("null");
-    //    SC.connect(function () {
-    //        like();
-    //    });
-    //} else {
-    //    console.log("not null");
-    //    like();
-    //}
-});
-
-// like the current song
-function like() {
     widget.getCurrentSoundIndex(function (index) {
         widget.getSounds(function (sounds) {
             sendData(sounds[index], "/like", function () {
             });
-            //SC.put('/me/favorites/' + sounds[index].id);
         });
     });
-}
+});
 
 //select the next song if present
 $("#next").click(function () {
@@ -219,7 +204,7 @@ function reloadWidget(url) {
                 "track": sounds[pos],
                 "waveform": waveform.data
             };
-            sendData(message, "/request", setStartTime);
+            sendData(message, "/request", setStartTime2);
             // use the following line if you want to re-render the page.
             // window.location.href = "http://localhost:9000/tracks/" + sounds[pos].id;
         });
@@ -231,15 +216,39 @@ $("#volume").on("input change", function () {
     widget.setVolume(parseInt($('#volume').val()));
 });
 
-// play the snippet of the song
-var songStart = parseFloat(start) - (snipWin / 2);
-var songEnd = Math.abs(songStart) + snipWin;
+
+//change the mode of the algorithm
+$("#algoMode").on("input change", function () {
+	var val = $("#algoMode").val();
+	if (val <= 25) {
+		$("#modeLabel").text("AUTO");
+		sendData({ "mode": "auto" }, "/setPreviewMode", function () {});
+	} else if (val > 25 & val <= 50) {
+		$("#modeLabel").text("INTENSITY");
+		sendData({ "mode": "intensity" }, "/setPreviewMode", function () {});
+	} else if (val > 50 & val <= 75) { 
+		$("#modeLabel").text("CONTENT");
+		sendData({ "mode": "content" }, "/setPreviewMode", function () {});
+	} else {
+		$("#modeLabel").text("RANDOM");
+		sendData({ "mode": "random" }, "/setPreviewMode", function () {});
+	}
+});
 
 //Set the new start time of the preview.
 function setStartTime(newStart) {
-    start = newStart;
-    songStart = parseFloat(start) - (snipWin / 2);
-    songEnd = Math.abs(songStart) + snipWin
+    if(newStart < 0 || newStart < (snipWin / 2)) {
+		songStart = 0;
+		songEnd = snipWin;
+	} else {
+	    songStart = parseFloat(newStart) - (snipWin / 2);
+	    songEnd = Math.abs(songStart) + snipWin
+	}
+}
+
+function setStartTime2(response) {
+    snipWin = response.window;
+    setStartTime(response.start);
 }
 
 //During the event the current track is seeked to the set songStart and played.
@@ -289,31 +298,19 @@ function randomSong() {
         contentType: "application/json; charset=utf-8",
         url: "/random",
         success: function (data) {
-            widget.load(data.url, {
+            console.log(data);
+            widget.load(data.response.url, {
                 auto_play: autoplay,
                 likes: false
             });
-            setStartTime(data.start);
+            console.log(data.response);
+            setStartTime2(data.response);
         }
     });
 }
 
 // load the widget with a random song
 $("#rand").click(randomSong);
-
-//connect with Soundcloud
-$("#connect").click(function () {
-    // initiate auth popup
-    if (SC.accessToken() == null) {
-        SC.connect(function () {
-            getFavorites();
-        });
-        $("#connect").html("Disconnect");
-    } else {
-        SC.accessToken(null);
-        $("#connect").html("Connect");
-    }
-});
 
 // when pressed the collection of the user is loaded in the widget
 $("#favorites").click(function () {
@@ -327,12 +324,55 @@ $("#favorites").click(function () {
     }
 });
 
+//connect with Soundcloud
+$("#connect").on('click', function () {
+    if ($(this).attr("class") == "connect") {
+        if (SC.accessToken() == null) {
+            SC.connect(function () {
+                getFavorites2(function (data) {
+                    SC.get("http://api.soundcloud.com/users/" + data.id + "/favorites", function(favourites) {
+                        console.log(favourites);
+                        sendData(favourites, "/favorites", function() {
+
+                        });
+                    });
+                    sendData(data, "/user", function() {
+                        console.log("id send");
+                    });
+                    loadFavorites(data);
+                });
+            });
+            $(this).html("Disconnect");
+            $(this).attr("class", "disconnect");
+        }
+    } else {
+        if (SC.accessToken() != null) {
+            SC.accessToken(null);
+            $(this).html("Connect");
+            $(this).attr("class", "connect");
+        }
+    }
+});
+
 function getFavorites() {
     SC.get('/me', function (me) {
         widget.load("api.soundcloud.com/users/" + me.id + "/favorites", {
             auto_play: false,
             likes: false
         });
+    });
+}
+
+function getFavorites2(callback) {
+    SC.get('/me', function (me) {
+        callback(me);
+    });
+}
+
+function loadFavorites(me) {
+    widget.load("api.soundcloud.com/users/" + me.id + "/favorites", {
+        auto_play: false,
+        likes: false
     });
 }
 

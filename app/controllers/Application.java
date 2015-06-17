@@ -3,13 +3,12 @@ package controllers;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-
-import models.database.DatabaseConnector;
-import models.database.RandomSongSelector;
+import models.json.Json;
 import models.mix.MixSplitter;
 import models.record.Track;
 import models.seeker.MixSeeker;
 import models.snippet.TimedSnippet;
+import models.utility.TrackList;
 import play.mvc.Controller;
 import play.mvc.Result;
 import views.html.index;
@@ -23,12 +22,8 @@ import java.util.TreeMap;
  * This class is used to control the model and the view parts of the MVC. It
  * renders the view with the values processed by the model classes.
  */
-public final class Application extends Controller {
 
-    /**
-     * The ObjectMapper used to create JsonNode objects.
-     */
-    private static ObjectMapper mapper;
+public final class Application extends Controller {
 
     /**
      * The index method is called when the application is started and no other
@@ -37,9 +32,9 @@ public final class Application extends Controller {
      * @return an http ok response with the rendered page.
      */
     public static Result index() {
-        String url = "w.soundcloud.com/tracks/56772597";
-        Track track = new Track(56772597, 5054685);
-        return ok(index.render(url, getStartTime(track)));
+        int starttime = Json.getStartTime(TrackList.get(
+                "SELECT * FROM tracks WHERE track_id = 56772597").get(0)).getStartTime();
+        return ok(index.render("w.soundcloud.com/tracks/56772597", starttime));
     }
 
     /**
@@ -49,72 +44,17 @@ public final class Application extends Controller {
      * @return An http ok response with the new rendered page.
      */
     public static Result trackRequest() {
-        JsonNode json = request().body().asJson();
-        if (json == null) {
-            return badRequest("Object is empty");
-        } else if (json.get("track") == null) {
-            return badRequest("Object does not contain a 'track' subset.");
-        } else {
-            int id = json.get("track").get("id").asInt();
-            int duration = json.get("track").get("duration").asInt();
-            Track track = new Track(id, duration);
-            int starttime2 = getStartTime(track);
-            ObjectNode objNode = mapper.createObjectNode();
-            JsonNode response = objNode.put("response", starttime2);
-            return ok(response);
-        }
-    }
-
-    /**
-     * Receives a Json object containing information about a track that the user
-     * has liked. This information is passed to the recommender for processing.
-     *
-     * @return an http ok response.
-     */
-    public static Result userLike() {
-        JsonNode json = request().body().asJson();
-        if (json == null) {
-            return badRequest("Object is empty");
-        } else {
-            System.out
-                    .println("Information about a Liked song has been received.");
-            return ok("");
-        }
-    }
-
-    /**
-     * Receives a Json object containing information about a track that the user
-     * has disliked. This information is passed to the recommender for
-     * processing.
-     *
-     * @return an http ok response.
-     */
-    public static Result userDislike() {
-        JsonNode json = request().body().asJson();
-        if (json == null) {
-            return badRequest("Object is empty");
-        } else {
-            System.out
-                    .println("Information about a disliked song has been received.");
-            return ok("");
-        }
+        return Json.response(Json.getTrack(request().body().asJson().get("track")));
     }
 
     /**
      * Selects a random track from the database.
      *
-     * @return an http ok response with a random track id.
+     * @return A HTTP ok response with a random track id.
      */
     public static Result getRandomSong() {
-        RandomSongSelector selector = RandomSongSelector.getRandomSongSelector();
-        int trackId = selector.getRandomSong();
-        String widgetUrl = "w.soundcloud.com/tracks/" + trackId;
-        int starttime = getStartTime(trackId);
-        Map<String, String> map = new TreeMap<String, String>();
-        map.put("url", widgetUrl);
-        map.put("start", Integer.toString(starttime));
-        JsonNode response = mapper.valueToTree(map);
-        return ok(response);
+        Track track = TrackList.get("SELECT DISTINCT * FROM tracks ORDER BY RAND() LIMIT 1").get(0);
+        return Json.response(track);
     }
 
     /**
@@ -130,21 +70,24 @@ public final class Application extends Controller {
         } else {
             int trackID = json.get("track").get("id").asInt();
             int duration = json.get("track").get("duration").asInt();
-            final Track track = new Track(trackID, duration);
+            final Track track = new Track();
+            track.put(Track.ID, trackID);
+            track.put(Track.DURATION, duration);
             MixSplitter splitter = new MixSplitter(json.get("waveform"), track);
             List<Integer> splits = splitter.split();
             List<Integer> starttimes = getStartTimes(splits, track);
             Map<String, List<Integer>> map = new TreeMap<String, List<Integer>>();
             map.put("response", starttimes);
-            JsonNode response = mapper.valueToTree(map);
+            JsonNode response = new ObjectMapper().valueToTree(map);
             return ok(response);
         }
     }
-    
+
     /**
      * Retrieves the starttimes of the pieces of the given song.
+     *
      * @param splits The start of all the pieces.
-     * @param track The track to search.
+     * @param track  The track to search.
      * @return The starttimes of the snippets.
      */
     protected static List<Integer> getStartTimes(final List<Integer> splits, final Track track) {
@@ -156,6 +99,7 @@ public final class Application extends Controller {
 
     /**
      * Lists the starttimes of all the snippets.
+     *
      * @param snippets The snippets to list the starttimes of.
      * @return The starttimes of all the snippets.
      */
@@ -178,61 +122,26 @@ public final class Application extends Controller {
         if (json == null) {
             return badRequest("Expecting Json data");
         } else {
-            ObjectNode objNode = mapper.createObjectNode();
+            ObjectNode objNode = new ObjectMapper().createObjectNode();
             JsonNode response = objNode.put("message", "File was transvered successfully");
             return ok(response);
         }
     }
 
     /**
-     * Retrieves a start-time calculated by the CommentIntensitySeeker for the
-     * given track id.
+     * Set the mode of the preview.
      *
-     * @param trackId The id of the track.
-     * @return the start-time of the snippet.
+     * @return A HTTP response
      */
-    public static int getStartTime(final int trackId) {
-        Track track = new Track();
-        track.setDuration(-1);
-        track.setId(trackId);
-        return getStartTime(track);
+    public static Result setPreviewMode() {
+        JsonNode json = request().body().asJson();
+        if (json == null) {
+            return badRequest("Object is empty");
+        } else if (json.get("mode") == null) {
+            return badRequest("The expected message does not exist.");
+        } else {
+            AlgorithmSelector.setMode(json.get("mode").asText());
+            return ok("");
+        }
     }
-
-    /**
-     * Get the start time calculated by the AlgorithmSelector.
-     *
-     * @param track The track
-     * @return The start time of the snippet.
-     */
-    public static int getStartTime(final Track track) {
-        return AlgorithmSelector.determineStart(track);
-    }
-
-    /**
-     * Getter for the ObjectMapper Object of the controller.
-     *
-     * @return the ObjectMapper Object.
-     */
-    public static ObjectMapper getObjectMapper() {
-        return mapper;
-    }
-
-    /**
-     * Setter for the ObjectMapper object.
-     *
-     * @param om the new ObjectMapper object.
-     */
-    public static void setObjectMapper(final ObjectMapper om) {
-        mapper = om;
-    }
-
-    /**
-     * Getter for the DatabaseConnecter Object of the controller.
-     *
-     * @return the DatabaseConnecter Object.
-     */
-    public static DatabaseConnector getDatabaseConnector() {
-        return DatabaseConnector.getConnector();
-    }
-
 }
