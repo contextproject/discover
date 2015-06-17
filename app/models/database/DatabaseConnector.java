@@ -22,7 +22,7 @@ public final class DatabaseConnector {
      * Statement object of the connection.
      */
     private Statement statement;
-    
+
     /**
      * The database connector instance.
      */
@@ -61,10 +61,70 @@ public final class DatabaseConnector {
             result = statement.executeQuery(query);
         } catch (SQLException e) {
             System.err.println("Something went wrong with the following query! " + query);
-            return result;
         }
         return result;
     }
+
+    /**
+     * Retrieves the String from the provided column from the provided query.
+     *
+     * @param query  The query to execute
+     * @param column The column name
+     * @return The String from the column name
+     */
+    public String getSingleString(final String query, final String column) {
+        ResultSet resultSet = executeQuery(query);
+        try {
+            if (resultSet != null && resultSet.next()) {
+                return resultSet.getString(column);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error when doing query "
+                    + query + " on the database.", e);
+        }
+        return null;
+    }
+
+    /**
+     * Retrieves the Integer from the provided column from the provided query.
+     *
+     * @param query  The query to execute
+     * @param column The column name
+     * @return The String from the column name
+     */
+    public int getSingleInt(final String query, final String column) {
+        ResultSet resultSet = executeQuery(query);
+        try {
+            if (resultSet != null && resultSet.next()) {
+                return resultSet.getInt(column);
+            }
+        } catch (SQLException e) {
+
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    /**
+     * Retrieves the Integer from the provided column from the provided query.
+     *
+     * @param query  The query to execute
+     * @param column The column name
+     * @return The String from the column name
+     */
+    public double getSingleDouble(final String query, final String column) {
+        ResultSet resultSet = executeQuery(query);
+        try {
+            if (resultSet != null && resultSet.next()) {
+                return resultSet.getDouble(column);
+            }
+        } catch (SQLException e) {
+
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
 
     /**
      * Loading the drivers to connect to a MySQL database.
@@ -85,7 +145,7 @@ public final class DatabaseConnector {
      * @param password The password of the username
      */
     public void makeConnection(final String url, final String username,
-            final String password) {
+                               final String password) {
         try {
             connection = DriverManager.getConnection(url, username, password);
             statement = connection.createStatement();
@@ -134,9 +194,10 @@ public final class DatabaseConnector {
     public Connection getConnection() {
         return connection;
     }
-    
+
     /**
-     * Retrieves a database connector to be used. 
+     * Retrieves a database connector to be used.
+     *
      * @return A database connector you can use.
      */
     public static DatabaseConnector getConnector() {

@@ -65,11 +65,12 @@ public class DatabaseUpdater {
                         json.get("favoritings_count").asText() + "', " +
                         json.get("download_count").asInt() + ", " + 
                         json.get("comment_count").asInt() +")";
-        try {
-            PreparedStatement ps = Application.getDatabaseConnector().getConnection().prepareStatement(res.toString());
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            PreparedStatement ps = getDatabaseConnector
+//                    .getDatabaseConnector().getConnection().prepareStatement(res.toString());
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
         return query + colums + values;
     }
 

@@ -61,7 +61,7 @@ public class GlobalTrackStack {
     public void push(ResultSet rs) {
         try {
             while (rs.next()) {
-                stack.push(new Track(rs));
+//                stack.push(new Track(rs));
             }
         } catch (SQLException e) {
             e.printStackTrace();

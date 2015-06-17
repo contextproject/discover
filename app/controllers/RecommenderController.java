@@ -5,17 +5,24 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import models.json.Json;
 import models.profile.Profile;
+import models.recommender.BasicRecommender;
+import models.recommender.FeatureRecommender;
+import models.recommender.LikesRecommender;
+import models.recommender.Recommender;
 import models.record.Track;
 import models.utility.TrackList;
 import play.mvc.Result;
 
+import java.util.Collections;
+
 import static play.mvc.Controller.request;
+import static play.mvc.Results.badRequest;
 import static play.mvc.Results.ok;
 
 /**
  * Controller for the recommendation system.
  */
-public final class UserActionController {
+public final class RecommenderController {
 
     /**
      * The profile of this session.
@@ -25,7 +32,7 @@ public final class UserActionController {
     /**
      * Constructor.
      */
-    private UserActionController() {
+    private RecommenderController() {
     }
 
     /**
@@ -63,12 +70,25 @@ public final class UserActionController {
      *
      * @return A HTTP ok response
      */
-    public static Result collection() {
-        JsonNode jsonNode = request().body().asJson();
-        TrackList trackList = Json.getTrackList(jsonNode);
-        for (Track track : trackList) {
-            profile.addLike(track);
+    public static Result favorites() {
+        JsonNode json = request().body().asJson();
+        if (json == null) {
+            System.out.println("json null");
+            return badRequest("Json object is null.");
+        } else {
+            profile.addFavourites(Json.getTrackList(json));
+            return ok();
         }
+    }
+
+    /**
+     * Receives the id of the user from the web page and adds the id to the profile.
+     *
+     * @return A HTTP ok response
+     */
+    public static Result user() {
+        JsonNode jsonNode = request().body().asJson();
+        profile.setUserid(jsonNode.get("id").asInt());
         return ok();
     }
 
@@ -78,20 +98,25 @@ public final class UserActionController {
      *
      * @return A HTTP ok response with the tracks to display
      */
-    public static Result tracks() {
+    public static Result recommend() {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode result = mapper.createObjectNode();
-        TrackList likes = profile.getLikes();
-        for (int i = 0; i < likes.size(); i++) {
-            Track track = likes.get(i);
+        Recommender rec = new FeatureRecommender(new LikesRecommender(new BasicRecommender(profile, 5)));
+        TrackList recs = rec.recommend();
+        Collections.sort(recs);
+        for (int i = 0; i < recs.size(); i++) {
+            Track track = recs.get(i);
             ObjectNode jsontrack = mapper.createObjectNode();
-            jsontrack.put("id", track.getId());
-            jsontrack.put("artist", track.getArtist());
-            jsontrack.put("title", track.getTitle());
-            jsontrack.put("url", track.getUrl());
+
+            jsontrack.put("id", track.get(Track.ID));
+            jsontrack.put("artist", track.get(Track.USERNAME));
+            jsontrack.put("title", track.get(Track.TITLE));
+            jsontrack.put("url", track.get(Track.URL));
+            jsontrack.put("genre", track.get(Track.GENRE));
+            jsontrack.put("score", track.get(Track.SCORE));
+
             result.put(Integer.toString(i), jsontrack);
         }
         return ok(result);
     }
-
 }
