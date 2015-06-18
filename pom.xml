@@ -214,6 +214,7 @@ under the License.
                 <version>3.2</version>
                 <configuration>
                     <format>xml</format>
+                    <skipEmptyReport>false</skipEmptyReport>
                 </configuration>
             </plugin>
 
@@ -222,6 +223,7 @@ under the License.
                 <artifactId>findbugs-maven-plugin</artifactId>
                 <version>3.0.1</version>
                 <configuration>
+                    <excludeFilterFile>FindBugsExcludeFilter.xml</excludeFilterFile>
                     <failOnError>false</failOnError>
                 </configuration>
             </plugin>

@@ -2,21 +2,13 @@
     width: 40%
 }
 
-.control {
+.control, .connect {
     width: 80%;
-}
-
-#waveform {
-    display: none;
 }
 
 #help {
     margin-left: 545px;
     cursor: pointer;
-}
-
-.\10u.\12u.content {
-    padding-left: 1em;
 }
 
 .search {
@@ -26,6 +18,10 @@
 .album-art img {
     width: 75px;
     height: 75px;
+}
+
+#tracks{
+    width:100%;
 }
 
 a.toggler {

@@ -67,7 +67,7 @@ public class RandomSeeker extends AbstractSeeker {
      * @return The start time
      */
     private int getStartTime() {
-        return (int) (Math.random() * getTrack().getDuration());
+        return (int) (Math.random() * getTrack().get(Track.DURATION));
     }
 
     @Override

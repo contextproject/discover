@@ -1,6 +1,7 @@
 package controllers;
 
 import models.database.DatabaseConnector;
+import models.record.Key;
 import models.record.Track;
 
 import org.junit.After;
@@ -31,8 +32,8 @@ public class AlgorithmSelectorTest {
         databaseConnector.makeConnection("jdbc:mysql://188.166.78.36/contextbase", "context", "password");
 
         track = new Track();
-        track.setId(1);
-        track.setDuration(50000);
+        track.put(new Key<>("id", Integer.class), 1);
+        track.put(new Key<>("duration", Integer.class), 50000);
     }
     
     /**
@@ -57,9 +58,9 @@ public class AlgorithmSelectorTest {
      */
     @Test
     public void testRandom() {
-        int start = AlgorithmSelector.determineStart(track);
+        int start = AlgorithmSelector.determineStart(track).getStartTime();
 
-        assertTrue(track.getDuration() >= start);
+        assertTrue(track.get(new Key<>("duration", Integer.class)) >= start);
         assertTrue(0 <= start);
     }
 }

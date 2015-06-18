@@ -1,6 +1,6 @@
 package models;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import controllers.RecommenderController;
 import models.database.DatabaseConnector;
 import play.Application;
 import play.GlobalSettings;
@@ -12,17 +12,9 @@ import play.Logger;
 public class Global extends GlobalSettings {
 
     /**
-     * DatabaseConnector object to the database.
-     */
-    private DatabaseConnector databaseConnector;
-    /**
-     * The ObjectMapper object used for JsonNode creations.
-     */
-    private ObjectMapper mapper = new ObjectMapper();
-
-    /**
-     * The method that gets called on the start of the play application.
-     * The connection to the database gets established here.
+     * This method gets called on the start of the play application.
+     * The connection to the database is established here and a profile
+     * for the current session is created.
      *
      * @param app The play application
      */
@@ -31,24 +23,22 @@ public class Global extends GlobalSettings {
         String username = "context";
         String password = "password";
 
-        databaseConnector = DatabaseConnector.getConnector();
+        DatabaseConnector databaseConnector = DatabaseConnector.getConnector();
         databaseConnector.loadDrivers();
         databaseConnector.makeConnection(url, username, password);
 
-        controllers.Application.setObjectMapper(mapper);
-
-        controllers.UserActionController.initialize();
+        RecommenderController.initialize();
     }
 
     /**
-     * The method that gets called on the stop of the play application.
-     * The connection to the database gets terminated here.
+     * This method gets called on the stop of the play application.
+     * The connection to the database is terminated here.
      *
      * @param app The play application
      */
     public void onStop(final Application app) {
         Logger.info("Application shutdown...");
 
-        databaseConnector.closeConnection();
+        DatabaseConnector.getConnector().closeConnection();
     }
 }

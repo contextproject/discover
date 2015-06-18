@@ -60,7 +60,7 @@ public class CommentIntensitySeeker extends AbstractSeeker {
     public CommentIntensitySeeker(final Track track, final Seeker decorate,
             final CommentContentSeeker filter) {
         super(track, decorate);
-        setComments(new CommentRetriever(track.getId()).getComments());
+        setComments(new CommentRetriever(track.get(Track.ID)).getComments());
         this.filter = filter;
     }
 
@@ -79,7 +79,7 @@ public class CommentIntensitySeeker extends AbstractSeeker {
     private ScoreStorage updateStorage(final int duration, final ScoreStorage storage) {
         Collections.sort(comments);
         final int commentsize = comments.size(); // Done here for efficientcy.
-        final int tracklength = getTrack().getDuration();
+        final int tracklength = getTrack().get(Track.DURATION);
         final int stepsize = Comment.getPeriod();
         for (int time = 0; time < tracklength; time += stepsize) {
             int count = 0;

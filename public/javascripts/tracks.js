@@ -14,6 +14,12 @@ searchBar.keypress(function (e) {
     }
 });
 
+function search(input) {
+    SC.get('/tracks', {q: input, limit: 5}, function (tracks) {
+        append(tracks, $("#searchList"));
+    });
+}
+
 // The list of search items
 $("#searchList").on('click', '.item', function () {
     reloadWidget($(this).attr("value"));
@@ -21,20 +27,16 @@ $("#searchList").on('click', '.item', function () {
 });
 
 // THe list of recommended tracks
-$("#tracks").on('click', '.item', function () {
+$("#trackList").on('click', '.item', function () {
     reloadWidget($(this).attr("value"));
-    $("#tracks").html("");
+    $("#trackList").html("");
 });
 
-function search(input) {
-    SC.get('/tracks', {q: input, limit: 5}, function (tracks) {
-        append(tracks, $("#searchList"));
-    });
-}
-
-$("#gettracks").click(function () {
-    SC.get('/tracks', {q: 'buuren', limit: 5}, function (tracks) {
-        append(tracks, $("#tracks"));
+$("#recommend").click(function () {
+    widget.getSounds(function () {
+        $.getJSON("/recommend", function (tracks) {
+            append(tracks, $("#trackList"));
+        });
     });
 });
 
@@ -65,20 +67,22 @@ function reloadWidget(url) {
 function append(tracks, element) {
     element.val("");
     jQuery.each(tracks, function (i, track) {
-        element.append(
-            "<li class='list_item' >" +
-                "<div class='row 150% item' value=" + track.permalink_url + ">" +
-                    "<div class='2u 12u'>" +
-                        "<span class='album-art'>" +
-                            "<img src=" + track.artwork_url +
-                        "</span> " +
-                    "</div>" +
-                    "<div class='10u 12u content'>" +
-                        "<div class='user'><h6>" + track.user.username + "</h6></div>" +
-                        "<div class='title'><h5>" + track.title + "</h5></div>" +
-                    "</div>" +
+        SC.get('/tracks/' + track.id, function (updatedtrack) {
+            element.append(
+                "<li class='list_item' >" +
+                "<div class='row 150% item' value=" + updatedtrack.permalink_url + ">" +
+                "<div class='2u 12u'>" +
+                "<span class='album-art'>" +
+                "<img src=" + updatedtrack.artwork_url +
+                "</span> " +
                 "</div>" +
-            "</li>"
-        );
+                "<div class='10u 12u content'>" +
+                "<div class='user'><h6>" + updatedtrack.user.username + "</h6></div>" +
+                "<div class='title'><h5>" + updatedtrack.title + "</h5></div>" +
+                "</div>" +
+                "</div>" +
+                "</li>"
+            );
+        });
     });
 }

@@ -12,4 +12,11 @@ public interface Record {
      * @return True if this object is the same as the other object
      */
     boolean equals(Object o);
+
+    /**
+     * Creates a hash code of the object.
+     *
+     * @return Hash code of the object
+     */
+    int hashCode();
 }
