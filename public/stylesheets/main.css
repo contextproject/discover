@@ -10,9 +10,22 @@
     display: none;
 }
 
-#help{
+#help {
     margin-left: 545px;
     cursor: pointer;
+}
+
+.\10u.\12u.content {
+    padding-left: 1em;
+}
+
+.search {
+    width: 100%;
+}
+
+.album-art img {
+    width: 75px;
+    height: 75px;
 }
 
 a.toggler {
@@ -27,7 +40,7 @@ a.toggler {
     margin-right: 10px;
 }
 
-a.toggler:hover{
+a.toggler:hover {
     border-bottom-color: white !important;
 }
 

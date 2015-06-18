@@ -462,7 +462,7 @@
 	}
 
 	.\-10u {
-		/*margin-left: 83.33333%;*/
+		margin-left: 83.33333%;
 	}
 
 	.\-9u {
@@ -504,7 +504,10 @@
 	@media screen and (max-width: 1680px) {
 
 		.row > * {
-			padding: 0 0 0 2em;
+			padding-top: 0;
+			padding-right: 0;
+			padding-left: 0em;
+			padding-bottom: 0;
 		}
 
 		.row {
