@@ -37,7 +37,7 @@ The CheckStyle configuration for the discover project
     <module name="RedundantImport"/>
     <module name="UnusedImports"/>
     <module name="LineLength">
-      <property name="max" value="100"/>
+      <property name="max" value="120"/>
     </module>
     <module name="MethodLength"/>
     <module name="ParameterNumber"/>
@@ -71,9 +71,6 @@ The CheckStyle configuration for the discover project
     </module>
     <module name="IllegalInstantiation"/>
     <module name="InnerAssignment"/>
-    <module name="MagicNumber">
-      <property name="tokens" value="NUM_DOUBLE,NUM_FLOAT,NUM_LONG"/>
-    </module>
     <module name="MissingSwitchDefault"/>
     <module name="SimplifyBooleanExpression"/>
     <module name="SimplifyBooleanReturn"/>

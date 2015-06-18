@@ -68,11 +68,7 @@ public final class Application extends Controller {
         if (json == null) {
             return badRequest("Expecting Json data");
         } else {
-            int trackID = json.get("track").get("id").asInt();
-            int duration = json.get("track").get("duration").asInt();
-            final Track track = new Track();
-            track.put(Track.ID, trackID);
-            track.put(Track.DURATION, duration);
+            final Track track = Json.getTrack(json);
             MixSplitter splitter = new MixSplitter(json.get("waveform"), track);
             List<Integer> splits = splitter.split();
             List<Integer> starttimes = getStartTimes(splits, track);
