@@ -272,8 +272,6 @@ function setStartTime(newStart) {
 $("#preview").click(function () {
     if(autoplay) {
         autoplay = false;
-        console.log(autoplay);
-        widget.pause();
         preview(songStart, songEnd);
         autoplay = true;
         radio();
