@@ -65,10 +65,20 @@ public final class Application extends Controller {
      */
     public static Result splitWaveform() {
         JsonNode json = request().body().asJson();
+        return splitWaveform(json);
+    }
+
+    /**
+     * Splits the waveform from the given JSON.
+     * @param json The JSON that contains the track information in the
+     * expected form.
+     * @return The result of the method.
+     */
+    public static Result splitWaveform(final JsonNode json) {
         if (json == null) {
             return badRequest("Expecting Json data");
         } else {
-            final Track track = Json.getTrack(json);
+            final Track track = Json.getTrack(json.get("track"));
             MixSplitter splitter = new MixSplitter(json.get("waveform"), track);
             List<Integer> splits = splitter.split();
             List<Integer> starttimes = getStartTimes(splits, track);

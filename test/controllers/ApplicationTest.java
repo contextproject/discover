@@ -70,20 +70,42 @@ public class ApplicationTest {
      * Tests the splitwaveform method in the application class.
      */
     @Test
-    public void testSplitWaveform() {
-        /*final Http.Request mockRequest = mock(Http.Request.class);
-        final HashMap<String, String> empty = new HashMap<>();
-        RequestHeader header = mock(play.api.mvc.RequestHeader.class);
-        final Http.Context context = new Http.Context(2L, header,
-                mockRequest, empty, empty, Collections.EMPTY_MAP);
-        final RequestBody mockBody = mock(RequestBody.class);
-        doReturn(null).when(mockBody).asJson();
-        doReturn(mockBody).when(mockRequest).body();
-        final Http.Context old = Http.Context.current();
-        Http.Context.current.set(context);
-        final int status = status(Application.splitWaveform());
+    public void testSplitWaveformNull() {
+        ObjectNode json = null;
+        final int status = status(Application.splitWaveform(json));
         assertEquals(BAD_REQUEST, status);
-        Http.Context.current.set(old);*/
+    }
+
+    /**
+     * Tests the splitwaveform method in the application class.
+     */
+    @Test
+    public void testSplitWaveform() {
+        ObjectNode json = getJSON();
+        Application.splitWaveform(json);
+        final int status = status(Application.splitWaveform(json));
+        assertEquals(OK, status);
+    }
+
+    /**
+     * Creates a JSON element.
+     * @return The JSON node.
+     */
+    protected JsonNode getJSON() {
+        ObjectNode json = new ObjectMapper().createObjectNode();
+        ObjectNode trackstuff = new ObjectMapper().createObjectNode();
+        ObjectNode usermapper = new ObjectMapper().createObjectNode();
+        usermapper.put("username", 402104238);
+        trackstuff.put("id", 1000214);
+        trackstuff.put("duration", 10000);
+        trackstuff.put("user_id", 4002123);
+        trackstuff.put("title", "The super cool song.");
+        trackstuff.put("genre", "cool");
+        trackstuff.put("uri", "Super cool URI");
+        trackstuff.put("user", usermapper);
+        json.put("track", trackstuff);
+        json.put("waveform", "[0.4, 0.1, 0.2]");
+        return json;
     }
     
     /**
@@ -97,6 +119,14 @@ public class ApplicationTest {
         );
         final int status = status(Application.index());
         assertEquals(OK, status);
+    }
+    
+    /**
+     * Tests the get random song method.
+     */
+    @Test
+    public void testGetRandomSong() {
+        assertEquals(OK, status(Application.getRandomSong()));
     }
 
     /**
