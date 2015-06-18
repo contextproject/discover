@@ -19,8 +19,8 @@ public class AlgorithmSelectorTest {
     /**
      * A Track object.
      */
-    private Track track;
-
+    private Track track, ntrack;
+    
     /**
      * Set up.
      * @throws Exception If the set up fails.
@@ -31,6 +31,9 @@ public class AlgorithmSelectorTest {
         databaseConnector.loadDrivers();
         databaseConnector.makeConnection("jdbc:mysql://188.166.78.36/contextbase", "context", "password");
 
+        ntrack = new Track();
+        ntrack.put(new Key<>("id", Integer.class), 1);
+        ntrack.put(new Key<>("duration", Integer.class), 0);
         track = new Track();
         track.put(new Key<>("id", Integer.class), 1);
         track.put(new Key<>("duration", Integer.class), 50000);
@@ -49,17 +52,44 @@ public class AlgorithmSelectorTest {
      * Test of the determineStart() method.
      */
     @Test
-    public void testDetermineStart() {
+    public void testDetermineStartAUTO() {
+        AlgorithmSelector.setMode("auto");
+        assertNotNull(AlgorithmSelector.determineStart(track));
+    }
+    
+    /**
+     * Test of the determineStart() method.
+     */
+    @Test
+    public void testDetermineStartAUTO_Zero() {
+        AlgorithmSelector.setMode("auto");
+        assertNotNull(AlgorithmSelector.determineStart(ntrack));
+    }
+    
+    /**
+     * Test of the determineStart() method.
+     */
+    @Test
+    public void testDetermineStartCONTENT() {
+        AlgorithmSelector.setMode("content");
+        assertNotNull(AlgorithmSelector.determineStart(track));
+    }
+    
+    /**
+     * Test of the determineStart() method.
+     */
+    @Test
+    public void testDetermineStartRANDOM() {
+        AlgorithmSelector.setMode("random");
         assertNotNull(AlgorithmSelector.determineStart(track));
     }
 
     /**
-     * Tets of the random() method.
+     * Test of the random() method.
      */
     @Test
     public void testRandom() {
         int start = AlgorithmSelector.determineStart(track).getStartTime();
-
         assertTrue(track.get(new Key<>("duration", Integer.class)) >= start);
         assertTrue(0 <= start);
     }

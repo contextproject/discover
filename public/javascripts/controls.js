@@ -53,7 +53,7 @@ widget.bind(SC.Widget.Events.READY, function () {
     widget.unbind(SC.Widget.Events.READY);
 });
 
-$(window).load(function() {
+$(window).load(function () {
     $('#joyRideTipContent').joyride({
         cookieMonster : true,
         autoStart : true,
@@ -100,13 +100,13 @@ function sendData(data, url, callback) {
     }
 }
 
-//event for disliking a song
+// event for disliking a song
 $("#dislike").click(function () {
+	
     if (SC.accessToken() != null) {
         widget.getCurrentSoundIndex(function (index) {
             widget.getSounds(function (sounds) {
-                sendData(sounds[index], "/dislike", function () {
-                });
+                sendData(sounds[index], "/dislike", function (){});
                 SC.delete('/me/favorites/' + sounds[index].id);
             });
         });
@@ -123,35 +123,44 @@ $("#like").click(function () {
     });
 });
 
-//select the next song if present
-$("#next").click(function () {
+// select the next song if present
+$("#next").click(function() {
+	widgetClearEvents(); nextSnip(false);
+});
+
+// select the previous song if present
+$("#prev").click(prevSnip);
+
+// Goes to the next snippet of the mix.
+function nexter() { nextSnip(true) }
+function nextSnip(autoplay) {
     if (mixSplits != null && mixSplits != undefined) {
         splitPointer++;
         if ((splitPointer < mixSplits.length) && (splitPointer >= 0)) {
-            widgetClearEvents();
-            var sPartial = mixSplits[splitPointer];
-            preview(sPartial, sPartial + snipWin);
+        	if(autoplay) {
+        		preview(mixSplits[splitPointer], mixSplits[splitPointer] + snipWin, nexter);
+        	} else {
+        		preview(mixSplits[splitPointer], mixSplits[splitPointer] + snipWin, function(){});
+        	}
         } else {
             splitPointer--;
         }
     }
-});
+}
 
-// select the previous song if present
-$("#prev").click(function () {
+// Goes to the previous snippet of a snippet mix.
+function prevSnip() {
     if (mixSplits != null && mixSplits != undefined) {
         splitPointer--;
         if ((splitPointer < mixSplits.length) && (splitPointer >= 0)) {
-            widgetClearEvents();
-            var sPartial = mixSplits[splitPointer];
-            preview(sPartial, sPartial + snipWin);
+    		preview(mixSplits[splitPointer], mixSplits[splitPointer] + snipWin, function(){});
         } else {
             splitPointer++;
         }
     }
-});
+}
 
-// sends the waveform of the current track
+// Sends the waveform of the current track
 $("#sendWave").click(function () {
     widget.getSounds(function (sounds) {
         var message = {
@@ -162,9 +171,11 @@ $("#sendWave").click(function () {
     });
 });
 
+// Sets up the list containing the list of snippets.
 function setMixSplit(newSp) {
     mixSplits = newSp;
-    console.log(newSp);
+    splitPointer = -1;
+    nexter();
 }
 
 // if the reload button is clicked on, call the reloadWidget function
@@ -178,6 +189,7 @@ $("#url").keypress(function (e) {
     }
 });
 
+// Clears the url bar and Reloads the widget with the new url.
 function clearInputAndReloadWidget() {
     var url = $("#url");
     var input = url.val();
@@ -206,7 +218,8 @@ function reloadWidget(url) {
             };
             sendData(message, "/request", setStartTime2);
             // use the following line if you want to re-render the page.
-            // window.location.href = "http://localhost:9000/tracks/" + sounds[pos].id;
+            // window.location.href = "http://localhost:9000/tracks/" +
+			// sounds[pos].id;
         });
     });
 }
@@ -235,7 +248,7 @@ $("#algoMode").on("input change", function () {
 	}
 });
 
-//Set the new start time of the preview.
+// Set the new start time of the preview.
 function setStartTime(newStart) {
     if(newStart < 0 || newStart < (snipWin / 2)) {
 		songStart = 0;
@@ -251,14 +264,14 @@ function setStartTime2(response) {
     setStartTime(response.start);
 }
 
-//During the event the current track is seeked to the set songStart and played.
+// During the event the current track is seeked to the set songStart and played.
 $("#preview").click(function () {
-    preview(songStart, songEnd);
+    preview(songStart, songEnd, function(){});
 });
 
 // Preview a snippet on the current track.
-function preview(sStart, sEnd) {
-    widgetClearEvents();
+function preview(sStart, sEnd, callback) {
+	widgetClearEvents();
     widget.isPaused(function (paused) {
         if (paused) {
             widget.bind(SC.Widget.Events.READY, function () {
@@ -276,7 +289,7 @@ function preview(sStart, sEnd) {
         widget.getPosition(function (position) {
             if (position > sEnd) {
                 widget.pause();
-                widget.unbind(SC.Widget.Events.PLAY_PROGRESS);
+                callback();
             }
         });
     });

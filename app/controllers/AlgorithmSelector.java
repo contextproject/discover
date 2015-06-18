@@ -29,7 +29,6 @@ public final class AlgorithmSelector {
          * with the to calculate the preview.
          */
         CONTENT,
-
         /**
          * Mode: RANDOM. The selector will choose a random time to start based
          * on its duration.
@@ -42,6 +41,11 @@ public final class AlgorithmSelector {
      */
     private static Mode curMode = AlgorithmSelector.Mode.AUTO;
 
+    /**
+     * Class constructor.
+     */
+    private AlgorithmSelector() { }
+    
     /**
      * Determine the start of the snippet for the track.
      *
