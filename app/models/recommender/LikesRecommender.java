@@ -117,11 +117,11 @@ public class LikesRecommender extends RecommendDecorator implements Recommender 
     public TrackList evaluate(final TrackList unweighed) {
         for (Track track : unweighed) {
             double score = track.get(Track.SCORE);
-            if (genreBoard.containsKey(Track.GENRE)) {
-                score += genreBoard.get(Track.GENRE);
+            if (genreBoard.containsKey(track.get(Track.GENRE))) {
+                score += genreBoard.get(track.get(Track.GENRE));
             }
-            if (artistBoard.containsKey(Track.USER_ID)) {
-                score += artistBoard.get(Track.USER_ID);
+            if (artistBoard.containsKey(track.get(Track.USER_ID))) {
+                score += artistBoard.get(track.get(Track.USER_ID));
             }
             track.put(Track.SCORE, score);
         }
