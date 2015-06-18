@@ -35,8 +35,10 @@ function openMenu() {
     var menu = $("#menu");
     if ($(menu).is(":visible") && !open) {
         $(menu).animate({height: 0}, 500, function() {$(menu).hide();});
+        document.getElementById("menu").style.display = "none";
     } else {
-        $(menu).show().animate({height: 100}, 500);
+        $(menu).show().animate({height: 100,}, 500);
+        document.getElementById("menu").style.display = "inline-block";
     }
 }
 
