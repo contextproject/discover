@@ -28,6 +28,12 @@ under the License.
 
     <name>Discover - Discover new music fast!</name>
     <url>https://github.com/contextproject/discover</url>
+    <description>Search some music, receive the most interesting snippet and decide if you love the song!</description>
+    
+    <ciManagement>
+    	<url>https://travis-ci.org/contextproject/discover</url>
+    	<system>Travis CI</system>
+    </ciManagement>
 
     <repositories>
         <repository>
@@ -123,6 +129,7 @@ under the License.
             <groupId>org.mockito</groupId>
             <artifactId>mockito-all</artifactId>
             <version>1.10.19</version>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
@@ -215,6 +222,7 @@ under the License.
                 <configuration>
                     <format>xml</format>
                     <skipEmptyReport>false</skipEmptyReport>
+                    <minumumTokens>25</minumumTokens>
                 </configuration>
             </plugin>
 
