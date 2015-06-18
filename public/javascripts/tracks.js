@@ -65,7 +65,7 @@ function reloadWidget(url) {
 }
 
 function append(tracks, element) {
-    element.val("");
+    element.html("");
     jQuery.each(tracks, function (i, track) {
         SC.get('/tracks/' + track.id, function (updatedtrack) {
             element.append(
