@@ -7,6 +7,8 @@ searchBar.keypress(function (e) {
         var input = searchBar.val();
         if (input.charAt(0) == "\/") {
             reloadWidget("w.soundcloud.com/tracks" + input);
+        } else if (input.length == 0) {
+            $("#searchList").html("");
         } else {
             search(input);
         }
