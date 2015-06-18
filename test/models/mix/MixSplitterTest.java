@@ -118,10 +118,11 @@ public class MixSplitterTest extends BasicTest {
     /**
      * Tests the {@link MixSplitter#split(int)} method on an empty dataset.
      */
+    @SuppressWarnings("checkstyle:magicnumber")
     @Test (expected = IllegalStateException.class)
     public void testSplitWithSizeEmptyImpossibleToFulfill() {
         getSplitter().setData(new ArrayList<Double>());
-        getSplitter().split(3);
+        getSplitter().addPieces(3, getSplitter().splitToShingles(), 0.85, getSplitter().split());
     }
 
     /**
@@ -701,21 +702,6 @@ public class MixSplitterTest extends BasicTest {
         final int thirdOfSong = DEFAULT_DURATION / 3;
         assertEquals(asListInt(0, thirdOfSong, 2 * thirdOfSong, DEFAULT_DURATION),
                 getSplitter().doTheSplit(3, shingles, 0.8, asListInt(DEFAULT_DURATION)));
-    }
-    
-    /**
-     * Tests the {@link MixSplitter#doTheSplit(int, List, double, List)} method.
-     */
-    @SuppressWarnings("checkstyle:magicnumber")
-    @Test (expected = IllegalStateException.class)
-    public void testDoTheSplitThreeSplitsFourRequested() {
-        getSplitter().setData(asList(3.0, 1.0, 100.0, 2.0, 0.0, 13.0, 2014.0, 1.1, 3.9,
-                2.4, -1.2, 100.4, 532.9, 201.4, 734.2, -104.2, 0.3, 10.2, 192.2, 53.2, 921.6));
-        final List<Shingle> shingles = new ArrayList<Shingle>();
-        shingles.add(new Shingle(asList(3.0, 1.0, 100.0, 2.0, 0.0, 13.0, 2014.0)));
-        shingles.add(new Shingle(asList(1.1, 3.9, 2.4, -1.2, 100.4, 532.9, 201.4)));
-        shingles.add(new Shingle(asList(734.2, -104.2, 0.3, 10.2, 192.2, 53.2, 921.6)));
-        getSplitter().doTheSplit(4, shingles, 0.8, asListInt(DEFAULT_DURATION));
     }
     
     /**
