@@ -7,18 +7,19 @@ var autoplay = false;
 var open = false;
 
 //Function for the autoplay button only works if autoplay is on
-widget.bind(SC.Widget.Events.FINISH, function () {
-    if(autoplay) {
-        widget.getSounds(function (sounds) {
-           if (sounds.length > 1){
-               widget.next();
-           } else{
-              randomSong();
-           }
-            widget.unbind(SC.Widget.Events.FINISH);
-        });
-    }
-});
+function radio() {
+    widget.bind(SC.Widget.Events.FINISH, function () {
+        if (autoplay) {
+            widget.getSounds(function (sounds) {
+                if (sounds.length > 1) {
+                    widget.next();
+                } else {
+                    randomSong();
+                }
+            });
+        }
+    });
+}
 
 
 $("#current").click(function () {
@@ -53,6 +54,7 @@ $('a.toggler.off').click(function(){
     } else {
         document.getElementById("switch").innerHTML = "on";
         autoplay = true;
+        radio();
     }
     $(this).toggleClass('off');
 });
@@ -268,14 +270,20 @@ function setStartTime(newStart) {
 
 //During the event the current track is seeked to the set songStart and played.
 $("#preview").click(function () {
-    preview(songStart, songEnd);
+    if(autoplay) {
+        autoplay = false;
+        console.log(autoplay);
+        widget.pause();
+        preview(songStart, songEnd);
+        autoplay = true;
+        radio();
+    }else{
+        preview(songStart, songEnd);
+    }
 });
 
 // Preview a snippet on the current track.
 function preview(sStart, sEnd) {
-    if(autoplay){
-        widget.pause();
-    }
     widgetClearEvents();
     widget.isPaused(function (paused) {
         if (paused) {
@@ -307,7 +315,6 @@ function widgetClearEvents() {
     widget.unbind(SC.Widget.Events.PLAY);
     widget.unbind(SC.Widget.Events.READY);
     widget.unbind(SC.Widget.Events.PLAY_PROGRESS);
-    widget.unbind(SC.Widget.Events.FINISH);
 }
 
 function randomSong() {
