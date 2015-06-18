@@ -13,7 +13,7 @@ widget.bind(SC.Widget.Events.FINISH, function () {
            if (sounds.length > 1){
                widget.next();
            } else{
-              randomSong();
+              recommendAuto();
            }
         });
     }
@@ -190,7 +190,7 @@ function reloadWidget(url) {
     mixSplits = null;
     // load the url in the widget
     widget.load(url, {
-        auto_play: false,
+        auto_play: autoplay,
         likes: true
     });
     widget.bind(SC.Widget.Events.READY, function () {
