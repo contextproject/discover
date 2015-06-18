@@ -1,38 +1,30 @@
-// This file handles the search bar and displays the results of the search bar and recommended tracks.
+// This file handles the search bar and recommended songs.
 
-$("#reload").click(function () {
-    analyzeInput();
-});
-
-$("#url").keypress(function (e) {
+// The search bar
+var searchBar = $("#search");
+searchBar.keypress(function (e) {
     if (e.which == 13) {
-
-        analyzeInput();
+        var input = searchBar.val();
+        if (input.charAt(0) == "\/") {
+            reloadWidget("w.soundcloud.com/tracks" + input);
+        } else {
+            search(input);
+        }
+        searchBar.val("");
     }
 });
 
-$("#tracks").on('click', '.item', function () {
-    reloadWidget($(this).attr("value"));
-});
-
+// The list of search items
 $("#searchList").on('click', '.item', function () {
     reloadWidget($(this).attr("value"));
     $("#searchList").html("");
 });
 
-function analyzeInput() {
-    var input = $("#url").val();
-    if (input.charAt(0) == "\/") {
-        reloadWidget("w.soundcloud.com/tracks" + input);
-    } else {
-        search(input);
-    }
-    clearInput();
-}
-
-function clearInput() {
-    $("#url").val("");
-}
+// THe list of recommended tracks
+$("#tracks").on('click', '.item', function () {
+    reloadWidget($(this).attr("value"));
+    $("#tracks").html("");
+});
 
 function search(input) {
     SC.get('/tracks', {q: input, limit: 5}, function (tracks) {
@@ -66,8 +58,6 @@ function reloadWidget(url) {
                 "waveform": waveform.data
             };
             sendData(message, "/request", setStartTime);
-            // use the following line if you want to re-render the page.
-            // window.location.href = "http://localhost:9000/tracks/" + sounds[pos].id;
         });
     });
 }
@@ -77,19 +67,17 @@ function append(tracks, element) {
     jQuery.each(tracks, function (i, track) {
         element.append(
             "<li class='list_item' >" +
-            "<div class='row 150% item' value=" + track.permalink_url + ">" +
-            "<div class='2u 12u'>" +
-            "<span class='album-art'>" +
-            "<img src=" + track.artwork_url +
-            "</span> " +
-            "</div>" +
-            "<div class='10u 12u content'>" +
-
-            "<div class='user'><h6>" + track.user.username + "</h6></div>" +
-            "<div class='title'><h5>" + track.title + "</h5></div>" +
-
-            "</div>" +
-            "</div>" +
+                "<div class='row 150% item' value=" + track.permalink_url + ">" +
+                    "<div class='2u 12u'>" +
+                        "<span class='album-art'>" +
+                            "<img src=" + track.artwork_url +
+                        "</span> " +
+                    "</div>" +
+                    "<div class='10u 12u content'>" +
+                        "<div class='user'><h6>" + track.user.username + "</h6></div>" +
+                        "<div class='title'><h5>" + track.title + "</h5></div>" +
+                    "</div>" +
+                "</div>" +
             "</li>"
         );
     });
