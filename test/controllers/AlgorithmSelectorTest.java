@@ -93,12 +93,4 @@ public class AlgorithmSelectorTest {
         assertTrue(track.get(new Key<>("duration", Integer.class)) >= start);
         assertTrue(0 <= start);
     }
-    
-    /**
-     * Test of the random() method.
-     */
-    @Test
-    public void testConstruction() {
-        assertNotNull(new AlgorithmSelector());
-    }
 }

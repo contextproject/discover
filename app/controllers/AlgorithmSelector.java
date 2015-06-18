@@ -42,6 +42,11 @@ public final class AlgorithmSelector {
     private static Mode curMode = AlgorithmSelector.Mode.AUTO;
 
     /**
+     * Class constructor.
+     */
+    private AlgorithmSelector() { }
+    
+    /**
      * Determine the start of the snippet for the track.
      *
      * @param track The track

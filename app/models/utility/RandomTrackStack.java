@@ -51,12 +51,7 @@ public class RandomTrackStack {
             return stack.pop();
         } else {
             if (autofill) {
-                this.push(DatabaseConnector.getConnector().executeQuery(
-                        this.query));
-                if (this.isEmpty()) {
-                    throw new NullPointerException(
-                            "The Stack is out of Tracks and cannot be refilled.");
-                }
+                this.push(DatabaseConnector.getConnector().executeQuery(this.query));
                 return stack.pop();
             } else {
                 throw new NullPointerException("The Stack is out of Tracks and will not "
@@ -73,7 +68,7 @@ public class RandomTrackStack {
     public TrackList pop(final int amount) {
         TrackList list = new TrackList();
         for (int i = 0; i < amount; i++) {
-            list.add(stack.pop());
+            list.add(this.pop());
         }
         return list;
     }
