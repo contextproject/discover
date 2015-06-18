@@ -47,6 +47,7 @@ a.toggler {
     transition: all .5s ease;
     margin-right: 10px;
     margin-left: 10%;
+    color: white;
 }
 
 a.toggler:hover{

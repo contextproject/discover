@@ -267,7 +267,12 @@ function setStartTime(newStart) {
 
 //During the event the current track is seeked to the set songStart and played.
 $("#preview").click(function () {
-    preview(songStart, songEnd);
+    if(autoplay){
+        widgetClearEvents();
+        preview(songStart, songEnd);
+    }else {
+        preview(songStart, songEnd);
+    }
 });
 
 // Preview a snippet on the current track.
