@@ -100,29 +100,6 @@ function sendData(data, url, callback) {
     }
 }
 
-// event for disliking a song
-$("#dislike").click(function () {
-	
-    if (SC.accessToken() != null) {
-        widget.getCurrentSoundIndex(function (index) {
-            widget.getSounds(function (sounds) {
-                sendData(sounds[index], "/dislike", function (){});
-                SC.delete('/me/favorites/' + sounds[index].id);
-            });
-        });
-    }
-});
-
-// event for liking a song
-$("#like").click(function () {
-    widget.getCurrentSoundIndex(function (index) {
-        widget.getSounds(function (sounds) {
-            sendData(sounds[index], "/like", function () {
-            });
-        });
-    });
-});
-
 // select the next song if present
 $("#next").click(function() {
 	widgetClearEvents(); nextSnip(false);

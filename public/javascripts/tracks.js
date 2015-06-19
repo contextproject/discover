@@ -37,17 +37,37 @@ $("#trackList").on('click', '.item', function () {
 $(".recommend").click(function () {
     var element = $(this).attr("id");
     widget.getSounds(function () {
-        $.getJSON("/recommend", function (tracks) {
-            if(element == "dislike") {
+        if (element == "dislike") {
+            dislike($.getJSON("/recommend", function (tracks) {
                 reloadWidget("w.soundcloud.com/tracks/" + tracks[0].id);
-            }
-            append(tracks, $("#trackList"));
-        });
+                append(tracks, $("#trackList"));
+            }))
+        } else {
+            like($.getJSON("/recommend", function (tracks) {
+                append(tracks, $("#trackList"));
+            }))
+        }
     });
 });
 
-function recommend() {
+function like(callback) {
+    widget.getCurrentSoundIndex(function (index) {
+        widget.getSounds(function (sounds) {
+            sendData(sounds[index], "/like", function () {
+                callback();
+            });
+        });
+    });
+}
 
+function dislike(callback) {
+    widget.getCurrentSoundIndex(function (index) {
+        widget.getSounds(function (sounds) {
+            sendData(sounds[index], "/dislike", function () {
+                callback();
+            });
+        });
+    });
 }
 
 // reload the widget with the url submitted in the input field
@@ -75,7 +95,7 @@ function reloadWidget(url) {
 }
 
 function append(tracks, element) {
-    element.html("");
+    element.html("<h2>Recommended Songs!</h2>");
     jQuery.each(tracks, function (i, track) {
         SC.get('/tracks/' + track.id, function (updatedtrack) {
             element.append(
