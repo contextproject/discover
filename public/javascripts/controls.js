@@ -182,11 +182,11 @@ $("#sendWave").click(function () {
             "waveform": waveform.data,
             "splits" : 0
         };
-        if($("#numsplit").val() == '' ) {
+        if($("#numsplit").val()=== '' ) {
             message["splits"] =  0;
             sendData(message, "/splitWaveform", setMixSplit);
             document.getElementById("numsplit").style.backgroundColor = "white";
-        }else if(parseInt($("#numsplit").val()) > 0){
+        }else if(parseInt($("#numsplit").val()) > 0 && typeof parseInt($("#numsplit").val()) != 'NaN' ){
             message["splits"] =  parseInt($("#numsplit").val());
             document.getElementById("numsplit").style.backgroundColor = "white";
             sendData(message, "/splitWaveform", setMixSplit);
@@ -194,9 +194,8 @@ $("#sendWave").click(function () {
             message["splits"] = 0;
             document.getElementById("numsplit").style.backgroundColor = "red";
             document.getElementById("numsplit").style.opacity = 0.75;
-            console.log("Number of splits must be greater or equal than zero");
         }
-        $("#numsplit").val({});
+        $("#numsplit").val("");
     });
 });
 
