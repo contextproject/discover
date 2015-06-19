@@ -1,37 +1,25 @@
 package models.database;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import controllers.Application;
-
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * This class tests the RandomSongSelector class. Due to database constrains
  * this will be highly difficult to achieve properly since a lot of it's
  * structure is implemented in SQL and requires a manual test instead.
- * 
- * @since 13-05-2015
- * @version 08-06-2015
- * 
- * @see RandomSongSelector
- * 
- * @author stefan boodt
  *
+ * @author stefan boodt
+ * @version 08-06-2015
+ * @see RandomSongSelector
+ * @since 13-05-2015
  */
 public class RandomSongSelectorTest {
 
@@ -47,9 +35,8 @@ public class RandomSongSelectorTest {
 
     /**
      * Does some static set up for the class. Such as database connections.
-     * 
-     * @throws Exception
-     *             If the set up fails.
+     *
+     * @throws Exception If the set up fails.
      */
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
@@ -62,9 +49,8 @@ public class RandomSongSelectorTest {
 
     /**
      * Does some static clean up for the class. Such as database connections.
-     * 
-     * @throws Exception
-     *             If the clean up fails.
+     *
+     * @throws Exception If the clean up fails.
      */
     @AfterClass
     public static void tearDownAfterClass() throws Exception {
@@ -73,9 +59,8 @@ public class RandomSongSelectorTest {
 
     /**
      * Does some set up.
-     * 
-     * @throws Exception
-     *             If the set up fails.
+     *
+     * @throws Exception If the set up fails.
      */
     @Before
     public void setUp() throws Exception {
@@ -84,9 +69,8 @@ public class RandomSongSelectorTest {
 
     /**
      * Does some clean up.
-     * 
-     * @throws Exception
-     *             If the clean up fails.
+     *
+     * @throws Exception If the clean up fails.
      */
     @After
     public void tearDown() throws Exception {
@@ -94,9 +78,8 @@ public class RandomSongSelectorTest {
 
     /**
      * Sets the selector under test to the given value.
-     * 
-     * @param tested
-     *            The selector under test.
+     *
+     * @param tested The selector under test.
      */
     public void setRandomSongSelector(final RandomSongSelector tested) {
         sel = tested;
@@ -104,7 +87,7 @@ public class RandomSongSelectorTest {
 
     /**
      * Returns the selector under test.
-     * 
+     *
      * @return The selector that is being tested.
      */
     public RandomSongSelector getRandomSongSelector() {
@@ -140,17 +123,7 @@ public class RandomSongSelectorTest {
      */
     @Test
     public void testGetRandomSong() {
-        //assertNotNull(getRandomSongSelector().getRandomSong());
-    }
-
-    /**
-     * Tests if the random song selector returns a null value. Since the song is
-     * selected randomly there is no telling on what the result would be.
-     * Therefore a test against null is not entirely pointless.
-     */
-    @Test
-    public void testGetRandomSongWithConnector() {
-        assertNotNull(getRandomSongSelector().getRandomSong(databaseConnector));
+        assertNotNull(getRandomSongSelector().getRandomSong());
     }
 
     /**
@@ -197,27 +170,5 @@ public class RandomSongSelectorTest {
     @Test
     public void testGetQueryNotNull() {
         assertNotNull("", sel.getQuery());
-    }
-
-    /**
-     * Checks the {@link RandomSongSelector#getRandomSong()} method in case of
-     * an empty result.
-     * 
-     * @throws SQLException
-     *             If the mocked statement has an SQL failure.
-     */
-    @Test(expected = RuntimeException.class)
-    public void testGetEmptyResult() throws SQLException {
-        final DatabaseConnector dbc = databaseConnector;
-        final Statement old = dbc.getStatement();
-        final Statement statement = mock(Statement.class);
-        final ResultSet set = mock(ResultSet.class);
-        doReturn(false).when(set).next();
-        doReturn(set).when(statement).executeQuery(sel.getQuery());
-        dbc.setStatement(statement);
-        sel.getRandomSong(dbc);
-
-        // Reset the statement.
-        dbc.setStatement(old);
     }
 }

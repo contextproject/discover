@@ -36,6 +36,8 @@ public class MixSplitterTest extends BasicTest {
      */
     protected static final int DEFAULT_DURATION = 300000;
 
+    Track track;
+
     /**
      * The splitter under test.
      */
@@ -50,8 +52,10 @@ public class MixSplitterTest extends BasicTest {
     @Override
     public void setUp() throws Exception {
         super.setUp();
-        setSplitter(new MixSplitter(asList(),
-                new Track(DEFAULT_TRACKID, DEFAULT_DURATION)));
+        track = new Track();
+        track.put(Track.ID, DEFAULT_TRACKID);
+        track.put(Track.DURATION, DEFAULT_DURATION);
+        setSplitter(new MixSplitter(asList(), track));
     }
 
     /**
@@ -373,8 +377,7 @@ public class MixSplitterTest extends BasicTest {
      */
     @Test
     public void testGetTrack() {
-        final Track expected = new Track(DEFAULT_TRACKID, DEFAULT_DURATION);
-        assertEquals(expected, getSplitter().getTrack());
+        assertEquals(track, getSplitter().getTrack());
     }
 
     /**
@@ -383,10 +386,10 @@ public class MixSplitterTest extends BasicTest {
     @Test
     public void testGetTrackAfterSetting() {
         final int id = 2104921042;
-        final Track expected = new Track(id, DEFAULT_DURATION);
+        track.put(Track.ID, id);
         final MixSplitter split = getSplitter();
-        split.setTrack(expected);
-        assertEquals(expected, split.getTrack());
+        split.setTrack(track);
+        assertEquals(track, split.getTrack());
     }
 
     /**

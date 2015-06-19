@@ -1,10 +1,5 @@
 package models.database;
 
-import controllers.Application;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 /**
  * This class selects a random song from the database. The current version of
  * this class uses the singleton pattern.
@@ -22,11 +17,6 @@ public final class RandomSongSelector {
     private static RandomSongSelector selector;
 
     /**
-     * The name of the track_id field in the database.
-     */
-    private final String trackid;
-
-    /**
      * The query to be executed.
      */
     private final String query;
@@ -35,11 +25,7 @@ public final class RandomSongSelector {
      * Private constructor that construct new random song selectors.
      */
     private RandomSongSelector() {
-        trackid = "track_id";
-        query = "SELECT DISTINCT " + trackid
-                + " FROM tracks"
-                + " ORDER BY RAND()"
-                + " LIMIT 1";
+        query = "SELECT DISTINCT track_id FROM tracks ORDER BY RAND() LIMIT 1";
     }
 
     /**
@@ -48,29 +34,7 @@ public final class RandomSongSelector {
      * @return The track_id of a random song.
      */
     public int getRandomSong() {
-        return getRandomSong(Application.getDatabaseConnector());
-    }
-
-    /**
-     * Method that returns the track_id of a random song in the database.
-     *
-     * @param dbc The database connector to use.
-     * @return The track_id of a random song.
-     */
-    public int getRandomSong(final DatabaseConnector dbc) {
-        final ResultSet result = dbc.executeQuery(getQuery());
-        try {
-            if (!result.next()) {
-                throw new RuntimeException("Error the query " + query
-                        + " returned an empty result set.");
-            }
-            return result.getInt(trackid);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw new RuntimeException("Error when doing query "
-                    + query + " on the database. The returned result did not"
-                    + " have a column by the name of " + trackid + " of type int", e);
-        }
+        return DatabaseConnector.getConnector().getSingleInt(query, "track_id");
     }
 
     /**

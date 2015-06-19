@@ -1,26 +1,24 @@
 // Soundcloud widget
 var widget = SC.Widget(document.getElementById("sc-widget"));
-var mixSplits, waveform;
+var mixSplits, waveform, songStart, songEnd;
 var snipWin = 5000.00;
 var splitPointer = -1;
+setStartTime(parseFloat(start));
 var autoplay = false;
 var open = false;
 
 //Function for the autoplay button only works if autoplay is on
-function radio() {
-    widget.bind(SC.Widget.Events.FINISH, function () {
-        if (autoplay) {
-            widget.getSounds(function (sounds) {
-                if (sounds.length > 1) {
-                    widget.next();
-                } else {
-                    randomSong();
-                }
-            });
-        }
-    });
-}
-
+widget.bind(SC.Widget.Events.FINISH, function () {
+    if(autoplay) {
+        widget.getSounds(function (sounds) {
+           if (sounds.length > 1){
+               widget.next();
+           } else{
+              recommendAuto();
+           }
+        });
+    }
+});
 
 $("#current").click(function () {
     widget.bind(SC.Widget.Events.READY, function () {
@@ -54,7 +52,6 @@ $('a.toggler.off').click(function(){
     } else {
         document.getElementById("switch").innerHTML = "on";
         autoplay = true;
-        radio();
     }
     $(this).toggleClass('off');
 });
@@ -72,11 +69,11 @@ widget.bind(SC.Widget.Events.READY, function () {
     widget.unbind(SC.Widget.Events.READY);
 });
 
-$(window).load(function() {
+$(window).load(function () {
     $('#joyRideTipContent').joyride({
-        cookieMonster : true,
-        autoStart : true,
-        postStepCallback : function (index, tip) {
+        cookieMonster: true,
+        autoStart: true,
+        postStepCallback: function (index, tip) {
             if (index == 2) {
                 $(this).joyride('set_li', false, 1);
             }
@@ -92,8 +89,8 @@ $("#help").click(function() {
     openMenu;
     $.removeCookie("joyride",{ expires: 365, domain: false, path: false });
     $('#joyRideTipContent').joyride({
-        cookieMonster : true,
-        preRideCallback: $(this).joyride('destroy',false,1)
+        cookieMonster: true,
+        preRideCallback: $(this).joyride('destroy', false, 1)
     });
     open = false;
 });
@@ -117,13 +114,13 @@ function sendData(data, url, callback) {
     }
 }
 
-//event for disliking a song
+// event for disliking a song
 $("#dislike").click(function () {
+	
     if (SC.accessToken() != null) {
         widget.getCurrentSoundIndex(function (index) {
             widget.getSounds(function (sounds) {
-                sendData(sounds[index], "/dislike", function () {
-                });
+                sendData(sounds[index], "/dislike", function (){});
                 SC.delete('/me/favorites/' + sounds[index].id);
             });
         });
@@ -132,58 +129,52 @@ $("#dislike").click(function () {
 
 // event for liking a song
 $("#like").click(function () {
-    like();
-    //if (SC.accessToken() == null) {
-    //    console.log("null");
-    //    SC.connect(function () {
-    //        like();
-    //    });
-    //} else {
-    //    console.log("not null");
-    //    like();
-    //}
-});
-
-// like the current song
-function like() {
     widget.getCurrentSoundIndex(function (index) {
         widget.getSounds(function (sounds) {
             sendData(sounds[index], "/like", function () {
             });
-            //SC.put('/me/favorites/' + sounds[index].id);
         });
     });
-}
+});
 
-//select the next song if present
-$("#next").click(function () {
+// select the next song if present
+$("#next").click(function() {
+	widgetClearEvents(); nextSnip(false);
+});
+
+// select the previous song if present
+$("#prev").click(prevSnip);
+
+// Goes to the next snippet of the mix.
+function nexter() { nextSnip(true) }
+function nextSnip(autoplay) {
     if (mixSplits != null && mixSplits != undefined) {
         splitPointer++;
         if ((splitPointer < mixSplits.length) && (splitPointer >= 0)) {
-            widgetClearEvents();
-            var sPartial = mixSplits[splitPointer];
-            preview(sPartial, sPartial + snipWin);
+        	if(autoplay) {
+        		preview(mixSplits[splitPointer], mixSplits[splitPointer] + snipWin, nexter);
+        	} else {
+        		preview(mixSplits[splitPointer], mixSplits[splitPointer] + snipWin, function(){});
+        	}
         } else {
             splitPointer--;
         }
     }
-});
+}
 
-// select the previous song if present
-$("#prev").click(function () {
+// Goes to the previous snippet of a snippet mix.
+function prevSnip() {
     if (mixSplits != null && mixSplits != undefined) {
         splitPointer--;
         if ((splitPointer < mixSplits.length) && (splitPointer >= 0)) {
-            widgetClearEvents();
-            var sPartial = mixSplits[splitPointer];
-            preview(sPartial, sPartial + snipWin);
+    		preview(mixSplits[splitPointer], mixSplits[splitPointer] + snipWin, function(){});
         } else {
             splitPointer++;
         }
     }
-});
+}
 
-// sends the waveform of the current track
+// Sends the waveform of the current track
 $("#sendWave").click(function () {
     widget.getSounds(function (sounds) {
         var message = {
@@ -203,53 +194,11 @@ $("#sendWave").click(function () {
     });
 });
 
+// Sets up the list containing the list of snippets.
 function setMixSplit(newSp) {
     mixSplits = newSp;
-    console.log(newSp);
-}
-
-// if the reload button is clicked on, call the reloadWidget function
-$("#reload").click(function () {
-    clearInputAndReloadWidget();
-});
-// if the url submit is entered, call the reloadWidget function
-$("#url").keypress(function (e) {
-    if (e.which == 13) {
-        clearInputAndReloadWidget();
-    }
-});
-
-function clearInputAndReloadWidget() {
-    var url = $("#url");
-    var input = url.val();
-    url.html("");
-    reloadWidget(input);
-}
-
-// reload the widget with the url submitted in the input field
-function reloadWidget(url) {
-    mixSplits = null;
-    // load the url in the widget
-    widget.load(url, {
-        auto_play: false,
-        likes: true
-    });
-    widget.bind(SC.Widget.Events.READY, function () {
-        widget.unbind(SC.Widget.Events.READY);
-        var pos;
-        widget.getCurrentSoundIndex(function (index) {
-            pos = index;
-        });
-        widget.getSounds(function (sounds) {
-            var message = {
-                "track": sounds[pos],
-                "waveform": waveform.data
-            };
-            sendData(message, "/request", setStartTime);
-            // use the following line if you want to re-render the page.
-            // window.location.href = "http://localhost:9000/tracks/" + sounds[pos].id;
-        });
-    });
+    splitPointer = -1;
+    nexter();
 }
 
 // change the volume of the widget
@@ -257,32 +206,49 @@ $("#volume").on("input change", function () {
     widget.setVolume(parseInt($('#volume').val()));
 });
 
-// play the snippet of the song
-var songStart = parseFloat(start) - (snipWin / 2);
-var songEnd = Math.abs(songStart) + snipWin;
 
-//Set the new start time of the preview.
+//change the mode of the algorithm
+$("#algoMode").on("input change", function () {
+	var val = $("#algoMode").val();
+	if (val <= 25) {
+		$("#modeLabel").text("AUTO");
+		sendData({ "mode": "auto" }, "/setPreviewMode", function () {});
+	} else if (val > 25 & val <= 50) {
+		$("#modeLabel").text("INTENSITY");
+		sendData({ "mode": "intensity" }, "/setPreviewMode", function () {});
+	} else if (val > 50 & val <= 75) { 
+		$("#modeLabel").text("CONTENT");
+		sendData({ "mode": "content" }, "/setPreviewMode", function () {});
+	} else {
+		$("#modeLabel").text("RANDOM");
+		sendData({ "mode": "random" }, "/setPreviewMode", function () {});
+	}
+});
+
+// Set the new start time of the preview.
 function setStartTime(newStart) {
-    start = newStart;
-    songStart = parseFloat(start) - (snipWin / 2);
-    songEnd = Math.abs(songStart) + snipWin
+    if(newStart < 0 || newStart < (snipWin / 2)) {
+		songStart = 0;
+		songEnd = snipWin;
+	} else {
+	    songStart = parseFloat(newStart) - (snipWin / 2);
+	    songEnd = Math.abs(songStart) + snipWin
+	}
 }
 
-//During the event the current track is seeked to the set songStart and played.
+function setStartTime2(response) {
+    snipWin = response.window;
+    setStartTime(response.start);
+}
+
+// During the event the current track is seeked to the set songStart and played.
 $("#preview").click(function () {
-    if(autoplay) {
-        autoplay = false;
-        preview(songStart, songEnd);
-        autoplay = true;
-        radio();
-    }else{
-        preview(songStart, songEnd);
-    }
+    preview(songStart, songEnd, function(){});
 });
 
 // Preview a snippet on the current track.
-function preview(sStart, sEnd) {
-    widgetClearEvents();
+function preview(sStart, sEnd, callback) {
+	widgetClearEvents();
     widget.isPaused(function (paused) {
         if (paused) {
             widget.bind(SC.Widget.Events.READY, function () {
@@ -301,6 +267,7 @@ function preview(sStart, sEnd) {
             if (position > sEnd) {
                 widget.pause();
                 widget.unbind(SC.Widget.Events.PLAY_PROGRESS);
+                callback();
             }
         });
     });
@@ -322,31 +289,19 @@ function randomSong() {
         contentType: "application/json; charset=utf-8",
         url: "/random",
         success: function (data) {
-            widget.load(data.url, {
+            console.log(data);
+            widget.load(data.response.url, {
                 auto_play: autoplay,
                 likes: false
             });
-            setStartTime(data.start);
+            console.log(data.response);
+            setStartTime2(data.response);
         }
     });
 }
 
 // load the widget with a random song
 $("#rand").click(randomSong);
-
-//connect with Soundcloud
-$("#connect").click(function () {
-    // initiate auth popup
-    if (SC.accessToken() == null) {
-        SC.connect(function () {
-            getFavorites();
-        });
-        $("#connect").html("Disconnect");
-    } else {
-        SC.accessToken(null);
-        $("#connect").html("Connect");
-    }
-});
 
 // when pressed the collection of the user is loaded in the widget
 $("#favorites").click(function () {
@@ -360,12 +315,55 @@ $("#favorites").click(function () {
     }
 });
 
+//connect with Soundcloud
+$("#connect").on('click', function () {
+    if ($(this).attr("class") == "connect") {
+        if (SC.accessToken() == null) {
+            SC.connect(function () {
+                getFavorites2(function (data) {
+                    SC.get("http://api.soundcloud.com/users/" + data.id + "/favorites", function(favourites) {
+                        console.log(favourites);
+                        sendData(favourites, "/favorites", function() {
+
+                        });
+                    });
+                    sendData(data, "/user", function() {
+                        console.log("id send");
+                    });
+                    loadFavorites(data);
+                });
+            });
+            $(this).html("Disconnect");
+            $(this).attr("class", "disconnect");
+        }
+    } else {
+        if (SC.accessToken() != null) {
+            SC.accessToken(null);
+            $(this).html("Connect");
+            $(this).attr("class", "connect");
+        }
+    }
+});
+
 function getFavorites() {
     SC.get('/me', function (me) {
         widget.load("api.soundcloud.com/users/" + me.id + "/favorites", {
             auto_play: false,
             likes: false
         });
+    });
+}
+
+function getFavorites2(callback) {
+    SC.get('/me', function (me) {
+        callback(me);
+    });
+}
+
+function loadFavorites(me) {
+    widget.load("api.soundcloud.com/users/" + me.id + "/favorites", {
+        auto_play: false,
+        likes: false
     });
 }
 
@@ -401,4 +399,12 @@ $("#waveform").click(function () {
         });
     });
 });
+
+function recommendAuto() {
+    $.getJSON("/recommend", function (data) {
+        var first = data[0];
+        console.log("w.soundcloud.com/tracks/" + first["id"]);
+        reloadWidget("w.soundcloud.com/tracks/" + first["id"]);
+    })
+}
 

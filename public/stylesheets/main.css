@@ -2,12 +2,13 @@
     width: 40%
 }
 
-.control {
+.control, #connect {
     width: 80%;
 }
 
-#waveform {
-    display: none;
+#help{
+    margin-left: 545px;
+    cursor: pointer;
 }
 
 #menu {
@@ -22,6 +23,11 @@
 
 }
 
+
+.search {
+    width: 100%;
+}
+
 #openMenu {
     cursor: pointer;
 
@@ -31,9 +37,13 @@
     margin-left:10px;
 }
 
-#help{
-    margin-left: 545px;
-    cursor: pointer;
+.album-art img {
+    width: 75px;
+    height: 75px;
+}
+
+#tracks{
+    width:100%;
 }
 
 a.toggler {
@@ -50,7 +60,7 @@ a.toggler {
     color: white;
 }
 
-a.toggler:hover{
+a.toggler:hover {
     border-bottom-color: white !important;
 }
 

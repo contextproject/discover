@@ -1,13 +1,12 @@
 package models.mix;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import models.record.Track;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-
-import models.record.Track;
 
 /**
  * The Class that is responsable for the splitting of the mix in several smaller
@@ -15,7 +14,7 @@ import models.record.Track;
  *
  * @author stefan boodt
  * @author arthur hovenesyan
- * @version 10-06-2015
+ * @version 16-06-2015
  * @see Shingle
  * @since 21-05-2015
  */
@@ -30,7 +29,7 @@ public class MixSplitter {
      * The id of the track to split.
      */
     private Track track;
-    
+
     /**
      * The default threshold for the splitting.
      */
@@ -40,7 +39,7 @@ public class MixSplitter {
      * Creates a new mixsplitter which can then split the given mix into
      * different pieces.
      *
-     * @param data    The data to split into pieces for.
+     * @param data  The data to split into pieces for.
      * @param track The id of the mix to split.
      */
     public MixSplitter(final List<Double> data, final Track track) {
@@ -52,12 +51,12 @@ public class MixSplitter {
      * Creates a new MixSplitter which can split the given mix into different
      * pieces.
      *
-     * @param json    The data to split in a JsonNode format.
-     * @param track   The track to split.
+     * @param json  The data to split in a JsonNode format.
+     * @param track The track to split.
      */
     public MixSplitter(final JsonNode json, final Track track) {
         Iterator<JsonNode> it = json.elements();
-        List<Double> data = new ArrayList<Double>();
+        List<Double> data = new ArrayList<>();
         while (it.hasNext()) {
             final double number = 10000.00;
             data.add(Math.round(it.next().asDouble() * number) / number);
@@ -73,12 +72,13 @@ public class MixSplitter {
      * beginning of a new piece.
      */
     public List<Integer> split() {
-        final int songtime = track.getDuration();
+        final int songtime = track.get(Track.DURATION);
         return split(splitToShingles(), DEFAULT_THRESHOLD, songtime);
     }
-    
+
     /**
      * Splits the song into numberOfSplits pieces.
+     *
      * @param numberOfSplits The number of splits you want. Or {@code 0} for default.
      * @return The list of starttimes that is numberOfSplits long.
      */
@@ -96,17 +96,18 @@ public class MixSplitter {
         }
         return starttimes.subList(0, numberOfSplits);
     }
-    
+
     /**
      * Splits the shingles into number of splits pieces.
+     *
      * @param numberOfSplits The number of splits.
-     * @param shingles The shingles to define.
-     * @param threshold The threshold to work with.
-     * @param current The current starttimes.
+     * @param shingles       The shingles to define.
+     * @param threshold      The threshold to work with.
+     * @param current        The current starttimes.
      * @return The starttimes of the pieces.
      */
-    protected List<Integer> doTheSplit(final int numberOfSplits,
-            final List<Shingle> shingles, final double threshold, final List<Integer> current) {
+    protected List<Integer> doTheSplit(final int numberOfSplits, final List<Shingle> shingles,
+                                       final double threshold, final List<Integer> current) {
         if (numberOfSplits == 0) {
             Collections.sort(current);
             return current;
@@ -124,15 +125,16 @@ public class MixSplitter {
 
     /**
      * Adds additional pieces to the song.
+     *
      * @param numberOfSplits The number of splits still left.
-     * @param shingles The list of shingles.
-     * @param threshold The threshold to allow them for this step.
-     * @param current The current list of starttimes.
+     * @param shingles       The list of shingles.
+     * @param threshold      The threshold to allow them for this step.
+     * @param current        The current list of starttimes.
      * @return The new list of starttimes.
      */
     public List<Integer> addPieces(final int numberOfSplits,
-            final List<Shingle> shingles, final double threshold,
-            final List<Integer> current) {
+                                   final List<Shingle> shingles, final double threshold,
+                                   final List<Integer> current) {
         if (shingles.size() < numberOfSplits) {
             throw new IllegalStateException("Can't instantiate " + numberOfSplits + " pieces"
                     + " because there only were " + shingles.size() + " shingles.");
@@ -151,31 +153,33 @@ public class MixSplitter {
 
     /**
      * Returns the new List that is returned after this iteration.
-     * @param shingles The shingles of this song.
+     *
+     * @param shingles  The shingles of this song.
      * @param threshold The threshold that is currently used.
-     * @param current The current list.
+     * @param current   The current list.
      * @return The new list of starttimes.
      */
     private List<Integer> getNewList(final List<Shingle> shingles,
-            final double threshold, final List<Integer> current) {
+                                     final double threshold, final List<Integer> current) {
         if (threshold >= 0.0) {
             return getNewList(current, split(shingles, threshold,
-                    track.getDuration()));
+                    track.get(Track.DURATION)));
         } else {
             return getNewList(current, addAllShingles(shingles));
         }
     }
-    
+
     /**
      * Builds a new list that contains current and then adds all the new values
      * from the second list.
+     *
      * @param current The current list to add to.
      * @param newOnes The new ones to be added.
      * @return The new List of starttimes.
      */
     private List<Integer> getNewList(final List<Integer> current,
-            final List<Integer> newOnes) {
-        final List<Integer> result = new ArrayList<Integer>(current);
+                                     final List<Integer> newOnes) {
+        final List<Integer> result = new ArrayList<>(current);
         for (Integer i : newOnes) {
             if (!(result.contains(i))) {
                 result.add(i);
@@ -186,14 +190,15 @@ public class MixSplitter {
 
     /**
      * Adds all the shingles to the starttimes.
+     *
      * @param shingles The shingles to add.
      * @return The list of starttimes.
      */
     private List<Integer> addAllShingles(final List<Shingle> shingles) {
         // Two variables are made for efficiency. Calculating them once saves time and energy.
         final int amountOfShingles = shingles.size();
-        final int songDuration = track.getDuration();
-        final List<Integer> starttimes = new ArrayList<Integer>(amountOfShingles);
+        final int songDuration = track.get(Track.DURATION);
+        final List<Integer> starttimes = new ArrayList<>(amountOfShingles);
         for (int i = 0; i < amountOfShingles; i++) {
             starttimes.add(getShingleStarttime(i, amountOfShingles, songDuration));
         }
@@ -220,8 +225,9 @@ public class MixSplitter {
      * Checks if the threshold and songtime are valid.
      * IllegalArgumentExceptions are thrown when an invalid value has
      * been found among them.
+     *
      * @param threshold The threshold to seek at, must be between 0 and 1.
-     * @param songtime The duration of the song.
+     * @param songtime  The duration of the song.
      */
     public void checkValid(final double threshold, final int songtime) {
         if (threshold < 0.0 || threshold > 1.0) {
@@ -239,14 +245,15 @@ public class MixSplitter {
      * Splits the song while not checking any values. You should avoid
      * to call this method. Please call the {@link #split()} method
      * instead. This one also checks if the values are a little sane.
-     * @param shingles The shingles that need to be compared.
+     *
+     * @param shingles  The shingles that need to be compared.
      * @param threshold The threshold to compare to.
-     * @param songtime The duration of the song.
+     * @param songtime  The duration of the song.
      * @return The list of starttimes.
      */
     private List<Integer> splitUnsafe(final List<Shingle> shingles,
-            final double threshold, final int songtime) {
-        List<Integer> starttimes = new ArrayList<Integer>();
+                                      final double threshold, final int songtime) {
+        List<Integer> starttimes = new ArrayList<>();
         starttimes.add(0);
         /*
          * Just in case someone enters a LinkedList or other list that
@@ -258,7 +265,7 @@ public class MixSplitter {
             final double distance = shingles.get(i).jaccardDistance(
                     shingles.get(i + 1));
             if (distance > threshold) {
-                final int integer = getShingleStarttime(songtime, amountOfShingles, i);
+                final int integer = getShingleStarttime(songtime, amountOfShingles, i + 1);
                 starttimes.add(integer);
             }
         }
@@ -266,15 +273,29 @@ public class MixSplitter {
     }
 
     /**
-     * Returns the starttime of shingle i.
-     * @param songtime The duration of the song.
+     * Returns the starttime of shingle shingleIndex.
+     *
+     * @param songtime         The duration of the song.
      * @param amountOfShingles The number of shingles in the song.
-     * @param shingleIndex The index of the shingle.
+     * @param shingleIndex     The index of the shingle.
      * @return The starttime of the shingle.
      */
     public int getShingleStarttime(final int songtime,
-            final int amountOfShingles, final int shingleIndex) {
-        return ((shingleIndex + 1) * songtime) / amountOfShingles;
+                                   final int amountOfShingles, final int shingleIndex) {
+        return getWaveformPart(songtime, amountOfShingles, shingleIndex);
+    }
+
+    /**
+     * Returns the starttime of bar barIndex.
+     *
+     * @param songtime     The duration of the song.
+     * @param amountOfBars The number of bars in the waveform of the song.
+     * @param barIndex     The index of the bar.
+     * @return The starttime of the bar.
+     */
+    public static int getWaveformPart(final int songtime,
+                                      final int amountOfBars, final int barIndex) {
+        return (barIndex * songtime) / amountOfBars;
     }
 
     /**
@@ -305,7 +326,8 @@ public class MixSplitter {
     /**
      * Checks if the two integers are valid sizes and throws an
      * IllegalArgumentException if they are not.
-     * @param size The size of the list of shingles to test.
+     *
+     * @param size     The size of the list of shingles to test.
      * @param stepsize The number of data elements to skip when making a Shingle.
      */
     private void checkValidSizes(final int size, final int stepsize) {
@@ -323,19 +345,19 @@ public class MixSplitter {
     /**
      * Splits the shingles in an unsafe way. It being unsafe is a reference
      * to the lack of validity tests in this method.
-     * 
+     * <p/>
      * <p>
      * Please refrain from calling this method and call the safe version instead.
      * The safe version is {@link #splitToShingles(int, int)}.
      * </p>
-     * 
-     * @param size The size of each shingle.
+     *
+     * @param size     The size of each shingle.
      * @param stepsize The size of the steps between two shingles.
      * @return The shingles found in the song with the given values.
      */
     private List<Shingle> splitToShinglesUnsafe(final int size,
-            final int stepsize) {
-        List<Shingle> shingles = new ArrayList<Shingle>();
+                                                final int stepsize) {
+        List<Shingle> shingles = new ArrayList<>();
         final int datasize = data.size(); // Saves a lot of time on really large
         // collections.
         for (int i = 0; i < datasize; i += stepsize) {
