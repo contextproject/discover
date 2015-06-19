@@ -12,6 +12,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -184,6 +187,23 @@ public class DatabaseConnectorTest {
     public void testGetSingleDouble0Results() {
         assertEquals(0.0, databaseConnector.getSingleDouble("SELECT * FROM tracks LIMIT 0",
                 "track_id"), 0.1);
+    }
+    
+    /**
+     * Tests what happens when you close the connection twice. Since
+     * this is implementation dependant it simply does not check that
+     * something random happens but it will be run to see if the program
+     * crashes.
+     */
+    @Test
+    public void doubleClose() {
+        PrintStream err = System.err;
+        PrintStream out = mock(PrintStream.class);
+        System.setErr(out);
+        databaseConnector.closeConnection();
+        databaseConnector.closeConnection();
+        System.setErr(err);
+        verify(out, atLeast(0)).println(anyString());
     }
     
     /**
