@@ -70,14 +70,28 @@ public final class Application extends Controller {
      */
     public static Result splitWaveform() {
         JsonNode json = getJSON();
-        final Track track = Json.getTrack(json.get("track"));
-        MixSplitter splitter = new MixSplitter(json.get("waveform"), track);
-        List<Integer> splits = splitter.split();
-        List<Integer> starttimes = getStartTimes(splits, track);
-        Map<String, List<Integer>> map = new TreeMap<String, List<Integer>>();
-        map.put("response", starttimes);
-        JsonNode response = new ObjectMapper().valueToTree(map);
-        return ok(response);
+        return splitWaveform(json);
+    }
+    
+    /**
+    * Splits the waveform from the given JSON.
+    * @param json The JSON that contains the track information in the
+    * expected form.
+    * @return The result of the method.
+    */
+    public static Result splitWaveform(final JsonNode json) {
+        if (json == null) {
+            return badRequest("Expecting Json data");
+        } else {
+            final Track track = Json.getTrack(json.get("track"));
+            MixSplitter splitter = new MixSplitter(json.get("waveform"), track);
+            List<Integer> splits = splitter.split();
+            List<Integer> starttimes = getStartTimes(splits, track);
+            Map<String, List<Integer>> map = new TreeMap<String, List<Integer>>();
+            map.put("response", starttimes);
+            JsonNode response = new ObjectMapper().valueToTree(map);
+            return ok(response);
+        }
     }
     
     /**
@@ -112,10 +126,20 @@ public final class Application extends Controller {
      * Method used to pass a Json object with track meta-data. This will be used
      * in the future to insert non-existing tracks.
      *
-     * @return ok response with a
+     * @return ok response with a json node.
      */
     public static Result trackMetadata() {
         JsonNode json = getJSON();
+        return trackMetadata(json);
+    }
+    
+    /**
+     * Method used to pass a Json object with track meta-data. This will be used
+     * in the future to insert non-existing tracks.
+     * @param json The json node to read.
+     * @return ok response with a json node.
+     */
+    protected static Result trackMetadata(final JsonNode json) {
         if (json == null) {
             return badRequest("Expecting Json data");
         } else {
