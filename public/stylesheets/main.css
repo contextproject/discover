@@ -1,9 +1,13 @@
 #next, #prev, #like, #dislike {
-    width: 40%
+    width: 45%
 }
 
 .control, #connect {
-    width: 80%;
+    width: 90%;
+}
+
+hr {
+    width: 90%;
 }
 
 #help {
