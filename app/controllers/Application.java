@@ -125,6 +125,16 @@ public final class Application extends Controller {
      */
     public static Result trackMetadata() {
         JsonNode json = request().body().asJson();
+        return trackMetadata(json);
+    }
+
+    /**
+     * Method used to pass a Json object with track meta-data. This will be used
+     * in the future to insert non-existing tracks.
+     * @param json The json node to read.
+     * @return ok response with a
+     */
+    protected static Result trackMetadata(final JsonNode json) {
         if (json == null) {
             return badRequest("Expecting Json data");
         } else {

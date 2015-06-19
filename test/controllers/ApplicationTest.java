@@ -67,27 +67,6 @@ public class ApplicationTest {
     }
 
     /**
-     * Tests the splitwaveform method in the application class.
-     */
-    @Test
-    public void testSplitWaveformNull() {
-        ObjectNode json = null;
-        final int status = status(Application.splitWaveform(json));
-        assertEquals(BAD_REQUEST, status);
-    }
-
-    /**
-     * Tests the splitwaveform method in the application class.
-     */
-    @Test
-    public void testSplitWaveform() {
-        ObjectNode json = getJSON();
-        Application.splitWaveform(json);
-        final int status = status(Application.splitWaveform(json));
-        assertEquals(OK, status);
-    }
-
-    /**
      * Creates a JSON element.
      * @return The JSON node.
      */
@@ -107,7 +86,41 @@ public class ApplicationTest {
         json.put("waveform", "[0.4, 0.1, 0.2]");
         return json;
     }
-    
+
+    /**
+     * Tests the splitwaveform method in the application class.
+     */
+    @Test
+    public void testSplitWaveformNull() {
+        ObjectNode json = null;
+        final int status = status(Application.splitWaveform(json));
+        assertEquals(BAD_REQUEST, status);
+    }
+
+    /**
+     * Tests the splitwaveform method in the application class.
+     */
+    @Test
+    public void testSplitWaveformJSON() {
+        JsonNode json = getJSON();
+        final int status = status(Application.splitWaveform(json));
+        assertEquals(OK, status);
+    }
+
+    /**
+     * Tests the split waveform method.
+     */
+    @Test
+    public void testSplitWaveformRoutes() {
+        final JsonNode json = getJSON();
+        final Result result = callAction(
+                routes.ref.Application.splitWaveform(),
+                new FakeRequest().withJsonBody(json)
+        );
+        final int status = status(result);
+        assertEquals(OK, status);
+    }
+
     /**
      * Tests the index method of the application.
      */
@@ -134,16 +147,77 @@ public class ApplicationTest {
      */
     @Test
     public void testTrackRequest() {
-        /*ObjectNode json = new ObjectMapper().createObjectNode();
-        ObjectNode trackstuff = new ObjectMapper().createObjectNode();
-        trackstuff.put("id", 1000214);
-        trackstuff.put("duration", 10000);
-        json.put("response", trackstuff);
-        Result result = callAction(
+        final JsonNode json = getJSON();
+        final Result result = callAction(
                 routes.ref.Application.trackRequest(),
                 new FakeRequest().withJsonBody(json)
         );
-        final int status = status(Application.index());
-        assertEquals(OK, status);*/
+        final int status = status(result);
+        assertEquals(OK, status);
+    }
+
+    /**
+     * Tests the track metadata method.
+     */
+    @Test
+    public void testTrackMetadataRoutes() {
+        final JsonNode json = getJSON();
+        final Result result = callAction(
+                routes.ref.Application.trackMetadata(),
+                new FakeRequest().withJsonBody(json)
+        );
+        final int status = status(result);
+        assertEquals(OK, status);
+    }
+
+    /**
+     * Tests the track metadata method.
+     */
+    @Test
+    public void testTrackMetadata() {
+        final JsonNode json = getJSON();
+        final Result result = Application.trackMetadata(json);
+        final int status = status(result);
+        assertEquals(OK, status);
+    }
+
+    /**
+     * Tests the track metadata method.
+     */
+    @Test
+    public void testTrackMetadataNull() {
+        final JsonNode json = null;
+        final Result result = Application.trackMetadata(json);
+        final int status = status(result);
+        assertEquals(BAD_REQUEST, status);
+    }
+
+    /**
+     * Tests the set preview mode method.
+     */
+    @Test
+    public void testSetPreviewMode() {
+        final ObjectNode json = new ObjectMapper().createObjectNode();
+        json.put("mode", "RANDOM");
+        final Result result = callAction(
+                routes.ref.Application.setPreviewMode(),
+                new FakeRequest().withJsonBody(json)
+        );
+        final int status = status(result);
+        assertEquals(OK, status);
+    }
+
+    /**
+     * Tests the set preview mode method.
+     */
+    @Test
+    public void testSetPreviewModeInvalidJSON() {
+        final JsonNode json = getJSON();
+        final Result result = callAction(
+                routes.ref.Application.setPreviewMode(),
+                new FakeRequest().withJsonBody(json)
+        );
+        final int status = status(result);
+        assertEquals(BAD_REQUEST, status);
     }
 }
