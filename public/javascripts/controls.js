@@ -263,7 +263,6 @@ function randomSong() {
         contentType: "application/json; charset=utf-8",
         url: "/random",
         success: function (data) {
-            console.log(data);
             widget.load(data.response.url, {
                 auto_play: autoplay,
                 likes: false
@@ -296,14 +295,9 @@ $("#connect").on('click', function () {
             SC.connect(function () {
                 getFavorites2(function (data) {
                     SC.get("http://api.soundcloud.com/users/" + data.id + "/favorites", function (favourites) {
-                        console.log(favourites);
-                        sendData(favourites, "/favorites", function () {
-
-                        });
+                        sendData(favourites, "/favorites", function () {});
                     });
-                    sendData(data, "/user", function () {
-                        console.log("id send");
-                    });
+                    sendData(data, "/user", function () {});
                     loadFavorites(data);
                 });
                 $(this).html("Log out");
