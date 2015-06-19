@@ -4,9 +4,11 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.sql.SQLException;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.sql.Statement;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -15,10 +17,13 @@ import static org.mockito.Mockito.verify;
 
 
 /**
- * Test class for the Database class
+ * Test class for the Database class.
  */
 public class DatabaseConnectorTest {
 
+    /**
+     * Easier reference to the connector.
+     */
     private DatabaseConnector databaseConnector;
 
     /**
@@ -70,6 +75,115 @@ public class DatabaseConnectorTest {
     @Test
     public void executeQueryExceptionTest() throws Exception {
         assertNull(databaseConnector.executeQuery(""));
+    }
+    
+    /**
+     * Tests the get single string method.
+     */
+    @Test
+    public void testGetSingleStringEmptyQuery() {
+        assertNull(databaseConnector.getSingleString("", "track_id"));
+    }
+    
+    /**
+     * Tests the get single string method.
+     */
+    @Test (expected = RuntimeException.class)
+    public void testGetSingleStringNotExistingColumn() {
+        databaseConnector.getSingleString("SELECT * FROM tracks LIMIT 1", "ksjksbdfnmbjlk");
+    }
+    
+    /**
+     * Tests the get single string method.
+     */
+    @Test
+    public void testGetSingleString0Results() {
+        assertNull(databaseConnector.getSingleString("SELECT * FROM tracks LIMIT 0", "genre"));
+    }
+    
+    /**
+     * Tests the get single string method.
+     */
+    @Test
+    public void testGetSingleString() {
+        assertEquals("Rap", databaseConnector.getSingleString(
+                "SELECT * FROM tracks WHERE track_id = 32098962", "genre"));
+    }
+    
+    /**
+     * Tests the get single string method.
+     */
+    @Test
+    public void testGetSingleInt() {
+        assertEquals(32098962, databaseConnector.getSingleInt(
+                "SELECT * FROM tracks WHERE track_id = 32098962", "track_id"));
+    }
+    
+    /**
+     * Tests the get single string method.
+     */
+    @Test
+    public void testGetSingleIntEmptyQuery() {
+        assertEquals(0, databaseConnector.getSingleInt("", "track_id"));
+    }
+    
+    /**
+     * Tests the get single string method.
+     */
+    @Test
+    public void testGetSingleIntNotExistingColumn() {
+        PrintStream err = System.err;
+        OutputStream mock = mock(OutputStream.class);
+        System.setErr(new PrintStream(mock));
+        assertEquals(0, databaseConnector.getSingleInt("SELECT * FROM tracks LIMIT 1", "ksjksbdfnmbjlk"));
+        System.setErr(err);
+    }
+    
+    /**
+     * Tests the get single string method.
+     */
+    @Test
+    public void testGetSingleInt0Results() {
+        assertEquals(0, databaseConnector.getSingleInt("SELECT * FROM tracks LIMIT 0", "track_id"));
+    }
+    
+    /**
+     * Tests the get single string method.
+     */
+    @Test
+    public void testGetSingleDouble() {
+        assertEquals(32098962.0, databaseConnector.getSingleDouble(
+                "SELECT * FROM tracks WHERE track_id = 32098962", "track_id"), 0.5);
+    }
+    
+    /**
+     * Tests the get single string method.
+     */
+    @Test
+    public void testGetSingleDoubleEmptyQuery() {
+        assertEquals(0.0, databaseConnector.getSingleDouble("", "track_id"), 0.1);
+    }
+    
+    /**
+     * Tests the get single string method.
+     */
+    @Test
+    public void testGetSingleDoubleNotExistingColumn() {
+        PrintStream err = System.err;
+        OutputStream mock = mock(OutputStream.class);
+        System.setErr(new PrintStream(mock));
+        assertEquals(0.0, databaseConnector.getSingleDouble("SELECT * FROM tracks LIMIT 1",
+                "ksjksbdfnmbjlk"), 0.1);
+        System.setErr(err);
+    }
+    
+    /**
+     * Tests the get single string method.
+     */
+    @Test
+    public void testGetSingleDouble0Results() {
+        assertEquals(0.0, databaseConnector.getSingleDouble("SELECT * FROM tracks LIMIT 0",
+                "track_id"), 0.1);
     }
     
     /**

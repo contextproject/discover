@@ -122,7 +122,7 @@ public final class DatabaseConnector {
 
             e.printStackTrace();
         }
-        return 0;
+        return 0.0;
     }
 
 
