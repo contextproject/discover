@@ -306,9 +306,9 @@ $("#connect").on('click', function () {
                     });
                     loadFavorites(data);
                 });
+                $(this).html("Log out");
+                $(this).attr("class", "disconnect");
             });
-            $(this).html("Log out");
-            $(this).attr("class", "disconnect");
         }
     } else {
         if (SC.accessToken() != null) {
