@@ -75,7 +75,7 @@ public class FeatureRecommender extends RecommendDecorator implements Recommende
      * @return The updated track
      */
     private TrackList updateTracks(final TrackList trackList) {
-        for(int i = 0; i < trackList.size(); i++) {
+        for (int i = 0; i < trackList.size(); i++) {
             Track track = trackList.get(0);
             String query = "SELECT * FROM features WHERE features.track_id = "
                     + track.get(Track.ID);
