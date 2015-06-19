@@ -51,7 +51,7 @@ public final class Application extends Controller {
      * @return An http ok response with the new rendered page.
      */
     public static Result trackRequest() {
-        return Json.response(Json.getTrack(request().body().asJson().get("track")));
+        return Json.response(Json.getTrack(getJSON().get("track")));
     }
 
     /**
@@ -70,7 +70,7 @@ public final class Application extends Controller {
      * @return ok response with the start times for the mix.
      */
     public static Result splitWaveform() {
-        JsonNode json = request().body().asJson();
+        JsonNode json = getJSON();
         if (json == null) {
             return badRequest("Expecting Json data");
         } else {
@@ -124,7 +124,7 @@ public final class Application extends Controller {
      * @return ok response with a
      */
     public static Result trackMetadata() {
-        JsonNode json = request().body().asJson();
+        JsonNode json = getJSON();
         if (json == null) {
             return badRequest("Expecting Json data");
         } else {
@@ -140,7 +140,7 @@ public final class Application extends Controller {
      * @return A HTTP response
      */
     public static Result setPreviewMode() {
-        JsonNode json = request().body().asJson();
+        JsonNode json = getJSON();
         if (json == null) {
             return badRequest("Object is empty");
         } else if (json.get("mode") == null) {
@@ -149,5 +149,13 @@ public final class Application extends Controller {
             AlgorithmSelector.setMode(json.get("mode").asText());
             return ok("");
         }
+    }
+    
+    /**
+     * Returns the current json.
+     * @return The json node currently used.
+     */
+    public static JsonNode getJSON() {
+        return request().body().asJson();
     }
 }
