@@ -3,19 +3,16 @@ package controllers;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-
 import models.json.Json;
 import models.mix.MixSplitter;
 import models.record.Track;
 import models.seeker.MixSeeker;
 import models.snippet.TimedSnippet;
 import models.utility.RandomTrackStack;
-import models.utility.TrackList;
 import play.mvc.Controller;
 import play.mvc.Result;
 import views.html.index;
 
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +29,7 @@ public final class Application extends Controller {
      * The RandomTrackStack object used for returning random tracks.
      */
     private static RandomTrackStack gts = new RandomTrackStack(100, true);
-    
+
     /**
      * The index method is called when the application is started and no other
      * messages have been passed.
@@ -41,7 +38,7 @@ public final class Application extends Controller {
      */
     public static Result index() {
         Track track = gts.pop();
-        TimedSnippet starttime = AlgorithmSelector.determineStart(track);
+        TimedSnippet starttime = AlgorithmSelector.determineStart(track, new ArrayList<Double>());
         return ok(index.render("w.soundcloud.com/tracks/" + track.get(Track.ID), starttime.getStartTime()));
     }
 
@@ -52,7 +49,8 @@ public final class Application extends Controller {
      * @return An http ok response with the new rendered page.
      */
     public static Result trackRequest() {
-        return Json.response(Json.getTrack(request().body().asJson().get("track")));
+        return Json.response(Json.getTrack(getJSON().get("track")),
+                Json.getWaveform(getJSON()));
     }
 
     /**
@@ -61,7 +59,7 @@ public final class Application extends Controller {
      * @return A HTTP ok response with a random track id.
      */
     public static Result getRandomSong() {
-        return Json.response(gts.pop());
+        return Json.response(gts.pop(), new ArrayList<Double>());
     }
 
     /**
@@ -71,7 +69,7 @@ public final class Application extends Controller {
      * @return ok response with the start times for the mix.
      */
     public static Result splitWaveform() {
-        JsonNode json = request().body().asJson();
+        JsonNode json = getJSON();
         if (json == null) {
             return badRequest("Expecting Json data");
         } else {
@@ -125,7 +123,7 @@ public final class Application extends Controller {
      * @return ok response with a
      */
     public static Result trackMetadata() {
-        JsonNode json = request().body().asJson();
+        JsonNode json = getJSON();
         if (json == null) {
             return badRequest("Expecting Json data");
         } else {
@@ -141,7 +139,7 @@ public final class Application extends Controller {
      * @return A HTTP response
      */
     public static Result setPreviewMode() {
-        JsonNode json = request().body().asJson();
+        JsonNode json = getJSON();
         if (json == null) {
             return badRequest("Object is empty");
         } else if (json.get("mode") == null) {
@@ -150,5 +148,14 @@ public final class Application extends Controller {
             AlgorithmSelector.setMode(json.get("mode").asText());
             return ok("");
         }
+    }
+
+    /**
+     * Returns the current json.
+     *
+     * @return The json node currently used.
+     */
+    public static JsonNode getJSON() {
+        return request().body().asJson();
     }
 }

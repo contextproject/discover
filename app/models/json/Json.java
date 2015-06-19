@@ -85,15 +85,17 @@ public final class Json {
      * Generates a Play Result based on the given track.
      *
      * @param track The track
+     * @param waveform The waveform of the track.
      * @return A Play Result
      */
-    public static Result response(final Track track) {
+    public static Result response(final Track track, final List<Double> waveform) {
         if (track == null) {
             return badRequest("Object is empty.");
         } else {
             ObjectNode response = new ObjectMapper().createObjectNode();
-            response.put("start", getStartTime(track).getStartTime());
-            response.put("window", getStartTime(track).getWindow());
+            final TimedSnippet snippet = getStartTime(track, waveform);
+            response.put("start", snippet.getStartTime());
+            response.put("window", snippet.getWindow());
             response.put("url", "w.soundcloud.com/tracks/" + track.get(Track.ID));
             ObjectNode bla = new ObjectMapper().createObjectNode();
             bla.put("response", response);
@@ -105,9 +107,10 @@ public final class Json {
      * Get the start time calculated by the AlgorithmSelector.
      *
      * @param track The track
+     * @param waveform The waveform of the track.
      * @return The start time of the snippet.
      */
-    public static TimedSnippet getStartTime(final Track track) {
-        return AlgorithmSelector.determineStart(track);
+    public static TimedSnippet getStartTime(final Track track, final List<Double> waveform) {
+        return AlgorithmSelector.determineStart(track, waveform);
     }
 }

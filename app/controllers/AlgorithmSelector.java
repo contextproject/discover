@@ -1,7 +1,11 @@
 package controllers;
 
+import java.util.List;
+
+import models.json.Json;
 import models.record.Track;
 import models.seeker.CommentIntensitySeeker;
+import models.seeker.LoudnessSeeker;
 import models.seeker.RandomSeeker;
 import models.snippet.TimedSnippet;
 
@@ -30,6 +34,11 @@ public final class AlgorithmSelector {
          */
         CONTENT,
         /**
+         * Mode: LOUDNESS. The selector will choose the loudest part of the song
+         * as specified by the waveform.
+         */
+        LOUDNESS,
+        /**
          * Mode: RANDOM. The selector will choose a random time to start based
          * on its duration.
          */
@@ -50,9 +59,10 @@ public final class AlgorithmSelector {
      * Determine the start of the snippet for the track.
      *
      * @param track The track
+     * @param waveform The waveform of the track.
      * @return The start of the snippet
      */
-    public static TimedSnippet determineStart(final Track track) {
+    public static TimedSnippet determineStart(final Track track, final List<Double> waveform) {
         int start;
         switch (curMode) {
             case CONTENT:
@@ -61,10 +71,17 @@ public final class AlgorithmSelector {
             case RANDOM:
                 start = random(track);
                 break;
+            case LOUDNESS:
+                start = loudness(track, waveform);
+                break;
             default:
                 start = commentContent(track);
                 if (start == 0) {
-                    start = random(track);
+                    if (waveform.isEmpty()) {
+                        start = random(track);
+                    } else {
+                        start = loudness(track, waveform);
+                    }
                 }
                 break;
         }
@@ -90,6 +107,16 @@ public final class AlgorithmSelector {
     private static int random(final Track track) {
         return new RandomSeeker(track).seek().getStartTime();
     }
+    
+    /**
+     * Returns the starttime based on the waveform.
+     * @param track The track to seek.
+     * @param waveform The waveform of the track.
+     * @return The starttime of the loudness.
+     */
+    private static int loudness(final Track track, final List<Double> waveform) {
+        return new LoudnessSeeker(track, waveform).seek().getStartTime();
+    }
 
     /**
      * Sets the mode of the Algorithm Selector.
@@ -101,6 +128,8 @@ public final class AlgorithmSelector {
             curMode = Mode.CONTENT;
         } else if (mode.equalsIgnoreCase("random")) {
             curMode = Mode.RANDOM;
+        } else if (mode.equalsIgnoreCase("loudness")) {
+            curMode = Mode.LOUDNESS;
         } else {
             curMode = Mode.AUTO;
         }

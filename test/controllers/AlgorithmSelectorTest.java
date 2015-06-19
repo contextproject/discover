@@ -1,5 +1,8 @@
 package controllers;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import models.database.DatabaseConnector;
 import models.record.Key;
 import models.record.Track;
@@ -47,6 +50,14 @@ public class AlgorithmSelectorTest {
     public void tearDown() throws Exception {
         DatabaseConnector.getConnector().closeConnection();
     }
+    
+    /**
+     * Gets an empty waveform.
+     * @return The waveform.
+     */
+    protected List<Double> getWaveform() {
+        return new ArrayList<Double>();
+    }
 
     /**
      * Test of the determineStart() method.
@@ -54,7 +65,7 @@ public class AlgorithmSelectorTest {
     @Test
     public void testDetermineStartAUTO() {
         AlgorithmSelector.setMode("auto");
-        assertNotNull(AlgorithmSelector.determineStart(track));
+        assertNotNull(AlgorithmSelector.determineStart(track, getWaveform()));
     }
     
     /**
@@ -63,7 +74,7 @@ public class AlgorithmSelectorTest {
     @Test
     public void testDetermineStartAUTO_Zero() {
         AlgorithmSelector.setMode("auto");
-        assertNotNull(AlgorithmSelector.determineStart(ntrack));
+        assertNotNull(AlgorithmSelector.determineStart(ntrack, getWaveform()));
     }
     
     /**
@@ -72,7 +83,7 @@ public class AlgorithmSelectorTest {
     @Test
     public void testDetermineStartCONTENT() {
         AlgorithmSelector.setMode("content");
-        assertNotNull(AlgorithmSelector.determineStart(track));
+        assertNotNull(AlgorithmSelector.determineStart(track, getWaveform()));
     }
     
     /**
@@ -81,7 +92,7 @@ public class AlgorithmSelectorTest {
     @Test
     public void testDetermineStartRANDOM() {
         AlgorithmSelector.setMode("random");
-        assertNotNull(AlgorithmSelector.determineStart(track));
+        assertNotNull(AlgorithmSelector.determineStart(track, getWaveform()));
     }
 
     /**
@@ -89,7 +100,7 @@ public class AlgorithmSelectorTest {
      */
     @Test
     public void testRandom() {
-        int start = AlgorithmSelector.determineStart(track).getStartTime();
+        int start = AlgorithmSelector.determineStart(track, getWaveform()).getStartTime();
         assertTrue(track.get(new Key<>("duration", Integer.class)) >= start);
         assertTrue(0 <= start);
     }

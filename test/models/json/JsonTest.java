@@ -3,6 +3,7 @@ package models.json;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -50,6 +51,15 @@ public class JsonTest {
         map.put("response", list);
         wave = new ObjectMapper().createArrayNode().add(1);
     }
+    
+    /**
+     * Returns an empty list 
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    public List<Double> getWaveform() {
+        return new LinkedList<Double>();
+    }
 
     /**
      * Test for the method getTrack.
@@ -88,7 +98,7 @@ public class JsonTest {
      */
     @Test
     public void testGetStartTime() {
-        assertTrue(Json.getStartTime(Json.getTrack(json1)) instanceof TimedSnippet);
+        assertTrue(Json.getStartTime(Json.getTrack(json1), getWaveform()) instanceof TimedSnippet);
     }
 
     /**
@@ -96,7 +106,7 @@ public class JsonTest {
      */
     @Test
     public void testResponse() {
-        assertTrue(Json.response(Json.getTrack(json1)) != null);
+        assertTrue(Json.response(Json.getTrack(json1), getWaveform()) != null);
     }
 
     /**
@@ -104,7 +114,7 @@ public class JsonTest {
      */
     @Test
     public void testResponseNull() {
-        assertTrue(Json.response(Json.getTrack(null)) != null);
+        assertTrue(Json.response(Json.getTrack(null), getWaveform()) != null);
     }
 
     /**
