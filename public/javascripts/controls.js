@@ -5,7 +5,7 @@ var snipWin = 5000.00;
 var splitPointer = -1;
 setStartTime(parseFloat(start));
 var autoplay = false;
-var open = false;
+var advMenu = false;
 
 //Function for the autoplay button only works if autoplay is on
 widget.bind(SC.Widget.Events.FINISH, function () {
@@ -33,7 +33,7 @@ $("#current").click(function () {
 
 function openMenu() {
     var menu = $("#menu");
-    if ($(menu).is(":visible") && !open) {
+    if ($(menu).is(":visible") && !advMenu) {
         $(menu).animate({height: 0}, 500, function () {
             $(menu).hide();
         });
@@ -284,7 +284,7 @@ $("#favorites").click(function () {
     } else {
         SC.connect(function () {
             getFavorites();
-            $("#connect").html("Disconnect");
+            $("#connect").html("Log out");
         });
     }
 });
@@ -307,13 +307,13 @@ $("#connect").on('click', function () {
                     loadFavorites(data);
                 });
             });
-            $(this).html("Disconnect");
+            $(this).html("Log out");
             $(this).attr("class", "disconnect");
         }
     } else {
         if (SC.accessToken() != null) {
             SC.accessToken(null);
-            $(this).html("Connect");
+            $(this).html("Log in");
             $(this).attr("class", "connect");
         }
     }
