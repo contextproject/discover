@@ -100,29 +100,6 @@ function sendData(data, url, callback) {
     }
 }
 
-// event for disliking a song
-$("#dislike").click(function () {
-	
-    if (SC.accessToken() != null) {
-        widget.getCurrentSoundIndex(function (index) {
-            widget.getSounds(function (sounds) {
-                sendData(sounds[index], "/dislike", function (){});
-                SC.delete('/me/favorites/' + sounds[index].id);
-            });
-        });
-    }
-});
-
-// event for liking a song
-$("#like").click(function () {
-    widget.getCurrentSoundIndex(function (index) {
-        widget.getSounds(function (sounds) {
-            sendData(sounds[index], "/like", function () {
-            });
-        });
-    });
-});
-
 // select the next song if present
 $("#next").click(function() {
 	widgetClearEvents(); nextSnip(false);
@@ -185,21 +162,8 @@ $("#volume").on("input change", function () {
 
 
 //change the mode of the algorithm
-$("#algoMode").on("input change", function () {
-	var val = $("#algoMode").val();
-	if (val <= 25) {
-		$("#modeLabel").text("AUTO");
-		sendData({ "mode": "auto" }, "/setPreviewMode", function () {});
-	} else if (val > 25 & val <= 50) {
-		$("#modeLabel").text("INTENSITY");
-		sendData({ "mode": "intensity" }, "/setPreviewMode", function () {});
-	} else if (val > 50 & val <= 75) { 
-		$("#modeLabel").text("CONTENT");
-		sendData({ "mode": "content" }, "/setPreviewMode", function () {});
-	} else {
-		$("#modeLabel").text("RANDOM");
-		sendData({ "mode": "random" }, "/setPreviewMode", function () {});
-	}
+$("#mode").click(function(){
+    sendData({ "mode": $("input[name=mode]:checked").val() }, "/setPreviewMode", function () {});
 });
 
 // Set the new start time of the preview.

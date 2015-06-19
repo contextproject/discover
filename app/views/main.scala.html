@@ -75,20 +75,34 @@
                     </div>
                     <div class="4u$ 12u$(medium) important(medium)">
                         <div class="controls">
+                            <button class="control" id="preview">Preview</button> <br>
+                            <button class="control" id="rand">Random Song</button> <br>
+                            <p></p>
+
+                            <button class="recommend" id="like">Like</button><button class="recommend" id="dislike">
+                            Dislike</button> <br>
+                            <p></p>
+
+                            <button class="control" id="sendWave">Mix Splitter</button> <br>
+                            <button class="control" id="prev">Snippet-</button><button class="control" id="next">
+                            Snippet+</button> <br>
+                            <p></p>
+
+
+
+                            @*<input type="checkbox">Advandced Options <br>*@
                             <a id="switch" class="toggler off">off</a>  Autoplay  <br>
                             <label for="volume"></label><input type="range" class="control" id="volume">
-                            <button class="control" id="preview">Preview</button> <br>
-                            <button class="connect" id="connect">Connect</button> <br>
-                            <button class="control" id="prev">Prev</button><button class="control" id="next">
-                            Next</button> <br>
-                            <button class="control" id="like">Like</button><button class="control" id="dislike">
-                            Dislike</button> <br>
 
-                            <button class="control" id="recommend">Recommend</button> <br>
-                            <button class="control" id="sendWave">Mix Splitter</button> <br>
-                            <button class="control" id="rand">Random Song</button> <br>
-                            <p id="modeLabel">AUTO</p>
-                            <input type="range" class="control" id="algoMode" value="0" step="33">
+                            <form id="mode">
+                                <input type="radio" name="mode" value="auto" checked>Automatic<br>
+                                <input type="radio" name="mode" value="content">Comment Content<br>
+                                <input type="radio" name="mode" value="intensity">Comment Intensity<br>
+                                <input type="radio" name="mode" value="random">Random<br>
+                            </form>
+
+                            @*<p id="modeLabel">AUTO</p>*@
+                            @*<input type="range" class="control" id="algoMode" value="0" step="33">*@
                         </div>
                     </div>
                 </div>

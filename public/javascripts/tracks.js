@@ -34,13 +34,41 @@ $("#trackList").on('click', '.item', function () {
     $("#trackList").html("");
 });
 
-$("#recommend").click(function () {
+$(".recommend").click(function () {
+    var element = $(this).attr("id");
     widget.getSounds(function () {
-        $.getJSON("/recommend", function (tracks) {
-            append(tracks, $("#trackList"));
-        });
+        if (element == "dislike") {
+            dislike($.getJSON("/recommend", function (tracks) {
+                reloadWidget("w.soundcloud.com/tracks/" + tracks[0].id);
+                append(tracks, $("#trackList"));
+            }))
+        } else {
+            like($.getJSON("/recommend", function (tracks) {
+                append(tracks, $("#trackList"));
+            }))
+        }
     });
 });
+
+function like(callback) {
+    widget.getCurrentSoundIndex(function (index) {
+        widget.getSounds(function (sounds) {
+            sendData(sounds[index], "/like", function () {
+                callback();
+            });
+        });
+    });
+}
+
+function dislike(callback) {
+    widget.getCurrentSoundIndex(function (index) {
+        widget.getSounds(function (sounds) {
+            sendData(sounds[index], "/dislike", function () {
+                callback();
+            });
+        });
+    });
+}
 
 // reload the widget with the url submitted in the input field
 function reloadWidget(url) {
@@ -61,13 +89,18 @@ function reloadWidget(url) {
                 "track": sounds[pos],
                 "waveform": waveform.data
             };
-            sendData(message, "/request", setStartTime);
+            sendData(message, "/request", setStartTime2);
         });
     });
 }
 
 function append(tracks, element) {
-    element.html("");
+    if(element.attr("id") == "trackList") {
+        element.html("<h3>Recommended Songs!</h3>");
+    } else {
+        element.html("");
+    }
+
     jQuery.each(tracks, function (i, track) {
         SC.get('/tracks/' + track.id, function (updatedtrack) {
             element.append(

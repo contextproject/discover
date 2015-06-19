@@ -15,6 +15,7 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import views.html.index;
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -39,9 +40,9 @@ public final class Application extends Controller {
      * @return an http ok response with the rendered page.
      */
     public static Result index() {
-        int starttime = Json.getStartTime(TrackList.get(
-                "SELECT * FROM tracks WHERE track_id = 56772597").get(0)).getStartTime();
-        return ok(index.render("w.soundcloud.com/tracks/56772597", starttime));
+        Track track = gts.pop();
+        TimedSnippet starttime = AlgorithmSelector.determineStart(track);
+        return ok(index.render("w.soundcloud.com/tracks/" + track.get(Track.ID), starttime.getStartTime()));
     }
 
     /**
