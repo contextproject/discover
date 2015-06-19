@@ -23,7 +23,7 @@ under the License.
     <modelVersion>4.0.0</modelVersion>
     <groupId>multimediaservices5</groupId>
     <artifactId>discover</artifactId>
-    <version>1.4</version>
+    <version>1.4.1</version>
     <packaging>play2</packaging>
 
     <name>Discover - Discover new music fast!</name>
