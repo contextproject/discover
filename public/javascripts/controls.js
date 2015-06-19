@@ -184,13 +184,19 @@ $("#sendWave").click(function () {
         };
         if($("#numsplit").val() == '' ) {
             message["splits"] =  0;
+            sendData(message, "/splitWaveform", setMixSplit);
+            document.getElementById("numsplit").style.backgroundColor = "white";
         }else if(parseInt($("#numsplit").val()) > 0){
             message["splits"] =  parseInt($("#numsplit").val());
+            document.getElementById("numsplit").style.backgroundColor = "white";
+            sendData(message, "/splitWaveform", setMixSplit);
         }else{
             message["splits"] = 0;
+            document.getElementById("numsplit").style.backgroundColor = "red";
+            document.getElementById("numsplit").style.opacity = 0.75;
             console.log("Number of splits must be greater or equal than zero");
         }
-        sendData(message, "/splitWaveform", setMixSplit);
+        $("#numsplit").val({});
     });
 });
 
