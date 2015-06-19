@@ -89,13 +89,18 @@ function reloadWidget(url) {
                 "track": sounds[pos],
                 "waveform": waveform.data
             };
-            sendData(message, "/request", setStartTime);
+            sendData(message, "/request", setStartTime2);
         });
     });
 }
 
 function append(tracks, element) {
-    element.html("<h2>Recommended Songs!</h2>");
+    if(element.attr("id") == "trackList") {
+        element.html("<h3>Recommended Songs!</h3>");
+    } else {
+        element.html("");
+    }
+
     jQuery.each(tracks, function (i, track) {
         SC.get('/tracks/' + track.id, function (updatedtrack) {
             element.append(
