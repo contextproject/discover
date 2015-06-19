@@ -1,8 +1,5 @@
 package controllers;
 
-import java.util.Collections;
-import java.util.HashMap;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -13,29 +10,22 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import play.api.mvc.RequestHeader;
-import play.mvc.Http;
-import play.mvc.Http.RequestBody;
 import play.mvc.Result;
-import play.mvc.Results.Status;
 import play.test.FakeRequest;
+
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+
 import static play.mvc.Http.Status.OK;
 import static play.mvc.Http.Status.BAD_REQUEST;
-import static play.mvc.Results.ok;
 import static play.test.Helpers.callAction;
 import static play.test.Helpers.GET;
-import static play.test.Helpers.POST;
 import static play.test.Helpers.status;
 
 /**
  * Tests the Application class.
  * 
  * @since 18-06-2015
- * @version 18-06-2015
+ * @version 19-06-2015
  * 
  * @see Application
  * 
