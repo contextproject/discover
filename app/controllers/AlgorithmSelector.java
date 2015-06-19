@@ -59,9 +59,10 @@ public final class AlgorithmSelector {
      * Determine the start of the snippet for the track.
      *
      * @param track The track
+     * @param waveform The waveform of the track.
      * @return The start of the snippet
      */
-    public static TimedSnippet determineStart(final Track track) {
+    public static TimedSnippet determineStart(final Track track, final List<Double> waveform) {
         int start;
         switch (curMode) {
             case CONTENT:
@@ -71,12 +72,16 @@ public final class AlgorithmSelector {
                 start = random(track);
                 break;
             case LOUDNESS:
-                start = loudness(track);
+                start = loudness(track, waveform);
                 break;
             default:
                 start = commentContent(track);
                 if (start == 0) {
-                    start = loudness(track);
+                    if (waveform.isEmpty()) {
+                        start = random(track);
+                    } else {
+                        start = loudness(track, waveform);
+                    }
                 }
                 break;
         }
@@ -106,10 +111,10 @@ public final class AlgorithmSelector {
     /**
      * Returns the starttime based on the waveform.
      * @param track The track to seek.
+     * @param waveform The waveform of the track.
      * @return The starttime of the loudness.
      */
-    private static int loudness(final Track track) {
-        final List<Double> waveform = Json.getWaveform(Application.getJSON().get("waveform"));
+    private static int loudness(final Track track, final List<Double> waveform) {
         return new LoudnessSeeker(track, waveform).seek().getStartTime();
     }
 

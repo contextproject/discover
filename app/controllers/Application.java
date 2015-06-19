@@ -40,7 +40,8 @@ public final class Application extends Controller {
      */
     public static Result index() {
         int starttime = Json.getStartTime(TrackList.get(
-                "SELECT * FROM tracks WHERE track_id = 56772597").get(0)).getStartTime();
+                "SELECT * FROM tracks WHERE track_id = 56772597").get(0),
+                new ArrayList<Double>()).getStartTime();
         return ok(index.render("w.soundcloud.com/tracks/56772597", starttime));
     }
 
@@ -51,7 +52,8 @@ public final class Application extends Controller {
      * @return An http ok response with the new rendered page.
      */
     public static Result trackRequest() {
-        return Json.response(Json.getTrack(getJSON().get("track")));
+        return Json.response(Json.getTrack(getJSON().get("track")),
+                Json.getWaveform(getJSON()));
     }
 
     /**
@@ -60,7 +62,7 @@ public final class Application extends Controller {
      * @return A HTTP ok response with a random track id.
      */
     public static Result getRandomSong() {
-        return Json.response(gts.pop());
+        return Json.response(gts.pop(), new ArrayList<Double>());
     }
 
     /**
