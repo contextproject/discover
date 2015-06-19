@@ -34,13 +34,21 @@ $("#trackList").on('click', '.item', function () {
     $("#trackList").html("");
 });
 
-$("#recommend").click(function () {
+$(".recommend").click(function () {
+    var element = $(this).attr("id");
     widget.getSounds(function () {
         $.getJSON("/recommend", function (tracks) {
+            if(element == "dislike") {
+                reloadWidget("w.soundcloud.com/tracks/" + tracks[0].id);
+            }
             append(tracks, $("#trackList"));
         });
     });
 });
+
+function recommend() {
+
+}
 
 // reload the widget with the url submitted in the input field
 function reloadWidget(url) {
