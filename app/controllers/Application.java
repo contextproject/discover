@@ -72,14 +72,14 @@ public final class Application extends Controller {
         JsonNode json = getJSON();
         final Track track = Json.getTrack(json.get("track"));
         MixSplitter splitter = new MixSplitter(json.get("waveform"), track);
-        List<Integer> splits = splitter.split();
+        List<Integer> splits = splitter.split(json.get("splits").asInt());
         List<Integer> starttimes = getStartTimes(splits, track);
         Map<String, List<Integer>> map = new TreeMap<String, List<Integer>>();
         map.put("response", starttimes);
         JsonNode response = new ObjectMapper().valueToTree(map);
         return ok(response);
-    }
-    
+        }
+
     /**
      * Retrieves the starttimes of the pieces of the given song.
      *

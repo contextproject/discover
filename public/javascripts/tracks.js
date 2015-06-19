@@ -75,7 +75,7 @@ function reloadWidget(url) {
     mixSplits = null;
     // load the url in the widget
     widget.load(url, {
-        auto_play: false,
+        auto_play: autoplay,
         likes: true
     });
     widget.bind(SC.Widget.Events.READY, function () {

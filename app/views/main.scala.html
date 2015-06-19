@@ -76,12 +76,13 @@
                     <div class="4u$ 12u$(medium) important(medium)">
                         <div class="controls">
                             <button class="control" id="preview">Preview</button> <br>
+                           
                             <button class="control" id="rand">Random Song</button> <br>
                             <p></p>
 
                             <button class="recommend" id="like">Like</button><button class="recommend" id="dislike">
                             Dislike</button> <br>
-                            <p></p>
+			    <p></p>
 
                             <button class="control" id="sendWave">Mix Splitter</button> <br>
                             <button class="control" id="prev">Snippet-</button><button class="control" id="next">
@@ -91,15 +92,21 @@
 
 
                             @*<input type="checkbox">Advandced Options <br>*@
-                            <a id="switch" class="toggler off">off</a>  Autoplay  <br>
-                            <label for="volume"></label><input type="range" class="control" id="volume">
+                            <label for="volume"></label><input type="range" class="control" id="volume"> <br>
 
-                            <form id="mode">
+                            <a id="openMenu">Advanced menu &#x25BE </a> <br>
+                            <div id="menu">
+                                <a id="switch" class="toggler off">off</a>  Autoplay  <br>
+                                <input placeholder="Number of splits (&#8805 0)" class="control" id="numsplit"> <br>
+
+				                <form id="mode">
                                 <input type="radio" name="mode" value="auto" checked>Automatic<br>
                                 <input type="radio" name="mode" value="content">Comment Content<br>
                                 <input type="radio" name="mode" value="intensity">Comment Intensity<br>
                                 <input type="radio" name="mode" value="random">Random<br>
-                            </form>
+                            	</form>
+                            </div>
+                            
 
                             @*<p id="modeLabel">AUTO</p>*@
                             @*<input type="range" class="control" id="algoMode" value="0" step="33">*@
@@ -136,65 +143,78 @@
         </section>
 
             <!-- Tip Content -->
-        <ol id="joyRideTipContent">
-            <li data-id="disc" data-text="Next">
-                <h2>Welcome to Discover</h2>
-                <p>The place to discover new music. Take this tour to learn more about this page.</p>
-                <p>(Press Escape to skip this tour or click on the 'Skip' button)</p>
-            </li>
-            <li data-id="url" data-button="Next" >
-                <h2>Search bar</h2>
-                <p>Here you can put the url of the song you want to listen to.</p>
-            </li>
-            <li data-id="reload" data-button="Next" >
-                <h2>Reload!!</h2>
-                <p>Load the song which you filled in, in the previous step.</p>
-            </li>
-            <li data-class="sound__content" data-button="Next" >
-                <h2>SoundCloud player</h2>
-                <p>This is the SoundCloud player where you can actually play the music, comment on the song and etc.</p>
-            </li>
-            <li data-id="volume" data-button="Next" >
-                <h2>Change the volume!</h2>
-                <p>Here you can change the volume of the song that is playing</p>
-            </li>
-            <li data-id="preview" data-button="Next" >
-                <h2>Preview a song</h2>
-                <p>This gives you a short 10 second preview of how the song sounds like.</p>
-            </li>
-            <li data-id="next" data-button="Next" data-options="tipLocation: left" >
-                <h2>Next!</h2>
-                <p>Gives the next song or gives the next part of the current song.</p>
-            </li>
-            <li data-id="prev" data-button="Next" >
-                <h2>Previous</h2>
-                <p>Opposite of next.</p>
-            </li>
-            <li data-id="rand" data-button="Next" >
-                <h2>You want something else?</h2>
-                <p>Loads a random song from SoundCloud.</p>
-            </li>
-            <li data-id="sendWave" data-button="Next" >
-                <h2>Split the Mix!</h2>
-                <p>Splits a mix in different part to play separately.</p>
-            </li>
-            <li data-id="connect" data-button="Next" >
-                <h2>Account login</h2>
-                <p>Allows you to connect with you SoundCloud account</p>
-            </li>
-            <li data-id="like" data-button="Next" >
-                <h2>Like!</h2>
-                <p>When you are connected with your account, then you are able to like the current song.</p>
-            </li>
-            <li data-id="dislike" data-button="Next" data-options="tipLocation: left" >
-                <h2>Dislike!</h2>
-                <p>You can also dislike a song.</p>
-            </li>
-            <li data-id="help" data-button="Close" >
-                <h2>Forgot something?</h2>
-                <p>You can retake this tour if you press this link</p>
-            </li>
-        </ol>
+            <ol id="joyRideTipContent">
+                <li data-id="disc" data-text="Next">
+                    <h2>Welcome to Discover</h2>
+                    <p>The place to discover new music. Take this tour to learn more about this page.</p>
+                    <p>(Press Escape to skip this tour or click on the 'Skip' button)</p>
+                </li>
+                <li data-id="url" data-button="Next" >
+                    <h2>Search bar</h2>
+                    <p>Here you can put the url of the song you want to listen to.</p>
+                </li>
+                <li data-id="reload" data-button="Next" >
+                    <h2>Reload!!</h2>
+                    <p>Load the song which you filled in, in the previous step.</p>
+                </li>
+                <li data-class="sound__content" data-button="Next" >
+                    <h2>SoundCloud player</h2>
+                    <p>This is the SoundCloud player where you can actually play the music, comment on the song and etc.</p>
+                </li>
+                <li data-id="volume" data-button="Next" >
+                    <h2>Change the volume!</h2>
+                    <p>Here you can change the volume of the song that is playing</p>
+                </li>
+                <li data-id="preview" data-button="Next" >
+                    <h2>Preview a song</h2>
+                    <p>This gives you a short 10 second preview of how the song sounds like.</p>
+                </li>
+                <li data-id="next" data-button="Next" data-options="tipLocation: left" >
+                    <h2>Next!</h2>
+                    <p>Gives the next song or gives the next part of the current song.</p>
+                </li>
+                <li data-id="prev" data-button="Next" >
+                    <h2>Previous</h2>
+                    <p>Opposite of next.</p>
+                </li>
+                <li data-id="rand" data-button="Next" >
+                    <h2>You want something else?</h2>
+                    <p>Loads a random song from SoundCloud.</p>
+                </li>
+                <li data-id="sendWave" data-button="Next" >
+                    <h2>Split the Mix!</h2>
+                    <p>Splits a mix in different part to play separately.</p>
+		 </li>
+                <li data-id="openMenu" data-button="Next" >
+                    <h2>Advanced</h2>
+                    <p>This menu will give you some extra feautures and options.</p>
+                </li>
+                <li data-id="switch" data-button="Next" >
+                    <h2>Autoplay</h2>
+                    <p>If you want to listen to music non-stop switch the button to 'on' and it will automaticly keep playing music.</p>
+                    <p>This can be the next track in the playlist or a recommended song based on your preferences.</p>
+                </li>
+                <li data-id="numsplit" data-button="Next" >
+                    <h2>How many splits do you want?</h2>
+                    <p>Fill in a number greater or equal than zero or keep it empty to search for the default amount of splits</p>
+                </li>
+                <li data-id="connect" data-button="Next" >
+                    <h2>Account login</h2>
+                    <p>Allows you to connect with you SoundCloud account</p>
+                </li>
+                <li data-id="like" data-button="Next" >
+                    <h2>Like!</h2>
+                    <p>When you are connected with your account, then you are able to like the current song.</p>
+                </li>
+                <li data-id="dislike" data-button="Next" data-options="tipLocation: left" >
+                    <h2>Dislike!</h2>
+                    <p>You can also dislike a song.</p>
+                </li>
+                <li data-id="help" data-button="Close"  >
+                    <h2>Forgot something?</h2>
+                    <p>You can retake this tour if you press this link</p>
+                </li>
+            </ol>
 
     </body>
 </html>

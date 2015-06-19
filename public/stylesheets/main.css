@@ -10,13 +10,35 @@ hr {
     width: 90%;
 }
 
-#help {
+#help{
     margin-left: 545px;
     cursor: pointer;
 }
 
+#menu {
+    padding-top: 2px;
+    height: 0px;
+    width: 80%;
+    border-radius: 4px;
+    border: 0px none;
+    box-shadow: 0px 0px 0px 1px rgba(144, 144, 144, 0.5) inset;
+    display:none;
+    width:90%;
+
+}
+
+
 .search {
     width: 100%;
+}
+
+#openMenu {
+    cursor: pointer;
+
+}
+
+#menu label{
+    margin-left:10px;
 }
 
 .album-art img {
@@ -31,13 +53,15 @@ hr {
 a.toggler {
     background: green;
     cursor: pointer;
-    border: 2px solid white;
-    border-right-width: 15px;
+    border: 0px none;
+    box-shadow: 0px 0px 0px 1px rgba(144, 144, 144, 0.5);
     padding: 0 5px;
     border-radius: 5px;
     text-decoration: none;
     transition: all .5s ease;
     margin-right: 10px;
+    margin-left: 10%;
+    color: white;
 }
 
 a.toggler:hover {
@@ -48,4 +72,17 @@ a.toggler.off {
     background: red;
     border-right-width: 2px;
     border-left-width: 15px;
+}
+
+#numsplit {
+    border-radius: 4px;
+    border: 0px none;
+    box-shadow: 0px 0px 0px 1px rgba(144, 144, 144, 0.5) inset;
+    margin-left: 10%;
+    margin-top: 10px;
+    width: 80% !important;
+}
+
+#mode{
+    margin-left:10%;
 }
