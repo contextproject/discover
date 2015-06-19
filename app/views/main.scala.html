@@ -50,10 +50,14 @@
             <div class="container">
                 <div class="row 150%">
                     <div class="8u 12u$(medium)">
-                        <input type="text" id="url" placeholder="Enter Soundcloud url of the track.">
+                        <input type="text" id="search" placeholder="Enter Soundcloud url of the track.">
                     </div>
                     <div class="4u$ 12u$(medium)">
-                        <button class="control" type="submit" id="reload">Reload</button>
+                        <button class="connect" id="connect">Log In</button> <br>
+                    </div>
+
+                    <div>
+                        <ul id="searchList" class="search"></ul>
                     </div>
                 </div>
             </div>
@@ -64,19 +68,10 @@
                 <div class="row 150%">
                     <div class="8u 12u$(medium)">
                         <div class="player">
-                            @player
+                        @player
                         </div>
                         <a id="favorites">My Collection</a>
                         <a id="help">Help Tour</a>
-
-                        <div>
-                            <table id="tracks"></table>
-                        </div>
-
-                        <div class="example-waveform" id="example">
-                            <canvas width="728" height="59"></canvas>
-                        </div>
-
                     </div>
                     <div class="4u$ 12u$(medium) important(medium)">
                         <div class="controls">
@@ -84,20 +79,29 @@
                             <label for="volume"></label><input type="range" class="control" id="volume">
                             <button class="control" id="preview">Preview</button> <br>
                             <button class="connect" id="connect">Connect</button> <br>
-                            <button class="control" id="prev">Prev</button><button class="control" id="next">Next</button> <br>
-                            <button class="control" id="like">Like</button><button class="control" id="dislike">Dislike</button> <br>
+                            <button class="control" id="prev">Prev</button><button class="control" id="next">
+                            Next</button> <br>
+                            <button class="control" id="like">Like</button><button class="control" id="dislike">
+                            Dislike</button> <br>
 
                             <button class="control" id="recommend">Recommend</button> <br>
-                            <button class="control" id="rand">Random Song</button> <br>
                             <button class="control" id="sendWave">Mix Splitter</button> <br>
-
+                            <button class="control" id="rand">Random Song</button> <br>
                             <p id="modeLabel">AUTO</p>
                             <input type="range" class="control" id="algoMode" value="0" step="33">
-
-
-                            <button class="control" id="waveform">Waveform</button> <br>
                         </div>
                     </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="tracklist" class="main style1">
+            <div class="container">
+                <div class="row 150%">
+                    <div>
+                        <ul id="trackList" class="track"></ul>
+                    </div>
+
                 </div>
             </div>
         </section>
@@ -108,7 +112,8 @@
                 <li><a href="#" class="icon alt fa-twitter"><span class="label">Twitter</span></a></li>
                 <li><a href="#" class="icon alt fa-facebook"><span class="label">Facebook</span></a></li>
                 <li><a href="#" class="icon alt fa-instagram"><span class="label">Instagram</span></a></li>
-                <li><a href="https://github.com/contextproject" class="icon alt fa-github"><span class="label">GitHub</span></a></li>
+                <li><a href="https://github.com/contextproject" class="icon alt fa-github"><span class="label">
+                    GitHub</span></a></li>
                 <li><a href="#" class="icon alt fa-envelope"><span class="label">Email</span></a></li>
             </ul>
             <ul class="copyright">
@@ -117,65 +122,65 @@
         </section>
 
             <!-- Tip Content -->
-            <ol id="joyRideTipContent">
-                <li data-id="disc" data-text="Next">
-                    <h2>Welcome to Discover</h2>
-                    <p>The place to discover new music. Take this tour to learn more about this page.</p>
-                    <p>(Press Escape to skip this tour or click on the 'Skip' button)</p>
-                </li>
-                <li data-id="url" data-button="Next" >
-                    <h2>Search bar</h2>
-                    <p>Here you can put the url of the song you want to listen to.</p>
-                </li>
-                <li data-id="reload" data-button="Next" >
-                    <h2>Reload!!</h2>
-                    <p>Load the song which you filled in, in the previous step.</p>
-                </li>
-                <li data-class="sound__content" data-button="Next" >
-                    <h2>SoundCloud player</h2>
-                    <p>This is the SoundCloud player where you can actually play the music, comment on the song and etc.</p>
-                </li>
-                <li data-id="volume" data-button="Next" >
-                    <h2>Change the volume!</h2>
-                    <p>Here you can change the volume of the song that is playing</p>
-                </li>
-                <li data-id="preview" data-button="Next" >
-                    <h2>Preview a song</h2>
-                    <p>This gives you a short 10 second preview of how the song sounds like.</p>
-                </li>
-                <li data-id="next" data-button="Next" data-options="tipLocation: left" >
-                    <h2>Next!</h2>
-                    <p>Gives the next song or gives the next part of the current song.</p>
-                </li>
-                <li data-id="prev" data-button="Next" >
-                    <h2>Previous</h2>
-                    <p>Opposite of next.</p>
-                </li>
-                <li data-id="rand" data-button="Next" >
-                    <h2>You want something else?</h2>
-                    <p>Loads a random song from SoundCloud.</p>
-                </li>
-                <li data-id="sendWave" data-button="Next" >
-                    <h2>Split the Mix!</h2>
-                    <p>Splits a mix in different part to play separately.</p>
-                </li>
-                <li data-id="connect" data-button="Next" >
-                    <h2>Account login</h2>
-                    <p>Allows you to connect with you SoundCloud account</p>
-                </li>
-                <li data-id="like" data-button="Next" >
-                    <h2>Like!</h2>
-                    <p>When you are connected with your account, then you are able to like the current song.</p>
-                </li>
-                <li data-id="dislike" data-button="Next" data-options="tipLocation: left" >
-                    <h2>Dislike!</h2>
-                    <p>You can also dislike a song.</p>
-                </li>
-                <li data-id="help" data-button="Close"  >
-                    <h2>Forgot something?</h2>
-                    <p>You can retake this tour if you press this link</p>
-                </li>
-            </ol>
+        <ol id="joyRideTipContent">
+            <li data-id="disc" data-text="Next">
+                <h2>Welcome to Discover</h2>
+                <p>The place to discover new music. Take this tour to learn more about this page.</p>
+                <p>(Press Escape to skip this tour or click on the 'Skip' button)</p>
+            </li>
+            <li data-id="url" data-button="Next" >
+                <h2>Search bar</h2>
+                <p>Here you can put the url of the song you want to listen to.</p>
+            </li>
+            <li data-id="reload" data-button="Next" >
+                <h2>Reload!!</h2>
+                <p>Load the song which you filled in, in the previous step.</p>
+            </li>
+            <li data-class="sound__content" data-button="Next" >
+                <h2>SoundCloud player</h2>
+                <p>This is the SoundCloud player where you can actually play the music, comment on the song and etc.</p>
+            </li>
+            <li data-id="volume" data-button="Next" >
+                <h2>Change the volume!</h2>
+                <p>Here you can change the volume of the song that is playing</p>
+            </li>
+            <li data-id="preview" data-button="Next" >
+                <h2>Preview a song</h2>
+                <p>This gives you a short 10 second preview of how the song sounds like.</p>
+            </li>
+            <li data-id="next" data-button="Next" data-options="tipLocation: left" >
+                <h2>Next!</h2>
+                <p>Gives the next song or gives the next part of the current song.</p>
+            </li>
+            <li data-id="prev" data-button="Next" >
+                <h2>Previous</h2>
+                <p>Opposite of next.</p>
+            </li>
+            <li data-id="rand" data-button="Next" >
+                <h2>You want something else?</h2>
+                <p>Loads a random song from SoundCloud.</p>
+            </li>
+            <li data-id="sendWave" data-button="Next" >
+                <h2>Split the Mix!</h2>
+                <p>Splits a mix in different part to play separately.</p>
+            </li>
+            <li data-id="connect" data-button="Next" >
+                <h2>Account login</h2>
+                <p>Allows you to connect with you SoundCloud account</p>
+            </li>
+            <li data-id="like" data-button="Next" >
+                <h2>Like!</h2>
+                <p>When you are connected with your account, then you are able to like the current song.</p>
+            </li>
+            <li data-id="dislike" data-button="Next" data-options="tipLocation: left" >
+                <h2>Dislike!</h2>
+                <p>You can also dislike a song.</p>
+            </li>
+            <li data-id="help" data-button="Close" >
+                <h2>Forgot something?</h2>
+                <p>You can retake this tour if you press this link</p>
+            </li>
+        </ol>
 
     </body>
 </html>

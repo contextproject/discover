@@ -8,7 +8,7 @@ var autoplay = false;
 
 
 widget.bind(SC.Widget.Events.FINISH, function () {
-    if(autoplay) {
+    if (autoplay) {
         widget.getSounds(function (sounds) {
            if (sounds.length > 1){
                widget.next();
@@ -30,7 +30,7 @@ $("#current").click(function () {
     });
 });
 
-$('a.toggler.off').click(function(){
+$('a.toggler.off').click(function () {
     if (document.getElementById("switch").innerHTML == "on") {
         document.getElementById("switch").innerHTML = "off";
         autoplay = false;
@@ -55,28 +55,28 @@ widget.bind(SC.Widget.Events.READY, function () {
 
 $(window).load(function () {
     $('#joyRideTipContent').joyride({
-        cookieMonster : true,
-        autoStart : true,
-        postStepCallback : function (index, tip) {
+        cookieMonster: true,
+        autoStart: true,
+        postStepCallback: function (index, tip) {
             if (index == 2) {
                 $(this).joyride('set_li', false, 1);
             }
         },
-        modal:true,
-        expose:true
+        modal: true,
+        expose: true
     });
 });
 
-$("#help").click(function() {
-    $.removeCookie("joyride",{ expires: 365, domain: false, path: false });
+$("#help").click(function () {
+    $.removeCookie("joyride", {expires: 365, domain: false, path: false});
     $('#joyRideTipContent').joyride({
-        cookieMonster : true,
-        preRideCallback: $(this).joyride('destroy',false,1)
+        cookieMonster: true,
+        preRideCallback: $(this).joyride('destroy', false, 1)
     });
 
-    if(!document.getElementById("switch").innerHTML == "on"){
+    if (!document.getElementById("switch").innerHTML == "on") {
         widget.bind(SC.Widget.Events.FINISH, function () {
-          alert("hoi");
+            alert("hoi");
         });
     }
 });
@@ -176,52 +176,6 @@ function setMixSplit(newSp) {
     mixSplits = newSp;
     splitPointer = -1;
     nexter();
-}
-
-// if the reload button is clicked on, call the reloadWidget function
-$("#reload").click(function () {
-    clearInputAndReloadWidget();
-});
-// if the url submit is entered, call the reloadWidget function
-$("#url").keypress(function (e) {
-    if (e.which == 13) {
-        clearInputAndReloadWidget();
-    }
-});
-
-// Clears the url bar and Reloads the widget with the new url.
-function clearInputAndReloadWidget() {
-    var url = $("#url");
-    var input = url.val();
-    url.html("");
-    reloadWidget(input);
-}
-
-// reload the widget with the url submitted in the input field
-function reloadWidget(url) {
-    mixSplits = null;
-    // load the url in the widget
-    widget.load(url, {
-        auto_play: autoplay,
-        likes: true
-    });
-    widget.bind(SC.Widget.Events.READY, function () {
-        widget.unbind(SC.Widget.Events.READY);
-        var pos;
-        widget.getCurrentSoundIndex(function (index) {
-            pos = index;
-        });
-        widget.getSounds(function (sounds) {
-            var message = {
-                "track": sounds[pos],
-                "waveform": waveform.data
-            };
-            sendData(message, "/request", setStartTime2);
-            // use the following line if you want to re-render the page.
-            // window.location.href = "http://localhost:9000/tracks/" +
-			// sounds[pos].id;
-        });
-    });
 }
 
 // change the volume of the widget
@@ -421,4 +375,11 @@ $("#waveform").click(function () {
         });
     });
 });
+
+function recommendAuto() {
+    $.getJSON("/recommend", function (data) {
+        var first = data[0];
+        reloadWidget("w.soundcloud.com/tracks/" + first["id"]);
+    })
+}
 

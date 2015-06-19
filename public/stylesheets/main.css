@@ -6,13 +6,18 @@
     width: 80%;
 }
 
-#waveform {
-    display: none;
-}
-
-#help{
+#help {
     margin-left: 545px;
     cursor: pointer;
+}
+
+.search {
+    width: 100%;
+}
+
+.album-art img {
+    width: 75px;
+    height: 75px;
 }
 
 #tracks{
@@ -31,7 +36,7 @@ a.toggler {
     margin-right: 10px;
 }
 
-a.toggler:hover{
+a.toggler:hover {
     border-bottom-color: white !important;
 }
 

@@ -114,6 +114,9 @@ public final class RecommenderController {
             jsontrack.put("url", track.get(Track.URL));
             jsontrack.put("genre", track.get(Track.GENRE));
             jsontrack.put("score", track.get(Track.SCORE));
+            ObjectNode user = new ObjectMapper().createObjectNode();
+            user.put("username", track.get(Track.USERNAME));
+            jsontrack.put("user", user);
 
             result.put(Integer.toString(i), jsontrack);
         }
