@@ -10,6 +10,13 @@ import play.Logger;
  * The global class of the play application.
  */
 public class Global extends GlobalSettings {
+    
+    /**
+     * Creates a new global.
+     */
+    public Global() {
+        super();
+    }
 
     /**
      * This method gets called on the start of the play application.

@@ -1,10 +1,14 @@
 package models.recommender;
 
+import models.database.DatabaseConnector;
 import models.profile.Profile;
 import models.record.Key;
 import models.record.Track;
 import models.utility.TrackList;
+
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -18,6 +22,26 @@ public class FeatureRecommenderTest {
     FeatureRecommender featureRecommender1, featureRecommender2, featureRecommender3;
     Profile profile1, profile2, profile3;
     Key key1, key2;
+    
+    /**
+     * Does some set up before the class.
+     * @throws Exception If the set up fails.
+     */
+    @BeforeClass
+    public static void setUpBeforeClass() throws Exception {
+        DatabaseConnector databaseConnector = DatabaseConnector.getConnector();
+        databaseConnector.loadDrivers();
+        databaseConnector.makeConnection("jdbc:mysql://188.166.78.36/contextbase", "context", "password");
+    } 
+    
+    /**
+     * Does some clean up after the class has been run.
+     * @throws Exception If the clean up fails.
+     */
+    @AfterClass
+    public static void tearDownAfterClass() throws Exception {
+        DatabaseConnector.getConnector().closeConnection();
+    }
 
 
     @Before

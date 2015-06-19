@@ -70,24 +70,16 @@ public final class Application extends Controller {
      */
     public static Result splitWaveform() {
         JsonNode json = getJSON();
-        if (json == null) {
-            return badRequest("Expecting Json data");
-        } else {
-            int trackID = json.get("track").get("id").asInt();
-            int duration = json.get("track").get("duration").asInt();
-            final Track track = new Track();
-            track.put(Track.ID, trackID);
-            track.put(Track.DURATION, duration);
-            MixSplitter splitter = new MixSplitter(json.get("waveform"), track);
-            List<Integer> splits = splitter.split();
-            List<Integer> starttimes = getStartTimes(splits, track);
-            Map<String, List<Integer>> map = new TreeMap<String, List<Integer>>();
-            map.put("response", starttimes);
-            JsonNode response = new ObjectMapper().valueToTree(map);
-            return ok(response);
-        }
+        final Track track = Json.getTrack(json.get("track"));
+        MixSplitter splitter = new MixSplitter(json.get("waveform"), track);
+        List<Integer> splits = splitter.split();
+        List<Integer> starttimes = getStartTimes(splits, track);
+        Map<String, List<Integer>> map = new TreeMap<String, List<Integer>>();
+        map.put("response", starttimes);
+        JsonNode response = new ObjectMapper().valueToTree(map);
+        return ok(response);
     }
-
+    
     /**
      * Retrieves the starttimes of the pieces of the given song.
      *
