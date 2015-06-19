@@ -112,7 +112,11 @@ public class MixSplitter {
             Collections.sort(current);
             return current;
         } else if (numberOfSplits > 0) {
-            return addPieces(numberOfSplits, shingles, threshold, current);
+            if (numberOfSplits > shingles.size()) {
+                return doTheSplit(0, shingles, threshold, current);
+            } else {
+                return addPieces(numberOfSplits, shingles, threshold, current);
+            }
         } else {
             return doTheSplit(0, shingles, threshold,
                     current.subList(0, current.size() + numberOfSplits));
