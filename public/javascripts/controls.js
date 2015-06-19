@@ -5,16 +5,17 @@ var snipWin = 5000.00;
 var splitPointer = -1;
 setStartTime(parseFloat(start));
 var autoplay = false;
+var open = false;
 
-
+//Function for the autoplay button only works if autoplay is on
 widget.bind(SC.Widget.Events.FINISH, function () {
     if (autoplay) {
         widget.getSounds(function (sounds) {
-           if (sounds.length > 1){
-               widget.next();
-           } else{
-              recommendAuto();
-           }
+            if (sounds.length > 1) {
+                widget.next();
+            } else {
+                recommendAuto();
+            }
         });
     }
 });
@@ -30,6 +31,22 @@ $("#current").click(function () {
     });
 });
 
+function openMenu() {
+    var menu = $("#menu");
+    if ($(menu).is(":visible") && !open) {
+        $(menu).animate({height: 0}, 500, function () {
+            $(menu).hide();
+        });
+        document.getElementById("menu").style.display = "none";
+    } else {
+        $(menu).show().animate({height: 200,}, 500);
+        document.getElementById("menu").style.display = "inline-block";
+    }
+}
+
+//the advanced slide menu
+$("#openMenu").click(openMenu);
+
 $('a.toggler.off').click(function () {
     if (document.getElementById("switch").innerHTML == "on") {
         document.getElementById("switch").innerHTML = "off";
@@ -39,8 +56,8 @@ $('a.toggler.off').click(function () {
         autoplay = true;
     }
     $(this).toggleClass('off');
-
 });
+
 
 // Prepare all the data to be sent when the widget is ready
 widget.bind(SC.Widget.Events.READY, function () {
@@ -62,23 +79,21 @@ $(window).load(function () {
                 $(this).joyride('set_li', false, 1);
             }
         },
+        preRideCallback: openMenu,
         modal: true,
         expose: true
     });
 });
 
 $("#help").click(function () {
+    open = true;
+    openMenu;
     $.removeCookie("joyride", {expires: 365, domain: false, path: false});
     $('#joyRideTipContent').joyride({
         cookieMonster: true,
         preRideCallback: $(this).joyride('destroy', false, 1)
     });
-
-    if (!document.getElementById("switch").innerHTML == "on") {
-        widget.bind(SC.Widget.Events.FINISH, function () {
-            alert("hoi");
-        });
-    }
+    open = false;
 });
 
 // The method is used to send Data to the server
@@ -99,26 +114,29 @@ function sendData(data, url, callback) {
         console.log(data.length > 0);
     }
 }
-
 // select the next song if present
-$("#next").click(function() {
-	widgetClearEvents(); nextSnip(false);
+$("#next").click(function () {
+    widgetClearEvents();
+    nextSnip(false);
 });
 
 // select the previous song if present
 $("#prev").click(prevSnip);
 
 // Goes to the next snippet of the mix.
-function nexter() { nextSnip(true) }
+function nexter() {
+    nextSnip(true)
+}
 function nextSnip(autoplay) {
     if (mixSplits != null && mixSplits != undefined) {
         splitPointer++;
         if ((splitPointer < mixSplits.length) && (splitPointer >= 0)) {
-        	if(autoplay) {
-        		preview(mixSplits[splitPointer], mixSplits[splitPointer] + snipWin, nexter);
-        	} else {
-        		preview(mixSplits[splitPointer], mixSplits[splitPointer] + snipWin, function(){});
-        	}
+            if (autoplay) {
+                preview(mixSplits[splitPointer], mixSplits[splitPointer] + snipWin, nexter);
+            } else {
+                preview(mixSplits[splitPointer], mixSplits[splitPointer] + snipWin, function () {
+                });
+            }
         } else {
             splitPointer--;
         }
@@ -130,7 +148,8 @@ function prevSnip() {
     if (mixSplits != null && mixSplits != undefined) {
         splitPointer--;
         if ((splitPointer < mixSplits.length) && (splitPointer >= 0)) {
-    		preview(mixSplits[splitPointer], mixSplits[splitPointer] + snipWin, function(){});
+            preview(mixSplits[splitPointer], mixSplits[splitPointer] + snipWin, function () {
+            });
         } else {
             splitPointer++;
         }
@@ -142,9 +161,22 @@ $("#sendWave").click(function () {
     widget.getSounds(function (sounds) {
         var message = {
             "track": sounds[0],
-            "waveform": waveform.data
+            "waveform": waveform.data,
+            "splits": 0
         };
-        sendData(message, "/splitWaveform", setMixSplit);
+        if ($("#numsplit").val() === '') {
+            message["splits"] = 0;
+            sendData(message, "/splitWaveform", setMixSplit);
+            document.getElementById("numsplit").style.backgroundColor = "white";
+        } else if (parseInt($("#numsplit").val()) > 0 && parseInt($("#numsplit").val()) != undefined) {
+            message["splits"] = parseInt($("#numsplit").val());
+            document.getElementById("numsplit").style.backgroundColor = "white";
+            sendData(message, "/splitWaveform", setMixSplit);
+        } else {
+            document.getElementById("numsplit").style.backgroundColor = "red";
+            document.getElementById("numsplit").style.opacity = 0.75;
+        }
+        $("#numsplit").val("");
     });
 });
 
@@ -168,13 +200,13 @@ $("#mode").click(function(){
 
 // Set the new start time of the preview.
 function setStartTime(newStart) {
-    if(newStart < 0 || newStart < (snipWin / 2)) {
-		songStart = 0;
-		songEnd = snipWin;
-	} else {
-	    songStart = parseFloat(newStart) - (snipWin / 2);
-	    songEnd = Math.abs(songStart) + snipWin
-	}
+    if (newStart < 0 || newStart < (snipWin / 2)) {
+        songStart = 0;
+        songEnd = snipWin;
+    } else {
+        songStart = parseFloat(newStart) - (snipWin / 2);
+        songEnd = Math.abs(songStart) + snipWin
+    }
 }
 
 function setStartTime2(response) {
@@ -184,12 +216,13 @@ function setStartTime2(response) {
 
 // During the event the current track is seeked to the set songStart and played.
 $("#preview").click(function () {
-    preview(songStart, songEnd, function(){});
+    preview(songStart, songEnd, function () {
+    });
 });
 
 // Preview a snippet on the current track.
 function preview(sStart, sEnd, callback) {
-	widgetClearEvents();
+    widgetClearEvents();
     widget.isPaused(function (paused) {
         if (paused) {
             widget.bind(SC.Widget.Events.READY, function () {
@@ -207,6 +240,7 @@ function preview(sStart, sEnd, callback) {
         widget.getPosition(function (position) {
             if (position > sEnd) {
                 widget.pause();
+                widget.unbind(SC.Widget.Events.PLAY_PROGRESS);
                 callback();
             }
         });
@@ -261,13 +295,13 @@ $("#connect").on('click', function () {
         if (SC.accessToken() == null) {
             SC.connect(function () {
                 getFavorites2(function (data) {
-                    SC.get("http://api.soundcloud.com/users/" + data.id + "/favorites", function(favourites) {
+                    SC.get("http://api.soundcloud.com/users/" + data.id + "/favorites", function (favourites) {
                         console.log(favourites);
-                        sendData(favourites, "/favorites", function() {
+                        sendData(favourites, "/favorites", function () {
 
                         });
                     });
-                    sendData(data, "/user", function() {
+                    sendData(data, "/user", function () {
                         console.log("id send");
                     });
                     loadFavorites(data);

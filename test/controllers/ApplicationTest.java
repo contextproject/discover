@@ -74,6 +74,7 @@ public class ApplicationTest {
         trackstuff.put("user", usermapper);
         json.put("track", trackstuff);
         json.put("waveform", "[0.4, 0.1, 0.2]");
+        json.put("splits", "0");
         return json;
     }
 
