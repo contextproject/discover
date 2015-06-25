@@ -300,15 +300,16 @@ $("#connect").on('click', function () {
                     sendData(data, "/user", function () {});
                     loadFavorites(data);
                 });
-                $(this).html("Log out");
-                $(this).attr("class", "disconnect");
+                console.log($(this));
+                $('#connect').html("Log out");
+                $('#connect').attr("class", "disconnect");
             });
         }
     } else {
         if (SC.accessToken() != null) {
             SC.accessToken(null);
-            $(this).html("Log in");
-            $(this).attr("class", "connect");
+            $('#connect').html("Log in");
+            $('#connect').attr("class", "connect");
         }
     }
 });
